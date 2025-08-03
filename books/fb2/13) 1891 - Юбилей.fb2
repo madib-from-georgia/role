@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+ <description>
+  <title-info>
+   <genre>dramaturgy</genre>
+   <author>
+    <first-name>Антон</first-name>
+    <middle-name>Павлович</middle-name>
+    <last-name>Чехов</last-name>
+   </author>
+   <book-title>13) 1891 - Юбилей</book-title>
+   <date value="1891-01-12">1891</date>
+   <coverpage>
+    <image l:href="#_931110023.jpg"/></coverpage>
+   <lang>ru</lang>
+   <src-lang>ru</src-lang>
+  </title-info>
+  <document-info>
+   <author>
+    <first-name>Людмила</first-name>
+    <last-name>Трофимова</last-name>
+    <email>trofla@mail.ru</email>
+   </author>
+   <program-used>FB Tools</program-used>
+   <date value="2005-08-15">2005-08-15</date>
+   <src-url>http://ilibrary.ru/text/969/p.1/index.html</src-url>
+   <id>B031B30E-0354-4BE7-B493-6DDF3CBFBAF0</id>
+   <version>1.0</version>
+  </document-info>
+  <publish-info>
+   <book-name>А. П. Чехов. Полное собрание сочинений и писем в 30-ти томах. Сочинения. Том 12.</book-name>
+   <publisher>Наука</publisher>
+   <city>Москва</city>
+   <year>1986</year>
+  </publish-info>
+  <custom-info info-type="">Разрешено свободное распространение текстов и использование для некоммерческих целей при условии сохранения целостности текста (включая данную информацию), оформления и ссылки на источник — Интернет-библиотеку Алексея Комарова. Email: otklik@ilibrary.ru</custom-info>
+ </description>
+ <body>
+  <section>
+   <title>
+    <p><strong>ЮБИЛЕЙ</strong></p>
+    <p>(Шутка в одном действии)</p>
+   </title>
+   <subtitle id="AutBody_0DocRoot"><emphasis>Действующие лица</emphasis></subtitle>
+   <p><strong>Шипучин Андрей Андреевич</strong>, председатель правления N-ского Общества взаимного кредита, нестарый человек, с моноклем.</p>
+   <p><strong>Татьяна Алексеевна</strong>, его жена, 25 лет.</p>
+   <p><strong>Хирин Кузьма Николаевич</strong>, бухгалтер банка, старик.</p>
+   <p><strong>Мерчуткина Настасья Федоровна</strong>, старуха в салопе.</p>
+   <p><strong>Члены банка</strong>.</p>
+   <p><strong>Служащие в банке</strong>.</p>
+   <empty-line/>
+   <p><emphasis>Действие происходит в N-ском Банке взаимного кредита</emphasis>.</p>
+   <empty-line/>
+   <p><emphasis>Кабинет председателя правления. Налево дверь, ведущая в контору банка. Два письменных стола. Обстановка с претензией на изысканную роскошь: бархатная мебель, цветы, статуи, ковры, телефон.— Полдень.</emphasis></p>
+   <p><emphasis>Хирин один; он в валенках.</emphasis></p>
+   <empty-line/>
+   <p><strong>Хирин</strong> (<emphasis>кричит в дверь</emphasis>). Пошлите взять в аптеке валериановых капель на пятнадцать копеек да велите принести в директорский кабинет свежей воды! Сто раз вам говорить! (<emphasis>Идет к столу.</emphasis>) Совсем замучился. Пишу уже четвертые сутки и глаз не смыкаю; от утра до вечера пишу здесь, а от вечера до утра — дома. (<emphasis>Кашляет.</emphasis>) А тут еще воспаление во всем теле. Зноб, жар, кашель, ноги ломит и в глазах этакие… междометия. (<emphasis>Садится.</emphasis>) Наш кривляка, этот мерзавец, председатель правления, сегодня на общем собрании будет читать доклад: «Наш банк в настоящем и в будущем». Какой Гамбетта, подумаешь… (<emphasis>Пишет.</emphasis>) Два… один… один… шесть… ноль… семь… Затем, шесть… ноль… один… шесть… Ему хочется пыль пустить, а я вот сиди и работай для него, как каторжный!.. Он в этот доклад одной только поэзии напустил и больше ничего, а я вот день-деньской на счетах щелкай, черт бы его душу драл!.. (<emphasis>Щелкает на счетах.</emphasis>) Терпеть не могу! (<emphasis>Пишет.</emphasis>) Значит, один… три… семь… два… один… ноль… Обещал наградить за труды. Если сегодня все обойдется благополучно и удастся очки втереть публике, то обещал золотой жетон и триста наградных… Увидим. (<emphasis>Пишет.</emphasis>) Ну, а если труды мои пропадут даром, то, брат, не взыщи… Я человек вспыльчивый… Я, брат, под горячую руку могу и преступление совершить… Да!</p>
+   <empty-line/>
+   <p><emphasis>За сценой шум и аплодисменты.</emphasis><emphasis>Голос </emphasis><strong>Шипучина</strong><emphasis>: «</emphasis>Благодарю! благодарю! Тронут!<emphasis>» Входит Шипучин. Он во фраке и белом галстуке; в руках только что поднесенный ему альбом.</emphasis></p>
+   <empty-line/>
+   <p><strong>Шипучин</strong> (<emphasis>стоя, в дверях и обращаясь в контору</emphasis>). Этот ваш подарок, дорогие сослуживцы, я буду хранить до самой смерти как воспоминание о счастливейших днях моей жизни! Да, милостивые государи! Еще раз благодарю! (<emphasis>Посылает воздушный поцелуй и идет к Хирину.</emphasis>) Мой дорогой, мой почтеннейший Кузьма Николаич!</p>
+   <empty-line/>
+   <p><emphasis>Все время, пока он на сцене, служащие изредка входят с бумагами для подписи и уходят.</emphasis></p>
+   <empty-line/>
+   <p><strong>Хирин</strong> (<emphasis>вставая</emphasis>). Честь имею поздравить вас, Андрей Андреич, с пятнадцатилетней годовщиной нашего банка и желаю, чтоб…</p>
+   <p><strong>Шипучин</strong> (<emphasis>крепко пожимает руку</emphasis>). Благодарю, мой дорогой! Благодарю! Для сегодняшнего знаменательного дня, ради юбилея, полагаю, можно и поцеловаться!.. </p>
+   <p><emphasis>Целуются.</emphasis></p>
+   <p>Очень, очень рад! Спасибо вам за службу… за все, за все спасибо! Если мною, пока я имею честь быть председателем правления этого банка, сделано что-нибудь полезное, то этим я обязан прежде всего своим сослуживцам. (<emphasis>Вздыхает.</emphasis>) Да, батенька, пятнадцать лет! Пятнадцать лет, не будь я Шипучин! (<emphasis>Живо.</emphasis>) Ну, что мой доклад? Подвигается?</p>
+   <p><strong>Хирин</strong>. Да. Осталось всего страниц пять.</p>
+   <p><strong>Шипучин</strong>. Прекрасно. Значит, к трем часам будет готов?</p>
+   <p><strong>Хирин</strong>. Если никто не помешает, то кончу. Пустяки осталось.</p>
+   <p><strong>Шипучин</strong>. Великолепно. Великолепно, не будь я Шипучин! Общее собрание будет в четыре. Пожалуйста, голубчик. Дайте-ка мне первую половину, я проштудирую… Дайте скорее… (<emphasis>Берет доклад.</emphasis>) На этот доклад я возлагаю громадные надежды… Это мое profession de foi <a l:href="#FbAutId_1" type="note">1</a>, или, лучше сказать, мой фейерверк… Фейерверк, не будь я Шипучин! (<emphasis>Садится и про себя читает доклад.</emphasis>) Устал я, однако, адски… Ночью у меня был припадочек подагры, все утро провел в хлопотах и побегушках, потом эти волнения, овации, эта ажитация… устал!</p>
+   <p><strong>Хирин</strong> (<emphasis>пишет</emphasis>). Два… ноль… ноль… три… девять… два… ноль… От цифр в глазах зелено… Три… один… шесть… четыре… один… пять… (<emphasis>Щелкает на счетах.</emphasis>)</p>
+   <p><strong>Шипучин</strong>. Тоже неприятность… Сегодня утром была у меня ваша супруга и опять жаловалась на вас. Говорила, что вчера вечером вы за нею и за свояченицей с ножом гонялись. Кузьма Николаич, на что это похоже? Ай-ай!</p>
+   <p><strong>Хирин</strong> (<emphasis>сурово</emphasis>). Осмелюсь ради юбилея, Андрей Андреич, обратиться к вам с просьбой. Прошу вас, хотя бы из уважения к моим каторжным трудам, не вмешивайтесь в мою семейную жизнь. Прошу!</p>
+   <p><strong>Шипучин</strong> (<emphasis>вздыхает</emphasis>). Невозможный у вас характер, Кузьма Николаич! Человек вы прекрасный, почтенный, а с женщинами держите себя, как какой-нибудь Джэк. Право. Не понимаю, за что вы их так ненавидите?</p>
+   <p><strong>Хирин</strong>. А я вот не понимаю: за что вы их так любите?</p>
+   <p><emphasis>Пауза.</emphasis></p>
+   <p><strong>Шипучин</strong>. Служащие поднесли сейчас альбом, а члены банка, как я слышал, хотят поднести мне адрес и серебряный жбан… (<emphasis>Играя моноклем.</emphasis>) Хорошо, не будь я Шипучин! Это не лишнее… Для репутации банка необходима некоторая помпа, черт возьми! Вы свой человек, вам все, конечно, известно… Адрес сочинял я сам, серебряный жбан купил тоже я сам… Ну, и переплет для адреса сорок пять рублей, но без этого нельзя. Сами бы они не догадались. (<emphasis>Оглядывается.</emphasis>) Обстановочка-то какова! Что за обстановка! Вот говорят, что я мелочен, что мне нужно, чтобы только замки у дверей были почищены, чтоб служащие носили модные галстуки да у подъезда стоял толстый швейцар. Ну, нет, судари мои. Замки у дверей и толстый швейцар — не мелочь. Дома у себя я могу быть мещанином, есть и спать по-свински, пить запоем…</p>
+   <p><strong>Хирин</strong>. Прошу, пожалуйста, без намеков!</p>
+   <p><strong>Шипучин</strong>. Ах, никто не намекает! Какой у вас невозможный характер… Так вот я и говорю: дома у себя я могу быть мещанином, парвеню и слушаться своих привычек, но здесь все должно быть en grand <a l:href="#FbAutId_2" type="note"> 2</a>. Здесь банк! Здесь каждая деталь должна импонировать, так сказать, и иметь торжественный вид. (<emphasis>Поднимает с пола бумажку и бросает ее в камин.</emphasis>) Заслуга моя именно в том, что я высоко поднял репутацию банка!.. Великое дело — тон! Великое, не будь я Шипучин. (<emphasis>Оглядев Хирина.</emphasis>) Дорогой мой, каждую минуту сюда может явиться депутация от членов банка, а вы в валенках, в этом шарфе… в каком-то пиджаке дикого цвета… Могли бы надеть фрак, ну, наконец, черный сюртук…</p>
+   <p><strong>Хирин</strong>. Для меня здоровье дороже ваших членов банка. У меня воспаление всего тела.</p>
+   <p><strong>Шипучин</strong> (<emphasis>волнуясь</emphasis>). Но согласитесь, что это беспорядок! Вы нарушаете ансамбль!</p>
+   <p><strong>Хирин</strong>. Если придет депутация, то я спрятаться могу. Не велика беда… (<emphasis>Пишет.</emphasis>) Семь… один… семь… два… один… пять… ноль. Я и сам беспорядков не люблю… Семь… два… девять… (<emphasis>Щелкает на счетах.</emphasis>) Терпеть не могу беспорядков! Вот хорошо бы вы сделали, если бы не приглашали сегодня на юбилейный обед дам…</p>
+   <p><strong>Шипучин</strong>. Пустяки какие…</p>
+   <p><strong>Хирин</strong>. Я знаю, вы для шику напустите их сегодня полную залу, но, глядите, они вам все дело испортят. От них всякий вред и беспорядок.</p>
+   <p><strong>Шипучин</strong>. Напротив, женское общество возвышает!</p>
+   <p><strong>Хирин</strong>. Да… Ваша супруга, кажется, образованная, а в понедельник на прошлой неделе такое выпалила, что я потом дня два только руками разводил. Вдруг при посторонних спрашивает: «Правда ли, что у нас в банке муж накупил акций Дряжско-Пряжского банка, которые упали на бирже? Ах, мой муж так беспокоится!» Это при посторонних-то! И зачем вы откровенничаете с ними, не понимаю! Хотите, чтобы они вас под уголовщину подвели?</p>
+   <p><strong>Шипучин</strong>. Ну, довольно, довольно! Для юбилея это все слишком мрачно. Кстати, вы мне напомнили. (<emphasis>Смотрит на часы.</emphasis>) Сейчас должна приехать моя супружница. В сущности, следовало бы съездить на вокзал, встретить ее, бедняжку, но нет времени и… и устал. Признаться, я не рад ей! То есть я рад, но для меня было бы приятнее, если бы она еще денька два пожила у своей матери. Она потребует, чтобы я сегодня провел весь вечер с нею, а, между тем, у нас сегодня предполагается после обеда маленькая экскурсия… (<emphasis>Вздрагивает.</emphasis>) Однако, у меня уже начинается нервная дрожь. Нервы так напряжены, что достаточно, кажется, малейшего пустяка, чтобы я расплакался! Нет, надо быть крепким, не будь я Шипучин!</p>
+   <empty-line/>
+   <p><emphasis>Входит Татьяна Алексеевна, в ватерпруфе и с дорожной сумочкой через плечо.</emphasis></p>
+   <empty-line/>
+   <p><strong>Шипучин</strong>. Ба! Легка на помине!</p>
+   <p><strong>Татьяна Алексеевна</strong>. Милый! (<emphasis>Бежит к мужу, продолжительный поцелуй.</emphasis>)</p>
+   <p><strong>Шипучин</strong>. А мы только что о тебе говорили!.. (<emphasis>Смотрит на часы.</emphasis>)</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>запыхавшись</emphasis>). Соскучился? Здоров? А я еще дома не была, с вокзала прямо сюда. Нужно тебе рассказать многое, многое… не могу утерпеть… Раздеваться я не буду, я на минутку. (<emphasis>Хирину.</emphasis>) Здравствуйте, Кузьма Николаич! (<emphasis>Мужу.</emphasis>) Дома у нас все благополучно?</p>
+   <p><strong>Шипучин</strong>. Все. А ты за эту неделю пополнела, похорошела… Ну, как съездила?</p>
+   <p><strong>Татьяна Алексеевна</strong>. Превосходно. Кланяются тебе мама и Катя. Василий Андреич велел тебя поцеловать. (<emphasis>Целует.</emphasis>) Тетя прислала тебе банку варенья, и все сердятся, что ты не пишешь. Зина велела тебя поцеловать. (<emphasis>Целует.</emphasis>) Ах, если б ты знал, что было! Что было! Мне даже страшно рассказывать! Ах, что было! Но я вижу по глазам, что ты мне не рад!</p>
+   <p><strong>Шипучин</strong>. Напротив… Милая… (<emphasis>Целует</emphasis>.)</p>
+   <p><emphasis>Хирин сердито кашляет.</emphasis></p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>вздыхает</emphasis>). Ах, бедная Катя, бедная Катя! Мне ее так жаль, так жаль!</p>
+   <p><strong>Шипучин</strong>. У нас, милая, сегодня юбилей, всякую минуту может явиться сюда депутация от членов банка, а ты не одета.</p>
+   <p><strong>Татьяна Алексеевна</strong>. Правда, юбилей! Поздравляю, господа… Желаю вам… Значит, сегодня собрание, обед… Это я люблю. А помнишь, тот прекрасный адрес, который ты так долго сочинял для членов банка? Его сегодня будут тебе читать?</p>
+   <p><emphasis>Хирин сердито кашляет</emphasis>.</p>
+   <p><strong>Шипучин</strong> (<emphasis>смущенно</emphasis>). Милая, об этом не говорят… Право, ехала бы домой.</p>
+   <p><strong>Татьяна Алексеевна</strong>. Сейчас, сейчас. В одну минуту расскажу и уеду. Я тебе все с самого начала. Ну-с… Когда ты меня проводил, я, помнишь, села рядом с той полной дамой и стала читать. В вагоне я не люблю разговаривать. Три станции все читала и ни с кем ни одного слова… Ну, наступил вечер, и такие, знаешь, пошли всё мрачные мысли! Напротив сидел молодой человек, ничего себе так, недурненький, брюнет… Ну, разговорились… Подошел моряк, потом студент какой-то… (<emphasis>Смеется.</emphasis>) Я сказала им, что я не замужем… Как они за мной ухаживали! Болтали мы до самой полночи, брюнет рассказывал ужасно смешные анекдоты, а моряк все пел. У меня грудь заболела от смеха. А когда моряк — ах, эти моряки! — когда моряк узнал нечаянно, что меня зовут Татьяной, то знаешь, что он пел? (<emphasis>Поет басом.</emphasis>) Онегин, я скрывать не стану, безумно я люблю Татьяну!.. (<emphasis>Хохочет.</emphasis>)</p>
+   <p><emphasis>Хирин сердито кашляет.</emphasis></p>
+   <p><strong>Шипучин</strong>. Однако, Танюша, мы мешаем Кузьме Николаичу. Поезжай домой, милая… После…</p>
+   <p><strong>Татьяна Алексеевна</strong>. Ничего, ничего, пусть и он послушает, это очень интересно. Я сейчас кончу. На станцию выехал за мной Сережа. Подвернулся тут какой-то молодой человек, податной инспектор, кажется… ничего себе, славненький, особенно глаза… Сережа представил его, и мы поехали втроем… Погода была чудная…</p>
+   <empty-line/>
+   <p><emphasis>За сценой голоса: </emphasis>«Нельзя! Нельзя! Что вам угодно?»<emphasis> Входит Мерчуткина.</emphasis></p>
+   <empty-line/>
+   <p><strong>Мерчуткина</strong> (<emphasis>в дверях, отмахиваясь</emphasis>). Чего хватаете-то? Вот еще! Мне самого нужно!.. (<emphasis>Входит, Шипучину.</emphasis>) Честь имею, ваше превосходительство… Жена губернского секретаря, Настасья Федоровна Мерчуткина-с.</p>
+   <p><strong>Шипучин</strong>. Что вам угодно?</p>
+   <p><strong>Мерчуткина</strong>. Изволите ли видеть, ваше превосходительство, муж мой, губернский секретарь Мерчуткин, был болен пять месяцев, и пока он лежал дома и лечился, ему без всякой причины отставку дали, ваше превосходительство, а когда я пошла за его жалованьем, то они, изволите ли видеть, взяли и вычли из его жалованья двадцать четыре рубля тридцать шесть копеек. За что? спрашиваю. «А он, говорят, из товарищеской кассы брал и за него другие ручались». Как же так? Нешто он мог без моего согласия брать? Так нельзя, ваше превосходительство! Я женщина бедная, только и кормлюсь жильцами… Я слабая, беззащитная… От всех обиду терплю и ни от кого доброго слова не слышу.</p>
+   <p><strong>Шипучин</strong>. Позвольте… (<emphasis>Берет от нее прошение и читает его стоя</emphasis>.)</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>Хирину</emphasis>). Но нужно сначала… На прошлой неделе вдруг я получаю от мамы письмо. Пишет, что сестре Кате сделал предложение некий Грендилевский. Прекрасный, скромный молодой человек, но без всяких средств и никакого определенного положения. И на беду, представьте себе, Катя увлеклась им. Что тут делать? Мама пишет, чтобы я не медля приехала и повлияла на Катю…</p>
+   <p><strong>Хирин</strong> (<emphasis>сурово</emphasis>). Позвольте, вы меня сбили! Вы — мама да Катя, а я вот сбился и ничего не понимаю.</p>
+   <p><strong>Татьяна Алексеевна</strong>. Экая важность! А вы слушайте, когда с вами дама говорит! Отчего вы сегодня такой сердитый? Влюблены? (<emphasis>Смеется.</emphasis>)</p>
+   <p><strong>Шипучин</strong> (<emphasis>Мерчуткиной</emphasis>). Позвольте, однако, как же это? Я ничего не понимаю…</p>
+   <p><strong>Татьяна Алексеевна</strong>. Влюблены? Ага! Покраснел!</p>
+   <p><strong>Шипучин</strong> (<emphasis>жене</emphasis>). Танюша, поди, милая, на минутку в контору. Я сейчас.</p>
+   <p><strong>Татьяна Алексеевна</strong>. Хорошо. (<emphasis>Уходит</emphasis>.)</p>
+   <p><strong>Шипучин</strong>. Я ничего не понимаю. Очевидно, вы, сударыня, не туда попали. Ваша просьба по существу совсем к нам не относится. Вы потрудитесь обратиться в то ведомство, где служил ваш муж.</p>
+   <p><strong>Мерчуткина</strong>. Я, батюшка, в пяти местах уже была, нигде даже прошения не приняли. Я уж и голову потеряла, да спасибо зятю Борису Матвеичу, надоумил к вам сходить. «Вы, говорит, мамаша, обратитесь к господину Шипучину: они влиятельный человек, все могут…» Помогите, ваше превосходительство!</p>
+   <p><strong>Шипучин</strong>. Мы, госпожа Мерчуткина, ничего не можем для вас сделать. Поймите вы: ваш муж, насколько я могу судить, служил по военно-медицинскому ведомству, а наше учреждение совершенно частное, коммерческое, у нас банк. Как не понять этого!</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство, а что муж мой болен был, у меня докторское свидетельство есть. Вот оно, извольте поглядеть…</p>
+   <p><strong>Шипучин</strong> (<emphasis>раздраженно</emphasis>). Прекрасно, я верю вам, но, повторяю, это к нам не относится.</p>
+   <p><emphasis>За сценой смех Татьяны Алексеевны; потом мужской смех</emphasis>.</p>
+   <p><strong>Шипучин</strong> (<emphasis>взглянув на дверь</emphasis>). Она там мешает служащим. (<emphasis>Мерчуткиной.</emphasis>) Странно и даже смешно. Неужели ваш муж не знает, куда вам обращаться?</p>
+   <p><strong>Мерчуткина</strong>. Он, ваше превосходительство, у меня ничего не знает. Зарядил одно: «не твое дело! пошла вон!» да и все тут…</p>
+   <p><strong>Шипучин</strong>. Повторяю, сударыня: ваш муж служил по военно-медицинскому ведомству, а здесь банк, учреждение частное, коммерческое…</p>
+   <p><strong>Мерчуткина</strong>. Так, так, так… Понимаю, батюшка. В таком случае, ваше превосходительство, прикажите выдать мне хоть пятнадцать рублей! Я согласна не всё сразу.</p>
+   <p><strong>Шипучин</strong> (<emphasis>вздыхает</emphasis>). Уф!</p>
+   <p><strong>Хирин</strong>. Андрей Андреич, этак я никогда доклада не кончу!</p>
+   <p><strong>Шипучин</strong>. Сейчас. (<emphasis>Мерчуткиной.</emphasis>) Вам не втолкуешь. Да поймите же, что обращаться к нам с подобной просьбой так же странно, как подавать прошение о разводе, например, в аптеку или в пробирную палатку. </p>
+   <p><emphasis>Стук в дверь. Голос Татьяны Алексеевны</emphasis>: «Андрей, можно войти?»</p>
+   <p>(<emphasis>Кричит</emphasis>.) Погоди, милая, сейчас! (<emphasis>Мерчуткиной</emphasis>.) Вам не доплатили, но мы-то тут при чем? И к тому же, сударыня, у нас сегодня юбилей, мы заняты… и может сюда войти кто-нибудь сейчас… Извините…</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство, пожалейте меня, сироту! Я женщина слабая, беззащитная… Замучилась до смерти… И с жильцами судись, и за мужа хлопочи, и по хозяйству бегай, а тут еще зять без места.</p>
+   <p><strong>Шипучин</strong>. Госпожа Мерчуткина, я… Нет, извините, я не могу с вами говорить! У меня даже голова закружилась… Вы и нам мешаете, и время понапрасну теряете… (<emphasis>Вздыхает, в сторону.</emphasis>) Вот пробка, не будь я Шипучин! (<emphasis>Хирину.</emphasis>) Кузьма Николаич, объясните вы, пожалуйста, госпоже Мерчуткиной… (<emphasis>Машет рукой и уходит в правление.</emphasis>)</p>
+   <p><strong>Хирин</strong> (<emphasis>подходит к Мерчуткиной. Сурово</emphasis>). Что вам угодно?</p>
+   <p><strong>Мерчуткина</strong>. Я женщина слабая, беззащитная… На вид, может, я крепкая, а ежели разобрать, так во мне ни одной жилочки нет здоровой! Еле на ногах стою и аппетита решилась. Кофей сегодня пила и без всякого удовольствия.</p>
+   <p><strong>Хирин</strong>. Я вас спрашиваю, что вам угодно?</p>
+   <p><strong>Мерчуткина</strong>. Прикажите, батюшка, выдать мне пятнадцать рублей, а остальные хоть через месяц.</p>
+   <p><strong>Хирин</strong>. Но ведь вам, кажется, было сказано русским языком: здесь банк!</p>
+   <p><strong>Мерчуткина</strong>. Так, так… А если нужно, я могу медицинское свидетельство представить.</p>
+   <p><strong>Хирин</strong>. У вас на плечах голова или что?</p>
+   <p><strong>Мерчуткина</strong>. Миленький, ведь я по закону прошу. Мне чужого не нужно.</p>
+   <p><strong>Хирин</strong>. Я вас, мадам, спрашиваю: у вас голова на плечах или что? Ну, черт меня подери совсем, мне некогда с вами разговаривать! Я занят. (<emphasis>Указывает на дверь.</emphasis>) Прошу!</p>
+   <p><strong>Мерчуткина</strong> (<emphasis>удивленная</emphasis>). А деньги как же?..</p>
+   <p><strong>Хирин</strong>. Одним словом, у вас на плечах не голова, а вот что… (<emphasis>Стучит пальцем по столу, потом себе по лбу.</emphasis>)</p>
+   <p><strong>Мерчуткина</strong> (<emphasis>обидевшись</emphasis>). Что? Ну, нечего, нечего… Своей жене постукай… Я губернская секретарша… Со мной не очень!</p>
+   <p><strong>Хирин</strong> (<emphasis>вспылив, вполголоса</emphasis>). Вон отсюда!</p>
+   <p><strong>Мерчуткина</strong>. Но, но, но… Не очень!</p>
+   <p><strong>Хирин</strong> (<emphasis>вполголоса</emphasis>). Ежели ты не уйдешь сию секунду, то я за дворником пошлю! Вон! (<emphasis>Топочет ногами.</emphasis>)</p>
+   <p><strong>Мерчуткина</strong>. Нечего, нечего! Не боюсь! Видали мы таких… Скважина!</p>
+   <p><strong>Хирин</strong>. Кажется, во всю свою жизнь не видал противнее… Уф! Даже в голову ударило… (<emphasis>Тяжело дышит.</emphasis>) Я тебе еще раз говорю… Слышишь! Ежели ты, старая кикимора, не уйдешь отсюда, то я тебя в порошок сотру! У меня такой характер, что я могу из тебя на весь век калеку сделать! Я могу преступление совершить!</p>
+   <p><strong>Мерчуткина</strong>. Собака лает, ветер носит. Не испугалась. Видали мы таких.</p>
+   <p><strong>Хирин</strong> (<emphasis>в отчаянии</emphasis>). Видеть ее не могу! Мне дурно! Я не могу! (<emphasis>Идет к столу и садится.</emphasis>) Напустили баб полон банк, не могу я доклада писать! Не могу!</p>
+   <p><strong>Мерчуткина</strong>. Я не чужое прошу, а свое, по закону. Ишь срамник! В присутственном месте в валенках сидит… Мужик…</p>
+   <empty-line/>
+   <p><emphasis>Входят Шипучин и Татьяна Алексеевна.</emphasis></p>
+   <empty-line/>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>входя за мужем</emphasis>). Поехали мы на вечер к Бережницким. На Кате было голубенькое фуляровое платье с легким кружевом и с открытой шейкой… Ей очень к лицу высокая прическа, и я ее сама причесала… Как оделась и причесалась, ну просто очарование!</p>
+   <p><strong>Шипучин</strong> (<emphasis>уже с мигренью</emphasis>). Да, да… очарование… Сейчас могут прийти сюда.</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство!..</p>
+   <p><strong>Шипучин</strong> (<emphasis>уныло</emphasis>). Что еще? Что вам угодно?</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство!.. (<emphasis>Указывает на Хирина</emphasis>.) Вот этот, вот самый… вот этот постучал себе пальцем по лбу, а потом по столу… Вы велели ему мое дело разобрать, а он насмехается и всякие слова. Я женщина слабая, беззащитная…</p>
+   <p><strong>Шипучин</strong>. Хорошо, сударыня, я разберу… приму меры… Уходите… после!.. (<emphasis>В сторону.</emphasis>) У меня подагра начинается!..</p>
+   <p><strong>Хирин</strong> (<emphasis>подходит к Шипучину, тихо</emphasis>). Андрей Андреич, прикажите послать за швейцаром, пусть ее в три шеи погонит. Ведь это что такое?</p>
+   <p><strong>Шипучин</strong> (<emphasis>испуганно</emphasis>). Нет, нет! Она визг поднимет, а в этом доме много квартир.</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство!..</p>
+   <p><strong>Хирин</strong> (<emphasis>плачущим голосом</emphasis>). Но ведь мне доклад надо писать! Я не успею!.. (<emphasis>Возвращается к столу.</emphasis>) Я не могу!</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство, когда же я получу? Мне нынче деньги надобны.</p>
+   <p><strong>Шипучин</strong> (<emphasis>в сторону, с негодованием</emphasis>). За-ме-ча-тель-но подлая баба! (<emphasis>Ей мягко.</emphasis>) Сударыня, я уже вам говорил. Здесь банк, учреждение частное, коммерческое…</p>
+   <p><strong>Мерчуткина</strong>. Сделайте милость, ваше превосходительство, будьте отцом родным… Ежели медицинского свидетельства мало, то я могу и из участка удостоверение представить. Прикажите выдать мне деньги!</p>
+   <p><strong>Шипучин</strong> (<emphasis>тяжело вздыхает</emphasis>). Уф!</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>Мерчуткиной</emphasis>). Бабушка, вам же говорят, что вы мешаете. Какая вы, право.</p>
+   <p><strong>Мерчуткина</strong>. Красавица, матушка, за меня похлопотать некому. Одно только звание, что пью и ем, а кофей ныне пила без всякого удовольствия.</p>
+   <p><strong>Шипучин</strong> (<emphasis>в изнеможении, Мерчуткиной</emphasis>). Сколько вы хотите получить?</p>
+   <p><strong>Мерчуткина</strong>. Двадцать четыре рубля тридцать шесть копеек.</p>
+   <p><strong>Шипучин</strong>. Хорошо! (<emphasis>Достает из бумажника 25 руб. и подает ей.</emphasis>) Вот вам двадцать пять рублей. Берите и… уходите!</p>
+   <p><emphasis>Хирин сердито кашляет</emphasis>.</p>
+   <p><strong>Мерчуткина</strong>. Покорнейше благодарю, ваше превосходительство… (<emphasis>Прячет деньги.</emphasis>)</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>садясь около мужа</emphasis>). Однако мне пора домой… (<emphasis>Посмотрев на часы.</emphasis>) Но я еще не кончила… В одну минуточку кончу и уйду… Что было! Ах, что было! Итак, поехали мы на вечер к Бережницким… Ничего себе, весело было, но не особенно… Был, конечно, и Катин вздыхатель Грендилевский… Ну, я с Катей поговорила, поплакала, повлияла на нее, она тут же на вечере объяснилась с Грендилевским и отказала ему. Ну, думаю, все устроилось, как нельзя лучше: маму успокоила, Катю спасла и теперь сама могу быть спокойна… Что же ты думаешь? Перед самым ужином идем мы с Катей по аллее и вдруг… (<emphasis>Волнуясь.</emphasis>) И вдруг слышим выстрел… Нет, я не могу говорить об этом хладнокровно! (<emphasis>Обмахивается платком.</emphasis>) Нет, не могу!</p>
+   <p><strong>Шипучин</strong> (<emphasis>вздыхает</emphasis>). Уф!</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>плачет</emphasis>). Бежим к беседке, а там… там лежит бедный Грендилевский… с пистолетом в руке…</p>
+   <p><strong>Шипучин</strong>. Нет, я этого не вынесу! Я не вынесу! (<emphasis>Мерчуткиной</emphasis>.) Вам что еще нужно?</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство, нельзя ли моему мужу опять поступить на место?</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>плача</emphasis>). Выстрелил себе прямо в сердце… вот тут… Катя упала без чувств, бедняжка… А он сам страшно испугался, лежит и… и просит послать за доктором. Скоро приехал доктор и… и спас несчастного…</p>
+   <p><strong>Мерчуткина</strong>. Ваше превосходительство, нельзя ли моему мужу опять поступить на место?</p>
+   <p><strong>Шипучин</strong>. Нет, я не вынесу! (<emphasis>Плачет.</emphasis>) Не вынесу! (<emphasis>Протягивает к Хирину обе руки, в отчаянии.</emphasis>) Прогоните ее! Прогоните, умоляю вас!</p>
+   <p><strong>Хирин</strong> (<emphasis>подходя к Татьяне Алексеевне</emphasis>). Вон отсюда!</p>
+   <p><strong>Шипучин</strong>. Не ее, а вот эту… вот эту ужасную… (<emphasis>указывает на Мерчуткину</emphasis>) вот эту!</p>
+   <p><strong>Хирин</strong> (<emphasis>не поняв его, Татьяне Алексеевне</emphasis>). Вон отсюда! (<emphasis>Топочет ногами.</emphasis>) Вон пошла!</p>
+   <p><strong>Татьяна Алексеевна</strong>. Что? Что вы? С ума сошли?</p>
+   <p><strong>Шипучин</strong>. Это ужасно! Я несчастный человек! Гоните ее! Гоните!</p>
+   <p><strong>Хирин</strong> (<emphasis>Татьяне Алексеевне</emphasis>). Вон! Искалечу! Исковеркаю! Преступление совершу!</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>бежит от него, он за ней</emphasis>). Да как вы смеете! Вы нахал! (<emphasis>Кричит.</emphasis>) Андрей! Спаси! Андрей! (<emphasis>Взвизгивает.</emphasis>)</p>
+   <p><strong>Шипучин</strong> (<emphasis>бежит за ними</emphasis>). Перестаньте! Умоляю вас! Тише! Пощадите меня!</p>
+   <p><strong>Хирин</strong> (<emphasis>гонится за Мерчуткиной</emphasis>). Вон отсюда! Ловите! Бейте! Режьте ее!</p>
+   <p><strong>Шипучин</strong> (<emphasis>кричит</emphasis>). Перестаньте! Прошу вас! Умоляю!</p>
+   <p><strong>Мерчуткина</strong>. Батюшки… батюшки!.. (<emphasis>Взвизгивает</emphasis>.) Батюшки!..</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>кричит</emphasis>). Спасите! Спасите!.. Ах, ах… дурно! Дурно! (<emphasis>Вскакивает на стул, потом падает на диван и стонет, как в обмороке.</emphasis>)</p>
+   <p><strong>Хирин</strong> (<emphasis>гонится за Мерчуткиной</emphasis>). Бейте ее! Лупите! Режьте!</p>
+   <p><strong>Мерчуткина</strong>. Ах, ах… батюшки, в глазах темно! Ах! (<emphasis>Падает без чувств на руки Шипучина</emphasis>.)</p>
+   <p><emphasis>Стук в дверь и голос за сценой</emphasis>: «Депутация!»</p>
+   <p><strong>Шипучин</strong>. Депутация… репутация… оккупация…</p>
+   <p><strong>Хирин</strong> (<emphasis>топочет ногами</emphasis>). Вон, черт бы меня драл! (<emphasis>Засучивает рукава.</emphasis>) Дайте мне ее! Преступление могу совершить!</p>
+   <empty-line/>
+   <p><emphasis>Входит депутация из пяти человек; все во фраках. У одного в руках адрес в бархатном переплете, у другого — жбан. В дверь из правления смотрят служащие. Татьяна Алексеевна на диване, Мерчуткина на руках у Шипучина, обе тихо стонут.</emphasis></p>
+   <empty-line/>
+   <p><strong>Член банка</strong> (<emphasis>громко читает</emphasis>). Многоуважаемый и дорогой Андрей Андреевич! Бросая ретроспективный взгляд на прошлое нашего финансового учреждения и пробегая умственным взором историю его постепенного развития, мы получаем в высшей степени отрадное впечатление. Правда, в первое время его существования небольшие размеры основного капитала, отсутствие каких-либо серьезных операций, а также неопределенность целей ставили ребром гамлетовский вопрос: «быть или не быть?», и в одно время даже раздавались голоса в пользу закрытия банка. Но вот во главе учреждения становитесь вы. Ваши знания, энергия и присущий вам такт были причиною необычайного успеха и редкого процветания. Репутация банка… (<emphasis>кашляет</emphasis>) репутация банка…</p>
+   <p><strong>Мерчуткина</strong> (<emphasis>стонет</emphasis>). Ох! Ох!</p>
+   <p><strong>Татьяна Алексеевна</strong> (<emphasis>стонет</emphasis>). Воды! Воды!</p>
+   <p><strong>Член банка</strong> (<emphasis>продолжает</emphasis>). Репутация… (<emphasis>кашляет</emphasis>) репутация банка поднята вами на такую высоту, что наше учреждение может ныне соперничать с лучшими заграничными учреждениями…</p>
+   <p><strong>Шипучин</strong>. Депутация… репутация… оккупация… шли два приятеля вечернею порой и дельный разговор вели между собой… Не говори, что молодость сгубила, что ревностью истерзана моей.</p>
+   <p><strong>Член банка</strong> (<emphasis>продолжает в смущении</emphasis>). Затем, бросая объективный взгляд на настоящее, мы, многоуважаемый и дорогой Андрей Андреевич… (<emphasis>Понизив тон.</emphasis>) В таком случае мы после… Мы лучше после…</p>
+   <p><emphasis>Уходят в смущении.</emphasis></p>
+   <subtitle><emphasis>Занавес</emphasis></subtitle>
+  </section>
+ </body>
+ <body name="notes">
+  <section id="FbAutId_1">
+   <title>
+    <p>1</p>
+   </title>
+   <p>исповедание веры (франц.)</p>
+  </section>
+  <section id="FbAutId_2">
+   <title>
+    <p>2</p>
+   </title>
+   <p>на широкую ногу (франц.)</p>
+  </section>
+ </body>
+ <binary id="_931110023.jpg" content-type="image/jpeg">/9j/4AAQSkZJRgABAgEBLAEsAAD/2wCEAAwICAgJCAwJCQwRCwoLERUPDAwPFRgTExUTExgR
+DAwMDAwMEQwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwBDQsLDQ4NEA4OEBQODg4UFA4O
+Dg4UEQwMDAwMEREMDAwMDAwRDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/CABEIAUMA
+yAMBIgACEQEDEQH/xADVAAADAQEBAQAAAAAAAAAAAAAAAQIDBAYFAQEBAQEBAAAAAAAAAAAA
+AAABAAIDBBAAAgEDBAICAgEFAQAAAAAAAAEREDECICFBEjADIjJCBEBQYBMjFDMRAAADBAgD
+BwQDAQAAAAAAAAABERAhMQIgMPBBUWFxgZHBEkChsdHxIjLhQlJyYoLCshIAAQIEBQMFAAAA
+AAAAAAAAMPBhAAGBwRAxodHhUGDxIBFBkeITAQACAgEDAwUBAQEBAAAAAAEAESExQfBRYXGB
+kRChscHR4fEgMP/aAAwDAQMCEQMRAAAB5qT8/sBVWdzVUSCRc6yi3Uq8xNMtBTSojWUBlCZV
+mZVy1TJKKkpXm6bgbQSEJlzV5WLkK1gKGim05gQ5sQM1DRoKm5opBaNCazqUJFaKACblsxEW
+JGpEaxso0zqRlSmUIKSaZ1JUgI3Fi00TGqoTpucZ0MzXPR1JpDTTUVFE56zqY2lCdJOI1Sgd
+Ug0xGdUgojQaCTXPZBjbTUk1NRntn14VUOWosHFFTLEus9TVBfLvCpJIqaCh50ODdk0KQqnP
+TLt5ylpmI26sb+ZPZx7xsRqWW+Oum6g4+ikpQctAg1jeNIzubmpkuSjLXLt5tO/5n3uPXrxr
+Pz+p/J+n8/WPm9fLr6fGaTdtNmO0zcoNMZKNYpMzpDhqcss8tc+3m6frcPb5fZw7ahr5c3fX
+z8daZbxrfPuzRPPs1YsUwpKIZUzLsSROow35+vn1+v8AC+9x73z64cfT8/o577eXKOrj3yvf
+O1oc8+42UhqZEOd5qRFSqWOMsdo7efD1Xle/D0z0fN59o+z8b7eV/H7sjXFYejgwOfYbKSCc
+yxzpLKkqIompzz2nrwz2xouvj7vl5vrL5cmvqZZyOgnoBLHVsbIAZLKSudZTVCDREE9eOaVu
+EKhnRNWxi2AgVz65lJkN1JQl51FOlRSNTKs68OfepDns2rOZ0UvPbKTUyMfPrKudA0EEms6h
+JpsQiapRWXXhvMaZJ0vKXSss7qJlXCtp8+o5dS1aSA50i5NgFEpxBo+vJRqwyuKaxFa53nmU
+aZ26SeOjApMdQI1z0KM9JY6hsoE5SagBtDFGsiGpapzapzalRtjDEax0ypx0amkBOgmhUsRj
+c5FEKkxE1TaIokbQlZ0EG+es0G4qapDIik5LgrRJCyFFE1STaAMRUmaYMlDhzSNJqqmpqYod
+TSSMYMtxCuNKlUU5aEGmKkpgOB+aDXpZ84J6U80T6U80D6WfODn0h5sb0q82ZfRaeZDXo35s
+T02fnRPTZ+dK9HXmgfSnmgv/2gAIAQEAAQUCiDaqSneiu79UdRYnUjYxrDdINj4m6WT+MxRn
+A9G8yogZLFdUka2GWVhDTi5uqIs+OR3Q7k03FY4d0c2EidsppJZsY2c88qaOjOdHFLsbIGLR
+yMWmBeCDLQjk55EPSq8LSzsdjZka1u6XOawXIJSOxJkKsaHcRajuK4rcCIIo9EPRaiv1ZuRT
+cSETSabm9XaCctMwPLI7ZHbInIlkseWRLG8ju6Ou5uxxRk7ydjsNMz+olSacODi1GbkokkmR
+qnGnK1JN3ogYhiij0PUx/WwzFSOEKWZSmX8MjNx6crSLGRrqev8AXyzP+Qz/AF/ZiZYwYPd0
+erfRtoysY5Qfr+ru+CT3Yplm6PVuPTwey0jPR/57V9o79nDGc6XoW1c7GPqT9eML1+6W/TDw
+7dnOJHyyMXs6Tq3IpDIZuZWP1XI8uq3aiDH7547uiNz5HypFXBsPS/qev2P15Yvt64cZZQ03
+2zHZMWnY2q9WVqYYPH0Zsac5KBY5xivgK9NqxRs2rAzIdhndZ/p/5P8AZ7cvj9suqnqe/wC6
+tzolUd6ujMrXp+s8j9r19lkmetT7cskjD398/wBjESGcJ6XTY2pNMrcZYs9GKyfvXv8ARlj7
+D/q9PV+715nqXy9nt/y5rTsbG2nc3NxraDI9eXV/u+zHPK7yp2y6xRnyN9LGbURFOBipBC0v
+W9PBkcGKctnZEQxio/Bvqyt+OR9cR4vJ55J5UxOMtW9HpZwJEf64ZjthAppDVHqh1Wngba9U
+b83zcDXUwx3dx0WlmWiaZWH9Pq8cjE++f3F8nr5HBudUQQqOTK0bYpdXjvYmUqYXtRm5CZB1
+REDdGQb6IIFuQdWJQSbGKG5rxSGQX0Qxp0eidG6PxVYpuRV2JNtLvS9HdQTLEK1Zo6QiEbEl
+h05pZ15VZpNOqIHFHSxycnKHpWhWpFGb0tTisb9SCEdTqQI40WrlFLVdOaKaZHFFbjWzZEUV
+OOaYobo1VU4d1SCaNMilx0d6xuxNjlkCkVIHYZxc3Q5j8nRmP25o/tRW54FaiFVn4v6f/9oA
+CAECAAEFAtb/AKhBBCIRCI8rt4ZQqceDKmN2ceDI4px4M6o48GSIMzHZ8eFW6og48nHk48nH
+ij+wnq//2gAIAQMAAQUC0Oq0z/K5/gPI7EknZic+VXrzphjor+DHcRnRX8GK2S3or+D1sbox
+X8CJMDLdK/hZ2ZIr+RX8iv5FevPgX87nyc614nei1f/aAAgBAgIGPwLrHEcQt4zX2ZOVOLzi
+nEt8U5U5U5U5U5U5U4/HZH//2gAIAQMCBj8C6upbxlrxGWvEZa8Rlr+TJi0nYtJ2D7+ik7Fp
+OxaTsWk7FpOxaTsWk7FS+OxFrh//2gAIAQEBBj8CxIKTcMBjRuqI0Hhe5qk3QKDauDFULRMw
+mLcxm17MglN9Uozt3sdxa8ZVeTTZu1ToOPizKidSbCoOpJQMHRRp9gMH2vward6g6ebDoQD6
+tA5j6ChVCqInQiIsQ4WhZKq9sWb0tWWtewqUbb1DuwIEDmZ11tKlzIVGYS8ZYhxoMSxYnZOq
+a1nUHVq0SaR0DY9hbVxWzY75AiHwjf6ZB6kHqZFmHKWtdCkZYWMGZhJkOyDWybIHCCUICAgI
+NhR+lFSfiCmxYhXw8WJcLa9klW/1HtiHm+4cxCIOWaNZAQEKXUWHeH+0wRqMrKFUW0EKMWuq
+5pS+KKg67y9O4wSiX8RNOkAiWvC9iW2oSa9CI9yLwCdSynD0MPJd7HzCdHSmA3KIOY3dFvAL
+9pQtn5VUREW1EWRoEeBiTpO5eLEZ0map6EulzYiIiIsiI2hUW07JlRJpJc9dPdy8CR7Egdrw
++7sZNmLD27n75jj/AATBJSvYUpRmcVvHIGZfG7SBceNBcRwZbStQL+L9/tyi/YS5rNyL/hhz
+3mssvd1nwPpL9psGIzj4nK/eUwlS7jUQ+T10cSb9SqiGCf7XE8uJuwfqHXuLkCllentl5zZd
+RrMerwS3kXfyO7IKUft0gv7TXYS6kMiifPaP7dJXjKCZXFwp8g5iVBEWficfpcg6i+MykR5Q
+N2houqGMDlJS1+JcOo5tUB5E/JfaHwifmhIhEWgV3ugtxXzf06SkLgRGbyzn+0sX9Ohymcpk
+UEV4tq1KChzXky4RJpBfxMy/0ud+jiZgoS4vRTxPwgSED4c/8v2Z3Lr7V79ohKFzYVKHUKb5
+b87+nzSBakq2xOjm3OqOlLv5O51S1atQQQigVomcTPFm9GLTqD7SYOoOha2tHC2LHi1n1a0C
+oOEKCm3eo5VCHQcxeAVhUNG5VCGM2OEA8ZNTGgYyqEoIEvb5/QWRp28bh5sNlrfQX7MKltbZ
+pW4MLmz/2gAIAQEDAT8hyK+tLGDHbn2m8d9PeVWqmG0cr8j5mHNHJ+Hzc8meZsxx0Q5hqi48
+hz/rzxHOj5Hp4YFZ2f8AIWo5fH3ZUyq+s+kMdsePNytXzcNVPuuv7AFtDfbHpAKWt69O7A9p
+dNYdefL2JQ5X2PPEMw12/p4hKa9ZZX17x3x8nbz6QBkwOfR/kc2+ZsvlD/ZsDUvI9/7OdR2x
+cDIc/v7xsXxw+2IdpTKGDd8fqPAN9agTLrUVX6w/ccA5196mh2q9p6aNfiOsfP6JWTa4/Uup
+f+f6yz7/AMgFeL17RpcHr4iLDxt9vHp2mHg8/hh+n9R1vY/5G+vvDbE2I0rO5lksM19yDW9M
+dOx18zevj+Sh95Zy7zj0uHGLJ7E1t0Tk+v8ACXs/4hXephgxz01LM2t/ErgydnqyHDSVZypp
+6afEzmSvIzdu38SFW9vxH9J3mGvXq4sY4/7CYb/xMaZhr3nEaK8xcPn/AB8R0DmPf4/vt+YB
++CeDXH9lGX4+NhMQO7n+D9E/c7Up655ippz0yTOj2/Z7x5rjJOb8f2cIbp46+0eXviWx+IYz
+DJ8zWe2a+zO/b9fuGQnXaPGNdfaX97+px6/8/M7Ots3nquX4l8/BMqLjriGTHHwR5Lfgwb+Y
+jVbmYrVOu3XPmHjxj9j+or8us+8SOa8T+v8AJ+T/AGO/QfuWrr3nZ3/y4de7X4g1v0Zo8Mn5
+/wBnnrrM/Z/KSsV8w/3r3PoGPz/Pdl29fHpPXP4/2WpmOTr1hqs3Pb16R78deSXZ/Ynd6563
+DO8VEOOuZznt/lRq6dY/sf0/cq8fMyHtg951+47SGmM6/k4nac+7Cqe+fxOyddyU1AcJQ/k8
+A9YHxXX8ge0Yp7xSjhqZ5Lmuk684mc89V+4tdfqd160584mSnL7fuYPXuQyeTl8YfMXROR94
+YvXt/Z1desNfP8nU9ia6dErrr1gZTsvr1Ut2ojjnMyucL269pncRr6HOG/PHf3fSXT5i6V63
+Bp063Hft/kChV4P3HsPxAPEy2dbldresRMZ8c119oufX+zAx7/mNV4ZY5a6OIePj81C3OOtk
+0nX6+mA+XrMj8OquPod8e/eVi7PXYxzPwa/E5z6/yIhnB0amBea0f3wRbkz/ANrtjUw0R3qC
+dHj8zvL6X8fiPGvz718Tkt7V57Qj5aOvMOJ+Kvf83BN3gwn/ADuQostd9+q2JDd1fW79yBqn
+tj9feHON5Id3ff8A2KOfk/ZUvg643Uozt/EevzAAW1123Kdz2/5xLefcmBefjrmdx+n5qVM5
+6/v0Rbivb9+xPxTAdev6nR+8ceTohRv05ifPv14mtjGq+c+WNqvr+5nFN9DnmZPt19oVN48/
+POJRhT2L/HrHy+3tK934ZXT5Y88CJWeuIlRLub5lOzNb/H7jWOzj5/4yqY+vMfYYv/fM0Z5h
+464l5+0a3z1z7TJ36/kqik+eu8vUQevaFN9+n4gXr3mW+av9/ebY8SzLvz+7nHrBiNhTfVxM
+164ftDGOBk61Kb/Pw/eWb19kHPZ6+czd9+0u/bolcTCrx4+8eF8P+x5SusBv/IK7HRUeIo8D
+1wXKdG+Py/iCxwc/98wUXm5p69PxA2PXNzI9dZjx7fi52eu0uXb163F7b7y84wcv87wwrln/
+AH7Ty6+IlOUGdV1+Z79b/c9axz9uI3Exr3+34gx9cv2CWNy1g6b3K+jzr8XKhSu58fmYLiPb
+5N1BeNj/AIWI8wPB128wP8lD18T+JquOv6weuvSW+A69ImN3K8L1f5i07df4x6Pv+Ig7ZQ+D
+uz0Y7v8AIPtLo647zk9pr8/8i4o+f5WtREI8dEBuXNev+EAGNHbjyS3r5/EcKxGF4b69oXb1
+3ml9uv3NXUPjtLrjrdTr/vmNMor9MrzT09EwxvrznmfCv+EcZfiN3br/AJcy+vHji2DbieHX
+eeTvr/Yuj35lA1+JlqVSm/1jHxFtX2+/4Y4xXX/I4NTp/wA9J017ykIxr43+SZAnOJwc1/qJ
+put/z4j3j59+u88ff+y6w9cTWH5grDtz/I73f5/kVXUz113ncuD469rne99P6l3p6VAa110x
+G2TaHFGw8837Srrwf7ECvE388LpCLyKv2G95sqXd2RCmDHl9o92dsvvPv+PmUoLuv+4hOGps
+X4h1+JSnfx+9dpzMS7ozfn459Yaznx/fiK3a5mXBFLolUadZmTQdf7KDj5mJxZ5/yZC+7+j8
+TRcpcqH2/wBEtBg7Z3gwZ5IB8RWbq3wq9woci9mjVfYS5fINj+f+zcaNp/p5mnnHXzKu7L9P
+t7bmK9enxFSH5Rt/rrmV2OsfqVz+X+Ta6gePv/kPP3dcwLRPZ8dcxAa9MEx2fg9OfEK5x6wm
+NCdbjg46xCPy/FTr9SpXYO4/iPW8PzT9poBm99eSaAtVbXqe1ytGrF+/ES3bD8bI3Tnp9+0p
+69vvcDeOuiNfY/H9nX7iAWodXr3l9U/udMf7K6fMw5Aa8x3jUp3hZrJ1x7zHXxPHeIY4e/8A
+fxF4c9c+8wHq/p+8c446qPOPt+JlVgPy4Rrrfmntv+w4RRkVp7hnhnOzXT5mudCz9QQyv22Z
+8kOPGyEsmsVHfx+JnZrsfthl46fXM9dyw1lltsUx18VnUsPTr7TKUcdOidPzx5nse7OzrxKU
+9dajK+V/TGprUqF4ldhRXikitVOG/wBepDQUvXftf2lgGlv27oiFSwx9pR2D3/qHNAcVrOre
+M95ennon8R+/X9hrH2+GXnbMaHcOWdPxMsopvfi+qh3XHWopx89eJhl+J2rNfHzqppnfXzuf
+lf0QKZx2/H6l/wA3K7uRwvBefWphFG3yd1bwSvya9HXEDuDQ9/fW4GnZP3U3GDr8r7Qy0b1+
+vjM+DiZY9P5E9n3+P5A4ev8AszzvqvRlXrDOc9c/qUenV475gor4/wBjXr5r84lM1fs9cxOz
+8+ko3R8ftjbaseZqru/g/cOHPf7SgA9TpmLe0J0qO3N3Mv7F3NnZsLmjFOMNcKaXFx1uBX93
+9y1DA1GF457Akyh/3t9spqXAXGO75hpGl9j8Tx8Yl8OfU99xDq5XW4cJZ0h3/P4jFx/ELeXx
+12l+X4h7F1r7w8/aa5WfT2/ErFffzT+IW3C3fXzFU4G/T08zKJSXwofa5wnMXDtC3X5iowD5
++Q+SVOuqg9feBu7HVTB/nrvPS+PaC8/Z/svz9v8AYL/x/st526fiLtz1qbePH93E9nXeYvrr
+UrzPCzrG7nHfr7XcTCDfiK3/ADqp0/P4nmueeu9Qo4OtV8xuWuvEta7an26/s4JoucPTr7zf
+XVQCv965htlFZ67R9evf0hnePP3z2zBwx1TrvMj08zx8P2+J6desvp941Venr6x4934z8THv
+mOcy5Ov6ve0A1AA4W3R8y3bsLrv6N8xdGDgn+d5eD469Ysdev6ljr3/D9P4/s86ef88x6/P4
+lYzPL8SrLeurnN/b7/iOuyY/kfCyZNY6qWXbjq9THD7dam+fmJrPXRMvc/TA9/TBR18e8wBq
+u+2sFuzVh2n2b/GvSBjafI1eOAzDRSxneFIu1AOYM0vP61P1r8f7Av3/AO/aUbM9N+J/h13q
+Yreur+8Ix3l1/ZZ5WZbx1UfmULt+P7OddekL1z0ceJ72+CJFiL09iFL5/wDPwTKvjTm1i3Yc
+kuLq5eija7emUV26P3B/ypeTqYkt6wqqWuq+534l58c9esSFlKWO1KOxIKT0b/X2mw9g/BMv
+PXRDXXrqU+Ejfbr2jXp1/ksO/Vx8yvdz/EHb3YVxr8yqmbjkK0114jp6/wAZdevTHyUs36QU
+0co64fsZGirruLzczugtwPKh90eLa8V1bU8mYprgZjrTI1ea3XnAatq7dvseQZ9qtvpNF1fZ
+zUQRaKMmi2aYR8CI/M2+J4950/EN336qbfPJPT36esr/AB9vbEzM7ZYOHXHEzqc+n/IvX3lP
+iJiw+erYVw7v6PaddfEukFBpzdngvMG2/InOgywLZSHw19ovCFV6xQ9A5MPoajgdTp41oOxQ
+C0oXswF1VsCpMOY1mcGLALWOSNwrTYnP5HmnDKxXX2jb9v7MHYvfrMvnrvid42lm430eJlz7
+vz7zUTPV1GzAPt6eIDsH0Wex17TXcbT1y/f9Ryu+v3fzFYq91sBtewWoE0z6/EtsXwfgzuyy
+5jnGbHLtddob1CGinY8stk73gkjNZPMRUcXiuNA7cbhXBrZ9mvJE8Pf/ALNoYXo8zkdNSnie
+Dr5nMU9f9mjrxOYrwYOuu04I/J7+IU4H0+NO59zn/e00/b+S0JRXV1mYFXXVGsQaXcVL+SDh
+olO8WCcFDh3aBu88o0KU2ra+Vs9VY1V9utc1PMeXXYhuaxvsP7qW9j1ljT1940Djh27/ADKy
+4qp5lL17QPr3mw77/wB7kpevvbLFGJhseOfvGslhXWJ4PB+5aVytRcnMfiL6UF3uXDjdvK6L
+wGrrc2bjq6wf8+YrdfD68be88HXp2lA1RLR1HHPWpl3OevJCg6+I51g95fkz0K68TP4jkL1c
+DKeDrz4iz64CVa9d4Bfg6x6w5PY7eIkpw1/wg8px/j6xqnABwerlGRBrXf8AM0gWF9v8P7GF
+zHNnXiYdP3Gk89f2csdbnATtXt/jPLEOSbIFy7gjlUyKCnr8znnTXpEtM7nfvj9zOz3gWZw6
+9v8AsDHXb/JW2BVE4MGfdnD7/icddZmmvf8AyUlJ8ffEyzVwpnodVA1vqoQ9dqlbgBb32Ose
+8X/n7XmBQrfWWd3aczjXN/f/AJP26ufo/f7gf5NccZ/GIZ/MrH3hry9feduu81jae/8AUOvx
+A466xNGNb68MSm+vX+Jjk3z1qWx1942Et29z4lv9D97Rouvd62wNvh+2cCvl9OnxEy8x2e39
+nN+s7wCz7/eAPNda5lNX5vjjX0gezv249ZR53x8kcctf9z2YMTl6/wAmK+IdPdlf5/PclBh1
+wynBz1xPj4P2MXhp3T24YOD7Rz69j98HtKN8sDNHXW45fLn+E7DMr9I9Pmc8xM+5KsXudfj8
+z8oXFW309Y36QOU6face8SjvTNlnHX+R1XGzrzBgiZv3/pMZ9cPHzC0X3/2LZGWXXWvMxt7P
+j7zl08w2roz/ACJXqf7Ky68TJcrL6yzwbMAc5P8AkqsuuIBXT0mKxKcfiYErG+8KgZGlPxO1
+5nPe6+8yw+j+esKenmUO3t8e0I57phnA/PoRzlwOn38y19r0dju+Z9nX5nYcs+kz8N+2pWF7
+69P9zAyzNidxyy+phmlBvj4mnxFgrHWvMcvw95kzxiWp+jg/D7xYJsp9pzZzBi61vrxLvuGn
+x/Yarr58/QVjetfuPd/PtpNDXT59Jy9PM3/v+TiXrj9QfX08ZqO4b9E2T+wb6Oemet13nq/v
+2j0f1UdT9/66JxHrv16y9c/CvvGp18eJ8zj1df8Acrbr3u/tiPk30K/c9Lp+Z//aAAgBAgMB
+PyH6X9DrcvrM31/fqH60V/54+lR+hOv8+nH/AK66x9H/AM8TE66z9Ous/TrrH/qpWOv7OuZ1
+z9Dmtehf8qV7vT1nkenrPJ9iPM+CWmTJ9/ct9v8Az1xMdV9OD0nXWZ11mX11c66xPyH/AIXi
+ddYnXP8AJ11idvTriL1iJ4vPtEOs9eJrr/Y/kfj6K6x9OJ11bOuqZ1zOD0jo9fX/AGddKi6f
+6Th/k/c6VOuf/HXE64mOqnB6HaWWvP59GLp/sWHT+IP267R29T8d064/s66z9euZfWf9nXM7
+eh3gMPPtr4h1r+RrePt/k5ePv947ep+Po66x9eusfTrrM7eh2lgeOuGAw9fmcDx55+Zel6+C
+O3qfj/w4+vXP8nb0PxHXX8hu1favwTq6qGVu9Hj78x29T8eUrronXWPr11iddYnXE7eh27Tr
+rMvrpnXP+zrn+R/I/H/wPHofj1+j11U66x9Hb1Px/wCnXWfp29D8SuuiddY+rt6n49H/AI46
+/v06619ButeePHLmV5PklenyT2fMV6fJHVebxmqvk9f/ABx1/Z11idda/wDkfTrj/wCnH/v3
+/wDXH/nj6Ef/ADx16zrx7QnXmOoa6r6P1fHXf6cdX7Tjnc//2gAIAQMDAT8h68n9+lY60/yE
+2lRxNvonXn6df9lr668/Xr9/qEvP0uG/o/Xn7/8Ag6+P/B9dzrolxn69fmdff6kY/S2Xnr0/
+8UYC63bQ+1mX7PlN+z5Tfs+U+J8o0tP2rmnHvj6svP0z1f05fX6XL+n4n8/R11mesr6L+nL6
+sqDcQJ4hOk8/Rf05/wDDt9WG3pBBiE19Gf8AxrP1I7fV/ML2M+24uXfxX6lPX9iV7zX0Z/8A
+Gs/Svo8+r+YmTivvF4+emC6nHzNfRn6a+nP/AI7+r+Y89cRRZ73NFe/4/wCytpNfRn/x5+jL
+66ZW/V/M5ipq4FiOFHq+f+TT0Zleumdcf2ddZnP/AI7+r+fqfTT0Z/8AHn/x39X8yv8Ax0nn
+/wAef/Hf1fy/+ek8/wDwkRe3FC7zxpns/DL8Pwy/X4Zfr8MGb0UmcXacP0e0+3Xic/8Anr7/
+AFP7H6s5/wDB18fWofW/q6vrX1PrfiG//H2/H+Svo6/2cfb+wmn6PjX1P+/P1569Ia6v3jO2
+9+3XeG+vvP2Tnr7Q67Tr8/Ttv3/Xj6fzr1TnjU//2gAMAwEDAhEDEQAAEIarxh/W2us0mgbT
+rhmrtQkiWiPrLKC1blSS3Zxcja0n8rqOQ5z7PhpKQGMVRhKm8MU1XkjAuN/7w6M4kk4UakF/
+doOzM9JhUnyR9lcbsSxbsd1Q5lV8Jj9saVoHOg9pDdDxSM0vSjyILQXMmR6ggD7Cy8kQcgao
+rgQ9NFWUk8FC7lYb2AtE8dzANdPmUc0tv78zkms9ApLf4uLKA78wGA4IoUVVBvJayjnkPZtp
+3SjcaBdAPAh2WoNAS6iGBdL3wY9DMTz7nn3HnrLXXvv/2gAIAQEDAT8QKK2iHI+ZQbF98iuY
+KRgoMWmcRwtneztHG3clu+FAPTXUPa9kM0CBKX6x2tG6ntcAEFqFXxfeVFBbVQ1ruIqxBdmA
+uxFqoDZAMZeEBVDoXQNw1hLVG/LUbubpPQEOcDbbqtuo7p7rR14igDWTRiuPOKwp4Q1k1ord
+8rohXAL0agGWQh5RAUqljgKwgrRdDdsxAKRyB4qDAQaz2SAlArmzMNYIqkCSwHXgyuIWk+Ia
+0FsX7Nn2mNLeAcZCQrMBio6pcrhfF7lsLSAy5Lxh9h5GBM7I5TINV5vvCN2gEYxXZOYGfaG2
+1i5zVMMPjPdiRNGmo6xm1PB/CM0KqCFLTHB6AjMa5OPEGohHQM0dkAoDh2TBjRvC4N8wShAu
+CqUPxQtQwDejzZcQZAvk7r7oC4kRrylcD3dqS35ifENe7FgxVifY/WBQaxTly2R1woTfaooj
+K1iVhzKYBFBp1ZEorJfo3xGRGB1vBChRU8WhUNVWy7l1hh80bhYtUsr7E0POz8RQGUqXulQ8
+LIp7TNiNXR57wuNCuqdGEbwHftAagbMcVtjAWYB1kcTR5RNGYhpEb5SyN9i3zsWKhyZdxswC
+70nkliwL93mWXKyMeYEPsN7BHSzzpmtwEBgHJvC+YDItci9tm3xLuwceu0bTa6UrxEZm057q
+OFVLaz4iz9VfMxVhynyEv7h6YzL01kfQEfdOBD2ekQcaMF5TFokLduHLBSMjgaDcY0W8U0Dh
+BaxWUFvEvtMeC24nhuqXkyVBkqQtOy2waAg7X4q5VQcinoTyFUgurFZv5Y7xMUfiLD3kX0ZY
+WtFxwx3iUpbHv2jyZbEelV+oY0MHByQz5YUPKgswCZHNUf1NimSo94cKOoBUPIEPSFqBXNv5
+ILa1OjxELW8lV4pajtWO1zfgBhYEXZmFMjgwQCB5be22YjQ495vS9Wi/MANiWsOQgxHzNDJx
+TqDHaJrywcTvw9YaN9w1wFSCd2lUVxAu40EEKqpz6YgjeNuj0hritAZgBamBQ8MFysryUT5t
+y1rtIQogMBtVge9BApb227OZDk6Qaecv+xKDdN+y7IFYhoOPD3SUI2Q4xQqB5s1dXrjiXQc/
+ncWLLg13u5grj3rTiKSlYPPaBaYbukF7IiyLys5+ITZohnn4YFF0LSvy16w44Imr0AiGQRTW
+3kFyM6afzTmFQEAb9FxKFJRPIYJQ4tRHnB/UKVjF78x+EyPJiLsF8N8s1ZHFmezfMKp2eXsi
+2IqyzHciOUWyrHBlZU6CbHlElYHBbgxBk7FjtUxa9Q1nEKCwuK0cesYUbyBo0XHBtxevEwW9
+OE8ylgjxjbTBGAXh0NVqFKl2oXHAsKgNuRDa44gUcRSq3tgKLtMiY8DNkZoteNsWG6buxdlQ
+wi2t21De7MGPvGGkOPDFx5JRpPMC7dtF9sQby3YrK4YQWv1VxUBamw4eLHmLKJTlrnzFDCVl
+oLaXc7jTXuhooOLNEx0JD7WczJXea+SF2FRAHFrxBoqM8a1BAHOrvxBRzo/kcKgd+QxFWnuv
+NujEutFG6VdeUtPlnR2hXltA+oScEhaC8DaER1ObXLXaULdHuOTMVRUa41FjsPVqY8oeL9ou
+m7adlgEpdWt1tYLYHd2Sm41L5L3TyREBe3mjMLXWlG1OmCDDRhF0wsZZNb9olB5x33/iWuy3
+FusowGYUL7rEaDWmrTkfeBEELd1+bDvMmnWMyFWlo0OILqgu8POoE7BVO0f6QxosEzawX0zX
+RVehAoLNQbEDtCzVq423NmLbdWenKKDhbMu+SKgGREltTAPKtRR1ywoQC4aTSoUg7HIab7wN
+LjAgsZ4EEA2MaXTZT2EFQpVZJPNqGZ2YLw0boYfhMKBxj5oCsBTNpdags5ct8WyP2izhc/2M
+gFMG32yiggMnEDRiobMmffxGlaqZSAm6K8Of2ygNgjnvxuLYdMHaKp3sxk1bAVI4vs7t4lNQ
+bMDuq3i9gmc+ijX5iGDaYpzp7Ji6Wm/EOAjBVLfMCoFBCzNXZkDbRkKt3UFaKYVfpEAVdtV6
+YxFEpFkpZQSFH0LhY4RTTh7z8I7nXTXF7QsfnnHdAIGWGvZi441y73UEnwvzs5glXLR3olZY
+VoVnogssol6O7cyoVlKY64iL2JwaVYCqqU0fIS4KhS6Muo1Oa7DEdgzc1xnn2Y5Lsilds5i9
+DBK0cmPyhVV2fPFRbAC7TPuJYKr3XxcLkRM3x6oy4ktsvEBW+9E+Jo22VKtNckrJ8L8YYJar
+qu+0lAls167feI9hV1wyX5xYzizcmpS7PLWyoWyou5l6yqtibO5XEMADkfacTkNigd4dorg7
+y1q8xHCFNDzFHKRxjUcHbSZe0SC1AKW41pCA2pfZqC94K1YQ7qTJGVNhu7e4wEotFgwLC8LH
+BogYUWmQ4veLmxXD64fZG4FmKsow5i9UaveHKJelHY64g0rjFrfliwKuvOLYAeTDnXpMuQx5
+UqFCFyyTv4RpW28fLFFfdyZzA58rzXOdQWBXzzqV1ZdR5cdy8yoTIjVc4mI4BQWvacIGxwCU
+4ssXKV5OKLHLnc5geVtywHbBVigRdtBbt+BK8LTTlV8EEgbYBa9YDFhssoMXmoIJtDV1uoiG
+1vLTVSxVrb43whFOVr9jmKpAozVnPpAEpfBbt4hbA2mgt86i6igWAZvniBsRFYso7Yp62wUV
+6Qa2auwygYKo3YX+4qwtjSZyygdl+5DaLti633qbFUW0/wBI5CqyGu91+4QG3YDBs74SsQ7t
+SZGAJELWDszG6QC4XZkXBqMNC4JjSf8AMPuiDVlPxBQB0b8wwVqm9Gg7I8OVMZ4hNAW8J4xE
+AqyFfajiNhVBte7IUV1V0Ld/Dvlwxk0PxhiyppF3F1ANFuAclyKrGGO6JBjdGBE1iSSVLstx
+xcOQs/kMAuUgOKfqRmUU63z2lXqUprMbDBhdLSKmq8qVwhnBhdL2QijyHSbipGChvbBvkFur
+doG4D49DEHfkBbLBRyYCzSwOWMCcNXA6fM6t4IWFLs9E5uXrRkbcpAUOWygMfwl/IrOT1/cW
+Cl00irAxDu+Xjh0uFFd1zyZkoWtGcPPHzKA1jZ7AVBQLRneKHeNg0VQUh8QsLTWQOWs/nHaw
+i3W9lfiLTVLeXiFWIVgnzlBAoUXFXgDK47KrijjMYAaGsmK76UOwLbA4RZBEWwgQCvK0ppNk
+KIlbxJXyJcWrOetHOEbVOd7PNKU370oUBYUFgKEcU1ncVvkVkLbEhVY70Xe/5gtoLoOHPC+E
+VmoilmO8XRFc1Rx8TYaAsVioBQuWcZVnHZDtgM8blBfyrz7ywDryK79/EaFdxFTXfcTFELvK
+mItRFWjD0dQ3RegX0h2cEA54svE1gN1497iHLUb72hCwRQACss0YeNIJQgLJ2Y0aCgcATSxs
+Gb8ox0kaTlOIWOI4Be4qVIqsW8YIvvlYVBd3vXODKmgLacekKmNJmv8AEKDsbDP8RYbKk290
+DaMeW637RLsLj9mBn2Nniu0UDkBC/OdzXFTlMc+ahOuBlYvzLeRBS3zdyMi78DRn2igQTaU5
+gClCgzBhcZwyV/xl2ZrdjS4/4jkAckoyKgbC22tBIoQBUbasuDLaoYoPK+SkBdXRs3GT2GuL
+R+qXryUuccJIrKvPL2goFYvfIkIoOcF+sAXRe6Lemoa8BVvHCFBtrGkb0gTY1nNWGCy6A0XZ
+rCU1AyUXGe/mXCA4Krx7xYiHl0IkVNqXIHaLwEFwjdZmnNL4GkXzMpSGxhINWwVejfYQlQWV
+Z8iwqYCFqrgphYL8IfHleKBCiUTinYeWTR4oaF30CNuEq0wvbUNOEkeAzKWFtL7HTjUUObWL
+xuWXtEHVgyWeNd0VGSlnI0wxEO6jncAZvIFF3RKSd9afMLGwr71jMyCl7aq4Fpd3yeaw4hNg
+L/YIO26zvMKVYFDV3xItaTwsCC2grZdZ2m3tEgDDSDjNwDgB7qIxq6OF9WIUE87VgVa8IqbE
+QytoidU1CG5HAwliAtcgJd8EWb4C9FGkFdhLFfYlIpcyGD7BkkneTeXOmJSZlhn8VBQYVtNP
+s6iw2wLlAwzVpR3jcoKQL559Ii7C1m759ZwUG2qxz/mXBCXmtb3BYOmgz8RlVLJ3WewZwVA4
+CLuaBuCqExtsV9mBzmQNFCHO6oxAYGWiortGwMjkWF+NQhUecr7PSOWo59BjAUiwYwAiqFS5
+d0YQ6JS6zsowA6QhHFyY6BrMq6sw4tTu7lSmALWuHZGLyp9iEGlqzYUDLFgWllNUI1jEhYHW
+VLVMCLWr1aH4lqitvPryhBMCrCbWuCCvgVgOGE28oxltqDZKX4IY0+N0dRQtrkVtQSqgbwwC
+WXvp4gVnW6zuULA9w1O2GYtJnGK2VjA3CtM4g0rDpIMrWTicFqqE4NAFtnDRK7USEtNJwqvl
+FaxVaLrLN44dLC7hxnl5AcXqpU55HbqBKppGwuPaJaEOFVx7ETsDjCdS5utBnJx7RtyENWuK
+quI7JNYXnPKu6EUyLtM8e0TlpOR6ShVl7wDLCkvzXXk7pXSHew8dkJXmW4ACetwF25YGFt7E
+MKzlcs1gQFkC0rfFevrAvISqcXiDGa5FSoHVRqI5UTaoENsBQv8AkwCJVEwQMbcpoX2lKABV
+U0cmZAOcuOef8RGhd1rzAa2UGQTDDsWMvdZF6iJHJU0WPduF1jx2zAqQe/gxRyUOKx7oNpTh
+gvv6I0u0cDs9cUysq6bWk7wmAp5owwFQLL4urv8A2BtcjfI1tJEWFCBRzAKF7aPGows8G3tT
+xLYqq0OzvcWKa1lxWQlRlZYULzUDtMUy05gaQtZMZL8pQIYJRrA3O65b9qxBWFMXk4rvHIHW
+oHzw0ZzUU5aC9vGWLa7ayZb4wQFstxjLiCZE7UuvdCBdleFvDG4N3HDWpg9t4n67VAiCxgHG
+biOEvuu9d0pERgDgrz90p4UNJ69o08LRfnyipJRavPKDKmm8PQZQvJWQvxOVMvK+8akzpGkW
+FyTY1isuV1kUogsIMpPgZWQLlQ2JhuDrBnIrOcZgacDnHMiGaq0T84UAlVopXZ3g0m6aQpfI
+xTSd7QnXFZqtXB32C6fPvFo1Yx7rzLaBMU7aouQsMwFHhcBVUo2vGMsAubX344loJdrHJlgR
+gtrWoVVpDuaKgyrBbfC+MS4okstDukPIyCnH4YVeErnYhD27asBypxqUyxYuFgIh2AQQNDw2
+LgbsYqGnIU14BcyUKSKDG8yZFDZhrGEqtqt6mV+sIVnBRvhE2jcpssu8veCtC+AjLitwSlMt
+isw0o+UqvKITueatp7SuANuFFuZUKiM24rfrAAsW5vM3FbyMrzz+oFXoEFDF32tvBFrgA43z
+A0Faug16sS74vOTDHvaqpi1CkhAxZaV3cP5jrFTh3YDGrxtZBKS1gBShybTx8k2jChzW03vq
+w6oavMW2VabC0EyK1GSqcMSwQMOGMjC61gDKkQBSHHFh3B1xMk7sMoWReXvxAQOO7zWO5HaN
+yrt4iZnQ2cVCVWu1K3qoAH1KZ4m+dt08VUbqXovJVecBaxzsu88sY2TDN5SMbast34vEShAu
+7MfaJtBQOKS3mLlCbWe0QJFHYqrutIRMs1MJZzk0vslpRTTWZs5thHYDEm5AHAhqBFmlkhN5
+LpQNt6FmjOWqTwhUQZxF2JmPu1USwRCNU6tCuTn0nLV0Vz6Ra4LVgNdXOWzV48zhmS/bAwBQ
+Y7DG9xKugm2ze4DVrTVrxnC4JB9RqIVFd3F2coqwTG3NXRKQ4AzxnNkaXW23BuKW1G2rzMZw
+XlwWntChKmgxuIoWqswYdXUIsAAsi93qCpY4XMw59Ig2p2yxQSEOiFta4lsYc0dqOIoks4pt
+ITIao4jSECjwVJISYULkNLAKyNoQDaUmby1lrxGIG6XbFcpQquwOm+RZ0QjWavtLLRxdN3yQ
+GKwLd9uIhQVsvUBRcWUnBqOQBA75lpQSKqrlWrMZBuG+C5o9/wBRozZ4svxDKihoqiAHCjeu
+b/5AMLmocWELkba8NGUMTUpQDyIyd7Li1K2s1ADRVJRYwlFlWsRlW+iNHio1ngSg54WRDk1a
+DNzGcGQkG94GxppkApqgW12MWCI3QY70QgqsCOnPeFKixh1x2StQMfLz7y3Dm9lc6gAooLvL
+d+UWrnjnuUlqF+RrmPbsQDb37krAGzOBvswwMSErfJAcNjZ20nug0dn7i1KSjga3KAZYTtwY
+RDBoxSVWDkRkFULTI0sSWmqRrzzEmQcN5e7DQuAur3W4qtK6RW9eZQBQL5OUjeP2CrHEmmRV
+/Xk3bBATrS6ZcZ7RKhzXlzkzE22QTPtC5YVrBzzcLTl8BBTn7jWeJbEeRAQ48w7w+4dkLAbM
+O/EQzR94o03nIeIb099ef4lmhrjk6MQDUKXxgqAA5k1hvDBRAPkLuBmNyMXaSYcj8u1Roo5M
+/EUOAVzxsgHeYH7Sm1dfTL3lC3a153FZUQLSSggKDdrLMQBGlW/ONR2BwA+6EoL+grw2gCyi
+hKE2lZg1IA0ZgO8X6xcsGy8ZzMAZBs9Kl4GEFNNmIBF6vS0sYwcuuGV4j2MJdX5OxLXNI5W3
+t3RbIipsV3YShui7yc7lSbaqvKVCxQsXGO0GRR0W6hGXcUy4YG1F5oNH/iaGnR7VmBVbAun0
+hcUNqC6pTsQRtAWlWEAOFCkgj7tzDTNmr4og2Busmi7zBbi8ZwdpiEurRDHMuu1xzpgGlq4W
+uYo6A0u8XUc3dRwQDgxStq4rrKVfLG+xst7SwQXvWyKG571gC2CzJXvm6mJSRQy3BRS0f4Ew
+BwV2cEcFdtGFIUVfwgYBB9CIQJzii+GDRuyL+P8AYNZzi/eVQqprPF3mWZU7H3uFABkQvbCI
+oqqRx2CGxeW/hmKIlDFGquQA2Cu+TMHK1rLBEbs4wD+ExWDjnO0M00t0rcKPC1uOlcO45MME
+bwF5BisxDArV064g2pFAaF4mUIYTv3ltWAEV2FwKoC3NzWSFSkq7B9xGZWHh3oqWU5KQJ7ov
+oFJy7MMiggqv1qWLLm44Fi3DGE47xeiFl3mWNNuXbGESXVFiHoEXABbNe7CWxNOXFMBIDW96
+x2RDDApxyZOYAE64Rw+yBGCvX0loXQEPJcAsIHfd7wXASz2bOIrbe6+MLcDUoOKR2ZS/xBwY
+AV5phAruw/JgFmqcV61zGTikw3pk1LbEs2CbYOZYJoyvSAqHeSrNK3MEzyqqhXaLmWFLB3f0
+QR2GAYeTKQstApneonClqADF0DzqaLNjl4sng0HN+RWYHYlF9iWKKujvBgF05DF2wWX3TJLG
+BVIXjkLm5ZJRZRbO8WgatDgOCMqwOA7vabAYwqu9QJmymD1uIVRaoPYjzq8t+wQWvCcOc8RB
+DhEz6SsAlMi/yK0l1v2eyAVZZRpHzkhCu/N+GNJK1oe+YvRcM+hiZAWK0mtRKpkpXxgUB3dC
+751FovR8UqkSi71PiKIyFs4Woqw2XRbpgrZSNDNuZCCxQ5ba1AMZdE5AYrgb5dPrAXWiWvtq
+FURxb+lBSwtyD5TKEVKFVRi7hTDRBsBr3gEy0ZPtEbhwoPSJZwDsVuJMbkUcl7RdC2fZcsF5
+f9hbAlLkvO5c8MOVsGMdrrDqC4Mo+SABq3D+Iq2gGjvZIyrKBn3JVJKML7MYL1Bl3KihRC37
+MrXkVtaz5RoABStOE1MWcnncTXVWwcGIXCltrFkIQAaBj5cxd9oPo3Gk6oi/AgDyrvoQBqMp
+eceY0JQrd64jbKoo8FEwpG1U4i7ZE4ROcxMYQWBhQglgoXIaEzL6AXyv8gbVtc84P9hsxebi
+Vmhye4mEUzSj7syqI4yPRGIjMih3KhpLBXoukUSaOBcDmJReq3ZXBLCsClfdmvktrKBXtLxd
+5XA8+zf3Jou9H3RflKXjdUQ6rwovhuH0Nn4ZXrupxb2a3rzG6zfw/UXp5nC9w3cKPWC/WtVX
+Cbbd+yW315n5vTqJ6ufzNDW2r8ox69zsMqc+2q9Z8+jq419j61DYZWfAjyuKuWmSteFcXD//
+2gAIAQIDAT8Qt5/KDB84fMVeXxHVX948exzGJnGYFyNekDGHc63Nn8l9/aX7nn9TUvF94fJ2
+lPnPrEumomPaVeXYgaJTXaDECCgNYr6Hz8T0+Jm+8e5X2n/Y19v3DWI69cfRkSz6VXrM37zH
+PncQOoPn73HNTn2gvjrES9a4xFYvq4kNsOsf5PWAWsk4Lir1FPn4hMly+kWMWOCOZP8Awk+b
+L3IXeMldrcQQYlekJTXv5lFZ6e89BBV4KmOHSZha6YHzf3gfO42TL4+0K7M1Vfeckw4/f8io
+HEcehzAaHLKNj6pHyPRDlXDrDG/8bBB6IDxFXKejC+YMLfMN6XTv/Yl5Y4XK3uvvBsr+8hds
+QuX6+0L1Asfn4llfvEs8RY4cQ5YqHTiBpeasY9kT01XNwsACFGmCNOYY5ufcQD2hfj8QvtLx
+r2meb94FxZDPdhutv4JUwWQ8oEaWtYIh1YVgixpW3/UX5uk5mdy/WL7SmoQMas9fEKV0FRkH
+O+dQYhYmKbgNhf8ARNANKeuH6O0lz5lnonv9/wDYZxf3iJBcbe5AXHcACAu6gKZ08QY2HgcI
+d1NHTMt+fvOJeIXxDfePWE8IFgQjTD4g3XML3n3qv1BjKagen2inEHUWIBbQ7M0oMsIBD2x9
+oJbfVw6zE5/MrHE43MwccRzA4ebh5xqL67wVfqsEfiXD7T3iqYAo2oApphAUj13cfqykO3OM
+2DsKjJoQ65uX5+85Hcvuim9Rm+0LmO6vi599fiawzjv7RNw3Bev+zMGZWPeG9xg8zOPSNnx+
+51mK1cWP00MrtMvM/wAy/wDhFty/edaj+pmt1qUtZlOYdbv6bhHvuXrncv19YXpjs+Y6gLtx
+xG6x9+08tx8MGF0/Hx9c9naHfOuIcv3HnWjUbNa4mreiOGbdXNOdupz7zl8jUO/5D8jf0Z//
+2gAIAQMDAT8QxWP7A83sgBIaqBFj5gtY5cVM3BfMBg7j2T5+gFdwzfdK3XvMenpH23aLp8x7
+9oNCe0Fn3gi53YuVP+zveY/VF/EVq+Wa/P8AsMtHzPXCFNY+5BrDPHaW35l3b3YZfvPENOIm
+ftN0e8W2NRqu/wBiLceNS0YbiKNn2lYthr3hzvuwND3l5q+/x3iz8xYPeDt6T0IgWznqLrDL
+Kg4Zbci7gQBcSi8A1wqGpTaFJdXcEVbzF9YrGpT01Ut417s9UOqc+7EvPylhPCPCpnfaZHtN
+BTD8xs5Ivf4TgvzMjf0PMX8pLXaYmTvUXyPqi5mqGNfQXL3zVTEJUXScwlHhdfQJJ7zCz6gk
+IfE/BKjYWZ9mW5H4ZksBQaL+aSs7QzwRcLvObJKweUcCVMg/DAe/2gZ/yW5cT49p7GFeJtGE
+q7qIbi5TnhA7VvNwIq9Pj6VkNT2fH+yu9SyGJ5gtfaVaZNTvByZGCMJp9kc0gwV44K5lTvqU
+xfiKi6+IW4ftAriFGZ6/2IgTWrzDMBHcZFwcvKLa4NI7g74hfYPt9BrnMA7SpefCBVbZjlgr
+x9YdZzmokPHxLIXzC441AyotsSoXeYMWH0Bede0Gz+S/8Q3MfqPjMumEHO5rMvvmE0fUKPXr
+iUxT2ue0uzMvQW1ruJcXG2e0cPaN5Vl9uMmqAKeCwLxv1iHl7SsJ+lRTnBAyzHrAKuFYfM/r
+FXrmO31qcbjT2iHmYlK3cvbmq+8dXWpa6xDXi5l7senn8wC0m02PeKYm0zx94cGYOKlnHG5W
+HfqiqMStzb3/AFMDVcuYocaiMftPBKz7RPtELuBwsHJi6mv5GuPaCrQGTvcU0XlxLLz7V3mD
+YuDbgrcSVvHMCv558R14/Ex36uPR3zPhDXkS0+rGz1g9XO4050xt7EGvbmOvEwGv7Hfu19C/
+/9k=</binary>
+</FictionBook>

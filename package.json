@@ -1,0 +1,35 @@
+{
+  "name": "analyse-text",
+  "version": "1.0.0",
+  "description": "Локальное приложение для анализа персонажей художественных произведений",
+  "main": "scripts/start.js",
+  "scripts": {
+    "start": "./scripts/start.sh",
+    "stop": "./scripts/stop.sh",
+    "switch": "./scripts/switch-ai-provider.sh",
+    "kill-ports": "./scripts/kill-ports.sh",
+    "init-nlp-models": "python3 scripts/init_models.py",
+    "dev": "npm run start",
+    "build": "cd frontend && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:md:fix": "markdownlint --fix **/*.md && prettier --write **/*.md"
+  },
+  "keywords": [
+    "character-analysis",
+    "literature",
+    "ai",
+    "nlp",
+    "acting"
+  ],
+  "author": "Analyse Text Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "markdownlint-cli": "^0.31.1",
+    "prettier": "^2.8.8"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.9.0"
+  }
+}
