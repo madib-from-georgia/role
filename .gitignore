@@ -188,11 +188,9 @@ storybook-static
 
 # Logs
 *.log
-
-# NLP Analysis Logs - игнорируем результаты, но сохраняем структуру
-backend/logs/*
-!backend/logs/
-!backend/logs/README.md
+logs/
+backend/logs/
+frontend/logs/
 
 # Temporary files
 tmp/

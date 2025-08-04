@@ -144,8 +144,8 @@ class PlayParser:
             character_names.add(char.name)
             character_names.update(char.aliases)
         
-        # Паттерн для поиска диалогов (с учетом отступов)
-        dialogue_pattern = r'^\s*([А-ЯЁ][А-ЯЁ\s]+):\s*(.+)$'
+        # Паттерн для поиска диалогов (с учетом отступов и действий в скобках или [[]])
+        dialogue_pattern = r'^\s*([А-ЯЁ][А-ЯЁа-яё\s]*(?:\([^)]+\)|\[\[[^\]]+\]\])?[А-ЯЁа-яё\s]*?):\s*(.+)$'
         
         lines = text.split('\n')
         position = 0
@@ -161,15 +161,19 @@ class PlayParser:
                 speaker_name = match.group(1).strip()
                 speech_text = match.group(2).strip()
                 
-                # Нормализуем имя говорящего
-                speaker_name = re.sub(r'\s+', ' ', speaker_name)
+                # Убираем действия в скобках и [[]] из имени говорящего для сопоставления с персонажами
+                speaker_name_clean = re.sub(r'\s*\([^)]+\)\s*', '', speaker_name)
+                speaker_name_clean = re.sub(r'\s*\[\[[^\]]+\]\]\s*', '', speaker_name_clean).strip()
                 
-                # Проверяем, есть ли такой персонаж в нашем списке
+                # Нормализуем имя говорящего
+                speaker_name_clean = re.sub(r'\s+', ' ', speaker_name_clean)
+                
+                # Проверяем, есть ли такой персонаж в нашем списке (используем очищенное имя)
                 character_found = None
                 for char in characters:
-                    if (char.name == speaker_name or 
-                        speaker_name in char.aliases or
-                        self._names_similar(char.name, speaker_name)):
+                    if (char.name == speaker_name_clean or 
+                        speaker_name_clean in char.aliases or
+                        self._names_similar(char.name, speaker_name_clean)):
                         character_found = char
                         break
                 
