@@ -1,5 +1,5 @@
 {
-  "name": "analyse-text",
+  "name": "role",
   "version": "1.0.0",
   "description": "Локальное приложение для анализа персонажей художественных произведений",
   "main": "scripts/start.js",
@@ -21,7 +21,7 @@
     "nlp",
     "acting"
   ],
-  "author": "Analyse Text Team",
+  "author": "Role Team",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2",
