@@ -10,6 +10,7 @@ from typing import Dict, Any
 from pathlib import Path
 
 from .base_parser import BaseParser
+from .content_models import StructuredContent
 
 logger = logging.getLogger(__name__)
 
@@ -171,6 +172,31 @@ class TxtParser(BaseParser):
                 'content': content,
                 'metadata': metadata
             }
+            
+        except Exception as e:
+            logger.error(f"Ошибка парсинга TXT файла {file_path}: {e}")
+            raise ValueError(f"Ошибка чтения TXT файла: {e}")
+    
+    def parse_to_structured_content(self, file_path: str) -> StructuredContent:
+        """
+        Парсинг TXT файла в структурированный формат.
+        """
+        try:
+            # Определяем кодировку
+            encoding = self.detect_encoding(file_path)
+            
+            # Читаем файл
+            with open(file_path, 'r', encoding=encoding) as f:
+                content = f.read()
+            
+            # Очищаем текст
+            content = self.clean_text(content)
+            
+            # Извлекаем метаданные
+            metadata = self.extract_metadata(file_path, content)
+            
+            # Создаем структурированный контент используя базовую реализацию
+            return self._create_structured_content_from_text(content, metadata, file_path)
             
         except Exception as e:
             logger.error(f"Ошибка парсинга TXT файла {file_path}: {e}")

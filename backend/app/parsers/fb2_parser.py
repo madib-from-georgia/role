@@ -206,6 +206,242 @@ class FB2Parser(BaseParser):
             logger.error(f"Ошибка парсинга FB2 файла {file_path}: {e}")
             raise ValueError(f"Ошибка чтения FB2 файла: {e}")
     
+    def parse_to_structured_content(self, file_path: str) -> 'StructuredContent':
+        """
+        Парсинг FB2 файла в структурированный формат с сохранением диалогов.
+        """
+        from .content_models import (
+            StructuredContent, ContentElement, DialogueElement, 
+            CharacterListElement, ContentType
+        )
+        
+        try:
+            # Парсим XML
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            
+            # Извлекаем метаданные
+            metadata = self.extract_metadata(root)
+            basic_metadata = self._extract_basic_metadata(file_path, "")
+            metadata.update(basic_metadata)
+            metadata['format'] = 'fb2'
+            
+            # Парсим структурированный контент
+            elements = []
+            raw_content_parts = []
+            
+            body = root.find('.//fb:body', self.namespaces)
+            if body is not None:
+                position = 0
+                
+                # Обходим все секции
+                for section in body.findall('.//fb:section', self.namespaces):
+                    elements_from_section, section_text = self._parse_section(section, position)
+                    elements.extend(elements_from_section)
+                    raw_content_parts.append(section_text)
+                    position += len(section_text) + 1
+            
+            # Собираем полный текст
+            raw_content = '\n'.join(raw_content_parts)
+            
+            # Обновляем метаданные базовыми данными для полного текста
+            basic_metadata = self._extract_basic_metadata(file_path, raw_content)
+            metadata.update(basic_metadata)
+            
+            return StructuredContent(
+                elements=elements,
+                raw_content=raw_content,
+                metadata=metadata,
+                source_file=file_path
+            )
+            
+        except ET.ParseError as e:
+            logger.error(f"Ошибка парсинга XML в FB2 файле {file_path}: {e}")
+            raise ValueError(f"Файл не является валидным FB2: {e}")
+        except Exception as e:
+            logger.error(f"Ошибка парсинга FB2 файла {file_path}: {e}")
+            raise ValueError(f"Ошибка чтения FB2 файла: {e}")
+    
+    def _parse_section(self, section, start_position: int):
+        """Парсинг секции FB2 с выделением диалогов и других элементов"""
+        from .content_models import (
+            ContentElement, DialogueElement, CharacterListElement, ContentType
+        )
+        
+        elements = []
+        content_parts = []
+        position = start_position
+        
+        # Обрабатываем заголовок секции
+        title = section.find('.//fb:title', self.namespaces)
+        if title is not None:
+            title_text = self.extract_text_from_element(title).strip()
+            if title_text:
+                # Проверяем, не список ли это персонажей
+                if re.search(r'(?i)(действующие\s+лица|персонажи|лица)', title_text):
+                    # Это список персонажей - парсим как CharacterListElement
+                    char_element, char_text = self._parse_character_list_section(section, position)
+                    if char_element:
+                        elements.append(char_element)
+                        content_parts.append(char_text)
+                        position += len(char_text) + 1
+                        return elements, '\n'.join(content_parts)
+                else:
+                    # Обычный заголовок
+                    element = ContentElement(
+                        type=ContentType.CHAPTER_TITLE,
+                        content=title_text,
+                        position=position,
+                        length=len(title_text)
+                    )
+                    elements.append(element)
+                    content_parts.append(title_text)
+                    position += len(title_text) + 1
+        
+        # Обрабатываем параграфы
+        for p in section.findall('.//fb:p', self.namespaces):
+            para_text = self.extract_text_from_element(p).strip()
+            if not para_text:
+                continue
+            
+            # Пытаемся определить, это диалог или нет
+            dialogue_info = self._try_parse_dialogue(para_text)
+            
+            if dialogue_info:
+                # Это диалог
+                element = DialogueElement(
+                    content=dialogue_info['text'],
+                    position=position,
+                    length=len(para_text),
+                    speaker=dialogue_info['speaker']
+                )
+            else:
+                # Проверяем на сценические ремарки
+                if self._is_stage_direction(para_text):
+                    element = ContentElement(
+                        type=ContentType.STAGE_DIRECTION,
+                        content=para_text,
+                        position=position,
+                        length=len(para_text)
+                    )
+                else:
+                    # Обычный текст
+                    element = ContentElement(
+                        type=ContentType.NARRATIVE,
+                        content=para_text,
+                        position=position,
+                        length=len(para_text)
+                    )
+            
+            elements.append(element)
+            content_parts.append(para_text)
+            position += len(para_text) + 1
+        
+        return elements, '\n'.join(content_parts)
+    
+    def _parse_character_list_section(self, section, position: int):
+        """Парсинг секции со списком персонажей"""
+        from .content_models import CharacterListElement
+        
+        characters = []
+        content_parts = []
+        
+        # Извлекаем заголовок
+        title = section.find('.//fb:title', self.namespaces)
+        title_text = ""
+        if title is not None:
+            title_text = self.extract_text_from_element(title).strip()
+            content_parts.append(title_text)
+        
+        # Извлекаем персонажей из параграфов
+        for p in section.findall('.//fb:p', self.namespaces):
+            para_text = self.extract_text_from_element(p).strip()
+            if not para_text:
+                continue
+            
+            content_parts.append(para_text)
+            
+            # Пытаемся распарсить персонажа
+            char_info = self._parse_character_from_text(para_text)
+            if char_info:
+                characters.append(char_info)
+        
+        full_text = '\n'.join(content_parts)
+        
+        if characters:
+            element = CharacterListElement(
+                content=title_text,
+                position=position,
+                length=len(full_text),
+                characters=characters
+            )
+            return element, full_text
+        
+        return None, full_text
+    
+    def _try_parse_dialogue(self, text: str) -> dict:
+        """Попытка распарсить диалог из текста"""
+        # Паттерны для FB2 диалогов
+        patterns = [
+            # "ИМЯ: текст" или "ИМЯ. текст"
+            r'^([А-ЯЁ][А-ЯЁа-яё\s]+?)[\.:]\s*(.+)$',
+            # "ИМЯ (действие). Текст" - в FB2 часто так форматируется
+            r'^([А-ЯЁ][А-ЯЁа-яё\s]+?)\s*\([^)]+\)\.\s*(.+)$',
+            # "— Текст. — говорит ИМЯ"
+            r'^—\s*(.+?)\.\s*—\s*([а-яё]+(?:\s+[А-ЯЁ][а-яё]+)*)',
+        ]
+        
+        for pattern in patterns:
+            match = re.match(pattern, text.strip())
+            if match:
+                if pattern.startswith('^—'):
+                    # Обратный порядок для цитат
+                    return {
+                        'speaker': match.group(2).strip(),
+                        'text': match.group(1).strip()
+                    }
+                else:
+                    return {
+                        'speaker': match.group(1).strip(),
+                        'text': match.group(2).strip()
+                    }
+        
+        return None
+    
+    def _is_stage_direction(self, text: str) -> bool:
+        """Проверка, является ли текст сценической ремаркой"""
+        # В FB2 ремарки часто выделяются курсивом или в скобках
+        return (
+            (text.startswith('(') and text.endswith(')')) or
+            (text.startswith('[') and text.endswith(']')) or
+            re.search(r'(?i)(входит|выходит|садится|встает|пауза)', text)
+        )
+    
+    def _parse_character_from_text(self, text: str) -> dict:
+        """Парсинг персонажа из строки текста"""
+        # Убираем HTML теги если есть
+        clean_text = re.sub(r'<[^>]+>', '', text)
+        
+        # Паттерны для персонажей в FB2
+        patterns = [
+            r'^([А-ЯЁа-яё][А-ЯЁа-яё\s]+(?:\([^)]+\))?),\s*(.+)$',
+            r'^([А-ЯЁа-яё][А-ЯЁа-яё\s]+?)\s*[—–-]\s*(.+)$',
+            r'^([А-ЯЁа-яё][А-ЯЁа-яё\s]+?)\.?\s*$'
+        ]
+        
+        for pattern in patterns:
+            match = re.match(pattern, clean_text.strip())
+            if match:
+                name = match.group(1).strip()
+                description = match.group(2).strip() if len(match.groups()) > 1 and match.group(2) else ""
+                
+                return {
+                    'name': name,
+                    'description': description
+                }
+        
+        return None
+    
     def validate_file(self, file_path: str) -> bool:
         """Валидация FB2 файла"""
         try:

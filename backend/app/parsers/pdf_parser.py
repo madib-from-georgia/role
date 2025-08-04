@@ -9,6 +9,7 @@ from pathlib import Path
 from pypdf import PdfReader
 
 from .base_parser import BaseParser
+from .content_models import StructuredContent
 
 logger = logging.getLogger(__name__)
 
@@ -173,6 +174,23 @@ class PDFParser(BaseParser):
                 'content': content,
                 'metadata': metadata
             }
+            
+        except Exception as e:
+            logger.error(f"Ошибка парсинга PDF файла {file_path}: {e}")
+            raise ValueError(f"Ошибка чтения PDF файла: {e}")
+    
+    def parse_to_structured_content(self, file_path: str) -> StructuredContent:
+        """
+        Парсинг PDF файла в структурированный формат.
+        """
+        try:
+            # Используем стандартный парсинг
+            result = self.parse_file(file_path)
+            content = result['content']
+            metadata = result['metadata']
+            
+            # Создаем структурированный контент используя базовую реализацию
+            return self._create_structured_content_from_text(content, metadata, file_path)
             
         except Exception as e:
             logger.error(f"Ошибка парсинга PDF файла {file_path}: {e}")

@@ -17,6 +17,7 @@ from .nlp.models import NLPResult, CharacterData, SpeechData, ExtractionStats
 from ..database.crud import character as character_crud, text as text_crud
 from ..database.models.character import Character
 from ..schemas.character import CharacterCreate, CharacterUpdate
+from ..parsers.content_models import StructuredContent, ContentType, DialogueElement, CharacterListElement
 
 
 class NLPProcessor:
@@ -112,6 +113,173 @@ class NLPProcessor:
                       f"Найдено {len(characters)} персонажей")
         
         return result
+    
+    async def process_structured_content(self, structured_content: StructuredContent, text_id: int, db: Session) -> NLPResult:
+        """
+        Обработка структурированного контента для извлечения персонажей и речи.
+        
+        Args:
+            structured_content: Структурированный контент
+            text_id: ID текста для связывания результатов
+            db: Сессия базы данных
+            
+        Returns:
+            Результат NLP анализа
+        """
+        start_time = time.time()
+        
+        logger.info(f"Начинаю обработку структурированного контента для текста ID {text_id}")
+        
+        # Извлекаем персонажей из структурированного контента
+        characters = self._extract_characters_from_structured_content(structured_content)
+        
+        # Извлекаем речевые атрибуции
+        speech_attributions = self._extract_speech_from_structured_content(structured_content, characters)
+        
+        # Создаем статистику
+        stats = ExtractionStats(
+            method_used="structured_content_parser",
+            is_play_format=len(structured_content.get_dialogues()) > 0,
+            has_character_section=len(structured_content.get_character_lists()) > 0,
+            total_characters=len(characters),
+            total_speech_attributions=len(speech_attributions),
+            extraction_time=time.time() - start_time,
+            text_length=len(structured_content.raw_content),
+            processing_errors=[]
+        )
+        
+        # Сохраняем персонажей в БД
+        saved_characters = await self._save_characters_to_db(
+            text_id, characters, speech_attributions, db
+        )
+        
+        # Создаем результат
+        processing_time = time.time() - start_time
+        stats.extraction_time = processing_time
+        
+        result = NLPResult(
+            text_id=text_id,
+            characters=characters,
+            speech_attributions=speech_attributions,
+            extraction_stats=stats
+        )
+        
+        # Сохраняем результаты в JSON
+        try:
+            text_obj = text_crud.get(db, id=text_id)
+            if text_obj:
+                await self._save_nlp_results_to_json(text_obj, result)
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении результатов в JSON: {e}")
+        
+        logger.success(f"Обработка структурированного контента завершена за {processing_time:.2f}с. "
+                      f"Найдено {len(characters)} персонажей, {len(speech_attributions)} реплик")
+        
+        return result
+    
+    def _extract_characters_from_structured_content(self, content: StructuredContent) -> List[CharacterData]:
+        """Извлечение персонажей из структурированного контента"""
+        characters = []
+        
+        # Сначала извлекаем персонажей из списков персонажей
+        for char_list in content.get_character_lists():
+            if isinstance(char_list, CharacterListElement):
+                for char_info in char_list.characters:
+                    character = CharacterData(
+                        name=char_info['name'],
+                        aliases=[],
+                        description=char_info.get('description', ''),
+                        mentions_count=0,  # Будет пересчитан позже
+                        first_mention_position=char_list.position,
+                        importance_score=1.0,  # Персонажи из списка считаются важными
+                        source="character_list"
+                    )
+                    characters.append(character)
+        
+        # Затем извлекаем персонажей из диалогов
+        dialogue_speakers = set()
+        for dialogue in content.get_dialogues():
+            if isinstance(dialogue, DialogueElement) and dialogue.speaker_normalized:
+                speaker = dialogue.speaker_normalized
+                if speaker not in dialogue_speakers and not any(c.name == speaker for c in characters):
+                    character = CharacterData(
+                        name=speaker,
+                        aliases=[],
+                        description=None,
+                        mentions_count=0,  # Будет пересчитан позже
+                        first_mention_position=dialogue.position,
+                        importance_score=0.8,  # Говорящие персонажи важны, но меньше чем из списка
+                        source="dialogue_extraction"
+                    )
+                    characters.append(character)
+                    dialogue_speakers.add(speaker)
+        
+        # Подсчитываем метрики для всех персонажей
+        self._calculate_character_metrics_from_content(characters, content)
+        
+        logger.info(f"Извлечено {len(characters)} персонажей из структурированного контента")
+        return characters
+    
+    def _extract_speech_from_structured_content(self, content: StructuredContent, characters: List[CharacterData]) -> List[SpeechData]:
+        """Извлечение речевых атрибуций из структурированного контента"""
+        speech_attributions = []
+        
+        # Создаем мапу персонажей для быстрого поиска
+        character_map = {char.name: char for char in characters}
+        
+        # Извлекаем речь из диалогов
+        for dialogue in content.get_dialogues():
+            if isinstance(dialogue, DialogueElement) and dialogue.speaker_normalized:
+                # Ищем персонажа
+                character = character_map.get(dialogue.speaker_normalized)
+                if character:
+                    from .nlp.models import SpeechType
+                    speech_data = SpeechData(
+                        character_name=character.name,
+                        text=dialogue.content,
+                        position=dialogue.position,
+                        speech_type=SpeechType.DIALOGUE,
+                        confidence=dialogue.confidence,
+                        context=None
+                    )
+                    speech_attributions.append(speech_data)
+        
+        logger.info(f"Найдено {len(speech_attributions)} речевых атрибуций")
+        return speech_attributions
+    
+    def _calculate_character_metrics_from_content(self, characters: List[CharacterData], content: StructuredContent) -> None:
+        """Подсчет метрик персонажей на основе структурированного контента"""
+        text = content.raw_content.lower()
+        text_length = len(content.raw_content)
+        
+        for character in characters:
+            name_lower = character.name.lower()
+            
+            # Подсчитываем упоминания в тексте
+            mentions = len([elem for elem in content.elements 
+                           if name_lower in elem.content.lower()])
+            
+            # Подсчитываем диалоги персонажа
+            dialogue_count = len([d for d in content.get_dialogues() 
+                                if isinstance(d, DialogueElement) and 
+                                d.speaker_normalized == character.name])
+            
+            character.mentions_count = mentions
+            
+            # Рассчитываем важность
+            if dialogue_count > 0:
+                # Персонаж говорит - высокая важность
+                base_score = 0.8 + min(dialogue_count / 10.0, 0.2)
+            elif mentions > 0:
+                # Персонаж упоминается - средняя важность
+                base_score = min(mentions / 20.0, 0.6)
+            else:
+                base_score = 0.1
+            
+            # Бонус за источник
+            source_bonus = 0.1 if character.source == "character_list" else 0.0
+            
+            character.importance_score = min(base_score + source_bonus, 1.0)
     
     async def _save_characters_to_db(
         self, 

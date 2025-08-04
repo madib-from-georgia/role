@@ -10,6 +10,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from .base_parser import BaseParser
+from .content_models import StructuredContent
 
 logger = logging.getLogger(__name__)
 
@@ -215,6 +216,23 @@ class EPUBParser(BaseParser):
         except zipfile.BadZipFile:
             logger.error(f"Файл {file_path} не является валидным ZIP архивом")
             raise ValueError("Файл не является валидным EPUB (не ZIP архив)")
+        except Exception as e:
+            logger.error(f"Ошибка парсинга EPUB файла {file_path}: {e}")
+            raise ValueError(f"Ошибка чтения EPUB файла: {e}")
+    
+    def parse_to_structured_content(self, file_path: str) -> StructuredContent:
+        """
+        Парсинг EPUB файла в структурированный формат.
+        """
+        try:
+            # Используем стандартный парсинг
+            result = self.parse_file(file_path)
+            content = result['content']
+            metadata = result['metadata']
+            
+            # Создаем структурированный контент используя базовую реализацию
+            return self._create_structured_content_from_text(content, metadata, file_path)
+            
         except Exception as e:
             logger.error(f"Ошибка парсинга EPUB файла {file_path}: {e}")
             raise ValueError(f"Ошибка чтения EPUB файла: {e}")
