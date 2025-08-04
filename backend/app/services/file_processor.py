@@ -34,12 +34,12 @@ class FileProcessor:
             'epub': EPUBParser()
         }
         
-        # Функции парсинга
+        # Функции парсинга (используем структурированные методы с нормализацией)
         self.parse_functions = {
-            'txt': parse_txt_file,
-            'pdf': parse_pdf_file,
-            'fb2': parse_fb2_file,
-            'epub': parse_epub_file
+            'txt': self._parse_txt_to_structured,
+            'pdf': self._parse_pdf_to_structured,
+            'fb2': self._parse_fb2_to_structured,
+            'epub': self._parse_epub_to_structured
         }
         
         # Функции валидации
@@ -94,6 +94,58 @@ class FileProcessor:
                 os.unlink(temp_file_path)
             except Exception as e:
                 logger.warning(f"Не удалось удалить временный файл {temp_file_path}: {e}")
+    
+    def _parse_txt_to_structured(self, file_path: str) -> Dict[str, Any]:
+        """Парсинг TXT файла с нормализацией контента"""
+        try:
+            structured_content = self.parsers['txt'].parse_to_structured_content(file_path)
+            return {
+                'content': structured_content.raw_content,  # Уже нормализованный контент
+                'metadata': structured_content.metadata
+            }
+        except Exception as e:
+            logger.warning(f"Ошибка структурированного парсинга TXT, используем fallback: {e}")
+            # Fallback на старый метод
+            return parse_txt_file(file_path)
+    
+    def _parse_pdf_to_structured(self, file_path: str) -> Dict[str, Any]:
+        """Парсинг PDF файла с нормализацией контента"""
+        try:
+            structured_content = self.parsers['pdf'].parse_to_structured_content(file_path)
+            return {
+                'content': structured_content.raw_content,  # Уже нормализованный контент
+                'metadata': structured_content.metadata
+            }
+        except Exception as e:
+            logger.warning(f"Ошибка структурированного парсинга PDF, используем fallback: {e}")
+            # Fallback на старый метод
+            return parse_pdf_file(file_path)
+    
+    def _parse_fb2_to_structured(self, file_path: str) -> Dict[str, Any]:
+        """Парсинг FB2 файла с нормализацией контента"""
+        try:
+            structured_content = self.parsers['fb2'].parse_to_structured_content(file_path)
+            return {
+                'content': structured_content.raw_content,  # Уже нормализованный контент
+                'metadata': structured_content.metadata
+            }
+        except Exception as e:
+            logger.warning(f"Ошибка структурированного парсинга FB2, используем fallback: {e}")
+            # Fallback на старый метод
+            return parse_fb2_file(file_path)
+    
+    def _parse_epub_to_structured(self, file_path: str) -> Dict[str, Any]:
+        """Парсинг EPUB файла с нормализацией контента"""
+        try:
+            structured_content = self.parsers['epub'].parse_to_structured_content(file_path)
+            return {
+                'content': structured_content.raw_content,  # Уже нормализованный контент
+                'metadata': structured_content.metadata
+            }
+        except Exception as e:
+            logger.warning(f"Ошибка структурированного парсинга EPUB, используем fallback: {e}")
+            # Fallback на старый метод
+            return parse_epub_file(file_path)
     
     def _validate_file(self, file: UploadFile) -> None:
         """Валидация загружаемого файла."""
