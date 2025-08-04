@@ -13,6 +13,7 @@ from app.database.models.user import User
 from app.schemas.project import ProjectCreate, ProjectUpdate, Project
 from app.schemas.text import TextCreate
 from app.services.file_processor import file_processor
+from app.services.nlp_processor import get_nlp_processor
 
 
 router = APIRouter(prefix="/api/projects", tags=["projects"])
@@ -306,6 +307,26 @@ async def upload_text_file(
             text_crud.update(db, db_obj=created_text, obj_in=update_data)
         
         print(f"✅ File {file.filename} processed successfully, text_id: {created_text.id}")
+        
+        # Запускаем автоматическую NLP обработку для поиска персонажей
+        try:
+            print(f"🧠 Starting NLP processing for text_id: {created_text.id}")
+            nlp_processor = get_nlp_processor()
+            nlp_result = await nlp_processor.process_text(
+                text_id=created_text.id,
+                db=db,
+                force_reprocess=False
+            )
+            
+            # Отмечаем текст как обработанный
+            text_crud.mark_as_processed(db, text_id=created_text.id)
+            
+            print(f"🎭 Found {len(nlp_result.characters)} characters in {file.filename}")
+            
+        except Exception as nlp_error:
+            # Логируем ошибку NLP, но не прерываем загрузку файла
+            print(f"⚠️ NLP processing failed for {file.filename}: {str(nlp_error)}")
+            traceback.print_exc()
         
         return {
             "success": True,

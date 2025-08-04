@@ -51,7 +51,7 @@ class NLPProcessor:
             logger.error(f"Текст с ID {text_id} не найден")
             raise ValueError(f"Текст с ID {text_id} не найден")
         
-        logger.info(f"Найден текст: {text_obj.title} (длина: {len(text_obj.content or '')} символов)")
+        logger.info(f"Найден текст: {text_obj.filename} (длина: {len(text_obj.content or '')} символов)")
         
         # Проверяем, есть ли уже обработанные персонажи (если не принудительная переобработка)
         if not force_reprocess:
