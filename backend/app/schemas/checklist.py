@@ -1,59 +1,200 @@
 """
-Pydantic схемы для чеклистов.
+Pydantic схемы для чеклистов
 """
 
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
+from enum import Enum
 
 
-class ChecklistResponseBase(BaseModel):
-    """Базовая схема ответа чеклиста."""
-    checklist_type: str = Field(..., min_length=1, max_length=50)
-    question_id: str = Field(..., min_length=1, max_length=100)
-    response: Optional[str] = Field(None, max_length=5000)
-    confidence_level: int = Field(default=3, ge=1, le=5)
+class SourceType(str, Enum):
+    """Источник ответа на вопрос"""
+    FOUND_IN_TEXT = "found_in_text"
+    LOGICALLY_DERIVED = "logically_derived"
+    IMAGINED = "imagined"
 
 
-class ChecklistResponseCreate(ChecklistResponseBase):
-    """Схема для создания ответа чеклиста."""
-    character_id: int
+# Базовые схемы для вопросов
+class ChecklistQuestionBase(BaseModel):
+    text: str = Field(..., description="Текст вопроса")
+    hint: Optional[str] = Field(None, description="Подсказка к вопросу")
+    order_index: int = Field(0, description="Порядок отображения")
 
 
-class ChecklistResponseUpdate(BaseModel):
-    """Схема для обновления ответа чеклиста."""
-    response: Optional[str] = Field(None, max_length=5000)
-    confidence_level: Optional[int] = Field(None, ge=1, le=5)
-
-
-class ChecklistResponseInDBBase(ChecklistResponseBase):
-    """Базовая схема ответа чеклиста в БД."""
+class ChecklistQuestion(ChecklistQuestionBase):
     id: int
-    character_id: int
+    question_group_id: int
     created_at: datetime
-    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
 
-    model_config = {"from_attributes": True}
+
+# Базовые схемы для групп вопросов
+class ChecklistQuestionGroupBase(BaseModel):
+    title: str = Field(..., description="Название группы вопросов")
+    order_index: int = Field(0, description="Порядок отображения")
 
 
-class ChecklistResponse(ChecklistResponseInDBBase):
-    """Схема ответа чеклиста для API."""
+class ChecklistQuestionGroup(ChecklistQuestionGroupBase):
+    id: int
+    subsection_id: int
+    questions: List[ChecklistQuestion] = []
+    
+    class Config:
+        from_attributes = True
+
+
+# Базовые схемы для подсекций
+class ChecklistSubsectionBase(BaseModel):
+    title: str = Field(..., description="Название подсекции")
+    number: Optional[str] = Field(None, description="Номер подсекции")
+    order_index: int = Field(0, description="Порядок отображения")
+
+
+class ChecklistSubsection(ChecklistSubsectionBase):
+    id: int
+    section_id: int
+    question_groups: List[ChecklistQuestionGroup] = []
+    
+    class Config:
+        from_attributes = True
+
+
+# Базовые схемы для секций
+class ChecklistSectionBase(BaseModel):
+    title: str = Field(..., description="Название секции")
+    number: Optional[str] = Field(None, description="Номер секции")
+    icon: Optional[str] = Field(None, description="Иконка секции")
+    order_index: int = Field(0, description="Порядок отображения")
+
+
+class ChecklistSection(ChecklistSectionBase):
+    id: int
+    checklist_id: int
+    subsections: List[ChecklistSubsection] = []
+    
+    class Config:
+        from_attributes = True
+
+
+# Базовые схемы для чеклистов
+class ChecklistBase(BaseModel):
+    title: str = Field(..., description="Название чеклиста")
+    description: Optional[str] = Field(None, description="Описание чеклиста")
+    slug: str = Field(..., description="URL slug")
+    icon: Optional[str] = Field(None, description="Иконка чеклиста")
+    order_index: int = Field(0, description="Порядок отображения")
+    is_active: bool = Field(True, description="Активен ли чеклист")
+
+
+class ChecklistCreate(ChecklistBase):
     pass
 
 
-class ChecklistModule(BaseModel):
-    """Схема модуля чеклиста."""
-    id: str = Field(..., min_length=1, max_length=50)
-    name: str = Field(..., min_length=1, max_length=255)
-    description: str = Field(..., min_length=1, max_length=1000)
-    questions: list[str] = []
+class ChecklistUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    icon: Optional[str] = None
+    order_index: Optional[int] = None
+    is_active: Optional[bool] = None
 
 
-class ChecklistQuestion(BaseModel):
-    """Схема вопроса чеклиста."""
-    id: str = Field(..., min_length=1, max_length=100)
-    text: str = Field(..., min_length=1, max_length=1000)
-    type: str = Field(default="text")  # text, textarea, select, radio
-    options: Optional[list[str]] = None
-    required: bool = True
-    help_text: Optional[str] = None
+class Checklist(ChecklistBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    sections: List[ChecklistSection] = []
+    
+    class Config:
+        from_attributes = True
+
+
+# Схемы для ответов на вопросы
+class ChecklistResponseBase(BaseModel):
+    answer: Optional[str] = Field(None, description="Текст ответа")
+    source_type: Optional[SourceType] = Field(None, description="Источник ответа")
+    comment: Optional[str] = Field(None, description="Комментарий к ответу")
+
+
+class ChecklistResponseCreate(ChecklistResponseBase):
+    question_id: int = Field(..., description="ID вопроса")
+    character_id: int = Field(..., description="ID персонажа")
+
+
+class ChecklistResponseUpdate(ChecklistResponseBase):
+    change_reason: Optional[str] = Field(None, description="Причина изменения")
+
+
+class ChecklistResponse(ChecklistResponseBase):
+    id: int
+    question_id: int
+    character_id: int
+    is_current: bool
+    version: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+# Схемы для истории ответов
+class ChecklistResponseHistory(BaseModel):
+    id: int
+    response_id: int
+    previous_answer: Optional[str]
+    previous_source_type: Optional[SourceType]
+    previous_comment: Optional[str]
+    previous_version: int
+    change_reason: Optional[str]
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+# Полная схема для отображения чеклиста с ответами персонажа
+class ChecklistQuestionWithResponse(ChecklistQuestion):
+    current_response: Optional[ChecklistResponse] = None
+    response_history: List[ChecklistResponseHistory] = []
+
+
+class ChecklistQuestionGroupWithResponses(ChecklistQuestionGroup):
+    questions: List[ChecklistQuestionWithResponse] = []
+
+
+class ChecklistSubsectionWithResponses(ChecklistSubsection):
+    question_groups: List[ChecklistQuestionGroupWithResponses] = []
+
+
+class ChecklistSectionWithResponses(ChecklistSection):
+    subsections: List[ChecklistSubsectionWithResponses] = []
+
+
+class ChecklistWithResponses(Checklist):
+    sections: List[ChecklistSectionWithResponses] = []
+    completion_stats: Optional[dict] = Field(None, description="Статистика заполнения")
+
+
+# Схемы для статистики
+class ChecklistStats(BaseModel):
+    total_questions: int = Field(..., description="Общее количество вопросов")
+    answered_questions: int = Field(..., description="Количество отвеченных вопросов")
+    completion_percentage: float = Field(..., description="Процент заполнения")
+    answers_by_source: dict = Field(..., description="Распределение ответов по источникам")
+    last_updated: Optional[datetime] = Field(None, description="Последнее обновление")
+
+
+# Схема для массового обновления ответов
+class BulkResponseUpdate(BaseModel):
+    responses: List[ChecklistResponseUpdate] = Field(..., description="Список обновлений ответов")
+    character_id: int = Field(..., description="ID персонажа")
+
+
+# Схема для восстановления версии ответа
+class RestoreResponseVersion(BaseModel):
+    response_id: int = Field(..., description="ID ответа")
+    history_id: int = Field(..., description="ID версии для восстановления")
+    restore_reason: Optional[str] = Field(None, description="Причина восстановления")

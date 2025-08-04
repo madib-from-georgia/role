@@ -9,6 +9,7 @@ import ProjectList from './pages/ProjectList'
 import CreateProject from './pages/CreateProject'
 import ProjectDetail from './pages/ProjectDetail'
 import Profile from './pages/Profile'
+import CharacterChecklists from './pages/CharacterChecklists'
 
 // Создаем экземпляр React Query клиента
 const queryClient = new QueryClient({
@@ -57,6 +58,14 @@ function App() {
                 <Route 
                   path="/profile" 
                   element={<Profile />}
+                />
+                <Route 
+                  path="/characters/:characterId/checklists" 
+                  element={
+                    <ProtectedRoute>
+                      <CharacterChecklists />
+                    </ProtectedRoute>
+                  } 
                 />
               </Routes>
             </main>

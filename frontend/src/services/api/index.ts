@@ -125,3 +125,34 @@ export const charactersApi = {
   analyze: (projectId: string, characterId: string) => 
     api.post(`/api/projects/${projectId}/characters/${characterId}/analyze`),
 }
+
+export const checklistApi = {
+  getAll: () => api.get('/api/checklists/'),
+  getChecklistForCharacter: (checklistSlug: string, characterId: number) => 
+    api.get(`/api/checklists/${checklistSlug}/character/${characterId}`),
+  createOrUpdateResponse: (data: {
+    question_id: number;
+    character_id: number;
+    answer?: string;
+    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    comment?: string;
+  }) => api.post('/api/checklists/responses', data),
+  updateResponse: (responseId: number, data: {
+    answer?: string;
+    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    comment?: string;
+    change_reason?: string;
+  }) => api.put(`/api/checklists/responses/${responseId}`, data),
+  deleteResponse: (responseId: number, deleteReason?: string) => 
+    api.delete(`/api/checklists/responses/${responseId}`, {
+      params: deleteReason ? { delete_reason: deleteReason } : undefined
+    }),
+  getResponseHistory: (responseId: number) => 
+    api.get(`/api/checklists/responses/${responseId}/history`),
+  restoreResponseVersion: (responseId: number, data: {
+    history_id: number;
+    restore_reason?: string;
+  }) => api.post(`/api/checklists/responses/${responseId}/restore`, data),
+  getCharacterProgress: (characterId: number) => 
+    api.get(`/api/checklists/character/${characterId}/progress`),
+}
