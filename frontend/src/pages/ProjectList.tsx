@@ -12,8 +12,8 @@ interface Project {
 }
 
 const fetchProjects = async (): Promise<Project[]> => {
-  const response = await projectsApi.getAll()
-  return response.projects
+  const projects = await projectsApi.getAll()
+  return projects
 }
 
 const deleteProject = async (id: string): Promise<void> => {

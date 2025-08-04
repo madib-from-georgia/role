@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import { ChecklistView } from '../components/ChecklistView';
-import { checklistApi } from '../services/api';
+import { checklistApi, charactersApi } from '../services/api';
 
 interface Character {
   id: number;
@@ -29,16 +29,7 @@ const CharacterChecklists: React.FC = () => {
   // Загружаем данные персонажа
   const { data: character, isLoading: characterLoading } = useQuery({
     queryKey: ['character', characterId],
-    queryFn: async () => {
-      // Имитируем загрузку персонажа через API
-      // В реальном приложении здесь будет API call
-      return {
-        id: parseInt(characterId!),
-        name: 'Пример персонажа',
-        description: 'Описание персонажа из произведения',
-        importance_score: 0.85
-      } as Character;
-    },
+    queryFn: () => charactersApi.getById(characterId!),
     enabled: !!characterId
   });
 

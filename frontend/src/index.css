@@ -3101,7 +3101,7 @@ a:hover {
 .empty-description {
   color: #666;
   font-size: 14px;
-  margin: 0;
+  margin: 0 auto;
 }
 
 /* Индикаторы загрузки */

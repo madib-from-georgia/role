@@ -12,7 +12,8 @@
     "dev": "npm run start",
     "build": "cd frontend && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:md:fix": "markdownlint --fix **/*.md && prettier --write **/*.md"
+    "lint:md:fix": "markdownlint --fix **/*.md && prettier --write **/*.md",
+    "show-user-projects": "cd backend && python scripts/show_user_projects.py"
   },
   "keywords": [
     "character-analysis",

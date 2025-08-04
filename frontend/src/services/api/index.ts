@@ -113,17 +113,11 @@ export const textsApi = {
 }
 
 export const charactersApi = {
-  getByProject: (projectId: string) => api.get(`/api/projects/${projectId}/characters`),
-  getById: (projectId: string, characterId: string) => 
-    api.get(`/api/projects/${projectId}/characters/${characterId}`),
-  create: (projectId: string, data: any) => 
-    api.post(`/api/projects/${projectId}/characters`, data),
-  update: (projectId: string, characterId: string, data: any) => 
-    api.put(`/api/projects/${projectId}/characters/${characterId}`, data),
-  delete: (projectId: string, characterId: string) => 
-    api.delete(`/api/projects/${projectId}/characters/${characterId}`),
-  analyze: (projectId: string, characterId: string) => 
-    api.post(`/api/projects/${projectId}/characters/${characterId}/analyze`),
+  getByText: (textId: string) => api.get(`/api/texts/${textId}/characters`),
+  getById: (characterId: string) => 
+    api.get(`/api/characters/${characterId}`),
+  update: (characterId: string, data: any) => 
+    api.put(`/api/characters/${characterId}`, data),
 }
 
 export const checklistApi = {

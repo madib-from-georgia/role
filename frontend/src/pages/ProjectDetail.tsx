@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { projectsApi, textsApi } from '../services/api'
+import { projectsApi, textsApi, charactersApi } from '../services/api'
 import { Project } from '../../../shared/types'
-import CharacterAnalysis from '../components/CharacterAnalysis'
 
 // Фактический тип ответа загрузки файла от backend
 interface FileUploadResponse {
@@ -26,6 +25,16 @@ interface ProjectText {
   created_at: string
 }
 
+// Интерфейс для персонажа
+interface Character {
+  id: number
+  name: string
+  aliases?: string[]
+  importance_score?: number
+  speech_attribution?: any
+  created_at?: string
+}
+
 const fetchProject = async (id: string): Promise<Project> => {
   return await projectsApi.getById(id)
 }
@@ -44,14 +53,118 @@ const deleteProject = async (id: string): Promise<void> => {
   await projectsApi.delete(id)
 }
 
+const fetchCharacters = async (textId: string): Promise<Character[]> => {
+  return await charactersApi.getByText(textId)
+}
+
+// Компонент для отображения секции текста с персонажами
+const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: Character) => void }> = ({ text, onCharacterClick }) => {
+  const { data: characters, isLoading: charactersLoading, error: charactersError } = useQuery(
+    ['text-characters', text.id],
+    () => fetchCharacters(text.id.toString()),
+    { 
+      enabled: !!text.processed_at, // Загружаем персонажей только если текст обработан
+      staleTime: 5 * 60 * 1000 // 5 минут
+    }
+  )
+
+  return (
+    <div className="text-section">
+      <div className="text-header">
+        <h3>{text.filename}</h3>
+        <span className={`status-badge ${text.processed_at ? 'processed' : 'pending'}`}>
+          {text.processed_at ? 'Обработан' : 'В ожидании'}
+        </span>
+      </div>
+
+      <div className="file-status-info">
+        {text.processed_at ? (
+          <div className="processed-info">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Файл успешно обработан</span>
+            <small>{new Date(text.processed_at).toLocaleString('ru-RU')}</small>
+          </div>
+        ) : (
+          <div className="pending-info">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Ожидает обработки</span>
+          </div>
+        )}
+      </div>
+
+      {/* Отображение персонажей только для обработанных текстов */}
+      {text.processed_at && (
+        <>
+          {charactersLoading && (
+            <div className="characters-loading">
+              <div className="spinner"></div>
+              <span>Загрузка персонажей...</span>
+            </div>
+          )}
+
+          {charactersError && (
+            <div className="error-state">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <p>Ошибка загрузки персонажей</p>
+            </div>
+          )}
+
+          {characters && characters.length > 0 && (
+            <div className="characters-grid">
+              {characters.slice(0, 10).map((character) => (
+                <div 
+                  key={character.id} 
+                  className="character-item"
+                  onClick={() => onCharacterClick(character)}
+                >
+                  <div className="character-header">
+                    <h4>{character.name}</h4>
+                    {character.importance_score && (
+                      <span className="importance-score">
+                        {Math.round(character.importance_score * 100)}%
+                      </span>
+                    )}
+                  </div>
+                  
+                  {character.aliases && character.aliases.length > 0 && (
+                    <div className="character-aliases">
+                      <span>Алиасы: {character.aliases.join(', ')}</span>
+                    </div>
+                  )}
+                  
+                  <button className="analyze-btn">
+                    Анализировать →
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {characters && characters.length === 0 && (
+            <div className="empty-characters">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <p>Персонажи не найдены</p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [selectedCharacter, setSelectedCharacter] = useState<{
-    name: string;
-    textId: string;
-  } | null>(null)
+
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(deleteProject, {
@@ -107,13 +220,11 @@ const ProjectDetail: React.FC = () => {
     }
   }
 
-  const handleCharacterClick = (characterName: string, textId: string) => {
-    setSelectedCharacter({ name: characterName, textId })
+  const handleCharacterClick = (character: Character) => {
+    navigate(`/characters/${character.id}/checklists`)
   }
 
-  const handleCloseAnalysis = () => {
-    setSelectedCharacter(null)
-  }
+
 
   const handleDeleteProject = () => {
     if (!project) return;
@@ -257,77 +368,11 @@ const ProjectDetail: React.FC = () => {
               </div>
               
               {texts.map((text) => (
-                <div key={text.id} className="text-section">
-                  <div className="text-header">
-                    <h3>{text.filename}</h3>
-                    <span className={`status-badge ${text.processed_at ? 'processed' : 'pending'}`}>
-                      {text.processed_at ? 'Обработан' : 'В ожидании'}
-                    </span>
-                  </div>
-
-                  <div className="file-status-info">
-                    {text.processed_at ? (
-                      <div className="processed-info">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Файл успешно обработан</span>
-                        <small>{new Date(text.processed_at).toLocaleString('ru-RU')}</small>
-                      </div>
-                    ) : (
-                      <div className="pending-info">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Ожидает обработки</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {false && (
-                    <div className="characters-grid">
-                      {[].slice(0, 10).map((character: any, index: number) => (
-                        <div 
-                          key={index} 
-                          className="character-item"
-                          onClick={() => handleCharacterClick(character.name, text.id.toString())}
-                        >
-                          <div className="character-header">
-                            <h4>{character.name}</h4>
-                          </div>
-                          
-                          {character.aliases && character.aliases.length > 0 && (
-                            <div className="character-aliases">
-                              <span>Алиасы: {character.aliases.join(', ')}</span>
-                            </div>
-                          )}
-                          
-                          <button className="analyze-btn">
-                            Анализировать →
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {false && (
-                    <div className="empty-characters">
-                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                      <p>Персонажи не найдены</p>
-                    </div>
-                  )}
-
-                  {false && (
-                    <div className="error-state">
-                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                      </svg>
-                      <p>Ошибка обработки файла</p>
-                    </div>
-                  )}
-                </div>
+                <TextSection 
+                  key={text.id} 
+                  text={text} 
+                  onCharacterClick={handleCharacterClick} 
+                />
               ))}
             </div>
           )}
@@ -394,19 +439,7 @@ const ProjectDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal для анализа персонажа */}
-      {selectedCharacter && (
-        <div className="modal-overlay" onClick={handleCloseAnalysis}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <CharacterAnalysis
-              projectId={id!}
-              textId={selectedCharacter.textId}
-              characterName={selectedCharacter.name}
-              onClose={handleCloseAnalysis}
-            />
-          </div>
-        </div>
-      )}
+
     </div>
   )
 }
