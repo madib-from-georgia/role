@@ -38,7 +38,7 @@
 #### Frontend
 - **React 18** с TypeScript
 - **Vite** для сборки и dev-сервера  
-- **Tailwind CSS** для стилизации
+- **Custom CSS** для стилизации
 - **React Query** для управления состоянием
 - **React Hook Form** для работы с формами
 
@@ -438,7 +438,7 @@ role/
 │   ├── public/
 │   ├── package.json
 │   ├── vite.config.ts
-│   └── tailwind.config.js
+
 │
 ├── backend/                     # Python FastAPI сервер
 │   ├── app/

@@ -214,7 +214,7 @@ Priority: CRITICAL | Dependencies: Итерация 4
 - [ ] Автосохранение прогресса
 
 **7.3 UX/UI полировка**
-- [ ] Tailwind стили для чеклистов
+- [ ] Custom CSS стили для чеклистов
 - [ ] Responsive дизайн
 - [ ] Валидация форм
 - [ ] Подсказки и help tooltips
@@ -426,7 +426,7 @@ frontend/src/
 
 ### Frontend компоненты
 - ✅ **React Components**: Адаптированы под новую архитектуру
-- ✅ **UI Framework**: Tailwind CSS настроен + стили авторизации
+- ✅ **UI Framework**: Custom CSS настроен + стили авторизации
 - ✅ **Auth Integration**: Полная система авторизации готова
 - ✅ **API Integration**: Централизованный клиент с автообновлением токенов
 

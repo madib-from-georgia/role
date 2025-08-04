@@ -926,6 +926,56 @@ a:hover {
   color: #991b1b;
 }
 
+/* File Status Info */
+.processed-info,
+.pending-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.processed-info svg,
+.pending-info svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.processed-info {
+  color: #065f46;
+}
+
+.processed-info svg {
+  color: #10b981;
+}
+
+.pending-info {
+  color: #92400e;
+}
+
+.pending-info svg {
+  color: #f59e0b;
+}
+
+.processed-info small,
+.pending-info small {
+  margin-left: auto;
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+/* Opacity Utilities */
+.opacity-25 {
+  opacity: 0.25;
+}
+
+.opacity-75 {
+  opacity: 0.75;
+}
+
 /* Characters Grid */
 .characters-grid {
   display: grid;
