@@ -1,33 +1,47 @@
 import React, { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import axios from 'axios'
-import { Project, TextProcessingResult, UploadResponse } from '../../../shared/types'
+import { projectsApi, textsApi } from '../services/api'
+import { Project } from '../../../shared/types'
 import CharacterAnalysis from '../components/CharacterAnalysis'
 
+// Фактический тип ответа загрузки файла от backend
+interface FileUploadResponse {
+  success: boolean
+  text_id: number
+  filename: string
+  format: string
+  content_length: number
+  metadata: Record<string, any>
+  created_at: string
+  message?: string
+}
+
+// Фактический тип данных текста, которые возвращает API /projects/{id}/texts
+interface ProjectText {
+  id: number
+  filename: string
+  original_format: string
+  processed_at?: string
+  created_at: string
+}
+
 const fetchProject = async (id: string): Promise<Project> => {
-  const response = await axios.get(`/api/projects/${id}`)
-  return response.data
+  return await projectsApi.getById(id)
 }
 
-const fetchProjectTexts = async (projectId: string): Promise<TextProcessingResult[]> => {
-  const response = await axios.get(`/api/projects/${projectId}/texts`)
-  return response.data
+const fetchProjectTexts = async (projectId: string): Promise<ProjectText[]> => {
+  return await textsApi.getByProject(projectId)
 }
 
-const uploadText = async (projectId: string, file: File): Promise<UploadResponse> => {
+const uploadText = async (projectId: string, file: File): Promise<FileUploadResponse> => {
   const formData = new FormData()
   formData.append('file', file)
-  const response = await axios.post(`/api/projects/${projectId}/texts`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
-  return response.data
+  return await textsApi.upload(projectId, formData)
 }
 
 const deleteProject = async (id: string): Promise<void> => {
-  await axios.delete(`/api/projects/${id}`)
+  await projectsApi.delete(id)
 }
 
 const ProjectDetail: React.FC = () => {
@@ -58,7 +72,7 @@ const ProjectDetail: React.FC = () => {
     { enabled: !!id }
   )
 
-  const { data: texts, isLoading: textsLoading } = useQuery(
+  const { data: texts } = useQuery(
     ['project-texts', id],
     () => fetchProjectTexts(id!),
     { enabled: !!id }
@@ -221,10 +235,14 @@ const ProjectDetail: React.FC = () => {
 
               {uploadMutation.isSuccess && uploadMutation.data && (
                 <div className="success-message">
-                  <strong>Файл успешно обработан</strong>
-                  <div className="processing-stats">
-                    <p>Найдено персонажей: {uploadMutation.data.processing_result.characters_found}</p>
-                    <p>Время обработки: {uploadMutation.data.processing_result.processing_time.toFixed(2)} сек</p>
+                  <strong>Файл успешно загружен</strong>
+                  <div className="upload-stats">
+                    <p>Имя файла: {uploadMutation.data.filename}</p>
+                    <p>Формат: {uploadMutation.data.format?.toUpperCase()}</p>
+                    <p>Размер содержимого: {uploadMutation.data.content_length?.toLocaleString() || 'N/A'} символов</p>
+                    <p className="upload-note">
+                      💡 Файл загружен. Анализ персонажей будет доступен после обработки текста.
+                    </p>
                   </div>
                 </div>
               )}
@@ -239,28 +257,46 @@ const ProjectDetail: React.FC = () => {
               </div>
               
               {texts.map((text) => (
-                <div key={text.text_id} className="text-section">
+                <div key={text.id} className="text-section">
                   <div className="text-header">
                     <h3>{text.filename}</h3>
-                    <span className={`status-badge ${text.processing_status}`}>
-                      {text.processing_status === 'completed' ? 'Обработан' :
-                       text.processing_status === 'processing' ? 'Обрабатывается' : 'Ошибка'}
+                    <span className={`status-badge ${text.processed_at ? 'processed' : 'pending'}`}>
+                      {text.processed_at ? 'Обработан' : 'В ожидании'}
                     </span>
                   </div>
 
-                  {text.processing_status === 'completed' && text.characters.length > 0 && (
+                  <div className="file-status-info">
+                    {text.processed_at ? (
+                      <div className="processed-info">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Файл успешно обработан</span>
+                        <small>{new Date(text.processed_at).toLocaleString('ru-RU')}</small>
+                      </div>
+                    ) : (
+                      <div className="pending-info">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Ожидает обработки</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {false && (
                     <div className="characters-grid">
-                      {text.characters.slice(0, 10).map((character, index) => (
+                      {[].slice(0, 10).map((character: any, index: number) => (
                         <div 
                           key={index} 
                           className="character-item"
-                          onClick={() => handleCharacterClick(character.name, text.text_id)}
+                          onClick={() => handleCharacterClick(character.name, text.id.toString())}
                         >
                           <div className="character-header">
                             <h4>{character.name}</h4>
                           </div>
                           
-                          {character.aliases.length > 0 && (
+                          {character.aliases && character.aliases.length > 0 && (
                             <div className="character-aliases">
                               <span>Алиасы: {character.aliases.join(', ')}</span>
                             </div>
@@ -274,7 +310,7 @@ const ProjectDetail: React.FC = () => {
                     </div>
                   )}
 
-                  {text.processing_status === 'completed' && text.characters.length === 0 && (
+                  {false && (
                     <div className="empty-characters">
                       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -283,13 +319,12 @@ const ProjectDetail: React.FC = () => {
                     </div>
                   )}
 
-                  {text.processing_status === 'failed' && (
+                  {false && (
                     <div className="error-state">
                       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                       </svg>
                       <p>Ошибка обработки файла</p>
-                      {text.error_message && <p>{text.error_message}</p>}
                     </div>
                   )}
                 </div>
@@ -308,41 +343,34 @@ const ProjectDetail: React.FC = () => {
                 <strong>{texts?.length || 0}</strong>
               </div>
               <div className="stat-item">
-                <span>Найдено персонажей:</span>
-                <strong>{texts?.reduce((sum, text) => sum + text.characters_found, 0) || 0}</strong>
+                <span>Обработано:</span>
+                <strong>{texts?.filter(text => text.processed_at).length || 0}</strong>
               </div>
               <div className="stat-item">
-                <span>Проанализировано:</span>
-                <strong>{texts?.filter(text => text.processing_status === 'completed').length || 0}</strong>
+                <span>Форматы:</span>
+                <strong>{texts ? [...new Set(texts.map(t => t.original_format))].join(', ').toUpperCase() : 'Нет'}</strong>
               </div>
             </div>
 
-            {/* Метрики качества NLP */}
+            {/* Список файлов */}
             {texts && texts.length > 0 && (
-              <div className="quality-metrics">
-                <h4>Качество обработки:</h4>
+              <div className="files-list">
+                <h4>Загруженные файлы:</h4>
                 {texts.map((text) => (
-                  <div key={text.text_id} className="quality-item">
-                    <div className="quality-filename">{text.filename}</div>
-                    <div className="quality-stats">
-                      <div className="quality-metric">
-                        <span>Извлечение персонажей:</span>
-                        <span className={`quality-value ${
-                          text.nlp_metrics.character_extraction_accuracy >= 0.9 ? 'high' :
-                          text.nlp_metrics.character_extraction_accuracy >= 0.7 ? 'medium' : 'low'
-                        }`}>
-                          {(text.nlp_metrics.character_extraction_accuracy * 100).toFixed(0)}%
+                  <div key={text.id} className="file-item">
+                    <div className="file-info">
+                      <div className="filename">{text.filename}</div>
+                      <div className="file-details">
+                        <span className="format">{text.original_format.toUpperCase()}</span>
+                        <span className={`status ${text.processed_at ? 'processed' : 'pending'}`}>
+                          {text.processed_at ? '✓ Обработан' : '⏳ В ожидании'}
                         </span>
                       </div>
-                      <div className="quality-metric">
-                        <span>Атрибуция речи:</span>
-                        <span className={`quality-value ${
-                          text.nlp_metrics.speech_attribution_accuracy >= 0.95 ? 'high' :
-                          text.nlp_metrics.speech_attribution_accuracy >= 0.8 ? 'medium' : 'low'
-                        }`}>
-                          {(text.nlp_metrics.speech_attribution_accuracy * 100).toFixed(0)}%
-                        </span>
-                      </div>
+                      {text.processed_at && (
+                        <div className="processed-date">
+                          {new Date(text.processed_at).toLocaleDateString('ru-RU')}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -355,10 +383,11 @@ const ProjectDetail: React.FC = () => {
                 <li className={texts && texts.length > 0 ? 'completed' : ''}>
                   Загрузите текст произведения
                 </li>
-                <li className={texts && texts.some(t => t.characters_found > 0) ? 'completed' : ''}>
-                  Дождитесь извлечения персонажей
+                <li className={texts && texts.some(t => t.processed_at) ? 'completed' : ''}>
+                  Дождитесь обработки файлов
                 </li>
-                <li>Выберите персонажей для анализа</li>
+                <li>Запустите анализ персонажей</li>
+                <li>Выберите персонажей для детального анализа</li>
               </ul>
             </div>
           </div>
