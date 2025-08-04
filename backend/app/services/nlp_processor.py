@@ -30,9 +30,21 @@ class NLPProcessor:
     - Сохранение результатов в базе данных
     """
     
-    def __init__(self):
+    def __init__(self, logs_dir: Optional[str] = None):
         self.character_extractor = CharacterExtractor()
-        logger.info("NLP Processor инициализирован")
+        
+        # Настройка путей для логов
+        if logs_dir is None:
+            # По умолчанию logs рядом с backend
+            backend_dir = Path(__file__).parent.parent.parent
+            self.logs_dir = backend_dir / "logs"
+        else:
+            self.logs_dir = Path(logs_dir)
+        
+        # Создаем базовую директорию логов
+        self.logs_dir.mkdir(exist_ok=True)
+        
+        logger.info(f"NLP Processor инициализирован. Логи сохраняются в: {self.logs_dir}")
     
     async def process_text(self, text_id: int, db: Session, force_reprocess: bool = False) -> NLPResult:
         """
@@ -89,6 +101,12 @@ class NLPProcessor:
             speech_attributions=speech_attributions,
             extraction_stats=extraction_stats
         )
+        
+        # Сохраняем результаты в JSON
+        try:
+            await self._save_nlp_results_to_json(text_obj, result)
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении результатов в JSON: {e}")
         
         logger.success(f"Обработка текста ID {text_id} завершена за {processing_time:.2f}с. "
                       f"Найдено {len(characters)} персонажей")
@@ -263,6 +281,116 @@ class NLPProcessor:
         if character:
             logger.info(f"Обновлена важность персонажа {character.name}: {new_score}")
         return character
+    
+    async def _save_nlp_results_to_json(self, text_obj, result: NLPResult) -> None:
+        """
+        Сохранение результатов NLP анализа в JSON файлы
+        
+        Args:
+            text_obj: Объект текста из БД
+            result: Результат NLP анализа
+        """
+        # Создаем имя директории на основе названия файла текста
+        safe_filename = self._sanitize_filename(text_obj.filename or f"text_{text_obj.id}")
+        book_dir = self.logs_dir / safe_filename
+        book_dir.mkdir(exist_ok=True)
+        
+        # Создаем временную метку для уникальности
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Конвертируем результат в сериализуемый формат
+        json_data = {
+            "metadata": {
+                "text_id": result.text_id,
+                "filename": text_obj.filename,
+                "processing_time": result.extraction_stats.extraction_time,
+                "timestamp": datetime.now().isoformat(),
+                "processor_version": "1.0"
+            },
+            "extraction_stats": {
+                "method_used": result.extraction_stats.method_used,
+                "is_play_format": result.extraction_stats.is_play_format,
+                "has_character_section": result.extraction_stats.has_character_section,
+                "total_characters": result.extraction_stats.total_characters,
+                "total_speech_attributions": result.extraction_stats.total_speech_attributions,
+                "text_length": result.extraction_stats.text_length,
+                "processing_errors": result.extraction_stats.processing_errors
+            },
+            "characters": [
+                {
+                    "name": char.name,
+                    "aliases": char.aliases,
+                    "description": char.description,
+                    "mentions_count": char.mentions_count,
+                    "first_mention_position": char.first_mention_position,
+                    "importance_score": char.importance_score,
+                    "source": char.source
+                }
+                for char in result.characters
+            ],
+            "speech_attributions": [
+                {
+                    "character_name": speech.character_name,
+                    "text": speech.text,
+                    "position": speech.position,
+                    "speech_type": speech.speech_type.value if hasattr(speech.speech_type, 'value') else str(speech.speech_type),
+                    "confidence": speech.confidence,
+                    "context": speech.context
+                }
+                for speech in result.speech_attributions
+            ]
+        }
+        
+        # Сохраняем основной результат с временной меткой
+        result_file = book_dir / f"nlp_result_{timestamp}.json"
+        with open(result_file, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, ensure_ascii=False, indent=2)
+        
+        # Сохраняем копию как latest
+        latest_file = book_dir / "nlp_result_latest.json"
+        with open(latest_file, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, ensure_ascii=False, indent=2)
+        
+        # Обновляем глобальную latest директорию
+        await self._update_latest_directory(book_dir, safe_filename)
+        
+        logger.info(f"Результаты NLP сохранены в: {result_file}")
+        logger.info(f"Latest результат обновлен: {latest_file}")
+    
+    def _sanitize_filename(self, filename: str) -> str:
+        """Очистка имени файла для безопасного использования в путях"""
+        # Убираем расширение и нормализуем имя
+        name = Path(filename).stem
+        
+        # Заменяем небезопасные символы
+        safe_chars = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+        safe_chars += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_."
+        
+        cleaned = ''.join(c if c in safe_chars else '_' for c in name)
+        
+        # Ограничиваем длину
+        if len(cleaned) > 100:
+            cleaned = cleaned[:100]
+        
+        return cleaned or "unknown_text"
+    
+    async def _update_latest_directory(self, book_dir: Path, book_name: str) -> None:
+        """Обновление latest директории"""
+        latest_dir = self.logs_dir / "latest"
+        latest_dir.mkdir(exist_ok=True)
+        
+        # Копируем latest файл в общую latest директорию
+        source_file = book_dir / "nlp_result_latest.json"
+        target_file = latest_dir / f"{book_name}_latest.json"
+        
+        if source_file.exists():
+            shutil.copy2(source_file, target_file)
+            
+            # Также создаем общий latest.json (последний обработанный файл)
+            latest_global = latest_dir / "latest.json"
+            shutil.copy2(source_file, latest_global)
+            
+            logger.debug(f"Обновлена latest директория: {target_file}")
     
     def get_processing_capabilities(self) -> dict:
         """Получение информации о возможностях процессора"""

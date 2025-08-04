@@ -187,8 +187,13 @@ storybook-static
 *.sqlite3
 
 # Logs
-logs
 *.log
+
+# NLP Analysis Logs - игнорируем результаты, но сохраняем структуру
+logs/*
+!logs/
+!logs/README.md
+!logs/example_nlp_result.json
 
 # Temporary files
 tmp/
