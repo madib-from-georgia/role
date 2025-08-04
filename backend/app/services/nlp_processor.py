@@ -2,7 +2,12 @@
 Основной NLP процессор для обработки текстов и интеграции с базой данных
 """
 
+import json
+import os
+import shutil
 import time
+from datetime import datetime
+from pathlib import Path
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from loguru import logger
@@ -109,16 +114,24 @@ class NLPProcessor:
         Returns:
             Список сохраненных персонажей
         """
-        logger.info(f"Сохраняю {len(characters)} персонажей в БД")
+        logger.info(f"Сохраняю {len(characters)} персонажей в БД для текста ID {text_id}")
+        
+        # Логируем имена персонажей для отладки
+        character_names = [char.name for char in characters]
+        logger.debug(f"Имена персонажей для сохранения: {character_names}")
         
         # Удаляем существующих персонажей для данного текста (если переобрабатываем)
         existing_characters = character_crud.get_multi_by_text(db, text_id=text_id)
-        for char in existing_characters:
-            character_crud.remove(db, id=char.id)
+        if existing_characters:
+            logger.info(f"Удаляю {len(existing_characters)} существующих персонажей")
+            for char in existing_characters:
+                character_crud.remove(db, id=char.id)
         
         saved_characters = []
         
-        for char_data in characters:
+        for i, char_data in enumerate(characters):
+            logger.debug(f"Обрабатываю персонажа {i+1}/{len(characters)}: {char_data.name}")
+            
             # Подсчитываем количество речи для этого персонажа
             speech_count = len([s for s in speech_attributions if s.character_name == char_data.name])
             

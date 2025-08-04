@@ -74,7 +74,16 @@ class PlayParser:
             r"(?i)^сцена\s+",
             r"(?i)^явление\s+",
             r"(?i)^пролог\s*$",
-            r"(?i)^эпилог\s*$"
+            r"(?i)^эпилог\s*$",
+            # Добавляем фильтрацию заголовков секций персонажей
+            r"(?i)^действующие\s+лица\s*$",
+            r"(?i)^лица\s*$",
+            r"(?i)^персонажи\s*$",
+            r"(?i)^драматические\s+лица\s*$",
+            # Добавляем фильтрацию описательных строк
+            r"(?i)^действие\s+происходит\s+",
+            r"(?i)^время\s+действия\s+",
+            r"(?i)^место\s+действия\s+"
         ]
     
     def extract_characters(self, text: str) -> List[CharacterData]:
@@ -89,14 +98,24 @@ class PlayParser:
         """
         logger.debug(f"Начинаю извлечение персонажей из текста длиной {len(text)} символов")
         
+        characters = []
+        
         # Поиск секции с персонажами
         character_section = self._find_character_section(text)
         if character_section:
             logger.debug("Найдена секция с персонажами, используем структурированный парсинг")
             characters = self._parse_character_section(character_section)
+            
+            # Если в секции персонажей ничего не найдено, пробуем диалоги
+            if not characters:
+                logger.debug("В секции персонажей ничего не найдено, извлекаем из диалогов")
+                characters = self._extract_characters_from_dialogues(text)
         else:
             logger.debug("Секция персонажей не найдена, извлекаем из диалогов")
             characters = self._extract_characters_from_dialogues(text)
+        
+        # Убираем дубликаты (по имени)
+        characters = self._deduplicate_characters(characters)
         
         # Подсчитываем упоминания и важность для каждого персонажа
         self._calculate_character_metrics(characters, text)
@@ -398,6 +417,24 @@ class PlayParser:
         # Если есть общие слова длиннее 2 символов
         common_words = name1_words.intersection(name2_words)
         return any(len(word) > 2 for word in common_words)
+    
+    def _deduplicate_characters(self, characters: List[CharacterData]) -> List[CharacterData]:
+        """Удаление дубликатов персонажей по имени"""
+        seen_names = set()
+        unique_characters = []
+        
+        for character in characters:
+            # Нормализуем имя для сравнения
+            normalized_name = re.sub(r'\s+', ' ', character.name.strip())
+            
+            if normalized_name not in seen_names:
+                seen_names.add(normalized_name)
+                unique_characters.append(character)
+            else:
+                logger.debug(f"Удален дубликат персонажа: {character.name}")
+        
+        logger.debug(f"Дедупликация завершена: {len(characters)} -> {len(unique_characters)} персонажей")
+        return unique_characters
     
     def get_extraction_stats(self, text: str, characters: List[CharacterData]) -> dict:
         """Получение статистики извлечения"""
