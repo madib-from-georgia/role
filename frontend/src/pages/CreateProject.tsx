@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from 'react-query'
-import axios from 'axios'
+import { projectsApi } from '../services/api'
 
 interface CreateProjectData {
   title: string
@@ -9,8 +9,7 @@ interface CreateProjectData {
 }
 
 const createProject = async (data: CreateProjectData) => {
-  const response = await axios.post('/api/projects', data)
-  return response.data
+  return await projectsApi.create(data)
 }
 
 const CreateProject: React.FC = () => {

@@ -2,10 +2,13 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
+import { AuthProvider } from './contexts/AuthContext'
 import Header from './components/Header'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import ProjectList from './pages/ProjectList'
 import CreateProject from './pages/CreateProject'
 import ProjectDetail from './pages/ProjectDetail'
+import Profile from './pages/Profile'
 
 // Создаем экземпляр React Query клиента
 const queryClient = new QueryClient({
@@ -20,17 +23,43 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <div className="app">
-          <Header />
-          
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<ProjectList />} />
-              <Route path="/projects/new" element={<CreateProject />} />
-              <Route path="/projects/:id" element={<ProjectDetail />} />
-            </Routes>
-          </main>
+      <AuthProvider>
+        <Router>
+          <div className="app">
+            <Header />
+            
+            <main className="main-content">
+              <Routes>
+                <Route 
+                  path="/" 
+                  element={
+                    <ProtectedRoute>
+                      <ProjectList />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/projects/new" 
+                  element={
+                    <ProtectedRoute>
+                      <CreateProject />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/projects/:id" 
+                  element={
+                    <ProtectedRoute>
+                      <ProjectDetail />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/profile" 
+                  element={<Profile />}
+                />
+              </Routes>
+            </main>
 
           <footer className="footer">
             <div className="container">
@@ -61,8 +90,9 @@ function App() {
               </div>
             </div>
           </footer>
-        </div>
-      </Router>
+          </div>
+        </Router>
+      </AuthProvider>
     </QueryClientProvider>
   )
 }

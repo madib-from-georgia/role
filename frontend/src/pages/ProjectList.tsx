@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import axios from 'axios'
+import { projectsApi } from '../services/api'
 
 interface Project {
   id: string
@@ -12,12 +12,12 @@ interface Project {
 }
 
 const fetchProjects = async (): Promise<Project[]> => {
-  const response = await axios.get('/api/projects')
-  return response.data.projects
+  const response = await projectsApi.getAll()
+  return response.projects
 }
 
 const deleteProject = async (id: string): Promise<void> => {
-  await axios.delete(`/api/projects/${id}`)
+  await projectsApi.delete(id)
 }
 
 const ProjectList: React.FC = () => {
