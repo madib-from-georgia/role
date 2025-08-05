@@ -14,6 +14,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:md:fix": "markdownlint --fix **/*.md && prettier --write **/*.md",
     "show-user-projects": "cd backend && python scripts/show_user_projects.py",
+    "import-checklists": "cd backend && python scripts/import_checklists.py",
+    "clear-checklists": "cd backend && python scripts/clear_checklists.py",
+    "clear-checklists-force": "cd backend && python scripts/clear_checklists.py --clear-all --force",
+    "list-checklists": "cd backend && python scripts/clear_checklists.py --list",
     "logs": "cd backend && python scripts/view_nlp_logs.py"
   },
   "keywords": [

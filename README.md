@@ -553,6 +553,50 @@ GET    /api/characters/{id}/export/docx    # Экспорт в DOCX
 
 > **Примечание**: Все API endpoints, кроме авторизации, требуют валидный JWT токен в заголовке `Authorization: Bearer <token>`
 
+## 🛠️ NPM Скрипты
+
+### Основные команды
+```bash
+npm run start          # Запуск приложения (frontend + backend)
+npm run stop           # Остановка приложения
+npm run dev            # Алиас для npm run start
+npm run build          # Сборка frontend для production
+npm run kill-ports     # Остановка процессов на портах 5173 и 8000
+```
+
+### Управление чеклистами
+```bash
+npm run list-checklists        # Показать список всех чеклистов в БД
+npm run import-checklists      # Импорт чеклистов из Markdown файлов
+npm run clear-checklists       # Показать список чеклистов (без аргументов)
+npm run clear-checklists-force # Удалить все чеклисты без подтверждения
+```
+
+### Утилиты
+```bash
+npm run show-user-projects     # Показать проекты пользователей
+npm run logs                   # Просмотр NLP логов
+npm run lint:md:fix           # Исправить форматирование Markdown файлов
+```
+
+### Прямые команды Python
+```bash
+# Показать список чеклистов
+cd backend && python scripts/clear_checklists.py --list
+
+# Удалить все чеклисты (с подтверждением)
+cd backend && python scripts/clear_checklists.py --clear-all
+
+# Удалить все чеклисты (без подтверждения)
+cd backend && python scripts/clear_checklists.py --clear-all --force
+
+# Удалить конкретный чеклист по slug
+cd backend && python scripts/clear_checklists.py --clear-slug physical-checklist
+
+# Валидация чеклистов без импорта
+cd backend && python scripts/import_checklists.py --validate-only
+```
+
 ## 🎨 Пользовательский интерфейс
 
 ### Основные страницы
