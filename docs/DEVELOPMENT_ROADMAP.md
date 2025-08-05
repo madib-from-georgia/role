@@ -136,17 +136,17 @@ Priority: HIGH | Dependencies: Итерация 1
 Priority: CRITICAL | Dependencies: Итерация 1-2
 ```
 
-**5.1 Backend чеклистов**
-- [ ] Парсинг markdown чеклистов из docs/modules/
-- [ ] API для получения вопросов чеклистов
-- [ ] Сохранение ответов пользователей
-- [ ] Валидация и градация достоверности
+**5.1 Backend чеклистов** ✅ ЗАВЕРШЕНО
+- [x] Парсинг markdown чеклистов из docs/modules/
+- [x] API для получения вопросов чеклистов
+- [x] Сохранение ответов пользователей
+- [x] Валидация и градация достоверности
 
-**5.2 Checklist API**
-- [ ] GET /api/characters/{id}/checklists - все чеклисты
-- [ ] GET /api/characters/{id}/checklists/{type} - конкретный чеклист
-- [ ] POST /api/characters/{id}/checklists/{type} - сохранение ответов
-- [ ] PUT /api/characters/{id}/checklists/{type} - обновление
+**5.2 Checklist API** ✅ ЗАВЕРШЕНО
+- [x] GET /api/characters/{id}/checklists - все чеклисты
+- [x] GET /api/characters/{id}/checklists/{type} - конкретный чеклист
+- [x] POST /api/characters/{id}/checklists/{type} - сохранение ответов
+- [x] PUT /api/characters/{id}/checklists/{type} - обновление
 
 **5.3 Чеклист структура**
 - [ ] Стандартизация 20 модулей анализа
