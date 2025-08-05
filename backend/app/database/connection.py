@@ -70,8 +70,14 @@ def get_db_session() -> Generator[Session, None, None]:
 
 async def init_db():
     """Инициализация базы данных."""
-    # Импорт всех моделей для создания таблиц
-    from app.database.models import user, project, text, character, checklist, token
+    # Импорт всех моделей в правильном порядке для избежания circular imports
+    from app.database.models import base  # Сначала базовая модель
+    from app.database.models import user   # Базовые модели пользователей
+    from app.database.models import token  # Токены пользователей  
+    from app.database.models import project  # Проекты
+    from app.database.models import text   # Тексты
+    from app.database.models import character  # Персонажи
+    from app.database.models import checklist  # Чеклисты
     
     # Создание всех таблиц
     Base.metadata.create_all(bind=engine)

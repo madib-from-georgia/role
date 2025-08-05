@@ -498,6 +498,7 @@ a:hover {
 }
 
 .empty-description {
+  font-size: 14px;
   color: #666;
   margin-bottom: 24px;
   max-width: 400px;
@@ -1602,6 +1603,65 @@ a:hover {
   color: #dc2626;
   font-size: 0.75rem;
   margin-top: 4px;
+}
+
+.form-group input.error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-group input.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.auth-suggestion {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #1e40af;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+}
+
+.auth-suggestion svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.auth-suggestion p {
+  margin: 0 0 8px 0;
+}
+
+.auth-suggestion p:last-child {
+  margin-bottom: 12px;
+}
+
+.auth-suggestion-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-suggestion-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.auth-suggestion-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 .auth-submit-btn {
@@ -3148,12 +3208,6 @@ a:hover {
   margin-bottom: 8px;
 }
 
-.empty-description {
-  color: #666;
-  font-size: 14px;
-  margin: 0 auto;
-}
-
 /* Индикаторы загрузки */
 .checklist-loading,
 .checklist-error,
@@ -3245,5 +3299,142 @@ a:hover {
   
   .checklist-status {
     align-self: flex-end;
+  }
+}
+
+/* Стили для смены пароля */
+.change-password-form {
+  max-width: 100%;
+}
+
+.change-password-form h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.password-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-group input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: #374151;
+}
+
+.password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.password-requirements {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.password-requirements h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.password-requirements ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6b7280;
+}
+
+.password-requirements li {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.security-section {
+  width: 100%;
+}
+
+.security-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #3b82f6;
+  color: #3b82f6;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Адаптивность для формы смены пароля */
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+  
+  .security-info {
+    gap: 12px;
+  }
+  
+  .btn-outline {
+    width: 100%;
+    text-align: center;
   }
 }

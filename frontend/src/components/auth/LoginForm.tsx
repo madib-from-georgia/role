@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
+import { isValidEmail } from '../../utils/errorHandling'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -7,30 +8,78 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) => {
-  const { login, isLoading } = useAuth()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{email?: string, password?: string}>({})
+  const [showRegistrationSuggestion, setShowRegistrationSuggestion] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setFieldErrors({})
+    setShowRegistrationSuggestion(false)
+
+    // Валидация перед отправкой
+    const newFieldErrors: {email?: string, password?: string} = {}
+    
+    if (!formData.email) {
+      newFieldErrors.email = 'Email обязателен для заполнения'
+    } else if (!isValidEmail(formData.email)) {
+      newFieldErrors.email = 'Неверный формат email адреса'
+    }
+    
+    if (!formData.password) {
+      newFieldErrors.password = 'Пароль обязателен для заполнения'
+    }
+    
+    if (Object.keys(newFieldErrors).length > 0) {
+      setFieldErrors(newFieldErrors)
+      return
+    }
 
     try {
+      setIsLoading(true)
       await login(formData.email, formData.password)
       onSuccess?.()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка входа в систему')
+      const errorMessage = err instanceof Error ? err.message : 'Ошибка входа в систему'
+      setError(errorMessage)
+      
+      // Показываем предложение регистрации если пользователь не найден
+      if (errorMessage.includes('не найден') || errorMessage.includes('Проверьте email или зарегистрируйтесь')) {
+        setShowRegistrationSuggestion(true)
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }))
+    
+    // Очищаем ошибки при изменении поля
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }))
+    }
+    
+    // Очищаем общую ошибку если пользователь начал изменять данные
+    if (error) {
+      setError(null)
+      setShowRegistrationSuggestion(false)
+    }
   }
 
   return (
@@ -40,13 +89,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         <p>Войдите в свой аккаунт для доступа к проектам</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="auth-form-content">
+      <form onSubmit={handleSubmit} className="auth-form-content" autoComplete="off">
         {error && (
           <div className="auth-error">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {error}
+          </div>
+        )}
+
+        {showRegistrationSuggestion && (
+          <div className="auth-suggestion">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p><strong>Нет аккаунта?</strong></p>
+              <p>Похоже, пользователь с таким email не зарегистрирован.</p>
+              <button 
+                type="button" 
+                onClick={onSwitchToRegister}
+                className="auth-suggestion-btn"
+                disabled={isLoading}
+              >
+                Зарегистрироваться сейчас
+              </button>
+            </div>
           </div>
         )}
 
@@ -61,7 +130,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
             required
             disabled={isLoading}
             placeholder="example@email.com"
+            autoComplete="new-email"
+            className={fieldErrors.email ? 'error' : ''}
           />
+          {fieldErrors.email && (
+            <div className="field-error">{fieldErrors.email}</div>
+          )}
         </div>
 
         <div className="form-group">
@@ -76,7 +150,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
             disabled={isLoading}
             placeholder="Введите пароль"
             minLength={8}
+            autoComplete="new-password"
+            className={fieldErrors.password ? 'error' : ''}
           />
+          {fieldErrors.password && (
+            <div className="field-error">{fieldErrors.password}</div>
+          )}
         </div>
 
         <button 

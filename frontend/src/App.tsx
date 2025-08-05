@@ -57,7 +57,11 @@ function App() {
                 />
                 <Route 
                   path="/profile" 
-                  element={<Profile />}
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
                 />
                 <Route 
                   path="/characters/:characterId/checklists" 

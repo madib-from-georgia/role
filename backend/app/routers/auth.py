@@ -12,7 +12,9 @@ from app.schemas.auth import (
     RegisterRequest, 
     RefreshTokenRequest, 
     AuthResponse,
-    UserProfileResponse
+    UserProfileResponse,
+    ChangePasswordRequest,
+    UpdateProfileRequest
 )
 from app.schemas.token import TokenResponse
 from app.schemas.user import UserCreate, User
@@ -159,6 +161,113 @@ async def get_current_user_profile(
         is_active=current_user.is_active,
         created_at=current_user.created_at.isoformat()
     )
+
+
+@router.put("/me", response_model=UserProfileResponse)
+async def update_user_profile(
+    request: UpdateProfileRequest,
+    current_user: UserModel = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Обновление профиля текущего пользователя.
+    
+    Требует авторизации.
+    """
+    try:
+        from app.database.crud import user as user_crud
+        from app.schemas.user import UserUpdate
+        
+        # Проверяем уникальность email и username, если они изменяются
+        update_data = request.dict(exclude_unset=True)
+        
+        if update_data.get("email") and update_data["email"] != current_user.email:
+            existing_user = user_crud.get_by_email(db, email=update_data["email"])
+            if existing_user and existing_user.id != current_user.id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Пользователь с таким email уже существует"
+                )
+        
+        if update_data.get("username") and update_data["username"] != current_user.username:
+            existing_user = user_crud.get_by_username(db, username=update_data["username"])
+            if existing_user and existing_user.id != current_user.id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Пользователь с таким username уже существует"
+                )
+        
+        # Обновляем пользователя
+        user_update = UserUpdate(**update_data)
+        updated_user = user_crud.update(db, db_obj=current_user, obj_in=user_update)
+        
+        return UserProfileResponse(
+            id=updated_user.id,
+            email=updated_user.email,
+            username=updated_user.username,
+            full_name=updated_user.full_name,
+            is_active=updated_user.is_active,
+            created_at=updated_user.created_at.isoformat()
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка обновления профиля: {str(e)}"
+        )
+
+
+@router.post("/change-password", response_model=AuthResponse)
+async def change_password(
+    request: ChangePasswordRequest,
+    current_user: UserModel = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Смена пароля текущего пользователя.
+    
+    Требует авторизации и подтверждения текущего пароля.
+    """
+    try:
+        from app.database.crud import user as user_crud
+        from app.schemas.user import UserUpdate
+        
+        # Проверяем текущий пароль
+        if not user_crud.verify_password(request.current_password, current_user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Неверный текущий пароль"
+            )
+        
+        # Проверяем, что новый пароль отличается от текущего
+        if user_crud.verify_password(request.new_password, current_user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Новый пароль должен отличаться от текущего"
+            )
+        
+        # Обновляем пароль
+        user_update = UserUpdate(password=request.new_password)
+        user_crud.update(db, db_obj=current_user, obj_in=user_update)
+        
+        # Отзываем все токены пользователя для безопасности
+        from app.database.crud import token as token_crud
+        revoked_count = token_crud.revoke_all_user_tokens(db, user_id=current_user.id)
+        
+        return AuthResponse(
+            message=f"Пароль успешно изменен. Отозвано токенов: {revoked_count}. Войдите в систему заново.",
+            success=True
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка смены пароля: {str(e)}"
+        )
 
 
 @router.post("/verify", response_model=AuthResponse)

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { RegisterRequest } from '../../types/auth'
+import { isValidEmail, validatePassword } from '../../utils/errorHandling'
 
 interface RegisterFormProps {
   onSuccess?: () => void
@@ -17,20 +18,57 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
   })
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string
+    username?: string
+    password?: string
+    confirmPassword?: string
+  }>({})
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setFieldErrors({})
 
-    // Проверка совпадения паролей
-    if (formData.password !== confirmPassword) {
-      setError('Пароли не совпадают')
-      return
+    // Комплексная валидация формы
+    const newFieldErrors: typeof fieldErrors = {}
+
+    // Валидация email
+    if (!formData.email) {
+      newFieldErrors.email = 'Email обязателен для заполнения'
+    } else if (!isValidEmail(formData.email)) {
+      newFieldErrors.email = 'Неверный формат email адреса'
     }
 
-    // Проверка длины пароля
-    if (formData.password.length < 8) {
-      setError('Пароль должен содержать минимум 8 символов')
+    // Валидация username
+    if (!formData.username) {
+      newFieldErrors.username = 'Имя пользователя обязательно для заполнения'
+    } else if (formData.username.length < 3) {
+      newFieldErrors.username = 'Имя пользователя должно содержать минимум 3 символа'
+    } else if (!/^[a-zA-Z0-9_.-]+$/.test(formData.username)) {
+      newFieldErrors.username = 'Имя пользователя может содержать только буквы, цифры, точки, подчеркивания и дефисы'
+    }
+
+    // Валидация пароля
+    if (!formData.password) {
+      newFieldErrors.password = 'Пароль обязателен для заполнения'
+    } else {
+      const passwordValidation = validatePassword(formData.password)
+      if (!passwordValidation.isValid) {
+        newFieldErrors.password = passwordValidation.message
+      }
+    }
+
+    // Проверка совпадения паролей
+    if (!confirmPassword) {
+      newFieldErrors.confirmPassword = 'Подтверждение пароля обязательно'
+    } else if (formData.password !== confirmPassword) {
+      newFieldErrors.confirmPassword = 'Пароли не совпадают'
+    }
+
+    // Если есть ошибки валидации, показываем их
+    if (Object.keys(newFieldErrors).length > 0) {
+      setFieldErrors(newFieldErrors)
       return
     }
 
@@ -56,6 +94,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
         ...prev,
         [name]: value
       }))
+    }
+
+    // Очищаем ошибки при изменении поля
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }))
+    }
+    
+    // Очищаем общую ошибку если пользователь начал изменять данные
+    if (error) {
+      setError(null)
     }
   }
 
@@ -96,7 +147,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
             required
             disabled={isLoading}
             placeholder="example@email.com"
+            className={fieldErrors.email ? 'error' : ''}
           />
+          {fieldErrors.email && (
+            <div className="field-error">{fieldErrors.email}</div>
+          )}
         </div>
 
         <div className="form-group">
@@ -111,7 +166,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
             disabled={isLoading}
             placeholder="Минимум 3 символа"
             minLength={3}
+            className={fieldErrors.username ? 'error' : ''}
           />
+          {fieldErrors.username && (
+            <div className="field-error">{fieldErrors.username}</div>
+          )}
         </div>
 
         <div className="form-group">
@@ -139,7 +198,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
             disabled={isLoading}
             placeholder="Минимум 8 символов"
             minLength={8}
+            className={fieldErrors.password ? 'error' : ''}
           />
+          {fieldErrors.password && (
+            <div className="field-error">{fieldErrors.password}</div>
+          )}
         </div>
 
         <div className="form-group">
@@ -154,9 +217,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
             disabled={isLoading}
             placeholder="Повторите пароль"
             minLength={8}
+            className={fieldErrors.confirmPassword ? 'error' : ''}
           />
-          {confirmPassword && formData.password !== confirmPassword && (
-            <div className="field-error">Пароли не совпадают</div>
+          {fieldErrors.confirmPassword && (
+            <div className="field-error">{fieldErrors.confirmPassword}</div>
           )}
         </div>
 

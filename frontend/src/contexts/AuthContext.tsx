@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { User, AuthContextType, LoginRequest, RegisterRequest } from '../types/auth'
+import { User, AuthContextType, RegisterRequest } from '../types/auth'
 import { authApi } from '../services/api/auth'
+import { handleAuthError, handleRegistrationError, isValidEmail, validatePassword } from '../utils/errorHandling'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -25,7 +26,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Загрузка токенов из localStorage при инициализации
   useEffect(() => {
-    const loadTokensFromStorage = () => {
+    const loadTokensFromStorage = async () => {
       try {
         const accessToken = localStorage.getItem('access_token')
         const refreshToken = localStorage.getItem('refresh_token')
@@ -33,12 +34,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (accessToken && refreshToken) {
           setTokens({ access: accessToken, refresh: refreshToken })
           // Загружаем профиль пользователя
-          loadUserProfile(accessToken)
+          await loadUserProfile(accessToken)
         } else {
           setIsLoading(false)
         }
       } catch (error) {
         console.error('Error loading tokens from storage:', error)
+        clearTokens()
         setIsLoading(false)
       }
     }
@@ -77,28 +79,58 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      setIsLoading(true)
+      // НЕ меняем isLoading чтобы избежать перемонтирования компонентов!
+      
+      // Валидация email
+      if (!isValidEmail(email)) {
+        throw new Error('Неверный формат email адреса')
+      }
+      
+      // Валидация пароля
+      if (!password || password.length < 1) {
+        throw new Error('Пароль не может быть пустым')
+      }
+      
       const tokenData = await authApi.login({ email, password })
       
       saveTokens(tokenData)
       await loadUserProfile(tokenData.access_token)
     } catch (error) {
       clearTokens()
-      throw error
-    } finally {
-      setIsLoading(false)
+      // Используем улучшенную обработку ошибок
+      const errorMessage = handleAuthError(error)
+      throw new Error(errorMessage)
     }
   }
 
   const register = async (data: RegisterRequest) => {
     try {
       setIsLoading(true)
+      
+      // Валидация email
+      if (!isValidEmail(data.email)) {
+        throw new Error('Неверный формат email адреса')
+      }
+      
+      // Валидация пароля
+      const passwordValidation = validatePassword(data.password)
+      if (!passwordValidation.isValid) {
+        throw new Error(passwordValidation.message)
+      }
+      
+      // Валидация username
+      if (!data.username || data.username.length < 3) {
+        throw new Error('Имя пользователя должно содержать минимум 3 символа')
+      }
+      
       await authApi.register(data)
       // После регистрации автоматически логинимся
       await login(data.email, data.password)
     } catch (error) {
       clearTokens()
-      throw error
+      // Используем улучшенную обработку ошибок для регистрации
+      const errorMessage = handleRegistrationError(error)
+      throw new Error(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -114,6 +146,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       clearTokens()
     }
+  }
+
+  const clearAuth = () => {
+    clearTokens()
+    setIsLoading(false)
   }
 
   const refreshToken = async () => {
@@ -142,6 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
+    clearAuth,
     refreshToken,
     getAuthHeader
   }

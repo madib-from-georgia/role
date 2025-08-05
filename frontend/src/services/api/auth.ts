@@ -21,7 +21,15 @@ class AuthApi {
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`)
+      const error = new Error(errorData.detail || `HTTP error! status: ${response.status}`)
+      // Добавляем информацию для системы обработки ошибок
+      ;(error as any).response = {
+        status: response.status,
+        data: errorData
+      }
+      ;(error as any).status = response.status
+      ;(error as any).detail = errorData.detail
+      throw error
     }
 
     return response.json()
@@ -74,6 +82,41 @@ class AuthApi {
       },
       body: JSON.stringify(data),
     })
+  }
+
+  async changePassword(
+    accessToken: string, 
+    currentPassword: string, 
+    newPassword: string
+  ): Promise<AuthResponse> {
+    const requestBody = {
+      current_password: currentPassword,
+      new_password: newPassword,
+    }
+    
+    const url = `${API_BASE_URL}/auth/change-password`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(requestBody),
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      const error = new Error(errorData.detail || `HTTP error! status: ${response.status}`)
+      ;(error as any).response = {
+        status: response.status,
+        data: errorData
+      }
+      ;(error as any).status = response.status
+      ;(error as any).detail = errorData.detail
+      throw error
+    }
+
+    return response.json()
   }
 }
 

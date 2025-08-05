@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { authApi } from '../services/api/auth'
 import ProtectedRoute from '../components/auth/ProtectedRoute'
+import ChangePasswordForm from '../components/ChangePasswordForm'
 
 const Profile: React.FC = () => {
   const { user, logout, getAuthHeader } = useAuth()
@@ -9,6 +10,7 @@ const Profile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [showChangePassword, setShowChangePassword] = useState(false)
   
   const [editData, setEditData] = useState({
     username: user?.username || '',
@@ -29,7 +31,7 @@ const Profile: React.FC = () => {
         throw new Error('Токен авторизации не найден')
       }
 
-      const updatedUser = await authApi.updateProfile(
+      await authApi.updateProfile(
         authHeader.replace('Bearer ', ''),
         editData
       )
@@ -226,6 +228,38 @@ const Profile: React.FC = () => {
                     Функция будет добавлена в следующих обновлениях
                   </p>
                 </div>
+              </div>
+            </div>
+
+            <div className="profile-card">
+              <h2>Безопасность</h2>
+              <div className="security-section">
+                {!showChangePassword ? (
+                  <div className="security-info">
+                    <div className="form-group">
+                      <label>Пароль</label>
+                      <div className="field-value">••••••••</div>
+                      <p className="field-hint">
+                        Для безопасности пароль скрыт
+                      </p>
+                    </div>
+                    <button 
+                      className="btn btn-outline"
+                      onClick={() => setShowChangePassword(true)}
+                      disabled={isLoading}
+                    >
+                      Изменить пароль
+                    </button>
+                  </div>
+                ) : (
+                  <ChangePasswordForm
+                    onSuccess={() => {
+                      setShowChangePassword(false)
+                      setSuccess('Пароль успешно изменен')
+                    }}
+                    onCancel={() => setShowChangePassword(false)}
+                  />
+                )}
               </div>
             </div>
 

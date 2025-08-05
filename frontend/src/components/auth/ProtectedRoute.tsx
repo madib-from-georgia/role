@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import AuthModal from './AuthModal'
 
@@ -15,11 +15,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [pendingPath, setPendingPath] = useState<string | null>(null)
 
+  const handleCloseAuthModal = useCallback(() => {
+    setShowAuthModal(false)
+    // При закрытии модального окна без авторизации, 
+    // перенаправляем на главную страницу
+    if (redirectPath) {
+      window.location.href = redirectPath
+    }
+  }, [redirectPath])
+
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       // Сохраняем текущий путь для возврата после авторизации
       setPendingPath(window.location.pathname)
       setShowAuthModal(true)
+    } else if (!isLoading && isAuthenticated) {
+      // Если пользователь авторизован, убираем модальное окно
+      setShowAuthModal(false)
+      setPendingPath(null)
     }
   }, [isAuthenticated, isLoading])
 
@@ -67,15 +80,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         </div>
 
         <AuthModal 
-          isOpen={showAuthModal}
-          onClose={() => {
-            setShowAuthModal(false)
-            // При закрытии модального окна без авторизации, 
-            // перенаправляем на главную страницу
-            if (redirectPath) {
-              window.location.href = redirectPath
-            }
-          }}
+          isOpen={showAuthModal && !isAuthenticated}
+          onClose={handleCloseAuthModal}
         />
       </>
     )

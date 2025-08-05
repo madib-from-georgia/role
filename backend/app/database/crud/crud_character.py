@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.database.crud.base import CRUDBase
 from app.database.models.character import Character
+from app.database.models.checklist import ChecklistResponse
 from app.schemas.character import CharacterCreate, CharacterUpdate
 
 

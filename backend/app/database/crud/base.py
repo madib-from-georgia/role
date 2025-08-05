@@ -89,8 +89,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj = db.query(self.model).get(id)
         if not obj:
             raise ValueError(f"Запись с ID {id} не найдена")
-        db.delete(obj)
-        db.commit()
+        try:
+            db.delete(obj)
+            db.commit()
+        except IntegrityError as e:
+            db.rollback()
+            raise ValueError(f"Ошибка удаления записи: {str(e)}")
+        except Exception as e:
+            db.rollback()
+            raise ValueError(f"Неожиданная ошибка при удалении: {str(e)}")
         return obj
 
     def count(self, db: Session) -> int:

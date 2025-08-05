@@ -2,6 +2,7 @@
 Pydantic схемы для авторизации.
 """
 
+from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -45,3 +46,16 @@ class UserProfileResponse(BaseModel):
     created_at: str
     
     model_config = {"from_attributes": True}
+
+
+class ChangePasswordRequest(BaseModel):
+    """Схема для смены пароля."""
+    current_password: str = Field(..., min_length=8, max_length=100)
+    new_password: str = Field(..., min_length=8, max_length=100)
+
+
+class UpdateProfileRequest(BaseModel):
+    """Схема для обновления профиля."""
+    username: Optional[str] = Field(None, min_length=3, max_length=100)
+    full_name: Optional[str] = Field(None, max_length=255)
+    email: Optional[EmailStr] = None

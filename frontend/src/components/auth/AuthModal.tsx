@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 
@@ -15,13 +15,13 @@ const AuthModal: React.FC<AuthModalProps> = ({
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode)
 
-  const handleSuccess = () => {
+  const handleSuccess = useCallback(() => {
     onClose()
-  }
+  }, [onClose])
 
-  const handleSwitchMode = () => {
+  const handleSwitchMode = useCallback(() => {
     setMode(prev => prev === 'login' ? 'register' : 'login')
-  }
+  }, [])
 
   if (!isOpen) return null
 

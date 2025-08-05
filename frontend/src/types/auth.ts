@@ -38,6 +38,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   register: (data: RegisterRequest) => Promise<void>
   logout: () => Promise<void>
+  clearAuth: () => void
   refreshToken: () => Promise<void>
   getAuthHeader: () => string | null
 }

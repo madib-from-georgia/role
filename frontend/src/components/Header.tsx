@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import AuthModal from './auth/AuthModal'
@@ -10,14 +10,22 @@ const Header: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await logout()
       setShowUserMenu(false)
     } catch (error) {
       console.error('Logout error:', error)
     }
-  }
+  }, [logout])
+
+  const handleOpenAuthModal = useCallback(() => {
+    setShowAuthModal(true)
+  }, [])
+
+  const handleCloseAuthModal = useCallback(() => {
+    setShowAuthModal(false)
+  }, [])
 
   return (
     <>
@@ -35,7 +43,7 @@ const Header: React.FC = () => {
                   <div className="nav-guest">
                     <button 
                       className="nav-link auth-trigger"
-                      onClick={() => setShowAuthModal(true)}
+                      onClick={handleOpenAuthModal}
                     >
                       Войти
                     </button>
@@ -137,7 +145,7 @@ const Header: React.FC = () => {
     {/* Auth Modal */}
     <AuthModal 
       isOpen={showAuthModal}
-      onClose={() => setShowAuthModal(false)}
+      onClose={handleCloseAuthModal}
     />
   </>
   )
