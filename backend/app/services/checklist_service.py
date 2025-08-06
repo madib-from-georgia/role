@@ -66,7 +66,8 @@ class ChecklistService:
             slug=structure.slug,
             icon=structure.icon,
             order_index=0,
-            is_active=True
+            is_active=True,
+            goal=structure.goal  # Добавляем поле goal
         )
         
         checklist_obj = checklist_crud.create(db, obj_in=checklist_data)
@@ -266,6 +267,7 @@ class ChecklistService:
             icon=checklist_obj.icon,
             order_index=checklist_obj.order_index,
             is_active=checklist_obj.is_active,
+            goal=checklist_obj.goal,  # Добавляем поле goal
             created_at=checklist_obj.created_at,
             updated_at=checklist_obj.updated_at,
             sections=enriched_sections
