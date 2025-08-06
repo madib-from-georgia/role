@@ -22,6 +22,7 @@ class ChecklistQuestionBase(BaseModel):
     order_index: int = Field(0, description="Порядок отображения")
     options: Optional[List[str]] = Field(None, description="Варианты ответов")
     option_type: str = Field("none", description="Тип вариантов: single, multiple, none")
+    source: Optional[List[str]] = Field(None, description="Источники ответа: text, logic, imagination")
 
 
 class ChecklistQuestion(ChecklistQuestionBase):
@@ -92,7 +93,6 @@ class ChecklistBase(BaseModel):
     order_index: int = Field(0, description="Порядок отображения")
     is_active: bool = Field(True, description="Активен ли чеклист")
     goal: Optional[str] = Field(None, description="Цель чеклиста")
-    how_to_use: Optional[str] = Field(None, description="Как использовать этот блок")
 
 
 class ChecklistCreate(ChecklistBase):
@@ -106,7 +106,6 @@ class ChecklistUpdate(BaseModel):
     order_index: Optional[int] = None
     is_active: Optional[bool] = None
     goal: Optional[str] = None
-    how_to_use: Optional[str] = None
 
 
 class Checklist(ChecklistBase):

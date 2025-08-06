@@ -7,7 +7,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 from loguru import logger
 
-from app.services.checklist_parser import ChecklistMarkdownParser, ChecklistStructure
+from app.services.checklist_json_parser import ChecklistJsonParser, ChecklistStructure
 from app.database.crud.crud_checklist import (
     checklist as checklist_crud,
     checklist_section,
@@ -35,7 +35,7 @@ class ChecklistService:
     """
     
     def __init__(self):
-        self.parser = ChecklistMarkdownParser()
+        self.parser = ChecklistJsonParser()
     
     def import_checklist_from_file(self, db: Session, file_path: str) -> Checklist:
         """
@@ -89,7 +89,6 @@ class ChecklistService:
         checklist_obj = checklist_crud.get(db, id=checklist_id)
         if checklist_obj:
             checklist_obj.goal = structure.goal
-            checklist_obj.how_to_use = structure.how_to_use
             db.add(checklist_obj)
         
         for section_data in structure.sections:
@@ -135,7 +134,8 @@ class ChecklistService:
                             hint=question_data.hint,
                             order_index=question_data.order_index,
                             options=question_data.options,
-                            option_type=question_data.option_type
+                            option_type=question_data.option_type,
+                            source=question_data.source
                         )
                         db.add(question_obj)
         
