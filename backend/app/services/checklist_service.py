@@ -241,6 +241,8 @@ class ChecklistService:
                     title=subsection.title,
                     number=subsection.number,
                     order_index=subsection.order_index,
+                    examples=subsection.examples,
+                    why_important=subsection.why_important,
                     section_id=subsection.section_id,
                     question_groups=enriched_question_groups
                 )
