@@ -177,9 +177,88 @@ class ChecklistService:
         responses_dict: Dict[int, Any]
     ) -> ChecklistWithResponses:
         """Обогащает структуру чеклиста ответами"""
-        # Здесь нужна логика для создания ChecklistWithResponses
-        # с заполненными ответами. Для простоты возвращаем базовую структуру
-        return ChecklistWithResponses.from_orm(checklist_obj)
+        from app.schemas.checklist import (
+            ChecklistWithResponses, ChecklistSectionWithResponses,
+            ChecklistSubsectionWithResponses, ChecklistQuestionGroupWithResponses,
+            ChecklistQuestionWithResponse
+        )
+        
+        # Создаем обогащенные секции
+        enriched_sections = []
+        for section in checklist_obj.sections:
+            enriched_subsections = []
+            
+            for subsection in section.subsections:
+                enriched_question_groups = []
+                
+                for question_group in subsection.question_groups:
+                    enriched_questions = []
+                    
+                    for question in question_group.questions:
+                        # Получаем ответ для этого вопроса
+                        current_response = responses_dict.get(question.id)
+                        
+                        # Создаем обогащенный вопрос
+                        enriched_question = ChecklistQuestionWithResponse(
+                            id=question.id,
+                            text=question.text,
+                            hint=question.hint,
+                            order_index=question.order_index,
+                            question_group_id=question.question_group_id,
+                            created_at=question.created_at,
+                            current_response=current_response,
+                            response_history=[]  # TODO: Добавить историю ответов
+                        )
+                        enriched_questions.append(enriched_question)
+                    
+                    # Создаем обогащенную группу вопросов
+                    enriched_group = ChecklistQuestionGroupWithResponses(
+                        id=question_group.id,
+                        title=question_group.title,
+                        order_index=question_group.order_index,
+                        subsection_id=question_group.subsection_id,
+                        questions=enriched_questions
+                    )
+                    enriched_question_groups.append(enriched_group)
+                
+                # Создаем обогащенную подсекцию
+                enriched_subsection = ChecklistSubsectionWithResponses(
+                    id=subsection.id,
+                    title=subsection.title,
+                    number=subsection.number,
+                    order_index=subsection.order_index,
+                    section_id=subsection.section_id,
+                    question_groups=enriched_question_groups
+                )
+                enriched_subsections.append(enriched_subsection)
+            
+            # Создаем обогащенную секцию
+            enriched_section = ChecklistSectionWithResponses(
+                id=section.id,
+                title=section.title,
+                number=section.number,
+                icon=section.icon,
+                order_index=section.order_index,
+                checklist_id=section.checklist_id,
+                subsections=enriched_subsections
+            )
+            enriched_sections.append(enriched_section)
+        
+        # Создаем обогащенный чеклист
+        enriched_checklist = ChecklistWithResponses(
+            id=checklist_obj.id,
+            title=checklist_obj.title,
+            description=checklist_obj.description,
+            slug=checklist_obj.slug,
+            icon=checklist_obj.icon,
+            order_index=checklist_obj.order_index,
+            is_active=checklist_obj.is_active,
+            created_at=checklist_obj.created_at,
+            updated_at=checklist_obj.updated_at,
+            sections=enriched_sections
+        )
+        
+        return enriched_checklist
     
     def update_response(
         self, 

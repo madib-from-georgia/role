@@ -77,12 +77,12 @@ class ChecklistMarkdownParser:
         self.section_pattern = r'^## (.+)$'
         self.subsection_pattern = r'^### (.+)$'
         self.question_group_pattern = r'^- \*\*(.+)\*\*$'
-        self.question_pattern = r'^\s*- \[ \] \*\*(.+?)\*\*$'
+        self.question_pattern = r'^\s*- \[ \] \*\*(.+?)\*\*'
         self.hint_pattern = r'^\s*\*(.+?)\*$'
         
         # Альтернативные паттерны
         self.alt_question_group_pattern = r'^- (.+)$'
-        self.alt_question_pattern = r'^\s+- \[ \] \*\*(.+?)\*\*$'
+        self.alt_question_pattern = r'^\s+- \[ \] \*\*(.+?)\*\*'
     
     def parse_file(self, file_path: str) -> ChecklistStructure:
         """

@@ -26,6 +26,7 @@ export const ChecklistQuestionGroup: React.FC<ChecklistQuestionGroupProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(isExpanded);
 
+  console.log(group);
   // Статистика группы
   const totalQuestions = group.questions.length;
   const answeredQuestions = group.questions.filter(q => q.current_response?.answer).length;
