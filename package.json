@@ -18,7 +18,8 @@
     "clear-checklists": "cd backend && python scripts/clear_checklists.py",
     "clear-checklists-force": "cd backend && python scripts/clear_checklists.py --clear-all --force",
     "list-checklists": "cd backend && python scripts/clear_checklists.py --list",
-    "logs": "cd backend && python scripts/view_nlp_logs.py"
+    "logs": "cd backend && python scripts/view_nlp_logs.py",
+    "reset_db": "cd backend && python scripts/reset_database.py"
   },
   "keywords": [
     "character-analysis",

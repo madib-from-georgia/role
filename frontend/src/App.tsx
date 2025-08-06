@@ -10,6 +10,7 @@ import CreateProject from './pages/CreateProject'
 import ProjectDetail from './pages/ProjectDetail'
 import Profile from './pages/Profile'
 import CharacterChecklists from './pages/CharacterChecklists'
+import CharacterChecklistDetail from './pages/CharacterChecklistDetail'
 
 // Создаем экземпляр React Query клиента
 const queryClient = new QueryClient({
@@ -68,6 +69,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <CharacterChecklists />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/characters/:characterId/checklists/:checklistSlug" 
+                  element={
+                    <ProtectedRoute>
+                      <CharacterChecklistDetail />
                     </ProtectedRoute>
                   } 
                 />

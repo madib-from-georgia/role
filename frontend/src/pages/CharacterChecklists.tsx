@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import { ChecklistView } from '../components/ChecklistView';
 import { checklistApi, charactersApi } from '../services/api';
 
 interface Character {
@@ -24,7 +23,6 @@ interface ChecklistItem {
 const CharacterChecklists: React.FC = () => {
   const { characterId } = useParams<{ characterId: string }>();
   const navigate = useNavigate();
-  const [selectedChecklistSlug, setSelectedChecklistSlug] = useState<string | null>(null);
 
   // Загружаем данные персонажа
   const { data: character, isLoading: characterLoading } = useQuery({
@@ -75,39 +73,7 @@ const CharacterChecklists: React.FC = () => {
     );
   }
 
-  // Если выбран конкретный чеклист, показываем его
-  if (selectedChecklistSlug) {
-    return (
-      <div className="checklist-page">
-        <div className="page-header">
-          <div className="container">
-            <div className="header-nav">
-              <button
-                onClick={() => setSelectedChecklistSlug(null)}
-                className="btn btn-secondary"
-              >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Назад к списку чеклистов
-              </button>
-              
-              <div className="header-title centered">
-                <h1>{character?.name}</h1>
-              </div>
-              
-              <div className="header-spacer"></div>
-            </div>
-          </div>
-        </div>
-        
-        <ChecklistView 
-          checklistSlug={selectedChecklistSlug}
-          characterId={parseInt(characterId)}
-        />
-      </div>
-    );
-  }
+
 
   // Показываем список чеклистов
   return (
@@ -196,7 +162,7 @@ const CharacterChecklists: React.FC = () => {
                   <div
                     key={checklist.id}
                     className="checklist-card"
-                    onClick={() => setSelectedChecklistSlug(checklist.slug)}
+                    onClick={() => navigate(`/characters/${characterId}/checklists/${checklist.slug}`)}
                   >
                     <div className="checklist-card-content">
                       <div className="checklist-info">

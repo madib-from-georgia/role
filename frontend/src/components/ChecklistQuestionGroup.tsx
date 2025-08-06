@@ -11,7 +11,7 @@ interface ChecklistQuestionGroupProps {
   group: ChecklistQuestionGroupData;
   onAnswerUpdate: (questionId: number, data: {
     answer?: string;
-    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
   }) => void;
   onAnswerDelete: (responseId: number) => void;

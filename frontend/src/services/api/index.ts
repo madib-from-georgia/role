@@ -128,12 +128,12 @@ export const checklistApi = {
     question_id: number;
     character_id: number;
     answer?: string;
-    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
   }) => api.post('/api/checklists/responses', data),
   updateResponse: (responseId: number, data: {
     answer?: string;
-    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
     change_reason?: string;
   }) => api.put(`/api/checklists/responses/${responseId}`, data),

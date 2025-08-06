@@ -10,9 +10,9 @@ from enum import Enum
 
 class SourceType(str, Enum):
     """Источник ответа на вопрос"""
-    FOUND_IN_TEXT = "found_in_text"
-    LOGICALLY_DERIVED = "logically_derived"
-    IMAGINED = "imagined"
+    FOUND_IN_TEXT = "FOUND_IN_TEXT"
+    LOGICALLY_DERIVED = "LOGICALLY_DERIVED"
+    IMAGINED = "IMAGINED"
 
 
 # Базовые схемы для вопросов

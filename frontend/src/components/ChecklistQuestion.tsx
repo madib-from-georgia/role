@@ -7,7 +7,7 @@ export interface ChecklistQuestionData {
   current_response?: {
     id: number;
     answer?: string;
-    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
     version: number;
     updated_at?: string;
@@ -15,7 +15,7 @@ export interface ChecklistQuestionData {
   response_history?: Array<{
     id: number;
     previous_answer?: string;
-    previous_source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    previous_source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     previous_comment?: string;
     created_at: string;
   }>;
@@ -33,9 +33,9 @@ interface ChecklistQuestionProps {
 }
 
 const sourceTypeLabels = {
-  found_in_text: { label: 'Найдено в тексте', color: 'source-found' },
-  logically_derived: { label: 'Логически выведено', color: 'source-derived' },
-  imagined: { label: 'Придумано', color: 'source-imagined' }
+  FOUND_IN_TEXT: { label: 'Найдено в тексте', color: 'source-found' },
+  LOGICALLY_DERIVED: { label: 'Логически выведено', color: 'source-derived' },
+  IMAGINED: { label: 'Придумано', color: 'source-imagined' }
 };
 
 export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
@@ -49,7 +49,7 @@ export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
   const [showHistory, setShowHistory] = useState(false);
   const [formData, setFormData] = useState({
     answer: question.current_response?.answer || '',
-    source_type: question.current_response?.source_type || 'imagined' as const,
+    source_type: question.current_response?.source_type || 'IMAGINED' as const,
     comment: question.current_response?.comment || ''
   });
 
@@ -64,7 +64,7 @@ export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
   const handleCancel = () => {
     setFormData({
       answer: question.current_response?.answer || '',
-      source_type: question.current_response?.source_type || 'imagined',
+      source_type: question.current_response?.source_type || 'IMAGINED',
       comment: question.current_response?.comment || ''
     });
     setIsEditing(false);

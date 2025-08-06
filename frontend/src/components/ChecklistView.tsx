@@ -51,7 +51,7 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
       questionId: number;
       data: {
         answer?: string;
-        source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+        source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
         comment?: string;
       }
     }) => checklistApi.createOrUpdateResponse({
@@ -133,7 +133,7 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
 
   const handleAnswerUpdate = (questionId: number, data: {
     answer?: string;
-    source_type?: 'found_in_text' | 'logically_derived' | 'imagined';
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
   }) => {
     updateAnswerMutation.mutate({ questionId, data });
