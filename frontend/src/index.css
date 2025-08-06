@@ -3438,3 +3438,361 @@ a:hover {
     text-align: center;
   }
 }
+
+/* ===== ЧЕКЛИСТЫ - УЛУЧШЕННЫЙ UX ===== */
+
+/* Цель чеклиста */
+.checklist-goal {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.checklist-goal h2 {
+  color: #1e293b;
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.goal-content {
+  color: #475569;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* Как использовать этот блок */
+.checklist-how-to-use {
+  margin-bottom: 32px;
+}
+
+.how-to-use-toggle {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.how-to-use-toggle:hover {
+  color: #3b82f6;
+}
+
+.how-to-use-content {
+  background: #f1f5f9;
+  border-left: 4px solid #94a3b8;
+  padding: 16px 20px;
+  margin-top: 12px;
+  border-radius: 0 8px 8px 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Варианты ответов */
+.options-section {
+  margin-bottom: 24px;
+}
+
+.options-section h4 {
+  color: #374151;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.option-item:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.option-item input[type="radio"],
+.option-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.option-text {
+  flex: 1;
+  color: #374151;
+}
+
+.option-item.custom-answer {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.option-item.custom-answer:hover {
+  background: #dbeafe;
+}
+
+.option-item.custom-answer .option-text {
+  color: #1e40af;
+  font-weight: 500;
+}
+
+/* Поле для собственного ответа */
+.custom-answer-section {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.custom-answer-section label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Источник ответа */
+.source-type-section {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Комментарий */
+.comment-section {
+  margin-bottom: 24px;
+}
+
+/* Подсказки */
+.question-hint {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  color: #92400e;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.question-hint em {
+  font-style: italic;
+  color: #78350f;
+}
+
+/* Примеры из литературы и Почему это важно */
+.subsection-examples,
+.subsection-why-important {
+  margin-top: 24px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.subsection-examples h3,
+.subsection-why-important h3 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.examples-content,
+.why-important-content {
+  color: #475569;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.subsection-why-important {
+  border-left-color: #10b981;
+  background: #f0fdf4;
+}
+
+/* Кнопки действий формы */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Текущий ответ */
+.current-response {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.response-content {
+  color: #166534;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.response-comment {
+  color: #15803d;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.response-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #059669;
+}
+
+/* История ответов */
+.response-history {
+  margin-top: 16px;
+}
+
+.history-toggle {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.history-toggle:hover {
+  color: #374151;
+}
+
+.history-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.history-content {
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.history-comment {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.history-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}

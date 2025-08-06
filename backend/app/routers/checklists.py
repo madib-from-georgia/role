@@ -33,6 +33,28 @@ async def get_checklists(
     return checklist_service.get_available_checklists(db)
 
 
+@router.get("/{checklist_slug}", response_model=ChecklistWithResponses)
+async def get_checklist_structure(
+    checklist_slug: str,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Получение структуры чеклиста без привязки к персонажу.
+    
+    Возвращает полную структуру чеклиста с пустыми ответами.
+    """
+    checklist = checklist_service.get_checklist_structure(db, checklist_slug)
+    
+    if not checklist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Чеклист не найден"
+        )
+    
+    return checklist
+
+
 @router.get("/{checklist_slug}/character/{character_id}", response_model=ChecklistWithResponses)
 async def get_checklist_for_character(
     checklist_slug: str,

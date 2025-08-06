@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, AuthContextType, RegisterRequest } from '../types/auth'
 import { authApi } from '../services/api/auth'
 import { handleAuthError, handleRegistrationError, isValidEmail, validatePassword } from '../utils/errorHandling'
+import { config } from '../config'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -22,12 +23,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [tokens, setTokens] = useState<{access: string, refresh: string} | null>(null)
 
-  const isAuthenticated = !!user && !!tokens?.access
+  const isAuthenticated = !!user && (!!tokens?.access || !config.authEnabled)
 
   // Загрузка токенов из localStorage при инициализации
   useEffect(() => {
     const loadTokensFromStorage = async () => {
       try {
+        // Если авторизация отключена, используем mock пользователя
+        if (!config.authEnabled) {
+          setUser(config.mockUser)
+          setIsLoading(false)
+          return
+        }
+        
         const accessToken = localStorage.getItem('access_token')
         const refreshToken = localStorage.getItem('refresh_token')
         
@@ -79,6 +87,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
+      // Если авторизация отключена, просто устанавливаем mock пользователя
+      if (!config.authEnabled) {
+        setUser(config.mockUser)
+        return
+      }
+      
       // НЕ меняем isLoading чтобы избежать перемонтирования компонентов!
       
       // Валидация email
@@ -105,6 +119,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (data: RegisterRequest) => {
     try {
+      // Если авторизация отключена, просто устанавливаем mock пользователя
+      if (!config.authEnabled) {
+        setUser(config.mockUser)
+        return
+      }
+      
       setIsLoading(true)
       
       // Валидация email
@@ -138,6 +158,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
+      // Если авторизация отключена, просто очищаем состояние
+      if (!config.authEnabled) {
+        clearTokens()
+        return
+      }
+      
       if (tokens?.access) {
         await authApi.logout(tokens.access)
       }
@@ -154,21 +180,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const refreshToken = async () => {
-    if (!tokens?.refresh) {
-      throw new Error('No refresh token available')
-    }
-
     try {
-      const tokenData = await authApi.refreshToken(tokens.refresh)
-      saveTokens(tokenData)
+      // Если авторизация отключена, ничего не делаем
+      if (!config.authEnabled) {
+        return
+      }
+      
+      if (!tokens?.refresh) {
+        throw new Error('No refresh token available')
+      }
+      
+      const newTokens = await authApi.refreshToken(tokens.refresh)
+      saveTokens(newTokens)
     } catch (error) {
-      // Если refresh токен недействителен, выходим из системы
-      await logout()
+      console.error('Error refreshing token:', error)
+      clearTokens()
       throw error
     }
   }
 
   const getAuthHeader = (): string | null => {
+    // Если авторизация отключена, возвращаем null
+    if (!config.authEnabled) {
+      return null
+    }
+    
     return tokens?.access ? `Bearer ${tokens.access}` : null
   }
 

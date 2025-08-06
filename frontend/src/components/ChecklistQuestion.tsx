@@ -4,6 +4,8 @@ export interface ChecklistQuestionData {
   id: number;
   text: string;
   hint?: string;
+  options?: string[];  // Варианты ответов
+  option_type?: 'single' | 'multiple' | 'none';  // Тип вариантов
   current_response?: {
     id: number;
     answer?: string;
@@ -47,6 +49,10 @@ export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
   const [isOpen, setIsOpen] = useState(isExpanded);
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showCustomAnswer, setShowCustomAnswer] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [customAnswer, setCustomAnswer] = useState('');
+  
   const [formData, setFormData] = useState({
     answer: question.current_response?.answer || '',
     source_type: question.current_response?.source_type || 'IMAGINED' as const,
@@ -55,9 +61,78 @@ export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
 
   const hasResponse = !!question.current_response?.answer;
   const hasHistory = question.response_history && question.response_history.length > 0;
+  const hasOptions = question.options && question.options.length > 0;
+
+  // Инициализация выбранных вариантов из текущего ответа
+  React.useEffect(() => {
+    if (question.current_response?.answer && hasOptions) {
+      if (question.option_type === 'multiple') {
+        setSelectedOptions(question.current_response.answer.split(', '));
+      } else {
+        setSelectedOptions([question.current_response.answer]);
+      }
+    }
+  }, [question.current_response?.answer, hasOptions, question.option_type]);
+
+  const handleOptionChange = (option: string, checked: boolean) => {
+    if (question.option_type === 'single') {
+      if (option === 'отвечу сам') {
+        setShowCustomAnswer(checked);
+        if (checked) {
+          setSelectedOptions([]);
+          setFormData(prev => ({ ...prev, answer: '' }));
+        } else {
+          setCustomAnswer('');
+          setFormData(prev => ({ ...prev, answer: '' }));
+        }
+      } else {
+        setShowCustomAnswer(false);
+        setCustomAnswer('');
+        setSelectedOptions(checked ? [option] : []);
+      }
+    } else if (question.option_type === 'multiple') {
+      if (option === 'отвечу сам') {
+        setShowCustomAnswer(checked);
+        if (checked) {
+          setCustomAnswer('');
+          setFormData(prev => ({ ...prev, answer: '' }));
+        } else {
+          setCustomAnswer('');
+          setFormData(prev => ({ ...prev, answer: '' }));
+        }
+      } else {
+        setSelectedOptions(prev => 
+          checked 
+            ? [...prev, option]
+            : prev.filter(o => o !== option)
+        );
+      }
+    }
+  };
+
+  const handleCustomAnswerChange = (value: string) => {
+    setCustomAnswer(value);
+    if (value.trim()) {
+      setFormData(prev => ({ ...prev, answer: value.trim() }));
+    }
+  };
 
   const handleSave = () => {
-    onAnswerUpdate(question.id, formData);
+    let finalAnswer = '';
+    
+    if (showCustomAnswer && customAnswer.trim()) {
+      finalAnswer = customAnswer.trim();
+    } else if (selectedOptions.length > 0) {
+      // Исключаем "отвечу сам" из финального ответа
+      const filteredOptions = selectedOptions.filter(opt => opt !== 'отвечу сам');
+      finalAnswer = filteredOptions.join(', ');
+    }
+    
+    onAnswerUpdate(question.id, {
+      ...formData,
+      answer: finalAnswer,
+      source_type: formData.source_type.toLowerCase() as 'found_in_text' | 'logically_derived' | 'imagined'
+    });
     setIsEditing(false);
   };
 
@@ -67,6 +142,9 @@ export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
       source_type: question.current_response?.source_type || 'IMAGINED',
       comment: question.current_response?.comment || ''
     });
+    setSelectedOptions([]);
+    setCustomAnswer('');
+    setShowCustomAnswer(false);
     setIsEditing(false);
   };
 
@@ -99,204 +177,217 @@ export const ChecklistQuestion: React.FC<ChecklistQuestionProps> = ({
               </svg>
             </button>
             
-            <div className="question-content">
-              <p className="question-text">{question.text}</p>
+            <div className="question-info">
+              <h3 className="question-title">{question.text}</h3>
               
-              {/* Индикатор статуса */}
+              {/* Статус ответа */}
               <div className="question-status">
                 {hasResponse ? (
-                  <>
-                    <span className={`status-badge ${sourceTypeLabels[question.current_response!.source_type!].color}`}>
-                      {sourceTypeLabels[question.current_response!.source_type!].label}
-                    </span>
-                    {question.current_response?.version && question.current_response.version > 1 && (
-                      <span className="version-badge">
-                        v.{question.current_response.version}
-                      </span>
-                    )}
-                  </>
+                  <span className="status-badge answered">
+                    ✓ Отвечено
+                  </span>
                 ) : (
-                  <span className="status-badge unanswered">
-                    Не отвечен
+                  <span className="status-badge not-answered">
+                    ○ Не отвечено
+                  </span>
+                )}
+                
+                {/* Источник ответа */}
+                {question.current_response?.source_type && (
+                  <span className={`source-badge ${sourceTypeLabels[question.current_response.source_type].color}`}>
+                    {sourceTypeLabels[question.current_response.source_type].label}
                   </span>
                 )}
               </div>
             </div>
           </div>
           
-          {/* Кнопки действий */}
-          {hasResponse && (
-            <div className="question-actions">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  startEditing();
-                }}
-                className="action-btn edit-btn"
-                title="Редактировать ответ"
-              >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </button>
-              {hasHistory && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowHistory(!showHistory);
-                    setIsOpen(true);
-                  }}
-                  className="action-btn history-btn"
-                  title="История изменений"
-                >
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+          {/* Действия */}
+          <div className="question-actions">
+            {hasResponse ? (
+              <>
+                <button className="action-btn edit" onClick={startEditing}>
+                  ✏️
                 </button>
-              )}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete();
-                }}
-                className="action-btn delete-btn"
-                title="Удалить ответ"
-              >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
+                <button className="action-btn delete" onClick={handleDelete}>
+                  🗑️
+                </button>
+              </>
+            ) : (
+              <button className="action-btn add" onClick={startEditing}>
+                +
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Развернутое содержимое */}
+      {/* Содержимое вопроса */}
       {isOpen && (
-        <div className="question-body">
+        <div className="question-content">
           {/* Подсказка */}
           {question.hint && (
             <div className="question-hint">
-              <div className="hint-content">
-                <span className="hint-label">Подсказка:</span> {question.hint}
-              </div>
+              <em>{question.hint}</em>
             </div>
           )}
 
-          {/* Текущий ответ или форма */}
-          {isEditing ? (
+          {/* Форма редактирования */}
+          {isEditing && (
             <div className="question-form">
-              {/* Поле ответа */}
-              <div className="form-group">
-                <label className="form-label">Ответ</label>
-                <textarea
-                  value={formData.answer}
-                  onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-                  className="form-textarea"
-                  placeholder="Введите ваш ответ..."
-                />
-              </div>
+              {/* Варианты ответов */}
+              {hasOptions && question.options && (
+                <div className="options-section">
+                  <h4>Варианты ответов:</h4>
+                  <div className="options-list">
+                    {question.options.map((option, index) => (
+                      <label key={index} className="option-item">
+                        <input
+                          type={question.option_type === 'multiple' ? 'checkbox' : 'radio'}
+                          name={`question-${question.id}`}
+                          value={option}
+                          checked={selectedOptions.includes(option)}
+                          onChange={(e) => handleOptionChange(option, e.target.checked)}
+                        />
+                        <span className="option-text">{option}</span>
+                      </label>
+                    ))}
+                    
+                    {/* Вариант "отвечу сам" */}
+                    <label className="option-item custom-answer">
+                      <input
+                        type={question.option_type === 'multiple' ? 'checkbox' : 'radio'}
+                        name={`question-${question.id}`}
+                        checked={showCustomAnswer}
+                        onChange={(e) => handleOptionChange('отвечу сам', e.target.checked)}
+                      />
+                      <span className="option-text">Отвечу сам</span>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* Поле для собственного ответа */}
+              {(showCustomAnswer || !hasOptions) && (
+                <div className="custom-answer-section">
+                  <label className="form-label">
+                    Ваш ответ:
+                    <textarea
+                      className="form-textarea"
+                      value={customAnswer}
+                      onChange={(e) => handleCustomAnswerChange(e.target.value)}
+                      placeholder="Введите ваш ответ..."
+                      rows={3}
+                    />
+                  </label>
+                </div>
+              )}
 
               {/* Источник ответа */}
-              <div className="form-group">
-                <label className="form-label">Источник ответа</label>
-                <select
-                  value={formData.source_type}
-                  onChange={(e) => setFormData({ 
-                    ...formData, 
-                    source_type: e.target.value as 'found_in_text' | 'logically_derived' | 'imagined'
-                  })}
-                  className="form-input"
-                >
-                  <option value="found_in_text">Найдено в тексте</option>
-                  <option value="logically_derived">Логически выведено</option>
-                  <option value="imagined">Придумано</option>
-                </select>
+              <div className="source-type-section">
+                <label className="form-label">
+                  Источник ответа:
+                  <select
+                    className="form-select"
+                    value={formData.source_type}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      source_type: e.target.value as 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED'
+                    }))}
+                  >
+                    <option value="IMAGINED">Придумано</option>
+                    <option value="FOUND_IN_TEXT">Найдено в тексте</option>
+                    <option value="LOGICALLY_DERIVED">Логически выведено</option>
+                  </select>
+                </label>
               </div>
 
               {/* Комментарий */}
-              <div className="form-group">
-                <label className="form-label">Комментарий</label>
-                <textarea
-                  value={formData.comment}
-                  onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-                  className="form-textarea comment-textarea"
-                  placeholder="Цитата, обоснование или комментарий..."
-                />
+              <div className="comment-section">
+                <label className="form-label">
+                  Комментарий (необязательно):
+                  <textarea
+                    className="form-textarea"
+                    value={formData.comment}
+                    onChange={(e) => setFormData(prev => ({ ...prev, comment: e.target.value }))}
+                    placeholder="Добавьте комментарий к ответу..."
+                    rows={2}
+                  />
+                </label>
               </div>
 
-              {/* Кнопки */}
+              {/* Кнопки действий */}
               <div className="form-actions">
-                <button onClick={handleCancel} className="btn btn-secondary">
-                  Отмена
-                </button>
-                <button onClick={handleSave} className="btn btn-primary">
+                <button className="btn btn-primary" onClick={handleSave}>
                   Сохранить
                 </button>
-              </div>
-            </div>
-          ) : hasResponse ? (
-            <div className="question-answer">
-              {/* Ответ */}
-              <div className="answer-section">
-                <h4 className="answer-label">Ответ:</h4>
-                <p className="answer-text">{question.current_response?.answer}</p>
-              </div>
-
-              {/* Комментарий */}
-              {question.current_response?.comment && (
-                <div className="comment-section">
-                  <h4 className="comment-label">Комментарий:</h4>
-                  <p className="comment-text">{question.current_response.comment}</p>
-                </div>
-              )}
-
-              {/* Метаданные */}
-              {question.current_response?.updated_at && (
-                <div className="answer-meta">
-                  Обновлено: {new Date(question.current_response.updated_at).toLocaleString('ru-RU')}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="no-answer">
-              <div className="no-answer-content">
-                <p className="no-answer-text">Ответ еще не добавлен</p>
-                <button onClick={startEditing} className="btn btn-primary">
-                  Добавить ответ
+                <button className="btn btn-secondary" onClick={handleCancel}>
+                  Отмена
                 </button>
               </div>
             </div>
           )}
 
-          {/* История изменений */}
-          {showHistory && hasHistory && (
-            <div className="question-history">
-              <h4 className="history-title">История изменений</h4>
-              <div className="history-list">
-                {question.response_history?.map((historyItem) => (
-                  <div key={historyItem.id} className="history-item">
-                    {historyItem.previous_answer && (
-                      <div className="history-answer">
-                        <p className="history-label">Предыдущий ответ:</p>
-                        <p className="history-text">{historyItem.previous_answer}</p>
+          {/* Текущий ответ */}
+          {!isEditing && hasResponse && question.current_response && (
+            <div className="current-response">
+              <div className="response-content">
+                <strong>Ответ:</strong> {question.current_response.answer}
+              </div>
+              
+              {question.current_response.comment && (
+                <div className="response-comment">
+                  <strong>Комментарий:</strong> {question.current_response.comment}
+                </div>
+              )}
+              
+              <div className="response-meta">
+                <span className="response-source">
+                  {sourceTypeLabels[question.current_response.source_type || 'IMAGINED'].label}
+                </span>
+                {question.current_response.updated_at && (
+                  <span className="response-date">
+                    Обновлено: {new Date(question.current_response.updated_at).toLocaleDateString('ru-RU')}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* История ответов */}
+          {hasHistory && question.response_history && (
+            <div className="response-history">
+              <button 
+                className="history-toggle"
+                onClick={() => setShowHistory(!showHistory)}
+              >
+                {showHistory ? 'Скрыть историю' : 'Показать историю'} ({question.response_history.length})
+              </button>
+              
+              {showHistory && (
+                <div className="history-list">
+                  {question.response_history.map((history, index) => (
+                    <div key={history.id} className="history-item">
+                      <div className="history-content">
+                        <strong>Предыдущий ответ:</strong> {history.previous_answer}
                       </div>
-                    )}
-                    
-                    {historyItem.previous_source_type && (
-                      <div className="history-source">
-                        <span className={`status-badge ${sourceTypeLabels[historyItem.previous_source_type].color}`}>
-                          {sourceTypeLabels[historyItem.previous_source_type].label}
+                      {history.previous_comment && (
+                        <div className="history-comment">
+                          <strong>Комментарий:</strong> {history.previous_comment}
+                        </div>
+                      )}
+                      <div className="history-meta">
+                        <span className="history-source">
+                          {sourceTypeLabels[history.previous_source_type || 'IMAGINED'].label}
+                        </span>
+                        <span className="history-date">
+                          {new Date(history.created_at).toLocaleDateString('ru-RU')}
                         </span>
                       </div>
-                    )}
-                    
-                    <div className="history-date">
-                      {new Date(historyItem.created_at).toLocaleString('ru-RU')}
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

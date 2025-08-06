@@ -1,8 +1,8 @@
-"""Create all tables including checklists
+"""initial_migration_with_new_checklist_structure
 
-Revision ID: 9f7ffa4a5c45
-Revises: c3566cd75d13
-Create Date: 2025-08-05 15:24:51.363678
+Revision ID: 50b61de1fbfd
+Revises: 
+Create Date: 2025-08-06 13:12:28.328380
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9f7ffa4a5c45'
-down_revision: Union[str, None] = 'c3566cd75d13'
+revision: str = '50b61de1fbfd'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -27,6 +27,8 @@ def upgrade() -> None:
     sa.Column('icon', sa.String(length=50), nullable=True),
     sa.Column('order_index', sa.Integer(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('goal', sa.Text(), nullable=True),
+    sa.Column('how_to_use', sa.Text(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -34,6 +36,20 @@ def upgrade() -> None:
     sa.UniqueConstraint('slug')
     )
     op.create_index(op.f('ix_checklists_id'), 'checklists', ['id'], unique=False)
+    op.create_table('users',
+    sa.Column('email', sa.String(length=255), nullable=False),
+    sa.Column('username', sa.String(length=100), nullable=False),
+    sa.Column('password_hash', sa.String(length=255), nullable=False),
+    sa.Column('full_name', sa.String(length=255), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
+    op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
     op.create_table('checklist_sections',
     sa.Column('checklist_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=500), nullable=False),
@@ -47,11 +63,38 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_checklist_sections_id'), 'checklist_sections', ['id'], unique=False)
+    op.create_table('projects',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=255), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_projects_id'), 'projects', ['id'], unique=False)
+    op.create_table('user_tokens',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('token_hash', sa.String(length=255), nullable=False),
+    sa.Column('token_type', sa.String(length=20), nullable=False),
+    sa.Column('expires_at', sa.DateTime(), nullable=False),
+    sa.Column('is_revoked', sa.Boolean(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_user_tokens_id'), 'user_tokens', ['id'], unique=False)
+    op.create_index(op.f('ix_user_tokens_token_hash'), 'user_tokens', ['token_hash'], unique=False)
     op.create_table('checklist_subsections',
     sa.Column('section_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=500), nullable=False),
     sa.Column('number', sa.String(length=20), nullable=True),
     sa.Column('order_index', sa.Integer(), nullable=True),
+    sa.Column('examples', sa.Text(), nullable=True),
+    sa.Column('why_important', sa.Text(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -59,6 +102,33 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_checklist_subsections_id'), 'checklist_subsections', ['id'], unique=False)
+    op.create_table('texts',
+    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.Column('filename', sa.String(length=255), nullable=False),
+    sa.Column('original_format', sa.String(length=10), nullable=False),
+    sa.Column('content', sa.Text(), nullable=True),
+    sa.Column('file_metadata', sa.JSON(), nullable=True),
+    sa.Column('processed_at', sa.DateTime(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_texts_id'), 'texts', ['id'], unique=False)
+    op.create_table('characters',
+    sa.Column('text_id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('aliases', sa.JSON(), nullable=True),
+    sa.Column('importance_score', sa.Float(), nullable=True),
+    sa.Column('speech_attribution', sa.JSON(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['text_id'], ['texts.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_characters_id'), 'characters', ['id'], unique=False)
     op.create_table('checklist_question_groups',
     sa.Column('subsection_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=500), nullable=False),
@@ -75,6 +145,8 @@ def upgrade() -> None:
     sa.Column('text', sa.Text(), nullable=False),
     sa.Column('hint', sa.Text(), nullable=True),
     sa.Column('order_index', sa.Integer(), nullable=True),
+    sa.Column('options', sa.JSON(), nullable=True),
+    sa.Column('option_type', sa.String(length=20), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -112,26 +184,11 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_checklist_response_history_id'), 'checklist_response_history', ['id'], unique=False)
-    op.drop_index('ix_character_checklist_responses_id', table_name='character_checklist_responses')
-    op.drop_table('character_checklist_responses')
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    op.create_table('character_checklist_responses',
-    sa.Column('character_id', sa.INTEGER(), nullable=False),
-    sa.Column('checklist_type', sa.VARCHAR(length=50), nullable=False),
-    sa.Column('question_id', sa.VARCHAR(length=100), nullable=False),
-    sa.Column('response', sa.TEXT(), nullable=True),
-    sa.Column('confidence_level', sa.INTEGER(), nullable=False),
-    sa.Column('id', sa.INTEGER(), nullable=False),
-    sa.Column('created_at', sa.DATETIME(), nullable=False),
-    sa.Column('updated_at', sa.DATETIME(), nullable=False),
-    sa.ForeignKeyConstraint(['character_id'], ['characters.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index('ix_character_checklist_responses_id', 'character_checklist_responses', ['id'], unique=False)
     op.drop_index(op.f('ix_checklist_response_history_id'), table_name='checklist_response_history')
     op.drop_table('checklist_response_history')
     op.drop_index(op.f('ix_checklist_responses_id'), table_name='checklist_responses')
@@ -140,10 +197,23 @@ def downgrade() -> None:
     op.drop_table('checklist_questions')
     op.drop_index(op.f('ix_checklist_question_groups_id'), table_name='checklist_question_groups')
     op.drop_table('checklist_question_groups')
+    op.drop_index(op.f('ix_characters_id'), table_name='characters')
+    op.drop_table('characters')
+    op.drop_index(op.f('ix_texts_id'), table_name='texts')
+    op.drop_table('texts')
     op.drop_index(op.f('ix_checklist_subsections_id'), table_name='checklist_subsections')
     op.drop_table('checklist_subsections')
+    op.drop_index(op.f('ix_user_tokens_token_hash'), table_name='user_tokens')
+    op.drop_index(op.f('ix_user_tokens_id'), table_name='user_tokens')
+    op.drop_table('user_tokens')
+    op.drop_index(op.f('ix_projects_id'), table_name='projects')
+    op.drop_table('projects')
     op.drop_index(op.f('ix_checklist_sections_id'), table_name='checklist_sections')
     op.drop_table('checklist_sections')
+    op.drop_index(op.f('ix_users_username'), table_name='users')
+    op.drop_index(op.f('ix_users_id'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
+    op.drop_table('users')
     op.drop_index(op.f('ix_checklists_id'), table_name='checklists')
     op.drop_table('checklists')
     # ### end Alembic commands ###

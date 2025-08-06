@@ -39,6 +39,15 @@ class CRUDChecklist(CRUDBase[Checklist, ChecklistCreate, ChecklistUpdate]):
             .selectinload(ChecklistQuestionGroup.questions)
         ).filter(Checklist.slug == slug).first()
     
+    def delete_by_slug(self, db: Session, slug: str) -> bool:
+        """Удаление чеклиста по slug"""
+        checklist_obj = self.get_by_slug(db, slug)
+        if checklist_obj:
+            db.delete(checklist_obj)
+            db.commit()
+            return True
+        return False
+    
     def get_active_checklists(self, db: Session) -> List[Checklist]:
         """Получение всех активных чеклистов"""
         return db.query(Checklist).filter(

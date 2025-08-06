@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.database.connection import get_db_session
 from app.services.auth import auth_service
+from app.config.settings import settings
 
 
 class SecurityMiddleware(BaseHTTPMiddleware):
@@ -106,6 +107,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: StarletteRequest, call_next) -> StarletteResponse:
         """Обработка запроса через middleware."""
         path = request.url.path
+        
+        # Если авторизация отключена, пропускаем все запросы
+        if not settings.auth_enabled:
+            return await call_next(request)
         
         # Пропускаем публичные пути
         if self._is_public_path(path):

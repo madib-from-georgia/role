@@ -5,6 +5,8 @@ export interface ChecklistSubsectionData {
   id: number;
   title: string;
   number?: string;
+  examples?: string;  // Примеры из литературы
+  why_important?: string;  // Почему это важно
   question_groups: ChecklistQuestionGroupData[];
 }
 
@@ -105,20 +107,40 @@ export const ChecklistSubsection: React.FC<ChecklistSubsectionProps> = ({
         </div>
       </div>
 
-      {/* Группы вопросов */}
+      {/* Содержимое подсекции */}
       {isOpen && (
-        <div className="subsection-body">
-          <div className="subsection-groups">
+        <div className="subsection-content">
+          {/* Группы вопросов */}
+          <div className="question-groups">
             {subsection.question_groups.map((group) => (
               <ChecklistQuestionGroup
                 key={group.id}
                 group={group}
                 onAnswerUpdate={onAnswerUpdate}
                 onAnswerDelete={onAnswerDelete}
-                isExpanded={false}
               />
             ))}
           </div>
+
+          {/* Примеры из литературы */}
+          {subsection.examples && (
+            <div className="subsection-examples">
+              <h3>Примеры из литературы</h3>
+              <div className="examples-content">
+                {subsection.examples}
+              </div>
+            </div>
+          )}
+
+          {/* Почему это важно */}
+          {subsection.why_important && (
+            <div className="subsection-why-important">
+              <h3>Почему это важно</h3>
+              <div className="why-important-content">
+                {subsection.why_important}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

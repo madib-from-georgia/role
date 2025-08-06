@@ -85,6 +85,13 @@ class ChecklistService:
     ):
         """Создает структуру чеклиста в базе данных"""
         
+        # Обновляем чеклист с новыми полями
+        checklist_obj = checklist_crud.get(db, id=checklist_id)
+        if checklist_obj:
+            checklist_obj.goal = structure.goal
+            checklist_obj.how_to_use = structure.how_to_use
+            db.add(checklist_obj)
+        
         for section_data in structure.sections:
             # Создаем секцию
             section_obj = ChecklistSection(
@@ -103,7 +110,9 @@ class ChecklistService:
                     section_id=section_obj.id,
                     title=subsection_data.title,
                     number=subsection_data.number,
-                    order_index=subsection_data.order_index
+                    order_index=subsection_data.order_index,
+                    examples=subsection_data.examples,
+                    why_important=subsection_data.why_important
                 )
                 db.add(subsection_obj)
                 db.flush()
@@ -124,7 +133,9 @@ class ChecklistService:
                             question_group_id=group_obj.id,
                             text=question_data.text,
                             hint=question_data.hint,
-                            order_index=question_data.order_index
+                            order_index=question_data.order_index,
+                            options=question_data.options,
+                            option_type=question_data.option_type
                         )
                         db.add(question_obj)
         
@@ -204,6 +215,8 @@ class ChecklistService:
                             text=question.text,
                             hint=question.hint,
                             order_index=question.order_index,
+                            options=question.options,
+                            option_type=question.option_type,
                             question_group_id=question.question_group_id,
                             created_at=question.created_at,
                             current_response=current_response,
@@ -381,7 +394,26 @@ class ChecklistService:
     
     def get_available_checklists(self, db: Session) -> List[Checklist]:
         """Получение списка доступных чеклистов"""
-        return checklist_crud.get_active_checklists(db)
+        return checklist_crud.get_multi(db)
+    
+    def get_checklist_structure(self, db: Session, checklist_slug: str) -> Optional[ChecklistWithResponses]:
+        """
+        Получение структуры чеклиста без привязки к персонажу
+        
+        Args:
+            db: Сессия базы данных
+            checklist_slug: Slug чеклиста
+            
+        Returns:
+            Структура чеклиста с пустыми ответами
+        """
+        checklist_obj = checklist_crud.get_by_slug_with_structure(db, checklist_slug)
+        
+        if not checklist_obj:
+            return None
+        
+        # Создаем структуру с пустыми ответами
+        return self._enrich_checklist_with_responses(checklist_obj, {})
     
     def validate_checklist_file(self, file_path: str) -> Dict[str, Any]:
         """

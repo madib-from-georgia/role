@@ -17,7 +17,7 @@ from loguru import logger
 
 CHECKLIST_FILES = [
     ("docs/modules/01-physical-portrait/ACTOR_PHYSICAL_CHECKLIST.md", "Физический портрет персонажа"),
-    ("docs/modules/02-emotional-profile/ACTOR_EMOTIONAL_CHECKLIST.md", "Эмоциональный профиль персонажа"),
+    # ("docs/modules/02-emotional-profile/ACTOR_EMOTIONAL_CHECKLIST.md", "Эмоциональный профиль персонажа"),
     # ("docs/modules/03-speech-characteristics/ACTOR_SPEECH_CHECKLIST.md", "Речевая характеристика персонажа"),
     # ("docs/modules/04-internal-conflicts/ACTOR_INTERNAL_CONFLICTS_CHECKLIST.md", "Внутренние конфликты персонажа"),
     # ("docs/modules/05-motivation-goals/ACTOR_MOTIVATION_GOALS_CHECKLIST.md", "Мотивация и цели персонажа"),

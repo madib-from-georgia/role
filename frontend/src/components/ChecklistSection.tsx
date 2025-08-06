@@ -100,41 +100,23 @@ export const ChecklistSection: React.FC<ChecklistSectionProps> = ({
                   style={{ width: `${completionPercentage}%` }}
                 />
               </div>
-              <span className="progress-text large">{completionPercentage}%</span>
+              <span className="progress-text">{completionPercentage}%</span>
             </div>
-            
-            {/* Статус секции */}
-            {completionPercentage === 100 ? (
-              <span className="status-badge completed large with-icon">
-                ✓ Завершено
-              </span>
-            ) : completionPercentage > 0 ? (
-              <span className="status-badge in-progress large with-icon">
-                ⚡ В работе
-              </span>
-            ) : (
-              <span className="status-badge not-started large with-icon">
-                ○ Не начато
-              </span>
-            )}
           </div>
         </div>
       </div>
 
-      {/* Подсекции */}
+      {/* Содержимое секции */}
       {isOpen && (
-        <div className="section-body">
-          <div className="section-subsections">
-            {section.subsections.map((subsection) => (
-              <ChecklistSubsection
-                key={subsection.id}
-                subsection={subsection}
-                onAnswerUpdate={onAnswerUpdate}
-                onAnswerDelete={onAnswerDelete}
-                isExpanded={false}
-              />
-            ))}
-          </div>
+        <div className="section-content">
+          {section.subsections.map((subsection) => (
+            <ChecklistSubsection
+              key={subsection.id}
+              subsection={subsection}
+              onAnswerUpdate={onAnswerUpdate}
+              onAnswerDelete={onAnswerDelete}
+            />
+          ))}
         </div>
       )}
     </div>

@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from app.database.connection import init_db, close_db
 from app.middleware.auth_middleware import AuthMiddleware, SecurityMiddleware, LoggingMiddleware
 from app.routers import auth, projects, texts, characters, checklists
+from app.config.settings import settings
 
 
 @asynccontextmanager
@@ -45,7 +46,10 @@ app.add_middleware(
 # Добавление кастомных middleware (порядок важен!)
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(SecurityMiddleware, rate_limit_requests=100, rate_limit_window=60)
-app.add_middleware(AuthMiddleware)
+
+# Добавляем AuthMiddleware только если авторизация включена
+if settings.auth_enabled:
+    app.add_middleware(AuthMiddleware)
 
 # Подключение роутеров
 app.include_router(auth.router)

@@ -9,6 +9,8 @@ export interface ChecklistData {
   description?: string;
   slug: string;
   icon?: string;
+  goal?: string;  // Цель чеклиста
+  how_to_use?: string;  // Как использовать этот блок
   sections: ChecklistSectionData[];
   completion_stats?: {
     total_questions: number;
@@ -30,6 +32,7 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [localData, setLocalData] = useState<ChecklistData | null>(null);
+  const [showHowToUse, setShowHowToUse] = useState(false);
 
   // Загрузка чеклиста
   const { data: checklistData, isLoading, error } = useQuery({
@@ -100,7 +103,7 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
   // Мутация для удаления ответа
   const deleteAnswerMutation = useMutation({
     mutationFn: (responseId: number) => checklistApi.deleteResponse(responseId),
-    onSuccess: (_: any, responseId: any) => {
+    onSuccess: (response: any, responseId: number) => {
       // Обновляем локальные данные
       if (localData) {
         const updatedData = { ...localData };
@@ -109,10 +112,11 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
         for (const section of updatedData.sections) {
           for (const subsection of section.subsections) {
             for (const group of subsection.question_groups) {
-              const question = group.questions.find(q => q.current_response?.id === responseId);
-              if (question) {
-                question.current_response = undefined;
-                break;
+              for (const question of group.questions) {
+                if (question.current_response?.id === responseId) {
+                  question.current_response = undefined;
+                  break;
+                }
               }
             }
           }
@@ -145,113 +149,83 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
 
   if (isLoading) {
     return (
-      <div className="checklist-loading">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <span className="loading-text">Загрузка чеклиста...</span>
-        </div>
+      <div className="checklist-view">
+        <div className="loading">Загрузка чеклиста...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="checklist-error">
-        <div className="error-content">
-          <div className="error-title">Ошибка при загрузке чеклиста</div>
-          <p className="error-message">
-            {error instanceof Error ? error.message : 'Неизвестная ошибка'}
-          </p>
-        </div>
+      <div className="checklist-view">
+        <div className="error">Ошибка загрузки чеклиста: {error instanceof Error ? error.message : 'Неизвестная ошибка'}</div>
       </div>
     );
   }
 
   if (!localData) {
     return (
-      <div className="checklist-empty">
-        <p className="empty-message">Чеклист не найден</p>
+      <div className="checklist-view">
+        <div className="error">Чеклист не найден</div>
       </div>
     );
   }
-
-  const stats = localData.completion_stats;
 
   return (
     <div className="checklist-view">
       {/* Заголовок чеклиста */}
       <div className="checklist-header">
-        <div className="header-content">
-          {localData.icon && (
-            <span className="checklist-icon">{localData.icon}</span>
-          )}
-          <div className="header-info">
-            <h1 className="checklist-title">{localData.title}</h1>
-            {localData.description && (
-              <p className="checklist-description">{localData.description}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Общая статистика */}
-        {stats && (
-          <div className="checklist-stats">
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-number primary">
-                  {stats.answered_questions}
-                </div>
-                <div className="stat-label">из {stats.total_questions}</div>
-                <div className="stat-sublabel">отвечено</div>
-              </div>
-              
-              <div className="stat-card">
-                <div className="stat-number success">
-                  {stats.completion_percentage}%
-                </div>
-                <div className="stat-sublabel">завершено</div>
-              </div>
-              
-              <div className="stat-card">
-                <div className="stat-number">
-                  {Object.entries(stats.answers_by_source).length}
-                </div>
-                <div className="stat-sublabel">типов источников</div>
-              </div>
-              
-              <div className="stat-card">
-                {stats.last_updated && (
-                  <>
-                    <div className="stat-date">
-                      {new Date(stats.last_updated).toLocaleDateString('ru-RU')}
-                    </div>
-                    <div className="stat-sublabel">обновлено</div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Прогресс-бар */}
-        {stats && (
-          <div className="overall-progress">
-            <div className="progress-header">
-              <span className="progress-label">Общий прогресс</span>
-              <span className="progress-value">{stats.completion_percentage}%</span>
-            </div>
-            <div className="progress-bar overall">
-              <div 
-                className={`progress-fill ${
-                  stats.completion_percentage === 100 ? 'completed' : 
-                  stats.completion_percentage > 50 ? 'in-progress' : 'started'
-                }`}
-                style={{ width: `${stats.completion_percentage}%` }}
-              />
-            </div>
-          </div>
+        <h1 className="checklist-title">
+          {localData.icon && <span className="checklist-icon">{localData.icon}</span>}
+          {localData.title}
+        </h1>
+        {localData.description && (
+          <p className="checklist-description">{localData.description}</p>
         )}
       </div>
+
+      {/* Цель чеклиста */}
+      {localData.goal && (
+        <div className="checklist-goal">
+          <h2>Цель чеклиста</h2>
+          <div className="goal-content">
+            {localData.goal}
+          </div>
+        </div>
+      )}
+
+      {/* Как использовать этот блок */}
+      {localData.how_to_use && (
+        <div className="checklist-how-to-use">
+          <button 
+            className="how-to-use-toggle"
+            onClick={() => setShowHowToUse(!showHowToUse)}
+          >
+            {showHowToUse ? 'Скрыть инструкцию' : 'Как использовать этот блок'}
+          </button>
+          {showHowToUse && (
+            <div className="how-to-use-content">
+              {localData.how_to_use}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Статистика заполнения */}
+      {localData.completion_stats && (
+        <div className="completion-stats">
+          <div className="stats-bar">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${localData.completion_stats.completion_percentage}%` }}
+            ></div>
+          </div>
+          <div className="stats-text">
+            Заполнено: {localData.completion_stats.answered_questions} из {localData.completion_stats.total_questions} вопросов 
+            ({localData.completion_stats.completion_percentage.toFixed(1)}%)
+          </div>
+        </div>
+      )}
 
       {/* Секции чеклиста */}
       <div className="checklist-sections">
@@ -261,22 +235,9 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({
             section={section}
             onAnswerUpdate={handleAnswerUpdate}
             onAnswerDelete={handleAnswerDelete}
-            isExpanded={true}
           />
         ))}
       </div>
-
-      {/* Индикатор загрузки при обновлении */}
-      {(updateAnswerMutation.isLoading || deleteAnswerMutation.isLoading) && (
-        <div className="loading-indicator">
-          <div className="loading-indicator-content">
-            <div className="spinner small"></div>
-            <span className="loading-indicator-text">
-              {updateAnswerMutation.isLoading ? 'Сохранение...' : 'Удаление...'}
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

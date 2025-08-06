@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db_session
 from app.database.models.user import User
 from app.services.auth import auth_service
+from app.config.settings import settings
 
 
 # HTTP Bearer схема для токенов
@@ -32,6 +33,17 @@ def get_current_user(
     Raises:
         HTTPException: 401 если токен невалиден
     """
+    # Если авторизация отключена, возвращаем mock пользователя
+    if not settings.auth_enabled:
+        # Создаем mock пользователя для разработки
+        mock_user = User(
+            id=1,
+            username="dev_user",
+            email="dev@example.com",
+            is_active=True
+        )
+        return mock_user
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Неверные учетные данные",
@@ -59,6 +71,10 @@ def get_current_active_user(
     Raises:
         HTTPException: 400 если пользователь неактивен
     """
+    # Если авторизация отключена, всегда возвращаем активного пользователя
+    if not settings.auth_enabled:
+        return current_user
+    
     if not current_user.is_active:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, 
@@ -76,6 +92,16 @@ def get_optional_current_user(
     
     Возвращает None если авторизация не предоставлена или невалидна.
     """
+    # Если авторизация отключена, возвращаем mock пользователя
+    if not settings.auth_enabled:
+        mock_user = User(
+            id=1,
+            username="dev_user",
+            email="dev@example.com",
+            is_active=True
+        )
+        return mock_user
+    
     if not credentials:
         return None
     
