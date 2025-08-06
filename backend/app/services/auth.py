@@ -166,6 +166,10 @@ class AuthService:
         revoked_count = token_crud.revoke_all_user_tokens(db, user_id=int(user_id))
         return revoked_count > 0
     
+    def get_user_by_email(self, db: Session, email: str) -> Optional[User]:
+        """Получение пользователя по email."""
+        return user_crud.get_by_email(db, email=email)
+    
     def get_current_user(self, db: Session, token: str) -> Optional[User]:
         """Получение текущего пользователя по токену."""
         payload = self.verify_token(token)

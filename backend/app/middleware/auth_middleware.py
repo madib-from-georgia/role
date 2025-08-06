@@ -108,8 +108,27 @@ class AuthMiddleware(BaseHTTPMiddleware):
         """Обработка запроса через middleware."""
         path = request.url.path
         
-        # Если авторизация отключена, пропускаем все запросы
+        # Если авторизация отключена, создаем mock пользователя и пропускаем запросы
         if not settings.auth_enabled:
+            # Создаем mock пользователя при первом запросе
+            try:
+                with get_db_session() as db:
+                    # Проверяем, существует ли mock пользователь
+                    existing_user = auth_service.get_user_by_email(db, "dev@example.com")
+                    if not existing_user:
+                        from app.schemas.user import UserCreate
+                        mock_user_data = UserCreate(
+                            email="dev@example.com",
+                            username="dev_user",
+                            password="dev_password_123",
+                            full_name="Development User",
+                            is_active=True
+                        )
+                        auth_service.register_user(db, mock_user_data)
+                        print("✅ Mock пользователь создан автоматически")
+            except Exception as e:
+                print(f"⚠️  Ошибка создания mock пользователя: {e}")
+            
             return await call_next(request)
         
         # Пропускаем публичные пути
