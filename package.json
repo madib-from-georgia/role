@@ -19,7 +19,8 @@
     "clear-checklists-force": "cd backend && python scripts/clear_checklists.py --clear-all --force",
     "list-checklists": "cd backend && python scripts/clear_checklists.py --list",
     "logs": "cd backend && python scripts/view_nlp_logs.py",
-    "reset_db": "cd backend && python scripts/reset_database.py"
+    "reset_db": "cd backend && python scripts/reset_database.py",
+    "convert-md": "./scripts/convert-md.sh"
   },
   "keywords": [
     "character-analysis",
@@ -31,12 +32,18 @@
   "author": "Role Team",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "concurrently": "^8.2.2",
     "markdownlint-cli": "^0.31.1",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0",
     "python": ">=3.9.0"
+  },
+  "dependencies": {
+    "marked": "^16.1.2"
   }
 }
