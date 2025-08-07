@@ -17,9 +17,20 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   canGoBack,
   canGoForward
 }) => {
-  // Keyboard shortcuts
+  // Enhanced keyboard shortcuts
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // Don't trigger shortcuts when user is typing in input fields
+      const activeElement = document.activeElement;
+      const isTyping = activeElement && (
+        activeElement.tagName === 'INPUT' || 
+        activeElement.tagName === 'TEXTAREA' || 
+        (activeElement as HTMLElement).contentEditable === 'true'
+      );
+
+      if (isTyping) return;
+
+      // Ctrl/Cmd + Arrow keys for navigation
       if (event.ctrlKey || event.metaKey) {
         switch (event.key) {
           case 'ArrowLeft':
@@ -31,6 +42,33 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             if (canGoForward) onNext();
             break;
         }
+      }
+      
+      // Additional shortcuts without modifiers
+      switch (event.key) {
+        case 'ArrowLeft':
+          if (!isTyping && canGoBack) {
+            event.preventDefault();
+            onPrevious();
+          }
+          break;
+        case 'ArrowRight':
+          if (!isTyping && canGoForward) {
+            event.preventDefault();
+            onNext();
+          }
+          break;
+        case 'Home':
+          event.preventDefault();
+          // Navigate to first question (will be implemented)
+          break;
+        case 'End':
+          event.preventDefault();
+          // Navigate to last question (will be implemented)
+          break;
+        case 'Escape':
+          // Close sidebar or other modals (will be handled by parent)
+          break;
       }
     };
 
@@ -105,11 +143,23 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
         </button>
       </div>
 
-      {/* Keyboard shortcuts hint */}
+      {/* Enhanced keyboard shortcuts hint */}
       <div className="keyboard-shortcuts">
         <div className="shortcut-hint">
+          <span className="shortcut-key">←/→</span>
+          <span className="shortcut-description">Навигация</span>
+        </div>
+        <div className="shortcut-hint">
           <span className="shortcut-key">Ctrl + ←/→</span>
-          <span className="shortcut-description">Навигация по вопросам</span>
+          <span className="shortcut-description">Быстрая навигация</span>
+        </div>
+        <div className="shortcut-hint">
+          <span className="shortcut-key">Home/End</span>
+          <span className="shortcut-description">В начало/конец</span>
+        </div>
+        <div className="shortcut-hint">
+          <span className="shortcut-key">Esc</span>
+          <span className="shortcut-description">Закрыть панели</span>
         </div>
       </div>
 

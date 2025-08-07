@@ -177,8 +177,18 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     return (
       <div className="question-flow question-flow--loading">
         <div className="loading-content">
-          <div className="spinner large"></div>
-          <span>Загрузка чеклиста...</span>
+          <div className="loading-spinner">
+            <div className="spinner large"></div>
+          </div>
+          <div className="loading-text">
+            <h2>Загрузка чеклиста...</h2>
+            <p>Подготавливаем вопросы для анализа персонажа</p>
+          </div>
+          <div className="loading-progress">
+            <div className="loading-bar">
+              <div className="loading-fill"></div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -188,8 +198,25 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     return (
       <div className="question-flow question-flow--error">
         <div className="error-content">
-          <h2>Ошибка загрузки</h2>
-          <p>Не удалось загрузить чеклист: {error instanceof Error ? error.message : 'Неизвестная ошибка'}</p>
+          <div className="error-icon">⚠️</div>
+          <div className="error-details">
+            <h2>Ошибка загрузки чеклиста</h2>
+            <p>Не удалось загрузить чеклист: {error instanceof Error ? error.message : 'Неизвестная ошибка'}</p>
+            <div className="error-actions">
+              <button 
+                className="btn btn-primary"
+                onClick={() => window.location.reload()}
+              >
+                🔄 Попробовать снова
+              </button>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => window.history.back()}
+              >
+                ← Вернуться назад
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -199,8 +226,19 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     return (
       <div className="question-flow question-flow--empty">
         <div className="empty-content">
-          <h2>Чеклист пуст</h2>
-          <p>В этом чеклисте нет вопросов для заполнения</p>
+          <div className="empty-icon">📝</div>
+          <div className="empty-details">
+            <h2>Чеклист пуст</h2>
+            <p>В этом чеклисте пока нет вопросов для заполнения</p>
+            <div className="empty-actions">
+              <button 
+                className="btn btn-primary"
+                onClick={() => window.history.back()}
+              >
+                ← Вернуться к списку чеклистов
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
