@@ -1,0 +1,169 @@
+/* ==========================================================================
+   Main stylesheet for Checklists v2 Design System
+   ========================================================================== */
+
+/* Import all stylesheets in order */
+@import './variables.css';
+@import './base.css';
+@import './components.css';
+@import './question-flow.css';
+
+/* Global application styles */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Page layouts */
+.page-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+  text-align: center;
+}
+
+.loading-text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.page-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.error-content {
+  text-align: center;
+  max-width: 24rem;
+}
+
+.error-title {
+  color: var(--color-error);
+  margin-bottom: var(--spacing-4);
+}
+
+.error-message {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-6);
+}
+
+/* Feature flag styles for development */
+.design-toggle {
+  position: fixed;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+  z-index: var(--z-toast);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2);
+  box-shadow: var(--shadow-lg);
+}
+
+.design-toggle__label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.design-toggle__switch {
+  position: relative;
+  width: 2.5rem;
+  height: 1.25rem;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast);
+}
+
+.design-toggle__switch.active {
+  background-color: var(--color-primary);
+}
+
+.design-toggle__handle {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: white;
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.design-toggle__switch.active .design-toggle__handle {
+  transform: translateX(1.25rem);
+}
+
+/* Development helpers */
+.dev-info {
+  position: fixed;
+  bottom: var(--spacing-4);
+  right: var(--spacing-4);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  z-index: var(--z-tooltip);
+  max-width: 12rem;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border: #000000;
+    --color-text-muted: var(--color-text-secondary);
+  }
+}
+
+/* Print styles */
+@media print {
+  .question-flow__header,
+  .question-flow__footer,
+  .navigation-sidebar,
+  .checklist-switcher,
+  .design-toggle,
+  .dev-info {
+    display: none !important;
+  }
+
+  .question-card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .question-flow__main {
+    padding: 0;
+  }
+}
