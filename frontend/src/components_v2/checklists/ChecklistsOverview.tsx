@@ -3,10 +3,10 @@ import { useQuery } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { checklistApi, charactersApi } from '../../services/api';
-// import { RecommendedNextStep } from './RecommendedNextStep';
-// import { ChecklistGroup } from './ChecklistGroup';
-// import { OverallProgress } from './OverallProgress';
-// import { ChecklistSwitcher } from './ChecklistSwitcher';
+import { RecommendedNextStep } from './RecommendedNextStep';
+import { ChecklistGroup } from './ChecklistGroup';
+import { OverallProgress } from './OverallProgress';
+import { ChecklistSwitcher } from './ChecklistSwitcher';
 
 interface ChecklistsOverviewProps {}
 
@@ -60,12 +60,43 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
     );
   }
 
-  // TODO: Implement checklist grouping logic
-  const groupedChecklists = {
-    basic: [],
-    advanced: [],
-    psychological: []
-  };
+  // Группировка чеклистов по типам
+  const groupedChecklists = React.useMemo(() => {
+    if (!checklists) {
+      return { basic: [], advanced: [], psychological: [] };
+    }
+
+    const basic: any[] = [];
+    const advanced: any[] = [];
+    const psychological: any[] = [];
+
+    checklists.forEach((checklist: any) => {
+      const slug = checklist.slug.toLowerCase();
+      
+      // Базовый анализ
+      if (slug.includes('physical') || slug.includes('emotional') || slug.includes('speech')) {
+        basic.push(checklist);
+      }
+      // Углубленный анализ  
+      else if (slug.includes('internal') || slug.includes('motivation') || slug.includes('relationships') || 
+               slug.includes('biography') || slug.includes('social') || slug.includes('scenes') || 
+               slug.includes('tasks') || slug.includes('exercises')) {
+        advanced.push(checklist);
+      }
+      // Психологический анализ
+      else if (slug.includes('subtext') || slug.includes('tempo') || slug.includes('personality') || 
+               slug.includes('defense') || slug.includes('trauma') || slug.includes('archetypes') || 
+               slug.includes('emotional-intelligence') || slug.includes('cognitive') || slug.includes('attachment')) {
+        psychological.push(checklist);
+      }
+      // Все остальные в базовый
+      else {
+        basic.push(checklist);
+      }
+    });
+
+    return { basic, advanced, psychological };
+  }, [checklists]);
 
   return (
     <div className="checklists-overview">
@@ -87,58 +118,24 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
       {/* Main Content */}
       <div className="checklists-overview__content">
         
-        {/* Temporary content - will be replaced with components */}
-        <div style={{ padding: '2rem', textAlign: 'center' }}>
-          <h2>🎨 New Design v2 is Loading...</h2>
-          <p>Базовая структура создана. Компоненты будут добавлены по очереди.</p>
-          
-          <div style={{ marginTop: '2rem', padding: '1rem', background: '#f3f4f6', borderRadius: '0.5rem' }}>
-            <h3>Планируемые компоненты:</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>📊 OverallProgress - общий прогресс</li>
-              <li>🎯 RecommendedNextStep - рекомендуемый шаг</li>
-              <li>📋 ChecklistGroup - группы чеклистов</li>
-              <li>🔄 ChecklistSwitcher - переключатель чеклистов</li>
-            </ul>
-          </div>
-          
-          {character && (
-            <div style={{ marginTop: '2rem', padding: '1rem', background: '#dbeafe', borderRadius: '0.5rem' }}>
-              <h4>Данные персонажа загружены:</h4>
-              <p><strong>{character.name}</strong></p>
-              {character.description && <p>{character.description}</p>}
-            </div>
-          )}
-          
-          {checklists && (
-            <div style={{ marginTop: '1rem', padding: '1rem', background: '#d1fae5', borderRadius: '0.5rem' }}>
-              <h4>Доступно чеклистов: {checklists.length}</h4>
-            </div>
-          )}
-          
-          {progress && (
-            <div style={{ marginTop: '1rem', padding: '1rem', background: '#fef3c7', borderRadius: '0.5rem' }}>
-              <h4>Прогресс данные загружены: {progress.length} записей</h4>
-            </div>
-          )}
-        </div>
-
-        {/* Components will be uncommented as they're implemented
+        {/* Overall Progress */}
         <OverallProgress 
           progress={progress}
           character={character}
         />
 
+        {/* Recommended Next Step */}
         <RecommendedNextStep 
           progress={progress}
           checklists={checklists}
           characterId={parseInt(characterId)}
         />
 
+        {/* Checklist Groups */}
         <div className="checklist-groups">
           <ChecklistGroup
             title="Базовый анализ"
-            description="Фундаментальные аспекты персонажа"
+            description="Фундаментальные аспекты персонажа: внешность, эмоции, речь"
             checklists={groupedChecklists.basic}
             progress={progress}
             characterId={parseInt(characterId)}
@@ -147,7 +144,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
           
           <ChecklistGroup
             title="Углубленный анализ"
-            description="Детальное изучение характера"
+            description="Детальное изучение характера: мотивация, отношения, биография"
             checklists={groupedChecklists.advanced}
             progress={progress}
             characterId={parseInt(characterId)}
@@ -156,7 +153,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
           
           <ChecklistGroup
             title="Психологический анализ"
-            description="Глубинные психологические аспекты"
+            description="Глубинные психологические аспекты: подтекст, защиты, травмы"
             checklists={groupedChecklists.psychological}
             progress={progress}
             characterId={parseInt(characterId)}
@@ -164,11 +161,31 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
           />
         </div>
 
+        {/* Quick Checklist Switcher */}
         <ChecklistSwitcher 
           characterId={parseInt(characterId)}
           currentChecklist={null}
         />
-        */}
+        
+        {/* Success message */}
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <h2>🎉 Все компоненты стартовой страницы реализованы!</h2>
+          
+          <div style={{ marginTop: '2rem', padding: '1rem', background: '#d1fae5', borderRadius: '0.5rem' }}>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li>✅ OverallProgress - общий прогресс</li>
+              <li>✅ RecommendedNextStep - рекомендуемый шаг</li>
+              <li>✅ ChecklistGroup - группы чеклистов</li>
+              <li>✅ ChecklistSwitcher - переключатель чеклистов</li>
+            </ul>
+          </div>
+          
+          <p style={{ marginTop: '1rem', color: '#6b7280' }}>
+            Переключите toggle в правом верхнем углу, чтобы сравнить новый и старый дизайн
+          </p>
+        </div>
+
+
       </div>
     </div>
   );
