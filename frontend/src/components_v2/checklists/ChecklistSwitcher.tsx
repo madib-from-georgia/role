@@ -41,7 +41,10 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
     return checklistProgress?.completion_percentage || 0;
   };
 
-  if (!checklists) return null;
+  // Если нет чеклистов, не рендерим компонент
+  if (!checklists) {
+    return null;
+  }
 
   return (
     <div className="checklist-switcher">

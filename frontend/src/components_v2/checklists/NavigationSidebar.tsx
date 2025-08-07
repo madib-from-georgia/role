@@ -99,10 +99,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
     setBookmarkedQuestions(newBookmarks);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <>
+    <div className={`navigation-sidebar-wrapper ${isOpen ? 'open' : 'closed'}`}>
       {/* Backdrop */}
       <div className="navigation-sidebar__backdrop" onClick={onClose} />
       
@@ -290,6 +288,6 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };

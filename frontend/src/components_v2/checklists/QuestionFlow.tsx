@@ -88,7 +88,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   // Мутация для удаления ответа
   const deleteAnswerMutation = useMutation({
     mutationFn: (responseId: number) => checklistApi.deleteResponse(responseId),
-    onSuccess: (response: any, responseId: number) => {
+    onSuccess: (_response: any, responseId: number) => {
       // Update local data
       if (localData) {
         const updatedData = { ...localData };

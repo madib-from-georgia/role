@@ -36,31 +36,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
     staleTime: 2 * 60 * 1000, // 2 минуты
   });
 
-  if (!characterId || isNaN(parseInt(characterId))) {
-    return (
-      <div className="checklists-overview__error">
-        <div className="error-content">
-          <h1>Неверный ID персонажа</h1>
-          <button onClick={() => navigate('/')} className="btn btn-primary">
-            Вернуться на главную
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (characterLoading || checklistsLoading) {
-    return (
-      <div className="checklists-overview__loading">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <span>Загрузка данных персонажа...</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Группировка чеклистов по типам
+  // Группировка чеклистов по типам (всегда должна быть после всех хуков)
   const groupedChecklists = React.useMemo(() => {
     if (!checklists) {
       return { basic: [], advanced: [], psychological: [] };
@@ -97,6 +73,31 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
 
     return { basic, advanced, psychological };
   }, [checklists]);
+
+  // Проверки на ошибки и загрузку после всех хуков
+  if (!characterId || isNaN(parseInt(characterId))) {
+    return (
+      <div className="checklists-overview__error">
+        <div className="error-content">
+          <h1>Неверный ID персонажа</h1>
+          <button onClick={() => navigate('/')} className="btn btn-primary">
+            Вернуться на главную
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (characterLoading || checklistsLoading) {
+    return (
+      <div className="checklists-overview__loading">
+        <div className="loading-content">
+          <div className="spinner"></div>
+          <span>Загрузка данных персонажа...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="checklists-overview">
@@ -166,25 +167,6 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
           characterId={parseInt(characterId)}
           currentChecklist={null}
         />
-        
-        {/* Success message */}
-        <div style={{ padding: '2rem', textAlign: 'center' }}>
-          <h2>🎉 Все компоненты стартовой страницы реализованы!</h2>
-          
-          <div style={{ marginTop: '2rem', padding: '1rem', background: '#d1fae5', borderRadius: '0.5rem' }}>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>✅ OverallProgress - общий прогресс</li>
-              <li>✅ RecommendedNextStep - рекомендуемый шаг</li>
-              <li>✅ ChecklistGroup - группы чеклистов</li>
-              <li>✅ ChecklistSwitcher - переключатель чеклистов</li>
-            </ul>
-          </div>
-          
-          <p style={{ marginTop: '1rem', color: '#6b7280' }}>
-            Переключите toggle в правом верхнем углу, чтобы сравнить новый и старый дизайн
-          </p>
-        </div>
-
 
       </div>
     </div>

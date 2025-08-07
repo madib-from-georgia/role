@@ -574,6 +574,14 @@
 }
 
 /* NavigationSidebar */
+.navigation-sidebar-wrapper.closed {
+  display: none;
+}
+
+.navigation-sidebar-wrapper.open {
+  display: block;
+}
+
 .navigation-sidebar__backdrop {
   position: fixed;
   top: 0;
