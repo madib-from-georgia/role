@@ -61,10 +61,12 @@ const CharacterChecklistDetailV2: React.FC = () => {
   }
 
   return (
-    <QuestionFlow 
-      checklistSlug={checklistSlug}
-      characterId={parseInt(characterId)}
-    />
+    <div className="checklist-page-v2">
+      <QuestionFlow 
+        checklistSlug={checklistSlug}
+        characterId={parseInt(characterId)}
+      />
+    </div>
   );
 };
 

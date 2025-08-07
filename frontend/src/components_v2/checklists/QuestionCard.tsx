@@ -3,18 +3,56 @@ import React, { useState } from 'react';
 interface QuestionCardProps {
   question: any;
   onAnswerUpdate: (questionId: number, data: any) => void;
+  onAnswerDelete?: (responseId: number) => void;
   isLoading: boolean;
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   onAnswerUpdate,
+  onAnswerDelete,
   isLoading
 }) => {
   const [localAnswer, setLocalAnswer] = useState(question?.current_response?.answer || '');
   const [localComment, setLocalComment] = useState(question?.current_response?.comment || '');
   const [sourceType, setSourceType] = useState(question?.current_response?.source_type || 'LOGICALLY_DERIVED');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const lastAnswerRef = React.useRef<string | null>(null);
+
+  // Determine question type from either 'type' or 'option_type' field
+  const getQuestionType = () => {
+    return question.type || (question.option_type === 'single' ? 'SINGLE_CHOICE' : 
+                            question.option_type === 'multiple' ? 'MULTIPLE_CHOICE' : 'OPEN_TEXT');
+  };
+
+  // Initialize selected options from existing answer
+  React.useEffect(() => {
+    const currentAnswer = question?.current_response?.answer || '';
+    
+    // Only update if the answer has actually changed from external source
+    if (currentAnswer !== lastAnswerRef.current) {
+      lastAnswerRef.current = currentAnswer;
+      
+      if (currentAnswer) {
+        const questionType = getQuestionType();
+        
+        if (questionType === 'SINGLE_CHOICE' || questionType === 'MULTIPLE_CHOICE') {
+          const options = currentAnswer.split(', ').filter((opt: string) => opt.trim());
+          setSelectedOptions(options);
+        }
+      } else {
+        // Clear selection if no answer exists
+        setSelectedOptions([]);
+      }
+    }
+  }, [question?.current_response?.answer]);
+
+  // Auto-save on blur for text fields
+  const handleAutoSave = () => {
+    if (localAnswer.trim() || localComment.trim()) {
+      handleSave();
+    }
+  };
 
   if (!question) {
     return (
@@ -32,8 +70,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       source_type: sourceType
     };
 
+    const questionType = getQuestionType();
+
     // Handle different question types
-    if (question.type === 'SINGLE_CHOICE' || question.type === 'MULTIPLE_CHOICE') {
+    if (questionType === 'SINGLE_CHOICE' || questionType === 'MULTIPLE_CHOICE') {
       data.answer = selectedOptions.join(', ');
     } else {
       data.answer = localAnswer;
@@ -43,19 +83,37 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   const handleOptionChange = (option: string, checked: boolean) => {
-    if (question.type === 'SINGLE_CHOICE') {
-      setSelectedOptions(checked ? [option] : []);
-    } else if (question.type === 'MULTIPLE_CHOICE') {
-      setSelectedOptions(prev => 
-        checked 
-          ? [...prev, option]
-          : prev.filter(o => o !== option)
-      );
+    const questionType = getQuestionType();
+    let newOptions: string[] = [];
+    
+    if (questionType === 'SINGLE_CHOICE') {
+      newOptions = checked ? [option] : [];
+      setSelectedOptions(newOptions);
+    } else if (questionType === 'MULTIPLE_CHOICE') {
+      newOptions = checked 
+        ? [...selectedOptions, option]
+        : selectedOptions.filter(o => o !== option);
+      setSelectedOptions(newOptions);
     }
+    
+    // Auto-save for options with the new selection
+    setTimeout(() => {
+      const data: any = {
+        comment: localComment,
+        source_type: sourceType,
+        answer: newOptions.join(', ')
+      };
+      
+      if (newOptions.length > 0 || question?.current_response?.answer) {
+        onAnswerUpdate(question.id, data);
+      }
+    }, 100);
   };
 
   const renderQuestionInput = () => {
-    switch (question.type) {
+    const questionType = getQuestionType();
+    
+    switch (questionType) {
       case 'SINGLE_CHOICE':
         return (
           <div className="question-options">
@@ -98,6 +156,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             <textarea
               value={localAnswer}
               onChange={(e) => setLocalAnswer(e.target.value)}
+              onBlur={handleAutoSave}
               placeholder="Введите ваш ответ..."
               rows={4}
               className="answer-textarea"
@@ -184,6 +243,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           <textarea
             value={localComment}
             onChange={(e) => setLocalComment(e.target.value)}
+            onBlur={handleAutoSave}
             placeholder="Добавьте заметки или обоснование..."
             rows={2}
             className="comment-textarea"
@@ -193,18 +253,33 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       {/* Actions */}
       <div className="question-card__actions">
-        <button
-          onClick={handleSave}
-          disabled={isLoading}
-          className="btn btn-primary btn-large"
-        >
-          {isLoading ? 'Сохранение...' : 'Сохранить ответ'}
-        </button>
+        <div className="action-buttons">
+          <button
+            onClick={handleSave}
+            disabled={isLoading}
+            className="btn btn-primary btn-large"
+          >
+            {isLoading ? 'Сохранение...' : 'Сохранить ответ'}
+          </button>
+          
+          {question.current_response && onAnswerDelete && (
+            <button
+              onClick={() => onAnswerDelete(question.current_response.id)}
+              className="btn btn-secondary"
+              title="Удалить ответ"
+            >
+              🗑 Удалить
+            </button>
+          )}
+        </div>
         
         {question.current_response && (
           <div className="save-status">
             <span className="save-icon">✓</span>
             <span className="save-text">Сохранено</span>
+            <span className="save-date">
+              {new Date(question.current_response.updated_at).toLocaleString('ru')}
+            </span>
           </div>
         )}
       </div>

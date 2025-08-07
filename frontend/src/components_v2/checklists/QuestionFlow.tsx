@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { checklistApi } from '../../services/api';
 
-// Import subcomponents (will be created later)
+// Import subcomponents
 import { QuestionCard } from './QuestionCard';
 import { ProgressBar } from './ProgressBar';
 import { QuestionNavigation } from './QuestionNavigation';
@@ -56,8 +56,25 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
       if (localData) {
         const updatedData = { ...localData };
         
-        // Find and update question
-        // TODO: Implement proper data structure transformation
+        // Find and update question in hierarchical structure
+        updatedData.sections?.forEach((section: any) => {
+          section.subsections?.forEach((subsection: any) => {
+            subsection.question_groups?.forEach((group: any) => {
+              const question = group.questions?.find((q: any) => q.id === variables.questionId);
+              if (question) {
+                question.current_response = {
+                  id: response.id,
+                  answer: response.answer,
+                  source_type: response.source_type,
+                  comment: response.comment,
+                  version: response.version,
+                  updated_at: response.updated_at
+                };
+              }
+            });
+          });
+        });
+        
         setLocalData(updatedData);
       }
       
@@ -65,6 +82,40 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
       queryClient.invalidateQueries({ 
         queryKey: ['checklist', checklistSlug, characterId] 
       });
+    }
+  });
+
+  // Мутация для удаления ответа
+  const deleteAnswerMutation = useMutation({
+    mutationFn: (responseId: number) => checklistApi.deleteResponse(responseId),
+    onSuccess: (response: any, responseId: number) => {
+      // Update local data
+      if (localData) {
+        const updatedData = { ...localData };
+        
+        // Find and remove answer in hierarchical structure
+        updatedData.sections?.forEach((section: any) => {
+          section.subsections?.forEach((subsection: any) => {
+            subsection.question_groups?.forEach((group: any) => {
+              group.questions?.forEach((question: any) => {
+                if (question.current_response?.id === responseId) {
+                  question.current_response = undefined;
+                }
+              });
+            });
+          });
+        });
+        
+        setLocalData(updatedData);
+      }
+      
+      // Invalidate cache
+      queryClient.invalidateQueries({ 
+        queryKey: ['checklist', checklistSlug, characterId] 
+      });
+    },
+    onError: (error: any) => {
+      console.error('Ошибка при удалении ответа:', error);
     }
   });
 
@@ -97,6 +148,10 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
   const handleAnswerUpdate = (questionId: number, data: any) => {
     updateAnswerMutation.mutate({ questionId, data });
+  };
+
+  const handleAnswerDelete = (responseId: number) => {
+    deleteAnswerMutation.mutate(responseId);
   };
 
   const handleNext = () => {
@@ -193,6 +248,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           <QuestionCard
             question={currentQuestion}
             onAnswerUpdate={handleAnswerUpdate}
+            onAnswerDelete={handleAnswerDelete}
             isLoading={updateAnswerMutation.isLoading}
           />
         </div>

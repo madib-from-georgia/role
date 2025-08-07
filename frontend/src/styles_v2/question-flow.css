@@ -2,6 +2,12 @@
    Question Flow styles for Checklists v2
    ========================================================================== */
 
+/* Page container */
+.checklist-page-v2 {
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
 /* QuestionFlow container */
 .question-flow {
   display: flex;
@@ -414,7 +420,13 @@
 /* Actions */
 .question-card__actions {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-3);
   align-items: center;
 }
 
@@ -424,6 +436,14 @@
   gap: var(--spacing-2);
   color: var(--color-success);
   font-size: var(--font-size-sm);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: var(--color-success-light);
+  border-radius: var(--radius-md);
+}
+
+.save-date {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 }
 
 .save-icon {
