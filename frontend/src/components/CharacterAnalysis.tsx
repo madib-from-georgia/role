@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import axios from 'axios'
 import { FullCharacterAnalysis, CharacterAnalysisResult } from '../../../shared/types'
 
@@ -22,7 +22,7 @@ const CharacterAnalysis: React.FC<CharacterAnalysisProps> = ({
   onClose 
 }) => {
   const [analysisResult, setAnalysisResult] = useState<FullCharacterAnalysis | null>(null)
-  const queryClient = useQueryClient()
+
 
   const analysisMutation = useMutation(
     () => analyzeCharacter(projectId, textId, characterName),

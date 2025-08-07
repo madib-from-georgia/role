@@ -6,7 +6,7 @@ import AuthGuard from './auth/AuthGuard'
 
 const Header: React.FC = () => {
   const location = useLocation()
-  const { user, logout, isAuthenticated } = useAuth()
+  const { user, logout } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
 

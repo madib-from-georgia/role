@@ -2,19 +2,11 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import { QuestionFlow } from '../components_v2/checklists/QuestionFlow';
+import { QuestionFlow } from '../components/checklists/QuestionFlow';
 import { charactersApi } from '../services/api';
 
 // Import v2 styles
 import '../styles_v2/index.css';
-
-interface Character {
-  id: number;
-  name: string;
-  description?: string;
-  importance_score?: number;
-  text_id: number;
-}
 
 const CharacterChecklistDetailV2: React.FC = () => {
   const { characterId, checklistSlug } = useParams<{ 
@@ -23,8 +15,8 @@ const CharacterChecklistDetailV2: React.FC = () => {
   }>();
   const navigate = useNavigate();
 
-  // Загружаем данные персонажа
-  const { data: character, isLoading: characterLoading } = useQuery({
+  // Загружаем данные персонажа (нужно только состояние загрузки)
+  const { isLoading: characterLoading } = useQuery({
     queryKey: ['character', characterId],
     queryFn: () => charactersApi.getById(characterId!),
     enabled: !!characterId

@@ -71,7 +71,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         {/* Section breakdown */}
         {checklist?.sections && (
           <div className="section-breakdown">
-            {checklist.sections.map((section: any, index: number) => {
+            {checklist.sections.map((section: any, _index: number) => {
               const sectionQuestions = section.subsections?.reduce((total: number, sub: any) => {
                 return total + (sub.question_groups?.reduce((groupTotal: number, group: any) => {
                   return groupTotal + (group.questions?.length || 0);

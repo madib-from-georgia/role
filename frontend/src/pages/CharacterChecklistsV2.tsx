@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChecklistsOverview } from '../components_v2/checklists/ChecklistsOverview';
+import { ChecklistsOverview } from '../components/checklists/ChecklistsOverview';
 
 // Import v2 styles
 import '../styles_v2/index.css';

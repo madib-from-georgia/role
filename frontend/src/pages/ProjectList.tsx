@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { projectsApi } from '../services/api'
 
@@ -21,7 +21,7 @@ const deleteProject = async (id: string): Promise<void> => {
 }
 
 const ProjectList: React.FC = () => {
-  const navigate = useNavigate()
+
   const queryClient = useQueryClient()
   const { data: projects, isLoading, error } = useQuery('projects', fetchProjects)
 

@@ -22,14 +22,19 @@ vi.mock('../services/api/auth', () => ({
   }
 }))
 
+// Type the mocked authApi
+const mockedAuthApi = vi.mocked(authApi)
+
 // Mock localStorage
 const localStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
+  length: 0,
+  key: vi.fn(),
 }
-global.localStorage = localStorageMock
+global.localStorage = localStorageMock as Storage
 
 // Test wrapper component
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -108,8 +113,8 @@ describe('AuthContext', () => {
       created_at: '2023-01-01'
     }
 
-    authApi.login.mockResolvedValue(mockTokens)
-    authApi.getProfile.mockResolvedValue(mockUser)
+    mockedAuthApi.login.mockResolvedValue(mockTokens)
+    mockedAuthApi.getProfile.mockResolvedValue(mockUser)
 
     render(
       <TestWrapper>
@@ -154,9 +159,9 @@ describe('AuthContext', () => {
       created_at: '2023-01-01'
     }
 
-    authApi.login.mockResolvedValue(mockTokens)
-    authApi.getProfile.mockResolvedValue(mockUser)
-    authApi.logout.mockResolvedValue({ message: 'Success', success: true })
+    mockedAuthApi.login.mockResolvedValue(mockTokens)
+    mockedAuthApi.getProfile.mockResolvedValue(mockUser)
+    mockedAuthApi.logout.mockResolvedValue({ message: 'Success', success: true })
 
     render(
       <TestWrapper>
@@ -250,8 +255,8 @@ describe('LoginForm', () => {
       created_at: '2023-01-01'
     }
 
-    authApi.login.mockResolvedValue(mockTokens)
-    authApi.getProfile.mockResolvedValue(mockUser)
+    mockedAuthApi.login.mockResolvedValue(mockTokens)
+    mockedAuthApi.getProfile.mockResolvedValue(mockUser)
 
     render(
       <TestWrapper>
@@ -274,7 +279,7 @@ describe('LoginForm', () => {
   })
 
   it('should show error on failed login', async () => {
-    authApi.login.mockRejectedValue(new Error('Invalid credentials'))
+    mockedAuthApi.login.mockRejectedValue(new Error('Invalid credentials'))
 
     render(
       <TestWrapper>
@@ -338,14 +343,14 @@ describe('RegisterForm', () => {
   it('should register user successfully', async () => {
     const mockOnSuccess = vi.fn()
     
-    authApi.register.mockResolvedValue({ message: 'Success', success: true })
-    authApi.login.mockResolvedValue({
+    mockedAuthApi.register.mockResolvedValue({ message: 'Success', success: true })
+    mockedAuthApi.login.mockResolvedValue({
       access_token: 'access-token',
       refresh_token: 'refresh-token',
       token_type: 'bearer',
       expires_in: 3600
     })
-    authApi.getProfile.mockResolvedValue({
+    mockedAuthApi.getProfile.mockResolvedValue({
       id: 1,
       email: 'newuser@test.com',
       username: 'newuser',
@@ -421,7 +426,7 @@ describe('ProtectedRoute', () => {
       return null
     })
 
-    authApi.getProfile.mockResolvedValue({
+    mockedAuthApi.getProfile.mockResolvedValue({
       id: 1,
       email: 'test@test.com',
       username: 'testuser',
@@ -475,7 +480,7 @@ describe('AuthGuard', () => {
       return null
     })
 
-    authApi.getProfile.mockResolvedValue({
+    mockedAuthApi.getProfile.mockResolvedValue({
       id: 1,
       email: 'test@test.com',
       username: 'testuser',
