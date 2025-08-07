@@ -440,6 +440,16 @@
   border-color: var(--color-border-dark);
 }
 
+.checklist-switcher__toggle--compact {
+  padding: var(--spacing-2);
+  min-width: 2.5rem;
+  justify-content: center;
+}
+
+.checklist-switcher__toggle--compact .switcher-text {
+  display: none;
+}
+
 .switcher-arrow {
   font-size: var(--font-size-xs);
   transition: transform var(--transition-fast);

@@ -124,6 +124,12 @@ p {
   border-radius: var(--radius-base);
 }
 
+.btn-compact {
+  padding: var(--spacing-2);
+  min-width: 2.5rem;
+  font-size: var(--font-size-lg);
+}
+
 /* Form elements */
 input[type="text"],
 input[type="email"],

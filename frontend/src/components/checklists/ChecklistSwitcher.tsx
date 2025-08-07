@@ -49,14 +49,12 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
   return (
     <div className="checklist-switcher">
       <button
-        className="checklist-switcher__toggle"
+        className="checklist-switcher__toggle checklist-switcher__toggle--compact"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
+        title={currentChecklist ? 'Переключить чеклист' : 'Быстрый переход'}
       >
         <span className="switcher-icon">📋</span>
-        <span className="switcher-text">
-          {currentChecklist ? 'Переключить чеклист' : 'Быстрый переход'}
-        </span>
         <span className={`switcher-arrow ${isOpen ? 'open' : ''}`}>▼</span>
       </button>
 

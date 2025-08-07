@@ -248,6 +248,13 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     <div className="question-flow">
       {/* Header with progress and controls */}
       <div className="question-flow__header">
+        <div className="question-flow__controls">
+          <ChecklistSwitcher
+            characterId={characterId}
+            currentChecklist={checklistSlug}
+          />
+        </div>
+
         <ProgressBar
           currentIndex={currentQuestionIndex}
           totalQuestions={allQuestions.length}
@@ -256,17 +263,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         
         <div className="question-flow__controls">
           <button
-            className="btn btn-icon"
+            className="btn btn-icon btn-compact"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             title="Навигация по вопросам"
           >
             ☰
           </button>
-          
-          <ChecklistSwitcher
-            characterId={characterId}
-            currentChecklist={checklistSlug}
-          />
         </div>
       </div>
 
