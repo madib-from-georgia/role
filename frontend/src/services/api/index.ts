@@ -150,3 +150,62 @@ export const checklistApi = {
   getCharacterProgress: (characterId: number) => 
     api.get(`/api/checklists/character/${characterId}/progress`),
 }
+
+export const exportApi = {
+  // Экспорт персонажа в PDF или DOCX
+  exportCharacter: (data: {
+    character_id: number;
+    format: 'pdf' | 'docx';
+    export_type?: 'detailed' | 'summary' | 'compact';
+    include_checklists?: string[];
+    include_empty_responses?: boolean;
+  }) => {
+    return apiClient.post('/api/export/character', data, {
+      responseType: 'blob', // Важно для получения бинарных данных
+    }).then(response => {
+      // Извлекаем имя файла из заголовков ответа
+      const contentDisposition = response.headers['content-disposition'] || '';
+      const fileNameMatch = contentDisposition.match(/filename=(.+)/);
+      const fileName = fileNameMatch ? fileNameMatch[1].replace(/"/g, '') : 
+        `character_export_${Date.now()}.${data.format}`;
+      
+      return {
+        data: response.data,
+        fileName,
+        contentType: response.headers['content-type']
+      };
+    });
+  },
+
+  // Получить доступные форматы экспорта
+  getFormats: () => api.get('/api/export/formats'),
+
+  // Получить типы экспорта
+  getTypes: () => api.get('/api/export/types'),
+
+  // Получить шаблоны экспорта
+  getTemplates: () => api.get('/api/export/templates'),
+
+  // Массовый экспорт (если понадобится в будущем)
+  exportMultipleCharacters: (data: {
+    character_ids: number[];
+    format: 'pdf' | 'docx';
+    export_type?: 'detailed' | 'summary' | 'compact';
+    merge_into_single_file?: boolean;
+  }) => {
+    return apiClient.post('/api/export/characters/bulk', data, {
+      responseType: 'blob',
+    }).then(response => {
+      const contentDisposition = response.headers['content-disposition'] || '';
+      const fileNameMatch = contentDisposition.match(/filename=(.+)/);
+      const fileName = fileNameMatch ? fileNameMatch[1].replace(/"/g, '') : 
+        `characters_export_${Date.now()}.${data.format}`;
+      
+      return {
+        data: response.data,
+        fileName,
+        contentType: response.headers['content-type']
+      };
+    });
+  }
+}

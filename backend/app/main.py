@@ -10,8 +10,12 @@ from contextlib import asynccontextmanager
 
 from app.database.connection import init_db, close_db
 from app.middleware.auth_middleware import AuthMiddleware, SecurityMiddleware, LoggingMiddleware
-from app.routers import auth, projects, texts, characters, checklists
+from app.middleware.performance_middleware import (
+    get_performance_middleware, get_cache_middleware, get_compression_middleware
+)
+from app.routers import auth, projects, texts, characters, checklists, export, security
 from app.config.settings import settings
+from app.utils.logging_config import LoggingConfig
 
 
 @asynccontextmanager
@@ -44,8 +48,17 @@ app.add_middleware(
 )
 
 # Добавление кастомных middleware (порядок важен!)
+# Сначала добавляем middleware для производительности (в обратном порядке)
+app.add_middleware(get_performance_middleware(), max_request_time=30.0)
+
+# Затем middleware для безопасности и логирования
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(SecurityMiddleware, rate_limit_requests=100, rate_limit_window=60)
+
+# Включаем middleware (после исправления конфликтов с бинарными файлами)
+# ВРЕМЕННО ОТКЛЮЧЕНЫ из-за конфликтов с response body
+# app.add_middleware(get_compression_middleware(), min_size=1024)
+# app.add_middleware(get_cache_middleware(), cache_ttl=300)
 
 # Добавляем AuthMiddleware только если авторизация включена
 if settings.auth_enabled:
@@ -57,6 +70,8 @@ app.include_router(projects.router)
 app.include_router(texts.router, prefix="/api/texts", tags=["texts"])
 app.include_router(characters.router, prefix="/api/characters", tags=["characters"])
 app.include_router(checklists.router, prefix="/api/checklists", tags=["checklists"])
+app.include_router(export.router)
+app.include_router(security.router)
 
 
 @app.get("/")

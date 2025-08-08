@@ -7,12 +7,14 @@ import { RecommendedNextStep } from './RecommendedNextStep';
 import { ChecklistGroup } from './ChecklistGroup';
 import { OverallProgress } from './OverallProgress';
 import { ChecklistSwitcher } from './ChecklistSwitcher';
+import { ExportDialog } from './ExportDialog';
 
 interface ChecklistsOverviewProps {}
 
 export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
   const { characterId } = useParams<{ characterId: string }>();
   const navigate = useNavigate();
+  const [isExportDialogOpen, setIsExportDialogOpen] = React.useState(false);
 
   // Загружаем данные персонажа
   const { data: character, isLoading: characterLoading } = useQuery({
@@ -103,12 +105,21 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
     <div className="checklists-overview">
       {/* Header */}
       <div className="checklists-overview__header">
-        <button
-          onClick={() => navigate(-1)}
-          className="btn btn-secondary"
-        >
-          ← Назад
-        </button>
+        <div className="header-actions">
+          <button
+            onClick={() => navigate(-1)}
+            className="btn btn-secondary"
+          >
+            ← Назад
+          </button>
+          
+          <button
+            onClick={() => setIsExportDialogOpen(true)}
+            className="btn btn-primary btn-export"
+          >
+            📄 Экспорт отчета
+          </button>
+        </div>
         
         <div className="character-info">
           <h1>{character?.name}</h1>
@@ -169,6 +180,16 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
         />
 
       </div>
+
+      {/* Export Dialog */}
+      {character && (
+        <ExportDialog
+          characterId={parseInt(characterId)}
+          characterName={character.name}
+          isOpen={isExportDialogOpen}
+          onClose={() => setIsExportDialogOpen(false)}
+        />
+      )}
     </div>
   );
 };

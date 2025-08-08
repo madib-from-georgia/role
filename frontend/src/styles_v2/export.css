@@ -1,0 +1,258 @@
+/* Export Dialog Styles */
+.export-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.export-dialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.export-dialog__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e1e5e9;
+  margin-bottom: 24px;
+}
+
+.export-dialog__header h2 {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.export-dialog__close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #a0aec0;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.export-dialog__close:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+.export-dialog__close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.export-dialog__content {
+  padding: 0 24px;
+}
+
+.export-character-info {
+  background: #f7fafc;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.export-character-info h3 {
+  margin: 0 0 8px 0;
+  color: #2d3748;
+  font-size: 1.1rem;
+}
+
+.character-name {
+  color: #3182ce;
+  font-weight: 600;
+}
+
+.export-description {
+  margin: 0;
+  color: #718096;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.export-options {
+  space-y: 24px;
+}
+
+.export-option-group {
+  margin-bottom: 24px;
+}
+
+.export-label {
+  display: block;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.export-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.export-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.export-radio:hover {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+}
+
+.export-radio input[type="radio"] {
+  margin-top: 2px;
+  accent-color: #3182ce;
+}
+
+.export-radio input[type="radio"]:checked + .export-radio-label {
+  color: #3182ce;
+}
+
+.export-radio input[type="radio"]:checked {
+  + .export-radio-label strong {
+    color: #3182ce;
+  }
+}
+
+.export-radio:has(input:checked) {
+  border-color: #3182ce;
+  background: #ebf8ff;
+}
+
+.export-radio-label {
+  flex: 1;
+}
+
+.export-radio-label strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.export-radio-label small {
+  color: #718096;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.export-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.export-checkbox:hover {
+  background: #f7fafc;
+}
+
+.export-checkbox input[type="checkbox"] {
+  accent-color: #3182ce;
+}
+
+.export-checkbox-label {
+  color: #2d3748;
+  font-size: 0.95rem;
+}
+
+.export-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid #e1e5e9;
+  margin-top: 24px;
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+/* Button Loading State */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner.small {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .export-dialog-overlay {
+    padding: 12px;
+  }
+  
+  .export-dialog {
+    max-height: 95vh;
+  }
+  
+  .export-dialog__header,
+  .export-dialog__content,
+  .export-dialog__footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  .export-radio-group {
+    gap: 8px;
+  }
+  
+  .export-radio {
+    padding: 12px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .btn-export {
+    justify-content: center;
+  }
+}

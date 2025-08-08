@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ персонажа: {{ character.name }}</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .character-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .character-info h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .info-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .info-table td:first-child {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            width: 30%;
+            color: #495057;
+        }
+        
+        .checklist-section {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .checklist-header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .checklist-content {
+            padding: 20px;
+        }
+        
+        .section-title {
+            color: #495057;
+            font-size: 1.3em;
+            margin: 25px 0 15px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .question-block {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .question {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .answer {
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .metadata {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.9em;
+        }
+        
+        .source {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .source.found-in-text {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .source.logically-derived {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .source.imagined {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .confidence {
+            color: #6c757d;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #343a40;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                font-size: 12pt;
+            }
+            
+            .checklist-section {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Анализ персонажа: {{ character.name }}</h1>
+    </div>
+
+    <div class="character-info">
+        <h2>Базовая информация</h2>
+        <table class="info-table">
+            <tr>
+                <td>Имя:</td>
+                <td>{{ character.name }}</td>
+            </tr>
+            {% if character.aliases %}
+            <tr>
+                <td>Псевдонимы:</td>
+                <td>{{ character.aliases | join(', ') }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td>Важность:</td>
+                <td>{{ "%.2f" | format(character.importance_score) if character.importance_score else "Не определена" }}</td>
+            </tr>
+            <tr>
+                <td>Дата анализа:</td>
+                <td>{{ export_date }}</td>
+            </tr>
+        </table>
+    </div>
+
+    {% for checklist in checklists %}
+    <div class="checklist-section">
+        <h2 class="checklist-header">{{ checklist.title }}</h2>
+        <div class="checklist-content">
+            {% if checklist.description %}
+            <p style="color: #6c757d; font-style: italic;">{{ checklist.description }}</p>
+            {% endif %}
+
+            {% set sections_responses = {} %}
+            {% for response in checklist.responses %}
+                {% set section = response.question.subsection.section.title %}
+                {% if section not in sections_responses %}
+                    {% set _ = sections_responses.update({section: []}) %}
+                {% endif %}
+                {% set _ = sections_responses[section].append(response) %}
+            {% endfor %}
+
+            {% for section_title, responses in sections_responses.items() %}
+            <h3 class="section-title">{{ section_title }}</h3>
+            
+            {% for response in responses %}
+            <div class="question-block">
+                <div class="question">{{ response.question.text }}</div>
+                
+                {% if response.response_text %}
+                <div class="answer">{{ response.response_text }}</div>
+                {% endif %}
+                
+                <div class="metadata">
+                    <span class="source {{ response.source.lower().replace('_', '-') }}">
+                        {% if response.source == 'FOUND_IN_TEXT' %}
+                            Найдено в тексте
+                        {% elif response.source == 'LOGICALLY_DERIVED' %}
+                            Логически выведено
+                        {% elif response.source == 'IMAGINED' %}
+                            Придумано
+                        {% else %}
+                            {{ response.source }}
+                        {% endif %}
+                    </span>
+                    
+                    {% if response.confidence_score %}
+                    <span class="confidence">Уверенность: {{ "%.2f" | format(response.confidence_score) }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="footer">
+        <p>Отчет создан {{ export_date }} системой анализа персонажей</p>
+    </div>
+</body>
+</html>

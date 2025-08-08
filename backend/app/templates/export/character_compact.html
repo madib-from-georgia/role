@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ character.name }} - Компактный отчет</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            line-height: 1.4;
+            color: #333;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #343a40;
+            color: white;
+            border-radius: 5px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        
+        .compact-info {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .value {
+            color: #6c757d;
+        }
+        
+        .main-stat {
+            text-align: center;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .main-stat .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .main-stat .text {
+            font-size: 0.9em;
+        }
+        
+        .mini-table {
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .mini-table-row {
+            display: flex;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .mini-table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .mini-table-row:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .mini-table .name {
+            flex: 1;
+            font-size: 0.9em;
+        }
+        
+        .mini-table .count {
+            font-weight: bold;
+            color: #495057;
+            font-size: 0.8em;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ character.name }}</h1>
+        <div style="font-size: 0.8em; margin-top: 5px;">Компактный отчет</div>
+    </div>
+
+    <div class="compact-info">
+        <div class="info-row">
+            <span class="label">Имя:</span>
+            <span class="value">{{ character.name }}</span>
+        </div>
+        {% if character.importance_score %}
+        <div class="info-row">
+            <span class="label">Важность:</span>
+            <span class="value">{{ "%.2f" | format(character.importance_score) }}</span>
+        </div>
+        {% endif %}
+        <div class="info-row">
+            <span class="label">Дата:</span>
+            <span class="value">{{ export_date.split(' ')[0] }}</span>
+        </div>
+    </div>
+
+    {% set total_questions = checklists | sum(attribute='responses') | length %}
+    {% set answered_questions = checklists | sum(attribute='responses') | selectattr('response_text') | list | length %}
+    {% set overall_completion = (answered_questions / total_questions * 100) if total_questions > 0 else 0 %}
+
+    <div class="main-stat">
+        <span class="number">{{ "%.0f" | format(overall_completion) }}%</span>
+        <span class="text">Завершено ({{ answered_questions }}/{{ total_questions }})</span>
+    </div>
+
+    <div class="mini-table">
+        {% for checklist in checklists[:5] %}
+        {% set checklist_total = checklist.responses | length %}
+        {% set checklist_answered = checklist.responses | selectattr('response_text') | list | length %}
+        <div class="mini-table-row">
+            <div class="name">{{ checklist.title[:20] }}{% if checklist.title|length > 20 %}...{% endif %}</div>
+            <div class="count">{{ checklist_answered }}/{{ checklist_total }}</div>
+        </div>
+        {% endfor %}
+        {% if checklists|length > 5 %}
+        <div class="mini-table-row" style="font-style: italic; color: #6c757d;">
+            <div class="name">...и еще {{ checklists|length - 5 }}</div>
+            <div class="count"></div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>{{ export_date }}</p>
+    </div>
+</body>
+</html>

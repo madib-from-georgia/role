@@ -8,6 +8,7 @@ import { ProgressBar } from './ProgressBar';
 import { QuestionNavigation } from './QuestionNavigation';
 import { NavigationSidebar } from './NavigationSidebar';
 import { ChecklistSwitcher } from './ChecklistSwitcher';
+import { ExportDialog } from './ExportDialog';
 
 interface QuestionFlowProps {
   checklistSlug: string;
@@ -22,6 +23,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [localData, setLocalData] = useState<any>(null);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   // Загрузка чеклиста
   const { data: checklistData, isLoading, error } = useQuery({
@@ -263,6 +265,14 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         
         <div className="question-flow__controls">
           <button
+            className="btn btn-primary btn-compact"
+            onClick={() => setIsExportDialogOpen(true)}
+            title="Экспорт чеклиста"
+          >
+            📄 Экспорт
+          </button>
+          
+          <button
             className="btn btn-icon btn-compact"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             title="Навигация по вопросам"
@@ -305,6 +315,16 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           canGoForward={currentQuestionIndex < allQuestions.length - 1}
         />
       </div>
+
+      {/* Export Dialog */}
+      {localData && (
+        <ExportDialog
+          characterId={characterId}
+          characterName={localData.character?.name || "Персонаж"}
+          isOpen={isExportDialogOpen}
+          onClose={() => setIsExportDialogOpen(false)}
+        />
+      )}
     </div>
   );
 };

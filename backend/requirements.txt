@@ -28,6 +28,15 @@ beautifulsoup4==4.12.2  # For EPUB and FB2 parsing
 zipfile36==0.1.3  # For EPUB archives
 chardet==5.2.0  # For text encoding detection
 
+# Export functionality
+reportlab==4.0.9  # PDF generation
+jinja2==3.1.2  # Template engine
+fpdf2==2.7.6  # Alternative PDF library
+markdown==3.5.2  # Markdown to HTML conversion
+
+# Optional export functionality (requires system dependencies)
+# weasyprint==61.2  # HTML to PDF - commented out due to macOS compatibility issues
+
 # Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
@@ -41,6 +50,9 @@ mypy==1.7.1
 
 # Logging
 loguru==0.7.2
+
+# Performance monitoring
+psutil==5.9.6
 
 # Environment
 python-dotenv==1.0.0

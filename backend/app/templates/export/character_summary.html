@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Краткий анализ: {{ character.name }}</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .summary-table th {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .summary-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #11998e;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Краткий анализ: {{ character.name }}</h1>
+    </div>
+
+    <div class="summary-card">
+        <h2>Общая статистика</h2>
+        {% set total_questions = checklists | sum(attribute='responses') | length %}
+        {% set answered_questions = checklists | sum(attribute='responses') | selectattr('response_text') | list | length %}
+        {% set overall_completion = (answered_questions / total_questions * 100) if total_questions > 0 else 0 %}
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ answered_questions }}</div>
+                <div class="stat-label">Отвечено</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_questions }}</div>
+                <div class="stat-label">Всего вопросов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ "%.1f" | format(overall_completion) }}%</div>
+                <div class="stat-label">Завершено</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ overall_completion }}%"></div>
+            <div class="progress-text">{{ "%.1f" | format(overall_completion) }}%</div>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <h2>Детализация по чеклистам</h2>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Чеклист</th>
+                    <th>Отвечено</th>
+                    <th>Процент</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for checklist in checklists %}
+                {% set checklist_total = checklist.responses | length %}
+                {% set checklist_answered = checklist.responses | selectattr('response_text') | list | length %}
+                {% set checklist_completion = (checklist_answered / checklist_total * 100) if checklist_total > 0 else 0 %}
+                <tr>
+                    <td>{{ checklist.title }}</td>
+                    <td>{{ checklist_answered }}/{{ checklist_total }}</td>
+                    <td>{{ "%.1f" | format(checklist_completion) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Отчет создан {{ export_date }}</p>
+    </div>
+</body>
+</html>
