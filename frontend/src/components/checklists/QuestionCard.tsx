@@ -316,35 +316,35 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       {/* Additional fields */}
       <div className="question-card__additional">
         {/* Source type selection */}
-        <div className="source-selection">
+        <div className="source-selection source-selection--inline">
           <label className="field-label">Источник информации:</label>
-          <div className="source-options">
-            <label className="source-option">
+          <div className="source-options source-options--compact">
+            <label className="source-option source-option--compact" title="Найдено в тексте">
               <input
                 type="radio"
                 value="FOUND_IN_TEXT"
                 checked={sourceType === 'FOUND_IN_TEXT'}
                 onChange={(e) => setSourceType(e.target.value as any)}
               />
-              <span>Найдено в тексте</span>
+              <span className="source-option__icon">📖</span>
             </label>
-            <label className="source-option">
+            <label className="source-option source-option--compact" title="Логически выведено">
               <input
                 type="radio"
                 value="LOGICALLY_DERIVED"
                 checked={sourceType === 'LOGICALLY_DERIVED'}
                 onChange={(e) => setSourceType(e.target.value as any)}
               />
-              <span>Логически выведено</span>
+              <span className="source-option__icon">🧠</span>
             </label>
-            <label className="source-option">
+            <label className="source-option source-option--compact" title="Домыслено">
               <input
                 type="radio"
                 value="IMAGINED"
                 checked={sourceType === 'IMAGINED'}
                 onChange={(e) => setSourceType(e.target.value as any)}
               />
-              <span>Домыслено</span>
+              <span className="source-option__icon">✨</span>
             </label>
           </div>
         </div>
