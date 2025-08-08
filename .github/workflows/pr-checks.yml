@@ -1,0 +1,156 @@
+name: PR Quality Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16.14.0'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install frontend dependencies
+      working-directory: frontend
+      run: npm ci
+
+    - name: Check frontend code style
+      working-directory: frontend
+      run: npm run lint
+
+    - name: Run frontend tests with coverage
+      working-directory: frontend
+      run: npm run test:coverage
+
+    - name: Check test coverage threshold
+      working-directory: frontend
+      run: |
+        # Extract coverage percentage from coverage summary
+        COVERAGE=$(npx nyc report --reporter=text-summary | grep "Lines" | grep -oE '[0-9.]+%' | head -1 | sed 's/%//')
+        echo "Current coverage: ${COVERAGE}%"
+        
+        # Set minimum coverage threshold
+        MIN_COVERAGE=80
+        
+        if (( $(echo "$COVERAGE < $MIN_COVERAGE" | bc -l) )); then
+          echo "❌ Coverage ${COVERAGE}% is below minimum threshold ${MIN_COVERAGE}%"
+          exit 1
+        else
+          echo "✅ Coverage ${COVERAGE}% meets minimum threshold ${MIN_COVERAGE}%"
+        fi
+
+    - name: Comment coverage on PR
+      uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Read coverage summary
+          try {
+            const coveragePath = path.join('frontend', 'coverage', 'coverage-summary.json');
+            if (fs.existsSync(coveragePath)) {
+              const coverage = JSON.parse(fs.readFileSync(coveragePath, 'utf8'));
+              const totalCoverage = coverage.total;
+              
+              const comment = `## 📊 Test Coverage Report
+              
+              | Metric | Percentage | Covered | Total |
+              |--------|------------|---------|-------|
+              | Lines | ${totalCoverage.lines.pct}% | ${totalCoverage.lines.covered} | ${totalCoverage.lines.total} |
+              | Branches | ${totalCoverage.branches.pct}% | ${totalCoverage.branches.covered} | ${totalCoverage.branches.total} |
+              | Functions | ${totalCoverage.functions.pct}% | ${totalCoverage.functions.covered} | ${totalCoverage.functions.total} |
+              | Statements | ${totalCoverage.statements.pct}% | ${totalCoverage.statements.covered} | ${totalCoverage.statements.total} |
+              
+              ${totalCoverage.lines.pct >= 80 ? '✅' : '❌'} **Coverage Status**: ${totalCoverage.lines.pct >= 80 ? 'PASSED' : 'FAILED'} (Minimum: 80%)
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.log('Could not read coverage report:', error.message);
+          }
+
+  changed-files:
+    name: Check Changed Files
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v40
+      with:
+        files: |
+          frontend/**/*.{ts,tsx,js,jsx}
+          frontend/**/*.test.{ts,tsx,js,jsx}
+
+    - name: Check if tests exist for changed components
+      if: steps.changed-files.outputs.any_changed == 'true'
+      run: |
+        echo "Changed files:"
+        echo "${{ steps.changed-files.outputs.all_changed_files }}"
+        
+        missing_tests=()
+        
+        for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          # Skip if it's already a test file
+          if [[ $file == *".test."* ]]; then
+            continue
+          fi
+          
+          # Skip config files and non-component files
+          if [[ $file == *"config"* ]] || [[ $file == *"index"* ]] || [[ $file == *"main"* ]]; then
+            continue
+          fi
+          
+          # Check if component/page file has corresponding test
+          if [[ $file == *"/components/"* ]] || [[ $file == *"/pages/"* ]] || [[ $file == *"/services/"* ]]; then
+            test_file=""
+            
+            # Convert component path to test path
+            if [[ $file == *".tsx" ]]; then
+              test_file="${file%.*}.test.tsx"
+            elif [[ $file == *".ts" ]]; then
+              test_file="${file%.*}.test.ts"
+            fi
+            
+            # Alternative test location in tests directory
+            alt_test_file=$(echo "$file" | sed 's|frontend/src/|frontend/src/tests/|' | sed 's|\.(ts|tsx)$|.test.\1|')
+            
+            if [[ ! -f "$test_file" ]] && [[ ! -f "$alt_test_file" ]]; then
+              missing_tests+=("$file")
+            fi
+          fi
+        done
+        
+        if [ ${#missing_tests[@]} -gt 0 ]; then
+          echo "⚠️  The following files may need tests:"
+          printf '%s\n' "${missing_tests[@]}"
+          echo ""
+          echo "Consider adding tests for new or significantly changed components."
+        else
+          echo "✅ All changed components appear to have tests."
+        fi

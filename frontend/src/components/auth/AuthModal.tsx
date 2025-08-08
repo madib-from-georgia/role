@@ -26,12 +26,13 @@ const AuthModal: React.FC<AuthModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="auth-modal-overlay" onClick={onClose} data-testid="auth-modal-overlay">
+      <div className="auth-modal" onClick={(e) => e.stopPropagation()} data-testid="auth-modal-content">
         <button 
           className="auth-modal-close"
           onClick={onClose}
           type="button"
+          aria-label="Close modal"
         >
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
