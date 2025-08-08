@@ -110,6 +110,10 @@ a:hover {
   font-weight: 500;
   transition: all 0.2s;
   color: #666;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .nav-link:hover {
@@ -124,9 +128,6 @@ a:hover {
 
 .nav-link.external {
   color: #666;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .nav-link.external svg {
@@ -870,6 +871,8 @@ a:hover {
   font-weight: 500;
   color: #374151;
   cursor: pointer;
+
+  display: block;
 }
 
 .upload-help {

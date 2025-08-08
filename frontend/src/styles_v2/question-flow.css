@@ -416,7 +416,6 @@
 /* Question types */
 .question-options {
   display: flex;
-  flex-direction: column;
   gap: var(--spacing-3);
 }
 
