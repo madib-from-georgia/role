@@ -6,21 +6,20 @@
 .checklists-overview {
   min-height: 100vh;
   background-color: var(--color-background);
+  padding: var(--spacing-4);
 }
 
 .checklists-overview__header {
   display: flex;
-  align-items: center;
   gap: var(--spacing-4);
-  padding: var(--spacing-6);
   background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
+  justify-content: space-between;
 }
 
 .checklists-overview__content {
   max-width: var(--container-lg);
   margin: 0 auto;
-  padding: var(--spacing-8) var(--spacing-4);
+  padding: 0 var(--spacing-4);
 }
 
 .checklists-overview__error,
@@ -45,11 +44,7 @@
 
 /* OverallProgress */
 .overall-progress {
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-background));
-  border-radius: var(--radius-xl);
   padding: var(--spacing-8);
-  margin-bottom: var(--spacing-8);
-  border: 1px solid var(--color-border-light);
 }
 
 .overall-progress--empty {
@@ -158,7 +153,7 @@
   border: 2px solid var(--color-primary);
   border-radius: var(--radius-xl);
   padding: var(--spacing-6);
-  margin-bottom: var(--spacing-8);
+  margin: var(--spacing-8) 0;
   box-shadow: var(--shadow-lg);
 }
 
@@ -245,6 +240,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
+  margin-top: var(--spacing-8);
 }
 
 .checklist-group {
@@ -337,7 +333,6 @@
 .checklist-item:hover {
   border-color: var(--color-primary);
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .checklist-item__icon {
@@ -450,15 +445,6 @@
   display: none;
 }
 
-.switcher-arrow {
-  font-size: var(--font-size-xs);
-  transition: transform var(--transition-fast);
-}
-
-.switcher-arrow.open {
-  transform: rotate(180deg);
-}
-
 .checklist-switcher__dropdown {
   position: absolute;
   top: 100%;
@@ -490,6 +476,9 @@
   overflow-y: auto;
 }
 
+.switcher-icon {
+  margin-right: var(--spacing-2);
+}
 .switcher-item {
   display: flex;
   align-items: center;
@@ -569,6 +558,7 @@
   right: 0;
   bottom: 0;
   z-index: calc(var(--z-dropdown) - 1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* Mobile responsive adjustments */

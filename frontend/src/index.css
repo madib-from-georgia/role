@@ -197,12 +197,6 @@ a:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.card-header {
-  padding-bottom: 16px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
 .card-title {
   font-size: 1.125rem;
   font-weight: 600;
@@ -211,50 +205,18 @@ a:hover {
 
 .project-card {
   cursor: pointer;
-  transition: all 0.2s;
 }
 
-.project-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: #3b82f6;
-}
 /* Project Card with Delete Button */
 .project-card-wrapper {
   position: relative;
+  margin: var(--spacing-4);
 }
 
 .delete-project-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  opacity: 0;
-  z-index: 2;
-}
-
-.project-card-wrapper:hover .delete-project-btn {
-  opacity: 1;
-}
-
-.delete-project-btn:hover {
-  background: #fef2f2;
-  border-color: #fecaca;
-  color: #dc2626;
-}
-
-.delete-project-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  top: 0;
+  right: 0;
 }
 
 .delete-project-btn svg {
@@ -269,6 +231,13 @@ a:hover {
   margin-bottom: 16px;
 }
 
+  .project-detail-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
 .project-title {
   font-size: 1.125rem;
   font-weight: 600;
@@ -281,17 +250,6 @@ a:hover {
   color: #888;
 }
 
-.project-arrow {
-  width: 20px;
-  height: 20px;
-  color: #ccc;
-  transition: all 0.2s;
-}
-
-.project-card:hover .project-arrow {
-  color: #3b82f6;
-  transform: translateX(4px);
-}
 
 .project-description {
   color: #666;
@@ -436,35 +394,7 @@ a:hover {
   align-items: center;
 }
 
-.search-input {
-  flex: 1;
-  position: relative;
-}
-
-.search-input input {
-  width: 100%;
-  padding: 12px 16px 12px 40px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: #9ca3af;
-}
-
 .filter-select {
-  padding: 12px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 14px;
-  background: white;
   min-width: 140px;
 }
 
@@ -522,6 +452,7 @@ a:hover {
   border-top: 2px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  display: inline-block;
 }
 
 .spinner.small {
@@ -560,47 +491,6 @@ a:hover {
 .breadcrumb-current {
   color: #1a1a1a;
   font-weight: 500;
-}
-
-/* ===== ФУТЕР ===== */
-.footer {
-  background: white;
-  border-top: 1px solid #e5e5e5;
-  padding: 24px 0;
-  margin-top: auto;
-}
-
-.footer-content {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-}
-
-.footer-title {
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
-.footer-features {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
-.footer-feature {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #666;
-}
-
-.footer-feature svg {
-  width: 14px;
-  height: 14px;
 }
 
 /* ===== СОЗДАНИЕ ПРОЕКТА ===== */
@@ -759,14 +649,8 @@ a:hover {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .footer-features {
-.project-detail-header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
     flex-direction: column;
     gap: 12px;
   }
@@ -788,6 +672,15 @@ a:hover {
 /* Project Detail Page */
 .project-detail-header {
   margin-bottom: 2rem;
+}
+
+.project-detail-button {
+  display: flex;
+  align-items: center;
+}
+
+.project-detail-button .spinner {
+  margin-right: 0.5rem;
 }
 
 .project-detail-header h1 {
@@ -836,17 +729,14 @@ a:hover {
 
 /* File Upload */
 .file-upload {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
 .upload-area {
   border: 2px dashed #d1d5db;
   border-radius: 0.75rem;
-  padding: 2rem;
   text-align: center;
   background: #f9fafb;
+  margin-bottom: 1rem;
 }
 
 .upload-icon {
@@ -871,6 +761,8 @@ a:hover {
   font-weight: 500;
   color: #374151;
   cursor: pointer;
+  padding: 1rem 0;
+
 
   display: block;
 }
@@ -878,6 +770,7 @@ a:hover {
 .upload-help {
   color: #6b7280;
   font-size: 0.875rem;
+  margin-top: 8px;
 }
 
 .upload-btn {
@@ -982,21 +875,11 @@ a:hover {
 
 /* Characters Grid */
 .characters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .character-item {
-  background: #f9fafb;
-  border-radius: 0.5rem;
-  padding: 1rem;
   cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.character-item:hover {
-  background: #f3f4f6;
 }
 
 .character-header {
@@ -1009,6 +892,7 @@ a:hover {
 .character-header h4 {
   font-weight: 500;
   color: #111827;
+  margin: 0;
 }
 
 .character-aliases {
@@ -1763,19 +1647,10 @@ a:hover {
 }
 
 .user-menu-trigger {
-  background: none;
-  border: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: background-color 0.2s;
-}
-
-.user-menu-trigger:hover {
-  background: #f3f4f6;
+  margin-top: 2px;
 }
 
 .user-avatar {
@@ -2244,10 +2119,6 @@ a:hover {
   font-weight: 500;
 }
 
-.overall-progress {
-  margin-top: 16px;
-}
-
 .progress-header {
   display: flex;
   align-items: center;
@@ -2515,7 +2386,6 @@ a:hover {
 }
 
 .group-header {
-  padding: 16px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -2541,13 +2411,6 @@ a:hover {
   flex: 1;
 }
 
-.group-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
 .group-stats {
   display: flex;
   align-items: center;
@@ -2561,13 +2424,6 @@ a:hover {
 
 .group-body {
   border-top: 1px solid #e5e7eb;
-}
-
-.group-questions {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 /* Вопросы */
@@ -2599,25 +2455,6 @@ a:hover {
   align-items: flex-start;
   gap: 12px;
   flex: 1;
-}
-
-.question-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.question-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: #1a1a1a;
-  line-height: 1.5;
-  margin-bottom: 8px;
-}
-
-.question-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .question-actions {
@@ -2698,14 +2535,6 @@ a:hover {
   border-top: 1px solid #e5e7eb;
   padding: 16px;
   background-color: #f8f9fa;
-}
-
-.question-hint {
-  margin-bottom: 16px;
-  padding: 12px 16px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 8px;
 }
 
 .hint-content {
@@ -2977,7 +2806,7 @@ a:hover {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
-  padding: 24px;
+  padding: 14px;
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -3630,23 +3459,6 @@ a:hover {
 /* Комментарий */
 .comment-section {
   margin-bottom: 24px;
-}
-
-/* Подсказки */
-.question-hint {
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin: 12px 0;
-  color: #92400e;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.question-hint em {
-  font-style: italic;
-  color: #78350f;
 }
 
 /* Примеры из литературы и Почему это важно */

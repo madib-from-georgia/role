@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Button, User, ArrowToggle } from "@gravity-ui/uikit";
 import { useAuth } from "../contexts/AuthContext";
 import AuthModal from "./auth/AuthModal";
 import AuthGuard from "./auth/AuthGuard";
@@ -50,28 +51,31 @@ const Header: React.FC = () => {
                   </div>
                 }
               >
-                <Link
-                  to="/"
-                  className={`nav-link ${
-                    location.pathname === "/" ? "active" : ""
-                  }`}
-                >
-                  Проекты
+                <Link to="/">
+                  <Button
+                    view={location.pathname === "/" ? "normal" : "flat"}
+                    size="l"
+                  >
+                    Проекты
+                  </Button>
                 </Link>
 
-                <Link
-                  to="/projects/new"
-                  className={`nav-link ${
-                    location.pathname === "/projects/new" ? "active" : ""
-                  }`}
-                >
-                  Создать проект
+                <Link to="/projects/new">
+                  <Button
+                    view={
+                      location.pathname === "/projects/new" ? "normal" : "flat"
+                    }
+                    size="l"
+                  >
+                    Создать проект
+                  </Button>
                 </Link>
 
-                <a
-                  href="http://localhost:8000/docs"
+                <Button
+                  view="flat"
+                  size="l"
+                  href="/docs"
                   target="_blank"
-                  rel="noopener noreferrer"
                   className="nav-link external"
                 >
                   API Docs
@@ -83,14 +87,31 @@ const Header: React.FC = () => {
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
-                </a>
+                </Button>
 
                 {/* User Menu */}
                 <div className="user-menu-container">
-                  <button
-                    className="user-menu-trigger"
+                  <Button
                     onClick={() => setShowUserMenu(!showUserMenu)}
+                    view="flat"
+                    size="l"
                   >
+                    <div className="user-menu-trigger">
+                      <User
+                        avatar={{
+                          text: `${user?.full_name || user?.username}`,
+                          theme: "brand",
+                        }}
+                        name={user?.full_name || user?.username}
+                        size="m"
+                      />
+                      <ArrowToggle
+                        direction={showUserMenu ? "top" : "bottom"}
+                      />
+                    </div>
+                  </Button>
+
+                  {/* <button className="user-menu-trigger">
                     <div className="user-avatar">
                       {user?.full_name
                         ? user.full_name
@@ -118,7 +139,7 @@ const Header: React.FC = () => {
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
-                  </button>
+                  </button> */}
 
                   {showUserMenu && (
                     <div className="user-menu-dropdown">

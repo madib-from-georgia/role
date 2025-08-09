@@ -130,56 +130,8 @@ p {
   font-size: var(--font-size-lg);
 }
 
-/* Form elements */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea,
-select {
-  width: 100%;
-  padding: var(--spacing-3);
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-normal);
-  color: var(--color-text-primary);
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  transition: border-color var(--transition-fast);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 3rem;
-}
-
-/* Checkbox and radio styles */
-input[type="checkbox"],
-input[type="radio"] {
-  width: 1rem;
-  height: 1rem;
-  margin-right: var(--spacing-2);
-  accent-color: var(--color-primary);
-}
 
 /* Labels */
-label {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-2);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  cursor: pointer;
-}
-
 .field-label {
   display: block;
   margin-bottom: var(--spacing-2);

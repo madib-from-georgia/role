@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from "@gravity-ui/uikit";
 
 interface RecommendedNextStepProps {
   progress: any[];
@@ -94,7 +95,6 @@ export const RecommendedNextStep: React.FC<RecommendedNextStepProps> = ({
     <div className="recommended-step">
       <div className="recommended-step__header">
         <h2>{headerText}</h2>
-        <span className="recommended-step__badge">Smart AI</span>
       </div>
       
       <div className="recommended-step__content">
@@ -120,27 +120,13 @@ export const RecommendedNextStep: React.FC<RecommendedNextStepProps> = ({
         </div>
         
         <div className="recommended-step__actions">
-          <button 
+          <Button 
             onClick={handleStartStep}
-            className="btn btn-primary btn-large"
+            view="action"
           >
             {buttonText}
-          </button>
-          
-          {/* Показываем оценку времени только если есть прогресс */}
-          {recommendedStep.progress && (
-            <div className="recommended-step__time-estimate">
-              ≈ {Math.max(1, Math.ceil(((recommendedStep.progress.total_questions || 0) - (recommendedStep.progress.answered_questions || 0)) / 4))} мин
-            </div>
-          )}
-          
-          {/* Для нового пользователя показываем другую информацию */}
-          {recommendedStep.type === 'start' && (
-            <div className="recommended-step__time-estimate">
-              ≈ 10-15 мин на чеклист
-            </div>
-          )}
-        </div>
+          </Button>
+                  </div>
       </div>
     </div>
   );

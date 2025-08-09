@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Button, TextInput, Progress, Label, ArrowToggle } from "@gravity-ui/uikit";
 
 interface NavigationSidebarProps {
   isOpen: boolean;
   questions: any[];
   currentIndex: number;
+  completionPercentage: number;
   onQuestionSelect: (index: number) => void;
   onClose: () => void;
 }
@@ -12,18 +14,25 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
   isOpen,
   questions,
   currentIndex,
+  completionPercentage,
   onQuestionSelect,
-  onClose
+  onClose,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Set<number>>(new Set());
-  const [filterMode, setFilterMode] = useState<'all' | 'unanswered' | 'bookmarked'>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set()
+  );
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Set<number>>(
+    new Set()
+  );
+  const [filterMode, setFilterMode] = useState<
+    "all" | "unanswered" | "bookmarked"
+  >("all");
 
   // Group questions by section/subsection
   const groupedQuestions = React.useMemo(() => {
     const groups: { [key: string]: any[] } = {};
-    
+
     questions.forEach((question, index) => {
       const groupKey = `${question.sectionTitle} → ${question.subsectionTitle}`;
       if (!groups[groupKey]) {
@@ -31,44 +40,49 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
       }
       groups[groupKey].push({ ...question, index });
     });
-    
+
     return groups;
   }, [questions]);
 
   // Filter questions based on search and filter mode
   const filteredGroups = React.useMemo(() => {
     let filtered: { [key: string]: any[] } = {};
-    
+
     Object.entries(groupedQuestions).forEach(([groupKey, groupQuestions]) => {
       let matchingQuestions = groupQuestions;
-      
+
       // Apply filter mode
       switch (filterMode) {
-        case 'unanswered':
-          matchingQuestions = matchingQuestions.filter(q => !q.current_response?.answer);
+        case "unanswered":
+          matchingQuestions = matchingQuestions.filter(
+            (q) => !q.current_response?.answer
+          );
           break;
-        case 'bookmarked':
-          matchingQuestions = matchingQuestions.filter(q => bookmarkedQuestions.has(q.index));
+        case "bookmarked":
+          matchingQuestions = matchingQuestions.filter((q) =>
+            bookmarkedQuestions.has(q.index)
+          );
           break;
         default:
           // 'all' - no additional filtering
           break;
       }
-      
+
       // Apply search filter
       if (searchTerm) {
-        matchingQuestions = matchingQuestions.filter(q => 
-          q.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          q.sectionTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          q.subsectionTitle.toLowerCase().includes(searchTerm.toLowerCase())
+        matchingQuestions = matchingQuestions.filter(
+          (q) =>
+            q.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            q.sectionTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            q.subsectionTitle.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
-      
+
       if (matchingQuestions.length > 0) {
         filtered[groupKey] = matchingQuestions;
       }
     });
-    
+
     return filtered;
   }, [groupedQuestions, searchTerm, filterMode, bookmarkedQuestions]);
 
@@ -84,9 +98,9 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 
   const getQuestionStatus = (question: any) => {
     if (question.current_response?.answer) {
-      return 'answered';
+      return "answered";
     }
-    return 'unanswered';
+    return "unanswered";
   };
 
   const toggleBookmark = (questionIndex: number) => {
@@ -99,131 +113,160 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
     setBookmarkedQuestions(newBookmarks);
   };
 
+  const answeredQuestions = questions.filter(
+    (q) => q.current_response?.answer
+  ).length;
+
   return (
-    <div className={`navigation-sidebar-wrapper ${isOpen ? 'open' : 'closed'}`}>
+    <div className={`navigation-sidebar-wrapper ${isOpen ? "open" : "closed"}`}>
       {/* Backdrop */}
       <div className="navigation-sidebar__backdrop" onClick={onClose} />
-      
+
       {/* Sidebar */}
       <div className="navigation-sidebar">
         <div className="sidebar-header">
           <h3>Навигация по вопросам</h3>
-          <button className="close-button" onClick={onClose}>×</button>
+          <Button onClick={onClose} view="normal" size="l">
+            ×
+          </Button>
         </div>
 
         {/* Search */}
         <div className="sidebar-search">
-          <input
-            type="text"
-            placeholder="Поиск вопросов..."
+          <TextInput
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            onUpdate={(value) => setSearchTerm(value)}
+            placeholder="Поиск вопросов..."
           />
           {searchTerm && (
-            <button
+            <Button
+              onClick={() => setSearchTerm("")}
+              view="flat"
+              size="s"
               className="clear-search"
-              onClick={() => setSearchTerm('')}
             >
               ×
-            </button>
+            </Button>
           )}
         </div>
 
         {/* Filters */}
         <div className="sidebar-filters">
           <div className="filter-buttons">
-            <button
-              className={`filter-btn ${filterMode === 'all' ? 'active' : ''}`}
-              onClick={() => setFilterMode('all')}
+            <Button
+              onClick={() => setFilterMode("all")}
+              view={filterMode === "all" ? "action" : "outlined"}
+              size="s"
             >
               Все ({questions.length})
-            </button>
-            <button
-              className={`filter-btn ${filterMode === 'unanswered' ? 'active' : ''}`}
-              onClick={() => setFilterMode('unanswered')}
+            </Button>
+            <Button
+              onClick={() => setFilterMode("unanswered")}
+              view={filterMode === "unanswered" ? "action" : "outlined"}
+              size="s"
             >
-              Неотвеченные ({questions.filter(q => !q.current_response?.answer).length})
-            </button>
-            <button
-              className={`filter-btn ${filterMode === 'bookmarked' ? 'active' : ''}`}
-              onClick={() => setFilterMode('bookmarked')}
+              Неотвеченные (
+              {questions.filter((q) => !q.current_response?.answer).length})
+            </Button>
+            <Button
+              onClick={() => setFilterMode("bookmarked")}
+              view={filterMode === "bookmarked" ? "action" : "outlined"}
+              size="s"
             >
               ⭐ Закладки ({bookmarkedQuestions.size})
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Quick stats */}
         <div className="sidebar-stats">
-          <div className="stat-item">
-            <span className="stat-number">{questions.filter(q => q.current_response?.answer).length}</span>
-            <span className="stat-label">отвечено</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">{questions.length - questions.filter(q => q.current_response?.answer).length}</span>
-            <span className="stat-label">осталось</span>
-          </div>
+          <Progress
+            value={completionPercentage}
+            theme="success"
+            text={`${answeredQuestions} из ${questions.length}`}
+          />
         </div>
 
         {/* Question tree */}
         <div className="sidebar-content">
           {Object.entries(filteredGroups).map(([groupKey, groupQuestions]) => {
             const isExpanded = expandedSections.has(groupKey);
-            const answeredInGroup = groupQuestions.filter(q => q.current_response?.answer).length;
-            
+            const answeredInGroup = groupQuestions.filter(
+              (q) => q.current_response?.answer
+            ).length;
+
             return (
               <div key={groupKey} className="question-group">
-                <button
+                <div
                   className="group-header"
                   onClick={() => toggleSection(groupKey)}
                 >
-                  <span className={`expand-icon ${isExpanded ? 'expanded' : ''}`}>▶</span>
+                  <ArrowToggle direction={isExpanded ? "bottom" : "right"} /> 
+
                   <span className="group-title">{groupKey}</span>
-                  <span className="group-progress">
+                  <Label
+                    theme={
+                      answeredInGroup === 0
+                        ? "danger"
+                        : answeredInGroup === groupQuestions.length
+                        ? "success"
+                        : "info"
+                    }
+                  >
                     {answeredInGroup}/{groupQuestions.length}
-                  </span>
-                </button>
-                
+                  </Label>
+                </div>
+
                 {isExpanded && (
                   <div className="group-questions">
                     {groupQuestions.map((question) => {
                       const status = getQuestionStatus(question);
                       const isActive = question.index === currentIndex;
-                      
+
                       return (
                         <div
                           key={question.index}
-                          className={`question-item-container ${isActive ? 'active' : ''}`}
+                          className={`question-item-container ${
+                            isActive ? "active" : ""
+                          }`}
                         >
-                          <button
+                          <div
                             className={`question-item ${status}`}
                             onClick={() => onQuestionSelect(question.index)}
                           >
                             <div className="question-status">
-                              {status === 'answered' ? '✓' : '○'}
+                              {status === "answered" ? "✓" : "○"}
                             </div>
                             <div className="question-text">
                               <span className="question-number">
                                 {question.index + 1}.
                               </span>
                               <span className="question-content">
-                                {question.text.length > 50 
-                                  ? `${question.text.substring(0, 50)}...` 
-                                  : question.text
-                                }
+                                {question.text.length > 50
+                                  ? `${question.text.substring(0, 50)}...`
+                                  : question.text}
                               </span>
                             </div>
-                          </button>
+                          </div>
                           <button
-                            className={`bookmark-btn ${bookmarkedQuestions.has(question.index) ? 'bookmarked' : ''}`}
+                            className={`bookmark-btn ${
+                              bookmarkedQuestions.has(question.index)
+                                ? "bookmarked"
+                                : ""
+                            }`}
                             onClick={(e) => {
                               e.stopPropagation();
                               toggleBookmark(question.index);
                             }}
-                            title={bookmarkedQuestions.has(question.index) ? 'Убрать из закладок' : 'Добавить в закладки'}
+                            title={
+                              bookmarkedQuestions.has(question.index)
+                                ? "Убрать из закладок"
+                                : "Добавить в закладки"
+                            }
                           >
-                            {bookmarkedQuestions.has(question.index) ? '⭐' : '☆'}
+                            {bookmarkedQuestions.has(question.index)
+                              ? "⭐"
+                              : "☆"}
                           </button>
                         </div>
                       );
@@ -233,7 +276,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
               </div>
             );
           })}
-          
+
           {Object.keys(filteredGroups).length === 0 && searchTerm && (
             <div className="no-results">
               <p>Ничего не найдено по запросу "{searchTerm}"</p>
@@ -243,49 +286,56 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 
         {/* Quick actions */}
         <div className="sidebar-actions">
-          <button 
-            className="btn btn-sm"
+          <Button
             onClick={() => {
-              const nextUnanswered = questions.findIndex((q, index) => 
-                index > currentIndex && !q.current_response?.answer
+              const nextUnanswered = questions.findIndex(
+                (q, index) =>
+                  index > currentIndex && !q.current_response?.answer
               );
               if (nextUnanswered !== -1) {
                 onQuestionSelect(nextUnanswered);
               }
             }}
+            view="action"
+            size="l"
           >
             ➡️ Следующий неотвеченный
-          </button>
-          
+          </Button>
+
           {bookmarkedQuestions.size > 0 && (
-            <button 
-              className="btn btn-sm btn-highlight"
+            <Button
               onClick={() => {
-                const nextBookmark = questions.findIndex((_, index) => 
-                  index > currentIndex && bookmarkedQuestions.has(index)
+                const nextBookmark = questions.findIndex(
+                  (_, index) =>
+                    index > currentIndex && bookmarkedQuestions.has(index)
                 );
                 if (nextBookmark !== -1) {
                   onQuestionSelect(nextBookmark);
                 } else {
                   // If no bookmarks after current, go to first bookmark
-                  const firstBookmark = Math.min(...Array.from(bookmarkedQuestions));
+                  const firstBookmark = Math.min(
+                    ...Array.from(bookmarkedQuestions)
+                  );
                   onQuestionSelect(firstBookmark);
                 }
               }}
+              view="normal"
+              size="l"
             >
               ⭐ Следующая закладка
-            </button>
+            </Button>
           )}
-          
-          <button 
-            className="btn btn-sm btn-secondary"
+
+          <Button
             onClick={() => {
               // Expand all sections for easier navigation
               setExpandedSections(new Set(Object.keys(groupedQuestions)));
             }}
+            view="normal"
+            size="l"
           >
             📂 Развернуть все
-          </button>
+          </Button>
         </div>
       </div>
     </div>

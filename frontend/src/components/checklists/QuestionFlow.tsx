@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { checklistApi } from '../../services/api';
+import { Button } from "@gravity-ui/uikit";
+import { useNavigate } from 'react-router-dom';
 
 // Import subcomponents
 import { QuestionCard } from './QuestionCard';
@@ -24,6 +26,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [localData, setLocalData] = useState<any>(null);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Загрузка чеклиста
   const { data: checklistData, isLoading, error } = useQuery({
@@ -250,6 +253,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     <div className="question-flow">
       {/* Header with progress and controls */}
       <div className="question-flow__header">
+          <Button
+            onClick={() => navigate(-1)}
+            view="outlined"
+          >
+            ← 
+          </Button>
         <div className="question-flow__controls">
           <ChecklistSwitcher
             characterId={characterId}
@@ -264,21 +273,23 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         />
         
         <div className="question-flow__controls">
-          <button
-            className="btn btn-primary btn-compact"
+          <Button
             onClick={() => setIsExportDialogOpen(true)}
             title="Экспорт чеклиста"
+            view="normal"
+            size="m"
           >
             📄 Экспорт
-          </button>
+          </Button>
           
-          <button
-            className="btn btn-icon btn-compact"
+          <Button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             title="Навигация по вопросам"
+            view="normal"
+            size="m"
           >
             ☰
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -290,6 +301,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           questions={allQuestions}
           currentIndex={currentQuestionIndex}
           onQuestionSelect={handleJumpToQuestion}
+          completionPercentage={localData?.completion_stats?.completion_percentage || 0}
           onClose={() => setIsSidebarOpen(false)}
         />
 

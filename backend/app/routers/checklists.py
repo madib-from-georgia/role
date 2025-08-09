@@ -22,15 +22,35 @@ router = APIRouter()
 
 @router.get("/", response_model=List[Checklist])
 async def get_checklists(
+    character_id: Optional[int] = Query(None, description="ID персонажа для получения статистики"),
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
     Получение списка доступных чеклистов.
     
-    Возвращает все активные чеклисты без детальной структуры.
+    Возвращает все активные чеклисты. Если указан character_id,
+    добавляет статистику заполнения для каждого чеклиста.
     """
-    return checklist_service.get_available_checklists(db)
+    # Если указан character_id, проверяем права доступа к персонажу
+    if character_id:
+        character = character_crud.get(db, id=character_id)
+        if not character:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Персонаж не найден"
+            )
+        
+        # Проверяем, что персонаж принадлежит пользователю через текст
+        from app.database.crud import text as text_crud
+        text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
+        if not text:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Нет прав доступа к этому персонажу"
+            )
+    
+    return checklist_service.get_available_checklists(db, character_id)
 
 
 @router.get("/{checklist_slug}", response_model=ChecklistWithResponses)
