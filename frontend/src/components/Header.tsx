@@ -10,6 +10,7 @@ const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -28,6 +29,14 @@ const Header: React.FC = () => {
     setShowAuthModal(false);
   }, []);
 
+  const handleToggleMobileMenu = useCallback(() => {
+    setShowMobileMenu(!showMobileMenu);
+  }, [showMobileMenu]);
+
+  const handleCloseMobileMenu = useCallback(() => {
+    setShowMobileMenu(false);
+  }, []);
+
   return (
     <>
       <header className="header">
@@ -38,7 +47,19 @@ const Header: React.FC = () => {
               <span>Роль</span>
             </Link>
 
-            <nav className="nav">
+            {/* Mobile Menu Button */}
+            <Button
+              view="flat"
+              size="l"
+              className="mobile-menu-btn"
+              onClick={handleToggleMobileMenu}
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </Button>
+
+            <nav className="nav desktop-nav">
               <AuthGuard
                 fallback={
                   <div className="nav-guest">
@@ -70,24 +91,6 @@ const Header: React.FC = () => {
                     Создать проект
                   </Button>
                 </Link>
-
-                <Button
-                  view="flat"
-                  size="l"
-                  href="/docs"
-                  target="_blank"
-                  className="nav-link external"
-                >
-                  API Docs
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
-                </Button>
 
                 {/* User Menu */}
                 <div className="user-menu-container">
@@ -191,6 +194,126 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      {showMobileMenu && (
+        <div className="mobile-menu-overlay" onClick={handleCloseMobileMenu}>
+          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-header">
+              <div className="mobile-menu-logo">
+                <div className="logo-icon">Р</div>
+                <span>Роль</span>
+              </div>
+              <Button
+                view="flat"
+                size="m"
+                className="mobile-menu-close"
+                onClick={handleCloseMobileMenu}
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </Button>
+            </div>
+            
+            <nav className="mobile-menu-nav">
+              <AuthGuard
+                fallback={
+                  <div className="mobile-nav-guest">
+                    <Button
+                      view="normal"
+                      size="l"
+                      className="mobile-nav-link auth-trigger"
+                      onClick={() => {
+                        handleCloseMobileMenu();
+                        handleOpenAuthModal();
+                      }}
+                    >
+                      Войти
+                    </Button>
+                  </div>
+                }
+              >
+                <Link to="/" onClick={handleCloseMobileMenu}>
+                  <Button
+                    view={location.pathname === "/" ? "normal" : "flat"}
+                    size="l"
+                    className="mobile-nav-link"
+                  >
+                    Проекты
+                  </Button>
+                </Link>
+
+                <Link to="/projects/new" onClick={handleCloseMobileMenu}>
+                  <Button
+                    view={location.pathname === "/projects/new" ? "normal" : "flat"}
+                    size="l"
+                    className="mobile-nav-link"
+                  >
+                    Создать проект
+                  </Button>
+                </Link>
+
+                {/* User Menu in Mobile */}
+                <div className="mobile-user-section">
+                  <div className="mobile-user-info">
+                    <div className="mobile-user-avatar">
+                      {user?.full_name
+                        ? user.full_name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
+                        : user?.username.slice(0, 2).toUpperCase()}
+                    </div>
+                    <span className="mobile-user-name">
+                      {user?.full_name || user?.username}
+                    </span>
+                  </div>
+                  
+                  <Link to="/profile" onClick={handleCloseMobileMenu}>
+                    <Button
+                      view="flat"
+                      size="l"
+                      className="mobile-nav-link"
+                    >
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      Профиль
+                    </Button>
+                  </Link>
+
+                  <Button
+                    view="flat"
+                    size="l"
+                    className="mobile-nav-link logout"
+                    onClick={() => {
+                      handleCloseMobileMenu();
+                      handleLogout();
+                    }}
+                  >
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Выйти
+                  </Button>
+                </div>
+              </AuthGuard>
+            </nav>
+          </div>
+        </div>
+      )}
 
       {/* Auth Modal */}
       <AuthModal isOpen={showAuthModal} onClose={handleCloseAuthModal} />
