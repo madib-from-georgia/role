@@ -350,9 +350,6 @@ const ProjectDetail: React.FC = () => {
                     <p>Имя файла: {uploadMutation.data.filename}</p>
                     <p>Формат: {uploadMutation.data.format?.toUpperCase()}</p>
                     <p>Размер содержимого: {uploadMutation.data.content_length?.toLocaleString() || 'N/A'} символов</p>
-                    <p className="upload-note">
-                      💡 Файл загружен. Анализ персонажей будет доступен после обработки текста.
-                    </p>
                   </div>
                 </div>
               )}

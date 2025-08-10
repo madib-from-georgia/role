@@ -709,6 +709,11 @@ a:hover {
   gap: 2rem;
 }
 
+.error-message,
+.success-message {
+  margin-top: 16px;
+}
+
 @media (max-width: 1024px) {
   .project-content {
     grid-template-columns: 1fr;
