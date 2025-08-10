@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { checklistApi } from '../../services/api';
-import { Button } from "@gravity-ui/uikit";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { checklistApi, charactersApi } from "../../services/api";
+import { Button, Text } from "@gravity-ui/uikit";
+import { useNavigate } from "react-router-dom";
 
 // Import subcomponents
-import { QuestionCard } from './QuestionCard';
-import { ProgressBar } from './ProgressBar';
-import { QuestionNavigation } from './QuestionNavigation';
-import { NavigationSidebar } from './NavigationSidebar';
-import { ChecklistSwitcher } from './ChecklistSwitcher';
-import { ExportDialog } from './ExportDialog';
+import { QuestionCard } from "./QuestionCard";
+import { ProgressBar } from "./ProgressBar";
+import { QuestionNavigation } from "./QuestionNavigation";
+import { NavigationSidebar } from "./NavigationSidebar";
+import { ChecklistSwitcher } from "./ChecklistSwitcher";
+import { ExportDialog } from "./ExportDialog";
 
 interface QuestionFlowProps {
   checklistSlug: string;
@@ -19,7 +19,7 @@ interface QuestionFlowProps {
 
 export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   checklistSlug,
-  characterId
+  characterId,
 }) => {
   const queryClient = useQueryClient();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -28,10 +28,22 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Загружаем данные персонажа
+  const { data: character } = useQuery({
+    queryKey: ["character", characterId],
+    queryFn: () => charactersApi.getById(String(characterId!)),
+    enabled: !!characterId,
+  });
+
   // Загрузка чеклиста
-  const { data: checklistData, isLoading, error } = useQuery({
-    queryKey: ['checklist', checklistSlug, characterId],
-    queryFn: () => checklistApi.getChecklistForCharacter(checklistSlug, characterId),
+  const {
+    data: checklistData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["checklist", checklistSlug, characterId],
+    queryFn: () =>
+      checklistApi.getChecklistForCharacter(checklistSlug, characterId),
     staleTime: 5 * 60 * 1000, // 5 минут
   });
 
@@ -44,28 +56,34 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
   // Мутация для обновления ответа
   const updateAnswerMutation = useMutation({
-    mutationFn: ({ questionId, data }: {
+    mutationFn: ({
+      questionId,
+      data,
+    }: {
       questionId: number;
       data: {
         answer?: string;
-        source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+        source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
         comment?: string;
-      }
-    }) => checklistApi.createOrUpdateResponse({
-      question_id: questionId,
-      character_id: characterId,
-      ...data
-    }),
+      };
+    }) =>
+      checklistApi.createOrUpdateResponse({
+        question_id: questionId,
+        character_id: characterId,
+        ...data,
+      }),
     onSuccess: (response: any, variables: any) => {
       // Update local data
       if (localData) {
         const updatedData = { ...localData };
-        
+
         // Find and update question in hierarchical structure
         updatedData.sections?.forEach((section: any) => {
           section.subsections?.forEach((subsection: any) => {
             subsection.question_groups?.forEach((group: any) => {
-              const question = group.questions?.find((q: any) => q.id === variables.questionId);
+              const question = group.questions?.find(
+                (q: any) => q.id === variables.questionId
+              );
               if (question) {
                 question.current_response = {
                   id: response.id,
@@ -73,21 +91,21 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                   source_type: response.source_type,
                   comment: response.comment,
                   version: response.version,
-                  updated_at: response.updated_at
+                  updated_at: response.updated_at,
                 };
               }
             });
           });
         });
-        
+
         setLocalData(updatedData);
       }
-      
+
       // Invalidate cache
-      queryClient.invalidateQueries({ 
-        queryKey: ['checklist', checklistSlug, characterId] 
+      queryClient.invalidateQueries({
+        queryKey: ["checklist", checklistSlug, characterId],
       });
-    }
+    },
   });
 
   // Мутация для удаления ответа
@@ -97,7 +115,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
       // Update local data
       if (localData) {
         const updatedData = { ...localData };
-        
+
         // Find and remove answer in hierarchical structure
         updatedData.sections?.forEach((section: any) => {
           section.subsections?.forEach((subsection: any) => {
@@ -110,26 +128,26 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             });
           });
         });
-        
+
         setLocalData(updatedData);
       }
-      
+
       // Invalidate cache
-      queryClient.invalidateQueries({ 
-        queryKey: ['checklist', checklistSlug, characterId] 
+      queryClient.invalidateQueries({
+        queryKey: ["checklist", checklistSlug, characterId],
       });
     },
     onError: (error: any) => {
-      console.error('Ошибка при удалении ответа:', error);
-    }
+      console.error("Ошибка при удалении ответа:", error);
+    },
   });
 
   // Convert hierarchical data to flat question array
   const getAllQuestions = () => {
     if (!localData) return [];
-    
+
     const questions: any[] = [];
-    
+
     localData.sections?.forEach((section: any) => {
       section.subsections?.forEach((subsection: any) => {
         subsection.question_groups?.forEach((group: any) => {
@@ -138,13 +156,13 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
               ...question,
               sectionTitle: section.title,
               subsectionTitle: subsection.title,
-              groupTitle: group.title
+              groupTitle: group.title,
             });
           });
         });
       });
     });
-    
+
     return questions;
   };
 
@@ -161,13 +179,13 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
   const handleNext = () => {
     if (currentQuestionIndex < allQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex((prev) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
+      setCurrentQuestionIndex((prev) => prev - 1);
     }
   };
 
@@ -206,15 +224,18 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           <div className="error-icon">⚠️</div>
           <div className="error-details">
             <h2>Ошибка загрузки чеклиста</h2>
-            <p>Не удалось загрузить чеклист: {error instanceof Error ? error.message : 'Неизвестная ошибка'}</p>
+            <p>
+              Не удалось загрузить чеклист:{" "}
+              {error instanceof Error ? error.message : "Неизвестная ошибка"}
+            </p>
             <div className="error-actions">
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => window.location.reload()}
               >
                 🔄 Попробовать снова
               </button>
-              <button 
+              <button
                 className="btn btn-secondary"
                 onClick={() => window.history.back()}
               >
@@ -236,7 +257,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             <h2>Чеклист пуст</h2>
             <p>В этом чеклисте пока нет вопросов для заполнения</p>
             <div className="empty-actions">
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => window.history.back()}
               >
@@ -253,25 +274,24 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     <div className="question-flow">
       {/* Header with progress and controls */}
       <div className="question-flow__header">
-          <Button
-            onClick={() => navigate(-1)}
-            view="outlined"
-          >
-            ← 
-          </Button>
         <div className="question-flow__controls">
+          <Button onClick={() => navigate(-1)} view="outlined">
+            ←
+          </Button>
+
           <ChecklistSwitcher
             characterId={characterId}
             currentChecklist={checklistSlug}
           />
         </div>
 
-        <ProgressBar
-          currentIndex={currentQuestionIndex}
-          totalQuestions={allQuestions.length}
-          checklist={localData}
-        />
-        
+        <div className="character-info">
+          <Text variant="header-1" ellipsis={true}>
+            {character?.name}
+          </Text>
+          {character?.description && <p>{character.description}</p>}
+        </div>
+
         <div className="question-flow__controls">
           <Button
             onClick={() => setIsExportDialogOpen(true)}
@@ -281,16 +301,25 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           >
             📄 Экспорт
           </Button>
-          
-          <Button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            title="Навигация по вопросам"
-            view="normal"
-            size="m"
-          >
-            ☰
-          </Button>
         </div>
+      </div>
+
+      <div className="question-flow__header">
+        <Button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          title="Навигация по вопросам"
+          view="normal"
+          size="m"
+        >
+          ☰
+        </Button>
+
+        <ProgressBar
+          currentIndex={currentQuestionIndex}
+          totalQuestions={allQuestions.length}
+          checklist={localData}
+        />
+        <div className="question-flow__controls"></div>
       </div>
 
       {/* Main content area */}
@@ -301,7 +330,9 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           questions={allQuestions}
           currentIndex={currentQuestionIndex}
           onQuestionSelect={handleJumpToQuestion}
-          completionPercentage={localData?.completion_stats?.completion_percentage || 0}
+          completionPercentage={
+            localData?.completion_stats?.completion_percentage || 0
+          }
           onClose={() => setIsSidebarOpen(false)}
         />
 

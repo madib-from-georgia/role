@@ -247,6 +247,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  margin-bottom:  var(--spacing-2);
 }
 
 .checklist-title-compact {
@@ -538,7 +539,7 @@
 .navigation-sidebar {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   width: var(--sidebar-width);
   height: 100vh;
   background-color: var(--color-background);
@@ -742,7 +743,7 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
   .question-flow__header {
-    gap: var(--spacing-2);
+    gap: var(--spacing-4);
   }
 
   .progress-header {

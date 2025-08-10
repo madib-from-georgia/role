@@ -19,7 +19,7 @@
 
 .checklists-overview__controls {
   display: flex;
-  gap: var(--spacing-4);
+  gap: var(--spacing-2);
 }
 
 .checklists-overview__content {
