@@ -370,7 +370,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         <Button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           title="Навигация по вопросам"
-          view="action"
+          view="outlined"
           size="m"
         >
           ☰

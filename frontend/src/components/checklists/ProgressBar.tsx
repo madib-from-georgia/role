@@ -14,7 +14,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ checklist }) => {
   return (
     <div className="progress-bar-container">
       <div className="progress-header-compact">
-        <Text ellipsis={true} variant="header-1">
+        <Text variant="header-1">
           {checklist?.icon && (
             <span className="checklist-icon">{checklist.icon}</span>
           )}

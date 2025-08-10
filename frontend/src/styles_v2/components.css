@@ -25,7 +25,7 @@
 .checklists-overview__content {
   max-width: var(--container-lg);
   margin: 0 auto;
-  padding: 0 var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-4) 0;
 }
 
 .checklists-overview__error,

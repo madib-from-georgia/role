@@ -54,7 +54,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
       <Button
         onClick={() => setIsOpen(!isOpen)}
         title={currentChecklist ? "Переключить чеклист" : "Список чеклистов"}
-        view="normal"
+        view="outlined"
         size="m"
       >
         Чеклисты

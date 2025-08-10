@@ -49,7 +49,7 @@
 
 .question-flow__main {
   flex: 1;
-  padding: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6) var(--spacing-6);
   max-width: calc(var(--question-card-max-width) + 2 * var(--spacing-6));
   margin: 0 auto;
 }

@@ -127,6 +127,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
         </div>
           <Button
             onClick={() => setIsExportDialogOpen(true)}
+            view="outlined"
           >
             📄 Экспорт
           </Button>

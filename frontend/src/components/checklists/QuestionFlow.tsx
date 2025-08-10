@@ -293,7 +293,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           <Button
             onClick={() => setIsExportDialogOpen(true)}
             title="Экспорт чеклиста"
-            view="normal"
+            view="outlined"
             size="m"
           >
             📄 Экспорт
