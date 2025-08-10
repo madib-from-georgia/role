@@ -60,7 +60,7 @@
 .question-flow__footer {
   background-color: var(--color-background);
   border-top: 1px solid var(--color-border);
-  padding: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-4) 0;
 }
 
 /* ProgressBar container */
@@ -765,7 +765,6 @@
   }
 
   .question-card {
-    padding: var(--spacing-4);
     margin: 0;
   }
 
