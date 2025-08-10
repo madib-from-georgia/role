@@ -57,8 +57,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
         view="normal"
         size="m"
       >
-        <span className="switcher-icon">📋</span>
-        <ArrowToggle direction={isOpen ? "top" : "bottom"} />
+        Чеклисты
       </Button>
 
       {/* Full-screen sidebar */}

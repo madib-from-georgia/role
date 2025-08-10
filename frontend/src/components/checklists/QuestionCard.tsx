@@ -12,12 +12,18 @@ import {
   Tooltip,
   Icon,
 } from "@gravity-ui/uikit";
+import { NavigationSidebar } from "./NavigationSidebar";
 
 interface QuestionCardProps {
   question: any;
   onAnswerUpdate: (questionId: number, data: any) => void;
   onAnswerDelete?: (responseId: number) => void;
   isLoading: boolean;
+  // New props for NavigationSidebar
+  allQuestions: any[];
+  currentQuestionIndex: number;
+  onQuestionSelect: (index: number) => void;
+  completionPercentage: number;
 }
 
 // CheckIcon.jsx
@@ -51,6 +57,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onAnswerUpdate,
   onAnswerDelete,
   isLoading,
+  allQuestions,
+  currentQuestionIndex,
+  onQuestionSelect,
+  completionPercentage,
 }) => {
   const [localAnswer, setLocalAnswer] = useState(
     question?.current_response?.answer || ""
@@ -61,6 +71,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const [sourceType, setSourceType] = useState(
     question?.current_response?.source_type || "FOUND_IN_TEXT"
   );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [customOptionText, setCustomOptionText] = useState("");
   const lastAnswerRef = React.useRef<string | null>(null);
@@ -344,8 +355,29 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   return (
     <div className="question-card">
+      {/* Sidebar */}
+      <NavigationSidebar
+        isOpen={isSidebarOpen}
+        questions={allQuestions}
+        currentIndex={currentQuestionIndex}
+        onQuestionSelect={onQuestionSelect}
+        completionPercentage={completionPercentage}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
       {/* Question context */}
       <div className="question-card__context">
+        <Button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          title="Навигация по вопросам"
+          view="action"
+          size="m"
+        >
+          ☰
+        </Button>
+
+        <div className="question-card__breadcrumbs">
+
         <Breadcrumbs>
           <Breadcrumbs.Item>{question.sectionTitle}</Breadcrumbs.Item>
           <Breadcrumbs.Item>{question.subsectionTitle}</Breadcrumbs.Item>
@@ -353,6 +385,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             <Breadcrumbs.Item>{question.groupTitle}</Breadcrumbs.Item>
           )}
         </Breadcrumbs>
+        </div>
       </div>
 
       <div className="question-card__main">
@@ -438,16 +471,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             </div>
           )}
         </div>
-                  {question.current_response && (
-            <Alert
-              theme="success"
-              // title="Сохранено"
-              message={`Сохранено ${new Date(
-                question.current_response.updated_at
-              ).toLocaleString("ru")}`}
-            />
-          )}
-
+        {question.current_response && (
+          <Alert
+            theme="success"
+            // title="Сохранено"
+            message={`Сохранено ${new Date(
+              question.current_response.updated_at
+            ).toLocaleString("ru")}`}
+          />
+        )}
       </div>
     </div>
   );

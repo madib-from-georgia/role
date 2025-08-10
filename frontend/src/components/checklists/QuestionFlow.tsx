@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { QuestionCard } from "./QuestionCard";
 import { ProgressBar } from "./ProgressBar";
 import { QuestionNavigation } from "./QuestionNavigation";
-import { NavigationSidebar } from "./NavigationSidebar";
 import { ChecklistSwitcher } from "./ChecklistSwitcher";
 import { ExportDialog } from "./ExportDialog";
 
@@ -23,7 +22,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [localData, setLocalData] = useState<any>(null);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const navigate = useNavigate();
@@ -192,7 +190,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const handleJumpToQuestion = (index: number) => {
     if (index >= 0 && index < allQuestions.length) {
       setCurrentQuestionIndex(index);
-      setIsSidebarOpen(false);
     }
   };
 
@@ -304,43 +301,26 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         </div>
       </div>
 
-      <div className="question-flow__header">
-        <ProgressBar
-          currentIndex={currentQuestionIndex}
-          totalQuestions={allQuestions.length}
-          checklist={localData}
-        />
-        <Button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          title="Навигация по вопросам"
-          view="normal"
-          size="m"
-        >
-          ☰
-        </Button>
-      </div>
-
       {/* Main content area */}
       <div className="question-flow__content">
-        {/* Sidebar */}
-        <NavigationSidebar
-          isOpen={isSidebarOpen}
-          questions={allQuestions}
-          currentIndex={currentQuestionIndex}
-          onQuestionSelect={handleJumpToQuestion}
-          completionPercentage={
-            localData?.completion_stats?.completion_percentage || 0
-          }
-          onClose={() => setIsSidebarOpen(false)}
-        />
-
         {/* Question area */}
         <div className="question-flow__main">
+          <ProgressBar
+            currentIndex={currentQuestionIndex}
+            totalQuestions={allQuestions.length}
+            checklist={localData}
+          />
           <QuestionCard
             question={currentQuestion}
             onAnswerUpdate={handleAnswerUpdate}
             onAnswerDelete={handleAnswerDelete}
             isLoading={updateAnswerMutation.isLoading}
+            allQuestions={allQuestions}
+            currentQuestionIndex={currentQuestionIndex}
+            onQuestionSelect={handleJumpToQuestion}
+            completionPercentage={
+              localData?.completion_stats?.completion_percentage || 0
+            }
           />
         </div>
       </div>
