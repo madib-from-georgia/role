@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, TextInput, Select, Text, Card } from "@gravity-ui/uikit";
 import { useQuery, useMutation, useQueryClient } from 'react-query'
@@ -22,6 +22,8 @@ const deleteProject = async (id: string): Promise<void> => {
 }
 
 const ProjectList: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterValue, setFilterValue] = useState('Все')
 
   const queryClient = useQueryClient()
   const { data: projects, isLoading, error } = useQuery('projects', fetchProjects)
@@ -42,6 +44,52 @@ const ProjectList: React.FC = () => {
       deleteMutation.mutate(id)
     }
   }
+
+  // Фильтрация и поиск проектов
+  const filteredProjects = useMemo(() => {
+    if (!projects) return []
+
+    let filtered = projects
+
+    // Применяем поиск
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim()
+      filtered = filtered.filter(project =>
+        project.title.toLowerCase().includes(query) ||
+        (project.description && project.description.toLowerCase().includes(query))
+      )
+    }
+
+    // Применяем фильтр по статусу
+    if (filterValue !== 'Все') {
+      const now = new Date()
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+      
+      switch (filterValue) {
+        case 'Недавние':
+          filtered = filtered.filter(project =>
+            new Date(project.updated_at) >= sevenDaysAgo
+          )
+          break
+        case 'Завершенные':
+          // Пока что считаем завершенными проекты старше 30 дней без обновлений
+          const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+          filtered = filtered.filter(project =>
+            new Date(project.updated_at) < thirtyDaysAgo
+          )
+          break
+        case 'В работе':
+          // Проекты, обновленные в последние 30 дней (активные проекты)
+          const thirtyDaysAgoActive = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+          filtered = filtered.filter(project =>
+            new Date(project.updated_at) >= thirtyDaysAgoActive
+          )
+          break
+      }
+    }
+
+    return filtered
+  }, [projects, searchQuery, filterValue])
 
   if (isLoading) {
     return (
@@ -110,11 +158,19 @@ const ProjectList: React.FC = () => {
         <div>
           {/* Поиск и фильтры */}
           <div className="search-bar">
-            <TextInput 
+            <TextInput
                 placeholder="Поиск проектов..."
+                value={searchQuery}
+                onUpdate={setSearchQuery}
             />
             <div className='filter-select'>
-              <Select size="m" width="max" placeholder="Проекты">
+              <Select
+                size="m"
+                width="max"
+                placeholder="Проекты"
+                value={[filterValue]}
+                onUpdate={(values) => setFilterValue(values[0] || 'Все')}
+              >
                 <Select.Option value="Все">Все</Select.Option>
                 <Select.Option value="Недавние">Недавние</Select.Option>
                 <Select.Option value="Завершенные">Завершенные</Select.Option>
@@ -123,9 +179,35 @@ const ProjectList: React.FC = () => {
             </div>
           </div>
 
-          {/* Сетка проектов */}
-          <div className="grid grid-3">
-            {projects.map((project) => (
+          {/* Результаты поиска */}
+          {filteredProjects.length === 0 && (searchQuery.trim() || filterValue !== 'Все') ? (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <h3 className="empty-title">Проекты не найдены</h3>
+              <p className="empty-description">
+                {searchQuery.trim()
+                  ? `По запросу "${searchQuery}" ничего не найдено. Попробуйте изменить поисковый запрос.`
+                  : `Нет проектов в категории "${filterValue}". Попробуйте выбрать другой фильтр.`
+                }
+              </p>
+              <Button
+                onClick={() => {
+                  setSearchQuery('')
+                  setFilterValue('Все')
+                }}
+                view="outlined"
+              >
+                Сбросить фильтры
+              </Button>
+            </div>
+          ) : (
+            /* Сетка проектов */
+            <div className="grid grid-3">
+              {filteredProjects.map((project) => (
                 <Card type='container' view='raised' size='l'  key={project.id}>
                   <div className="project-card-wrapper">
                     <Link
@@ -174,8 +256,9 @@ const ProjectList: React.FC = () => {
                     </Button>
                   </div>
                 </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
