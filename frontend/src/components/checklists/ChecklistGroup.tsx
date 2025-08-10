@@ -112,12 +112,8 @@ export const ChecklistGroup: React.FC<ChecklistGroupProps> = ({
             const checklistProgress = progress?.find(
               (p) => p.checklist_id === checklist.id
             );
-            // const completionPercentage = checklistProgress?.completion_percentage || 0;
-
             const completionPercentage =
               checklist?.completion_stats?.completion_percentage || 0;
-
-            console.log(checklist);
 
             return (
               <div
