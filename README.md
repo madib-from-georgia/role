@@ -331,7 +331,7 @@ yc compute instance create \
 2. **Настройка сервера**
 ```bash
 # Подключение к серверу
-ssh ubuntu@<EXTERNAL_IP>
+ssh yc-user@51.250.4.162
 
 # Установка зависимостей
 sudo apt update && sudo apt upgrade -y
@@ -344,8 +344,8 @@ sudo npm install -g pm2
 3. **Деплой приложения**
 ```bash
 # Клонирование проекта
-git clone <repository-url> /opt/role
-cd /opt/role
+git clone <repository-url> /home/yc-user/role
+cd /home/yc-user/role
 
 # Backend setup
 cd backend
@@ -359,7 +359,7 @@ npm install
 npm run build
 
 # PM2 конфигурация
-cd /opt/role
+cd /home/yc-user/role
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
@@ -374,7 +374,7 @@ server {
     
     # Frontend
     location / {
-        root /opt/role/frontend/dist;
+        root /home/yc-user/role/frontend/dist;
         try_files $uri $uri/ /index.html;
     }
     
