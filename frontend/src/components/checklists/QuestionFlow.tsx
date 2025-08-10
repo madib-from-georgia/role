@@ -305,6 +305,11 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
       </div>
 
       <div className="question-flow__header">
+        <ProgressBar
+          currentIndex={currentQuestionIndex}
+          totalQuestions={allQuestions.length}
+          checklist={localData}
+        />
         <Button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           title="Навигация по вопросам"
@@ -313,13 +318,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         >
           ☰
         </Button>
-
-        <ProgressBar
-          currentIndex={currentQuestionIndex}
-          totalQuestions={allQuestions.length}
-          checklist={localData}
-        />
-        <div className="question-flow__controls"></div>
       </div>
 
       {/* Main content area */}

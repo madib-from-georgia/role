@@ -53,7 +53,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
     <div className="checklist-switcher">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        title={currentChecklist ? "Переключить чеклист" : "Быстрый переход"}
+        title={currentChecklist ? "Переключить чеклист" : "Список чеклистов"}
         view="normal"
         size="m"
       >
@@ -69,7 +69,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
         {/* Sidebar */}
         <div className="checklist-switcher-sidebar">
           <div className="switcher-sidebar-header">
-            <h3>Быстрый переход</h3>
+            <h3>Чеклисты</h3>
             <Button onClick={() => setIsOpen(false)} view="normal" size="l">
               ×
             </Button>
@@ -83,7 +83,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
             >
               <div className="switcher-item__icon">🏠</div>
               <div className="switcher-item__content">
-                <div className="switcher-item__title">Обзор чеклистов</div>
+                <div className="switcher-item__title">Все чеклисты</div>
                 <div className="switcher-item__subtitle">
                   Стартовая страница
                 </div>

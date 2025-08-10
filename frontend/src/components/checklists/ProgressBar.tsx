@@ -7,7 +7,7 @@ interface ProgressBarProps {
   checklist: any;
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ checklist, character }) => {
+export const ProgressBar: React.FC<ProgressBarProps> = ({ checklist }) => {
   const completionPercentage =
     checklist?.completion_stats?.completion_percentage || 0;
 
