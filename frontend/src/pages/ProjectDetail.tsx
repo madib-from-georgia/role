@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { Button, TextInput, Select, Text, Card } from "@gravity-ui/uikit";
-import { projectsApi, textsApi, charactersApi } from '../services/api'
+import { Button, Progress,Text } from "@gravity-ui/uikit";
+import { projectsApi, textsApi, charactersApi, checklistApi } from '../services/api'
 import { Project } from '../../../shared/types'
 
 // Фактический тип ответа загрузки файла от backend
@@ -56,6 +56,55 @@ const deleteProject = async (id: string): Promise<void> => {
 
 const fetchCharacters = async (textId: string): Promise<Character[]> => {
   return await charactersApi.getByText(textId)
+}
+
+// Компонент для отображения персонажа с прогрессом
+const CharacterItem: React.FC<{ character: Character; onCharacterClick: (character: Character) => void }> = ({ character, onCharacterClick }) => {
+  const { data: progress, isLoading, error } = useQuery(
+    ['character-progress', character.id],
+    () => checklistApi.getCharacterProgress(character.id),
+    {
+      staleTime: 2 * 60 * 1000, // 2 минуты
+      enabled: !!character.id
+    }
+  )
+
+  // Вычисляем общий процент заполненности
+  const overallProgress = progress?.length > 0
+    ? Math.round(progress.reduce((sum: number, item: any) => sum + (item.completion_percentage || 0), 0) / progress.length)
+    : 0
+
+  return (
+    <div
+      className="character-item"
+      onClick={() => onCharacterClick(character)}
+    >
+      <div className="character-name">
+        <Text variant='body-3'>{character.name}</Text>
+        {character.aliases && character.aliases.length > 0 && (
+          <div className="character-aliases">
+            Алиасы: {character.aliases.join(', ')}
+          </div>
+        )}
+      </div>
+      
+      <div className="character-progress">
+        {isLoading ? (
+          <div className="character-progress-loading"></div>
+        ) : error ? (
+          <div className="character-progress-error">Ошибка</div>
+        ) : (
+          <div className="character-progress-track">
+            <Progress
+              value={overallProgress}
+              theme="success"
+              text={`${overallProgress}%`}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
 
 // Компонент для отображения секции текста с персонажами
@@ -118,27 +167,12 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
 
           {characters && characters.length > 0 && (
             <div className="characters-grid">
-              {characters.slice(0, 10).map((character) => (
-                <div 
-                  key={character.id} 
-                  className="character-item"
-                  onClick={() => onCharacterClick(character)}
-                >
-                  <div className="character-header">
-                    <h4>{character.name}</h4>
-                    {/* {character.importance_score && (
-                      <span className="importance-score">
-                        {Math.round(character.importance_score * 100)}%
-                      </span>
-                    )} */}
-                  </div>
-                  
-                  {character.aliases && character.aliases.length > 0 && (
-                    <div className="character-aliases">
-                      <span>Алиасы: {character.aliases.join(', ')}</span>
-                    </div>
-                  )}
-                </div>
+              {characters.map((character) => (
+                <CharacterItem
+                  key={character.id}
+                  character={character}
+                  onCharacterClick={onCharacterClick}
+                />
               ))}
             </div>
           )}
