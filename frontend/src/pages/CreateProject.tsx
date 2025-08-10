@@ -136,22 +136,22 @@ const CreateProject: React.FC = () => {
               <li className="step">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h4>AI обработка</h4>
-                  <p>Система найдет и проанализирует персонажей</p>
+                  <h4>Подождите предобработку</h4>
+                  <p>Система найдет персонажей и их реплики</p>
                 </div>
               </li>
               <li className="step">
                 <div className="step-number">3</div>
                 <div className="step-content">
-                  <h4>Выберите персонажей</h4>
-                  <p>Отберите героев для детального анализа</p>
+                  <h4>Выберите персонажа</h4>
+                  <p>Заполните опросники для детального анализа</p>
                 </div>
               </li>
               <li className="step">
                 <div className="step-number">4</div>
                 <div className="step-content">
                   <h4>Получите результаты</h4>
-                  <p>Изучите характеристики персонажей</p>
+                  <p>Экспортируйте подробный анализ персонажа</p>
                 </div>
               </li>
             </ul>

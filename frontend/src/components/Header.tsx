@@ -34,8 +34,8 @@ const Header: React.FC = () => {
         <div className="container">
           <div className="header-inner">
             <Link to="/" className="logo">
-              <div className="logo-icon">AI</div>
-              <span>Analyse Text</span>
+              <div className="logo-icon">Р</div>
+              <span>Роль</span>
             </Link>
 
             <nav className="nav">
