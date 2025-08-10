@@ -61,13 +61,21 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
         <ArrowToggle direction={isOpen ? "top" : "bottom"} />
       </Button>
 
-      {isOpen && (
-        <div className="checklist-switcher__dropdown">
-          <div className="switcher-dropdown__header">
+      {/* Full-screen sidebar */}
+      <div className={`checklist-switcher-wrapper ${isOpen ? "open" : "closed"}`}>
+        {/* Backdrop */}
+        <div className="checklist-switcher__backdrop" onClick={() => setIsOpen(false)} />
+
+        {/* Sidebar */}
+        <div className="checklist-switcher-sidebar">
+          <div className="switcher-sidebar-header">
             <h3>Быстрый переход</h3>
+            <Button onClick={() => setIsOpen(false)} view="normal" size="l">
+              ×
+            </Button>
           </div>
 
-          <div className="switcher-dropdown__content">
+          <div className="switcher-sidebar-content">
             {/* Overview option */}
             <div
               className={`switcher-item ${!currentChecklist ? "active" : ""}`}
@@ -131,25 +139,17 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
           </div>
 
           {/* Quick actions */}
-          <div className="switcher-dropdown__footer">
+          <div className="switcher-sidebar-actions">
             <Button
               onClick={() => setIsOpen(false)}
-              view="normal"
-              size="m"
+              view="action"
+              size="l"
             >
               Закрыть
             </Button>
           </div>
         </div>
-      )}
-
-      {/* Backdrop */}
-      {isOpen && (
-        <div
-          className="checklist-switcher__backdrop"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      </div>
     </div>
   );
 };

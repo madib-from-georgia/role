@@ -436,35 +436,53 @@
   display: none;
 }
 
-.checklist-switcher__dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 20rem;
-  max-height: 24rem;
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  z-index: var(--z-dropdown);
-  overflow: hidden;
-  margin-top: var(--spacing-1);
+/* ChecklistSwitcher Full-screen Sidebar */
+.checklist-switcher-wrapper.closed {
+  display: none;
 }
 
-.switcher-dropdown__header {
+.checklist-switcher-wrapper.open {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9997;
+}
+
+.checklist-switcher-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--color-background);
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xl);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.switcher-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: var(--spacing-4);
   border-bottom: 1px solid var(--color-border);
   background-color: var(--color-background-secondary);
 }
 
-.switcher-dropdown__header h3 {
+.switcher-sidebar-header h3 {
   margin: 0;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-lg);
 }
 
-.switcher-dropdown__content {
-  max-height: 16rem;
+.switcher-sidebar-content {
+  flex: 1;
   overflow-y: auto;
+  padding: var(--spacing-2);
 }
 
 .switcher-icon {
@@ -536,10 +554,13 @@
   margin: var(--spacing-2) 0;
 }
 
-.switcher-dropdown__footer {
-  padding: var(--spacing-3);
+.switcher-sidebar-actions {
+  padding: var(--spacing-4);
   border-top: 1px solid var(--color-border);
   background-color: var(--color-background-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
 }
 
 .checklist-switcher__backdrop {
@@ -548,8 +569,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: calc(var(--z-dropdown) - 1);
-  background: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Sidebar animations */
+.checklist-switcher-sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.checklist-switcher__backdrop {
+  transition: opacity 0.3s ease;
 }
 
 /* Mobile responsive adjustments */
@@ -591,7 +623,8 @@
     gap: var(--spacing-2);
   }
 
-  .checklist-switcher__dropdown {
-    width: calc(100vw - 2rem);
+  .checklist-switcher-sidebar {
+    width: 100vw;
+    right: 0;
   }
 }
