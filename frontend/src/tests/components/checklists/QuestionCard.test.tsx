@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from '../../utils/test-utils'
 import { QuestionCard } from '../../../components/checklists/QuestionCard'
@@ -24,6 +24,10 @@ describe('QuestionCard', () => {
           question={null}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -43,6 +47,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -64,6 +72,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -86,6 +98,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -107,6 +123,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -125,6 +145,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -143,6 +167,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -174,6 +202,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -204,6 +236,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -232,6 +268,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -266,6 +306,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -290,6 +334,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -319,6 +367,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -353,6 +405,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={true}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -369,6 +425,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -403,6 +463,10 @@ describe('QuestionCard', () => {
           onAnswerUpdate={mockOnAnswerUpdate}
           onAnswerDelete={mockOnAnswerDelete}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -427,6 +491,10 @@ describe('QuestionCard', () => {
           onAnswerUpdate={mockOnAnswerUpdate}
           onAnswerDelete={mockOnAnswerDelete}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -451,6 +519,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -477,6 +549,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -499,6 +575,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 
@@ -519,6 +599,10 @@ describe('QuestionCard', () => {
           question={question}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
+          allQuestions={[question]}
+          currentQuestionIndex={0}
+          onQuestionSelect={() => {}}
+          completionPercentage={0}
         />
       )
 

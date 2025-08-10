@@ -34,12 +34,12 @@ describe('Auth API Service', () => {
       }
 
       // Mock the axios post method
-      const mockPost = vi.fn().mockResolvedValue(mockResponse)
       authApi.login = vi.fn().mockResolvedValue(mockResponse.data)
 
-      const result = await authApi.login('test@example.com', 'password')
+      const credentials = { email: 'test@example.com', password: 'password123' }
+      const result = await authApi.login(credentials)
 
-      expect(authApi.login).toHaveBeenCalledWith('test@example.com', 'password')
+      expect(authApi.login).toHaveBeenCalledWith(credentials)
       expect(result).toEqual(mockResponse.data)
     })
 
@@ -47,7 +47,8 @@ describe('Auth API Service', () => {
       const mockError = new Error('Invalid credentials')
       authApi.login = vi.fn().mockRejectedValue(mockError)
 
-      await expect(authApi.login('test@example.com', 'wrong')).rejects.toThrow('Invalid credentials')
+      const credentials = { email: 'test@example.com', password: 'wrongpassword' }
+      await expect(authApi.login(credentials)).rejects.toThrow('Invalid credentials')
     })
   })
 
@@ -141,11 +142,6 @@ describe('Auth API Service', () => {
 
   describe('changePassword', () => {
     it('should change user password', async () => {
-      const passwordData = {
-        current_password: 'oldpassword',
-        new_password: 'newpassword'
-      }
-
       const mockResponse = {
         message: 'Password changed successfully',
         success: true
@@ -153,22 +149,17 @@ describe('Auth API Service', () => {
 
       authApi.changePassword = vi.fn().mockResolvedValue(mockResponse)
 
-      const result = await authApi.changePassword('test-token', passwordData)
+      const result = await authApi.changePassword('test-token', 'oldpassword', 'newpassword')
 
-      expect(authApi.changePassword).toHaveBeenCalledWith('test-token', passwordData)
+      expect(authApi.changePassword).toHaveBeenCalledWith('test-token', 'oldpassword', 'newpassword')
       expect(result).toEqual(mockResponse)
     })
 
     it('should handle incorrect current password', async () => {
-      const passwordData = {
-        current_password: 'wrongpassword',
-        new_password: 'newpassword'
-      }
-
       const mockError = new Error('Current password is incorrect')
       authApi.changePassword = vi.fn().mockRejectedValue(mockError)
 
-      await expect(authApi.changePassword('test-token', passwordData)).rejects.toThrow('Current password is incorrect')
+      await expect(authApi.changePassword('test-token', 'wrongpassword', 'newpassword')).rejects.toThrow('Current password is incorrect')
     })
   })
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { exportApi } from '../../services/api';
-import { downloadFile, extractFileName, formatFileSize } from '../../utils/downloadFile';
+import { downloadFile, formatFileSize } from '../../utils/downloadFile';
 
 interface ExportDialogProps {
   characterId: number;
@@ -20,9 +20,9 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   const [exportType, setExportType] = useState<'detailed' | 'summary' | 'compact'>('detailed');
   const [includeEmptyResponses, setIncludeEmptyResponses] = useState(false);
 
-  // Загружаем доступные форматы и типы
-  const { data: formats } = useQuery('export-formats', exportApi.getFormats);
-  const { data: types } = useQuery('export-types', exportApi.getTypes);
+  // Загружаем доступные форматы и типы (закомментировано, так как не используется)
+  // const { data: formats } = useQuery('export-formats', exportApi.getFormats);
+  // const { data: types } = useQuery('export-types', exportApi.getTypes);
 
   // Мутация для экспорта
   const exportMutation = useMutation(exportApi.exportCharacter, {

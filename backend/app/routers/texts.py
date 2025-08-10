@@ -144,13 +144,13 @@ async def get_text_characters(
 
 
 @router.post("/{text_id}/process")
-async def process_text(
+async def mark_text_as_processed(
     text_id: int,
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Запуск обработки текста для извлечения персонажей.
+    Отметить текст как обработанный (без NLP анализа).
     
     Требует авторизации. Пользователь может обрабатывать только тексты своих проектов.
     
@@ -186,9 +186,9 @@ async def process_text(
         processed_text = text_crud.mark_as_processed(db, text_id=text_id)
         
         return {
-            "message": "Обработка текста запущена",
+            "message": "Текст отмечен как обработанный",
             "text_id": text_id,
-            "status": "processing_started",
+            "status": "marked_as_processed",
             "processed_at": processed_text.processed_at.isoformat()
         }
         

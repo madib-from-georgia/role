@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { checklistApi } from "../../services/api";
-import { Button, ArrowToggle } from "@gravity-ui/uikit";
+import { Button } from "@gravity-ui/uikit";
 
 interface ChecklistSwitcherProps {
   characterId: number;

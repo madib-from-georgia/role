@@ -1,5 +1,4 @@
 import { rest } from 'msw'
-import { faker } from '@faker-js/faker'
 
 // Mock user data
 const mockUser = {

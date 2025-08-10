@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from '../utils/test-utils'
 import ProjectList from '../../pages/ProjectList'
-import { createMockProjects, createMockPagination } from '../utils/mock-data'
+// import { createMockProjects, createMockPagination } from '../utils/mock-data'
 
 // Mock the useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return {
-    ...actual,
+    ...(actual as any),
     useNavigate: () => mockNavigate,
   }
 })
@@ -160,10 +160,10 @@ describe('ProjectList', () => {
 
       await waitFor(async () => {
         const nextButton = screen.queryByRole('button', { name: /далее|next|2/i })
-        if (nextButton && !nextButton.disabled) {
+        if (nextButton && !(nextButton as HTMLButtonElement).disabled) {
           await user.click(nextButton)
           // Should update page
-          expect(nextButton).toHaveBeenClicked || true
+          expect(nextButton).toBeInTheDocument()
         }
       })
     })

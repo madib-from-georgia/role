@@ -76,7 +76,6 @@ logs/
 *.log
 
 # Models
-models/
 *.pkl
 *.model
 

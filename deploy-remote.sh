@@ -180,7 +180,14 @@ sudo apt install -y git nginx certbot python3-certbot-nginx curl build-essential
 
 # Установка PM2
 log "🌐 Установка PM2..."
-sudo npm install -g pm2
+if ! sudo npm install -g pm2; then
+    error "Не удалось установить PM2"
+fi
+
+# Проверка установки PM2
+if ! command -v pm2 &> /dev/null; then
+    error "PM2 не установлен"
+fi
 
 # Клонирование репозитория
 log "📁 Клонирование репозитория..."
@@ -239,18 +246,17 @@ cd $APP_DIR
 log "📦 Установка зависимостей Node.js и сборка фронтенда..."
 cd frontend
 npm install
-
-# Попробуем собрать с проверкой типов, если не получится - без неё
-log "🔨 Сборка фронтенда..."
-if npm run build 2>/dev/null; then
-    log "✅ Сборка с проверкой типов выполнена успешно"
-else
-    warn "⚠️ Сборка с проверкой типов не удалась, собираем без проверки..."
-    # Собираем только через Vite, пропуская TypeScript проверку
-    npx vite build
-    log "✅ Сборка без проверки типов выполнена"
-fi
+npm run build
 cd ..
+
+# Проверка наличия сборки фронтенда
+if [ ! -d "frontend/dist" ]; then
+    error "Директория сборки фронтенда не найдена"
+fi
+
+if [ ! -f "frontend/dist/index.html" ]; then
+    error "Файл index.html не найден в сборке фронтенда"
+fi
 
 # Создание конфигурации PM2
 log "🔧 Создание конфигурации PM2..."
@@ -263,7 +269,8 @@ module.exports = {
       script: '$APP_DIR/.venv/bin/python',
       args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8000',
       env: {
-        ENVIRONMENT: 'production'
+        ENVIRONMENT: 'production',
+        PYTHONPATH: '$APP_DIR'
       },
       instances: 1,
       autorestart: true,
@@ -283,20 +290,46 @@ sudo chown yc-user:yc-user /var/log/pm2
 
 # Запуск приложения через PM2
 log "🚀 Запуск приложения..."
-pm2 start ecosystem.config.js
-pm2 save
-pm2 startup
+if ! pm2 start ecosystem.config.js; then
+    error "Не удалось запустить приложение через PM2"
+fi
+
+if ! pm2 save; then
+    error "Не удалось сохранить конфигурацию PM2"
+fi
+
+# Настройка автозапуска PM2 (без интерактивного режима)
+log "🔧 Настройка автозапуска PM2..."
+set +e  # Отключаем режим завершения при ошибках
+PM2_STARTUP_CMD=$(pm2 startup systemd -u yc-user --hp /home/yc-user --no-daemon 2>/dev/null)
+if [ -n "$PM2_STARTUP_CMD" ] && [[ "$PM2_STARTUP_CMD" == *"sudo"* ]]; then
+    log "Выполнение команды автозапуска PM2..."
+    # Выполняем команду от root без интерактивного режима
+    echo "$PM2_STARTUP_CMD" | sudo bash
+    if [ $? -ne 0 ]; then
+        warn "Не удалось настроить автозапуск PM2"
+    fi
+else
+    warn "Команда автозапуска PM2 не получена или не содержит sudo"
+fi
+set -e  # Включаем режим завершения при ошибках обратно
+
+# Проверка статуса приложения
+log "🔍 Проверка статуса приложения..."
+if ! pm2 list | grep -q "role-backend.*online"; then
+    warn "Приложение не запущено"
+fi
 
 # Настройка Nginx
 log "🌐 Настройка Nginx..."
-sudo tee /etc/nginx/sites-available/role-app > /dev/null << EOFNGINX
+cat > /tmp/nginx-role-app.conf << 'EOFNGINX'
 server {
     listen 80;
     server_name $DOMAIN;
 
     # Статические файлы фронтенда
     location / {
-        root $APP_DIR/frontend/dist;
+        root /home/yc-user/role/frontend/dist;
         try_files \$uri \$uri/ /index.html;
         
         location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
@@ -338,10 +371,35 @@ server {
 }
 EOFNGINX
 
+# Проверка наличия директории sites-available
+if [ ! -d "/etc/nginx/sites-available" ]; then
+    error "Директория /etc/nginx/sites-available не найдена"
+fi
+
+# Копирование конфигурации Nginx с проверкой ошибок
+if ! sudo cp /tmp/nginx-role-app.conf /etc/nginx/sites-available/role-app; then
+    error "Не удалось скопировать конфигурацию Nginx"
+fi
+
 # Активация конфигурации Nginx
-sudo ln -sf /etc/nginx/sites-available/role-app /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
-sudo nginx -t && sudo systemctl restart nginx
+if ! sudo ln -sf /etc/nginx/sites-available/role-app /etc/nginx/sites-enabled/; then
+    error "Не удалось активировать конфигурацию Nginx"
+fi
+
+if ! sudo rm -f /etc/nginx/sites-enabled/default; then
+    warn "Не удалось удалить стандартную конфигурацию Nginx"
+fi
+
+# Проверка конфигурации Nginx и перезапуск
+if sudo nginx -t; then
+    log "✅ Конфигурация Nginx проверена успешно"
+    if ! sudo systemctl restart nginx; then
+        error "Не удалось перезапустить Nginx"
+    fi
+    log "✅ Nginx перезапущен успешно"
+else
+    error "Ошибка в конфигурации Nginx"
+fi
 
 # Настройка файрвола
 log "🔥 Настройка файрвола..."
