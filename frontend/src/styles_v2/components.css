@@ -6,7 +6,7 @@
 .checklists-overview {
   min-height: 100vh;
   background-color: var(--color-background);
-  padding: var(--spacing-4);
+  padding: 0 var(--spacing-4);
 }
 
 .checklists-overview__header {
@@ -14,6 +14,11 @@
   gap: var(--spacing-4);
   background-color: var(--color-background);
   justify-content: space-between;
+}
+
+.checklists-overview__controls {
+  display: flex;
+  gap: var(--spacing-4);
 }
 
 .checklists-overview__content {
@@ -44,7 +49,7 @@
 
 /* OverallProgress */
 .overall-progress {
-  padding: var(--spacing-8);
+  padding: var(--spacing-4);
 }
 
 .overall-progress--empty {
@@ -66,12 +71,6 @@
 .character-importance {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-}
-
-.overall-progress__message {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-primary-dark);
 }
 
 .overall-progress__stats {
@@ -274,15 +273,6 @@
 
 .checklist-group__lock {
   font-size: var(--font-size-lg);
-}
-
-.checklist-group__progress-badge {
-  background-color: var(--color-primary);
-  color: white;
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
 }
 
 .checklist-group__description {

@@ -158,9 +158,4 @@
   .dev-info {
     display: none !important;
   }
-
-  .question-card {
-    box-shadow: none;
-    border: 1px solid #000;
-  }
 }
