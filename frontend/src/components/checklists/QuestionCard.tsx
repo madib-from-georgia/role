@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Text,
   Button,
   Radio,
@@ -348,7 +349,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         <Breadcrumbs>
           <Breadcrumbs.Item>{question.sectionTitle}</Breadcrumbs.Item>
           <Breadcrumbs.Item>{question.subsectionTitle}</Breadcrumbs.Item>
-          {question.groupTitle && <Breadcrumbs.Item>{question.groupTitle}</Breadcrumbs.Item>}
+          {question.groupTitle && (
+            <Breadcrumbs.Item>{question.groupTitle}</Breadcrumbs.Item>
+          )}
         </Breadcrumbs>
       </div>
 
@@ -416,27 +419,35 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           </Button>
 
           {question.current_response && onAnswerDelete && (
-            <Button
-              onClick={() => onAnswerDelete(question.current_response.id)}
-              view="normal"
-              title="Удалить ответ"
-            >
-              🗑 Удалить
-            </Button>
+            <div className="question-card__delete">
+              <Button
+                onClick={() => onAnswerDelete(question.current_response.id)}
+                title="Удалить ответ"
+                view="normal"
+                size="l"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </Button>
+            </div>
           )}
         </div>
+                  {question.current_response && (
+            <Alert
+              theme="success"
+              // title="Сохранено"
+              message={`Сохранено ${new Date(
+                question.current_response.updated_at
+              ).toLocaleString("ru")}`}
+            />
+          )}
 
-        {question.current_response && (
-          <div className="save-status">
-            <span className="save-icon">✓</span>
-            <span className="save-text">Сохранено</span>
-            <span className="save-date">
-              {new Date(question.current_response.updated_at).toLocaleString(
-                "ru"
-              )}
-            </span>
-          </div>
-        )}
       </div>
     </div>
   );

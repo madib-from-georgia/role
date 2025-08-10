@@ -28,7 +28,7 @@
   top: 0;
   background-color: var(--color-background);
   border-bottom: 1px solid var(--color-border);
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: 0 var(--spacing-4);
   z-index: var(--z-sticky);
   display: flex;
   justify-content: space-between;
@@ -327,10 +327,10 @@
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  padding: var(--spacing-8);
   margin: 0 auto;
   max-width: var(--question-card-max-width);
   box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
 .question-card--empty {
@@ -340,13 +340,14 @@
 }
 
 .question-card__context {
-  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-6) var(--spacing-6);
+  background: #fafafa;
 }
 
 .question-card__main {
   margin: 0;
-  padding: var(--spacing-12) 0;
-      border-top: 1px solid var(--color-border);
+  padding: var(--spacing-12);
+  border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
 
 }
@@ -382,8 +383,8 @@
 
 /* Additional fields */
 .question-card__additional {
-  margin-bottom: var(--spacing-8);
-  padding-top: var(--spacing-6);
+  padding: var(--spacing-6);
+  background: #fafafa;
 
   display: flex;
   gap: var(--spacing-4);
@@ -396,15 +397,24 @@
 
 /* Actions */
 .question-card__actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
+  padding: var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.question-card__delete {
+  margin-left: auto;
+}
+
+.question-card__delete svg {
+  width: 16px;
+  height: 16px;
 }
 
 .action-buttons {
   display: flex;
   gap: var(--spacing-3);
   align-items: center;
+  margin-bottom: var(--spacing-3);
 }
 
 .save-status {
@@ -856,16 +866,6 @@
     flex-direction: column;
     gap: var(--spacing-3);
     align-items: stretch;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    gap: var(--spacing-3);
-  }
-
-  .action-buttons button {
-    min-height: 48px;
-    font-size: var(--font-size-base);
   }
 
   .save-status {

@@ -6,10 +6,7 @@ interface OverallProgressProps {
   character: any;
 }
 
-export const OverallProgress: React.FC<OverallProgressProps> = ({
-  progress,
-  character
-}) => {
+export const OverallProgress: React.FC<OverallProgressProps> = ({ progress}) => {
   if (!progress || progress.length === 0) {
     return (
       <div className="overall-progress overall-progress--empty">
@@ -29,38 +26,9 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({
   const completedChecklists = progress.filter(p => p.completion_percentage === 100).length;
   const inProgressChecklists = progress.filter(p => p.completion_percentage > 0 && p.completion_percentage < 100).length;
 
-  const getProgressMessage = () => {
-    if (overallPercentage === 100) {
-      return "Анализ завершен! Отличная работа!";
-    } else if (overallPercentage >= 75) {
-      return "Почти готово! Последний рывок!";
-    } else if (overallPercentage >= 50) {
-      return "Половина пути пройдена!";
-    } else if (overallPercentage >= 25) {
-      return "Хорошее начало! Продолжайте!";
-    } else if (overallPercentage > 0) {
-      return "Анализ начат. Продолжайте работу!";
-    }
-    return "Готовы начать анализ?";
-  };
-
   return (
     <Card type='container' view='raised' size='l'>
     <div className="overall-progress">
-      <div className="overall-progress__header">
-        <div className="overall-progress__character">
-          <h2>Анализ персонажа</h2>
-          <div className="character-importance">
-            {character?.importance_score && (
-              <span>Важность: {Math.round(character.importance_score * 100)}%</span>
-            )}
-          </div>
-        </div>
-        <div className="overall-progress__message">
-          {getProgressMessage()}
-        </div>
-      </div>
-
       <div className="overall-progress__stats">
         <div className="progress-stat">
           <div className="stat-number">{overallPercentage}%</div>

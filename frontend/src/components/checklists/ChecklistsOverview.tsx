@@ -1,10 +1,9 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from "@gravity-ui/uikit";
+import { Button, Text } from "@gravity-ui/uikit";
 
 import { checklistApi, charactersApi } from '../../services/api';
-import { RecommendedNextStep } from './RecommendedNextStep';
 import { ChecklistGroup } from './ChecklistGroup';
 import { OverallProgress } from './OverallProgress';
 import { ChecklistSwitcher } from './ChecklistSwitcher';
@@ -108,15 +107,22 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
     <div className="checklists-overview">
       {/* Header */}
       <div className="checklists-overview__header">
+      <div className="checklists-overview__controls">
           <Button
             onClick={() => navigate(-1)}
             view="outlined"
           >
             ← 
           </Button>
+        <ChecklistSwitcher 
+          characterId={parseInt(characterId)}
+          currentChecklist={null}
+        />
+        </div>
+
         
         <div className="character-info">
-          <h1>{character?.name}</h1>
+          <Text variant="header-1">{character?.name}</Text>
           {character?.description && <p>{character.description}</p>}
         </div>
           <Button
@@ -133,13 +139,6 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
         <OverallProgress 
           progress={progress}
           character={character}
-        />
-
-        {/* Recommended Next Step */}
-        <RecommendedNextStep 
-          progress={progress}
-          checklists={checklists}
-          characterId={parseInt(characterId)}
         />
 
         {/* Checklist Groups */}
@@ -171,13 +170,6 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
             type="psychological"
           />
         </div>
-
-        {/* Quick Checklist Switcher */}
-        <ChecklistSwitcher 
-          characterId={parseInt(characterId)}
-          currentChecklist={null}
-        />
-
       </div>
 
       {/* Export Dialog */}
