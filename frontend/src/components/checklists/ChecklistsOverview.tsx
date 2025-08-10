@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Button } from "@gravity-ui/uikit";
 
 import { checklistApi, charactersApi } from '../../services/api';
 import { RecommendedNextStep } from './RecommendedNextStep';
@@ -25,8 +26,9 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
 
   // Загружаем список доступных чеклистов
   const { data: checklists, isLoading: checklistsLoading } = useQuery({
-    queryKey: ['checklists'],
-    queryFn: () => checklistApi.getAll(),
+    queryKey: ['checklists', characterId],
+    queryFn: () => checklistApi.getAll(characterId ? parseInt(characterId) : undefined),
+    enabled: !!characterId,
     staleTime: 10 * 60 * 1000, // 10 минут
   });
 
@@ -38,6 +40,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
     staleTime: 2 * 60 * 1000, // 2 минуты
   });
 
+  console.log(progress);
   // Группировка чеклистов по типам (всегда должна быть после всех хуков)
   const groupedChecklists = React.useMemo(() => {
     if (!checklists) {
@@ -105,26 +108,22 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
     <div className="checklists-overview">
       {/* Header */}
       <div className="checklists-overview__header">
-        <div className="header-actions">
-          <button
+          <Button
             onClick={() => navigate(-1)}
-            className="btn btn-secondary"
+            view="outlined"
           >
-            ← Назад
-          </button>
-          
-          <button
-            onClick={() => setIsExportDialogOpen(true)}
-            className="btn btn-primary btn-export"
-          >
-            📄 Экспорт отчета
-          </button>
-        </div>
+            ← 
+          </Button>
         
         <div className="character-info">
           <h1>{character?.name}</h1>
           {character?.description && <p>{character.description}</p>}
         </div>
+          <Button
+            onClick={() => setIsExportDialogOpen(true)}
+          >
+            📄 Экспорт
+          </Button>
       </div>
 
       {/* Main Content */}

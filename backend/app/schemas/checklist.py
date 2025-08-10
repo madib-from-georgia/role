@@ -113,6 +113,7 @@ class Checklist(ChecklistBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     sections: List[ChecklistSection] = []
+    completion_stats: Optional[dict] = Field(None, description="Статистика заполнения")
     
     class Config:
         from_attributes = True
@@ -189,6 +190,7 @@ class ChecklistWithResponses(Checklist):
 
 # Статистика
 class ChecklistStats(BaseModel):
+    checklist_id: int = Field(..., description="ID чеклиста")
     total_questions: int = Field(..., description="Общее количество вопросов")
     answered_questions: int = Field(..., description="Количество отвеченных вопросов")
     completion_percentage: float = Field(..., description="Процент заполнения")

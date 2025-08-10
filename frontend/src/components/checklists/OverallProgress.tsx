@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from "@gravity-ui/uikit";
 
 interface OverallProgressProps {
   progress: any[];
@@ -27,12 +28,7 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({
   
   const completedChecklists = progress.filter(p => p.completion_percentage === 100).length;
   const inProgressChecklists = progress.filter(p => p.completion_percentage > 0 && p.completion_percentage < 100).length;
-  const notStartedChecklists = progress.filter(p => p.completion_percentage === 0).length;
 
-  // Estimate time to completion (assuming 15 seconds per question)
-  const remainingQuestions = totalQuestions - answeredQuestions;
-  const estimatedMinutes = Math.ceil(remainingQuestions * 15 / 60);
-  
   const getProgressMessage = () => {
     if (overallPercentage === 100) {
       return "Анализ завершен! Отличная работа!";
@@ -49,10 +45,11 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({
   };
 
   return (
+    <Card type='container' view='raised' size='l'>
     <div className="overall-progress">
       <div className="overall-progress__header">
         <div className="overall-progress__character">
-          <h2>Анализ персонажа: {character?.name}</h2>
+          <h2>Анализ персонажа</h2>
           <div className="character-importance">
             {character?.importance_score && (
               <span>Важность: {Math.round(character.importance_score * 100)}%</span>
@@ -79,13 +76,6 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({
           <div className="stat-number">{completedChecklists}</div>
           <div className="stat-label">завершено</div>
         </div>
-        
-        {remainingQuestions > 0 && (
-          <div className="progress-stat">
-            <div className="stat-number">~{estimatedMinutes}</div>
-            <div className="stat-label">мин осталось</div>
-          </div>
-        )}
       </div>
 
       <div className="overall-progress__visual">
@@ -108,10 +98,6 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({
             <span className="dot in-progress"></span>
             {inProgressChecklists} в работе
           </div>
-          <div className="breakdown-item">
-            <span className="dot not-started"></span>
-            {notStartedChecklists} не начато
-          </div>
         </div>
       </div>
 
@@ -122,6 +108,7 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </Card>
   );
 };

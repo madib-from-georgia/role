@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { Button } from "@gravity-ui/uikit";
 
 interface QuestionNavigationProps {
   currentIndex: number;
@@ -15,87 +16,88 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   onPrevious,
   onNext,
   canGoBack,
-  canGoForward
+  canGoForward,
 }) => {
   // Enhanced keyboard shortcuts
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Don't trigger shortcuts when user is typing in input fields
       const activeElement = document.activeElement;
-      const isTyping = activeElement && (
-        activeElement.tagName === 'INPUT' || 
-        activeElement.tagName === 'TEXTAREA' || 
-        (activeElement as HTMLElement).contentEditable === 'true'
-      );
+      const isTyping =
+        activeElement &&
+        (activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          (activeElement as HTMLElement).contentEditable === "true");
 
       if (isTyping) return;
 
       // Ctrl/Cmd + Arrow keys for navigation
       if (event.ctrlKey || event.metaKey) {
         switch (event.key) {
-          case 'ArrowLeft':
+          case "ArrowLeft":
             event.preventDefault();
             if (canGoBack) onPrevious();
             break;
-          case 'ArrowRight':
+          case "ArrowRight":
             event.preventDefault();
             if (canGoForward) onNext();
             break;
         }
       }
-      
+
       // Additional shortcuts without modifiers
       switch (event.key) {
-        case 'ArrowLeft':
+        case "ArrowLeft":
           if (!isTyping && canGoBack) {
             event.preventDefault();
             onPrevious();
           }
           break;
-        case 'ArrowRight':
+        case "ArrowRight":
           if (!isTyping && canGoForward) {
             event.preventDefault();
             onNext();
           }
           break;
-        case 'Home':
+        case "Home":
           event.preventDefault();
           // Navigate to first question (will be implemented)
           break;
-        case 'End':
+        case "End":
           event.preventDefault();
           // Navigate to last question (will be implemented)
           break;
-        case 'Escape':
+        case "Escape":
           // Close sidebar or other modals (will be handled by parent)
           break;
       }
     };
 
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
   }, [canGoBack, canGoForward, onPrevious, onNext]);
 
   return (
     <div className="question-navigation">
       <div className="navigation-content">
         {/* Previous button */}
-        <button
+        <Button
           onClick={onPrevious}
           disabled={!canGoBack}
-          className="nav-button nav-button--previous"
+          view="raised"
+          size="xl"
           title="Предыдущий вопрос (Ctrl+←)"
         >
           <span className="nav-icon">←</span>
           <span className="nav-text">Назад</span>
-        </button>
+        </Button>
 
         {/* Position indicator */}
         <div className="position-indicator">
           <div className="position-dots">
             {Array.from({ length: Math.min(totalQuestions, 7) }, (_, index) => {
               let dotIndex: number;
-              
+
               if (totalQuestions <= 7) {
                 dotIndex = index;
               } else {
@@ -108,39 +110,40 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
                   dotIndex = currentIndex - 3 + index;
                 }
               }
-              
+
               const isActive = dotIndex === currentIndex;
               const isPast = dotIndex < currentIndex;
-              
+
               return (
                 <div
                   key={`dot-${index}`}
                   className={`position-dot ${
-                    isActive ? 'active' : isPast ? 'completed' : 'upcoming'
+                    isActive ? "active" : isPast ? "completed" : "upcoming"
                   }`}
                   title={`Вопрос ${dotIndex + 1}`}
                 />
               );
             })}
           </div>
-          
+
           <div className="position-text">
             {currentIndex + 1} / {totalQuestions}
           </div>
         </div>
 
         {/* Next button */}
-        <button
+        <Button
           onClick={onNext}
           disabled={!canGoForward}
-          className="nav-button nav-button--next"
+          view="raised"
+          size="xl"
           title="Следующий вопрос (Ctrl+→)"
         >
           <span className="nav-text">
-            {currentIndex === totalQuestions - 1 ? 'Завершить' : 'Далее'}
+            {currentIndex === totalQuestions - 1 ? "Завершить" : "Далее"}
           </span>
           <span className="nav-icon">→</span>
-        </button>
+        </Button>
       </div>
 
       {/* Enhanced keyboard shortcuts hint */}
@@ -160,16 +163,6 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
         <div className="shortcut-hint">
           <span className="shortcut-key">Esc</span>
           <span className="shortcut-description">Закрыть панели</span>
-        </div>
-      </div>
-
-      {/* Progress indicators */}
-      <div className="navigation-progress">
-        <div className="progress-track">
-          <div 
-            className="progress-fill"
-            style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
-          />
         </div>
       </div>
     </div>

@@ -361,6 +361,7 @@ class ChecklistService:
             stats = checklist_response.get_completion_stats(db, character_id, checklist_obj.id)
             
             checklist_stats = ChecklistStats(
+                checklist_id=checklist_obj.id,
                 total_questions=stats["total_questions"],
                 answered_questions=stats["answered_questions"],
                 completion_percentage=stats["completion_percentage"],
@@ -396,9 +397,47 @@ class ChecklistService:
         
         return checklist_question.search_questions(db, query, checklist_id)
     
-    def get_available_checklists(self, db: Session) -> List[Checklist]:
-        """Получение списка доступных чеклистов"""
-        return checklist_crud.get_multi(db)
+    def get_available_checklists(self, db: Session, character_id: Optional[int] = None) -> List[Checklist]:
+        """
+        Получение списка доступных чеклистов
+        
+        Args:
+            db: Сессия базы данных
+            character_id: ID персонажа для получения статистики (опционально)
+            
+        Returns:
+            Список чеклистов с опциональной статистикой заполнения
+        """
+        checklists = checklist_crud.get_multi(db)
+        
+        # Если указан character_id, добавляем статистику для каждого чеклиста
+        if character_id:
+            enriched_checklists = []
+            for checklist_obj in checklists:
+                # Получаем статистику заполнения
+                stats = checklist_response.get_completion_stats(db, character_id, checklist_obj.id)
+                
+                # Создаем обогащенный чеклист
+                from app.schemas.checklist import Checklist
+                enriched_checklist = Checklist(
+                    id=checklist_obj.id,
+                    title=checklist_obj.title,
+                    description=checklist_obj.description,
+                    slug=checklist_obj.slug,
+                    icon=checklist_obj.icon,
+                    order_index=checklist_obj.order_index,
+                    is_active=checklist_obj.is_active,
+                    goal=checklist_obj.goal,
+                    created_at=checklist_obj.created_at,
+                    updated_at=checklist_obj.updated_at,
+                    sections=[],  # Для списка чеклистов секции не нужны
+                    completion_stats=stats
+                )
+                enriched_checklists.append(enriched_checklist)
+            
+            return enriched_checklists
+        
+        return checklists
     
     def get_checklist_structure(self, db: Session, checklist_slug: str) -> Optional[ChecklistWithResponses]:
         """

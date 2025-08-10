@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { Button, TextInput, Select, Text, Card } from "@gravity-ui/uikit";
 import { projectsApi, textsApi, charactersApi } from '../services/api'
 import { Project } from '../../../shared/types'
 
@@ -125,11 +126,11 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
                 >
                   <div className="character-header">
                     <h4>{character.name}</h4>
-                    {character.importance_score && (
+                    {/* {character.importance_score && (
                       <span className="importance-score">
                         {Math.round(character.importance_score * 100)}%
                       </span>
-                    )}
+                    )} */}
                   </div>
                   
                   {character.aliases && character.aliases.length > 0 && (
@@ -137,10 +138,6 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
                       <span>Алиасы: {character.aliases.join(', ')}</span>
                     </div>
                   )}
-                  
-                  <button className="analyze-btn">
-                    Анализировать →
-                  </button>
                 </div>
               ))}
             </div>
@@ -266,25 +263,26 @@ const ProjectDetail: React.FC = () => {
       <div className="project-detail-header">
         <div className="project-detail-header-top">
           <div>
-            <h1>{project.title}</h1>
+            <Text variant='display-1'>{project.title}</Text>
             {project.description && (
               <p>{project.description}</p>
             )}
           </div>
-          <button
-            className="btn btn-secondary"
+          <Button
             onClick={handleDeleteProject}
             disabled={deleteMutation.isLoading}
+            size='l'
+
           >
             {deleteMutation.isLoading ? (
-              <>
-                <div className="spinner small"></div>
-                Удаление...
-              </>
+              <div className='project-detail-delete'>
+                <span className="spinner small"></span>
+                <span>Удаление...</span>
+              </div>
             ) : (
               'Удалить проект'
             )}
-          </button>
+          </Button>
         </div>
         <div className="project-meta">
           <span>Создан: {new Date(project.created_at).toLocaleDateString('ru-RU')}</span>
@@ -302,14 +300,15 @@ const ProjectDetail: React.FC = () => {
             
             <div className="file-upload">
               <div className="upload-area">
-                <div className="upload-icon">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                  </svg>
-                </div>
                 <div className="upload-content">
                   <label htmlFor="file-upload" className="upload-label">
+                    <div className="upload-icon">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                    </div>
                     {selectedFile ? selectedFile.name : 'Перетащите файл сюда или нажмите для выбора'}
+                    <p className="upload-help">Поддерживаются файлы TXT и FB2 до 10MB</p>
                   </label>
                   <input
                     id="file-upload"
@@ -318,24 +317,24 @@ const ProjectDetail: React.FC = () => {
                     onChange={handleFileSelect}
                     style={{ display: 'none' }}
                   />
-                  <p className="upload-help">Поддерживаются файлы TXT и FB2 до 10MB</p>
                 </div>
               </div>
 
-              <button
-                className="btn btn-primary upload-btn"
+              <Button
                 disabled={!selectedFile || uploadMutation.isLoading}
                 onClick={handleUpload}
+                view='action'
+                size="l"
               >
                 {uploadMutation.isLoading ? (
-                  <>
-                    <div className="spinner small"></div>
+                  <div className='project-detail-button'>
+                    <span className="spinner small"></span>
                     Обработка файла...
-                  </>
+                  </div>
                 ) : (
                   'Загрузить и обработать текст'
                 )}
-              </button>
+              </Button>
 
               {uploadMutation.isError && (
                 <div className="error-message">
@@ -421,20 +420,6 @@ const ProjectDetail: React.FC = () => {
                 ))}
               </div>
             )}
-
-            <div className="next-steps">
-              <h4>Следующие шаги:</h4>
-              <ul>
-                <li className={texts && texts.length > 0 ? 'completed' : ''}>
-                  Загрузите текст произведения
-                </li>
-                <li className={texts && texts.some(t => t.processed_at) ? 'completed' : ''}>
-                  Дождитесь обработки файлов
-                </li>
-                <li>Запустите анализ персонажей</li>
-                <li>Выберите персонажей для детального анализа</li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>

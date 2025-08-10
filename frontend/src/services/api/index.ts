@@ -121,8 +121,11 @@ export const charactersApi = {
 }
 
 export const checklistApi = {
-  getAll: () => api.get('/api/checklists/'),
-  getChecklistForCharacter: (checklistSlug: string, characterId: number) => 
+  getAll: (characterId?: number) => {
+    const params = characterId ? { character_id: characterId } : {};
+    return api.get('/api/checklists/', { params });
+  },
+  getChecklistForCharacter: (checklistSlug: string, characterId: number) =>
     api.get(`/api/checklists/${checklistSlug}/character/${characterId}`),
   createOrUpdateResponse: (data: {
     question_id: number;

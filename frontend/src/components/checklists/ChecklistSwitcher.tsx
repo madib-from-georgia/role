@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { checklistApi } from '../../services/api';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { checklistApi } from "../../services/api";
+import { Button, ArrowToggle } from "@gravity-ui/uikit";
 
 interface ChecklistSwitcherProps {
   characterId: number;
@@ -10,25 +11,25 @@ interface ChecklistSwitcherProps {
 
 export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
   characterId,
-  currentChecklist
+  currentChecklist,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const { data: checklists } = useQuery({
-    queryKey: ['checklists'],
-    queryFn: () => checklistApi.getAll(),
+    queryKey: ["checklists", characterId],
+    queryFn: () => checklistApi.getAll(characterId),
     staleTime: 10 * 60 * 1000, // 10 минут
   });
 
   const { data: progress } = useQuery({
-    queryKey: ['checklist-progress', characterId],
+    queryKey: ["checklist-progress", characterId],
     queryFn: () => checklistApi.getCharacterProgress(characterId),
     staleTime: 2 * 60 * 1000, // 2 минуты
   });
 
   const handleChecklistSelect = (checklistSlug: string) => {
-    if (checklistSlug === 'overview') {
+    if (checklistSlug === "overview") {
       navigate(`/characters/${characterId}/checklists`);
     } else {
       navigate(`/characters/${characterId}/checklists/${checklistSlug}`);
@@ -37,7 +38,9 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
   };
 
   const getChecklistProgress = (checklistId: number) => {
-    const checklistProgress = progress?.find((p: any) => p.checklist_id === checklistId);
+    const checklistProgress = progress?.find(
+      (p: any) => p.checklist_id === checklistId
+    );
     return checklistProgress?.completion_percentage || 0;
   };
 
@@ -48,32 +51,34 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
 
   return (
     <div className="checklist-switcher">
-      <button
-        className="checklist-switcher__toggle checklist-switcher__toggle--compact"
+      <Button
         onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        title={currentChecklist ? 'Переключить чеклист' : 'Быстрый переход'}
+        title={currentChecklist ? "Переключить чеклист" : "Быстрый переход"}
+        view="normal"
+        size="m"
       >
         <span className="switcher-icon">📋</span>
-        <span className={`switcher-arrow ${isOpen ? 'open' : ''}`}>▼</span>
-      </button>
+        <ArrowToggle direction={isOpen ? "top" : "bottom"} />
+      </Button>
 
       {isOpen && (
         <div className="checklist-switcher__dropdown">
           <div className="switcher-dropdown__header">
             <h3>Быстрый переход</h3>
           </div>
-          
+
           <div className="switcher-dropdown__content">
             {/* Overview option */}
             <div
-              className={`switcher-item ${!currentChecklist ? 'active' : ''}`}
-              onClick={() => handleChecklistSelect('overview')}
+              className={`switcher-item ${!currentChecklist ? "active" : ""}`}
+              onClick={() => handleChecklistSelect("overview")}
             >
               <div className="switcher-item__icon">🏠</div>
               <div className="switcher-item__content">
                 <div className="switcher-item__title">Обзор чеклистов</div>
-                <div className="switcher-item__subtitle">Стартовая страница</div>
+                <div className="switcher-item__subtitle">
+                  Стартовая страница
+                </div>
               </div>
             </div>
 
@@ -83,30 +88,34 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
             {checklists.map((checklist: any) => {
               const completionPercentage = getChecklistProgress(checklist.id);
               const isActive = currentChecklist === checklist.slug;
-              
+
               return (
                 <div
                   key={checklist.id}
-                  className={`switcher-item ${isActive ? 'active' : ''}`}
+                  className={`switcher-item ${isActive ? "active" : ""}`}
                   onClick={() => handleChecklistSelect(checklist.slug)}
                 >
                   <div className="switcher-item__icon">
-                    {checklist.icon || '📝'}
+                    {checklist.icon || "📝"}
                   </div>
-                  
+
                   <div className="switcher-item__content">
-                    <div className="switcher-item__title">{checklist.title}</div>
+                    <div className="switcher-item__title">
+                      {checklist.title}
+                    </div>
                     <div className="switcher-item__progress">
                       <div className="mini-progress-bar">
-                        <div 
+                        <div
                           className="mini-progress-fill"
                           style={{ width: `${completionPercentage}%` }}
                         />
                       </div>
-                      <span className="progress-text">{completionPercentage}%</span>
+                      <span className="progress-text">
+                        {completionPercentage}%
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="switcher-item__status">
                     {completionPercentage === 100 ? (
                       <span className="status-icon completed">✓</span>
@@ -120,22 +129,23 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
               );
             })}
           </div>
-          
+
           {/* Quick actions */}
           <div className="switcher-dropdown__footer">
-            <button
-              className="btn btn-sm btn-secondary"
+            <Button
               onClick={() => setIsOpen(false)}
+              view="normal"
+              size="m"
             >
               Закрыть
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {/* Backdrop */}
       {isOpen && (
-        <div 
+        <div
           className="checklist-switcher__backdrop"
           onClick={() => setIsOpen(false)}
         />
