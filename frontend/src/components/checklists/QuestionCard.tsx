@@ -370,7 +370,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       <div className="question-card__additional">
         <div className="source-selection">
-          <div className="field-label">Источник информации:</div>
+          <div className="field-label">Источник ответа:</div>
           <SegmentedRadioGroup
             value={sourceType}
             onUpdate={(value) => setSourceType(value)}
@@ -397,12 +397,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
 
         <div className="comment-field">
-          <div className="field-label">Заметки:</div>
+          <div className="field-label">Дополнить ответ:</div>
           <TextArea
             value={localComment}
             onUpdate={(value) => handleCommentChange(value)}
             onBlur={handleSave}
-            placeholder="Добавьте заметки или обоснование..."
+            placeholder="Цитаты, обоснование, свои мысли..."
           />
         </div>
       </div>
@@ -413,9 +413,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             onClick={handleSave}
             disabled={isLoading}
             view="action"
-            size="l"
+            size="xl"
           >
-            {isLoading ? "Сохранение..." : "Сохранить ответ"}
+            {isLoading ? "Сохранение..." : "Сохранить"}
           </Button>
 
           {question.current_response && onAnswerDelete && (

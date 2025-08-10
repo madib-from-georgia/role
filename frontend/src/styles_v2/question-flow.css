@@ -366,6 +366,7 @@
   display: flex;
   flex-flow: row wrap;
   gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
 }
 
 .custom-option-text-input {
@@ -384,7 +385,6 @@
 /* Additional fields */
 .question-card__additional {
   padding: var(--spacing-6);
-  background: #fafafa;
 
   display: flex;
   gap: var(--spacing-4);
