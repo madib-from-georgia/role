@@ -389,7 +389,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       <div className="question-card__main">
-        <Text ellipsis={true} variant="header-1">
+        <Text variant="header-1">
           {question.text}
           {question.hint ? (
             <Tooltip content={question.hint} openDelay={0}>
