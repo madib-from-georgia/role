@@ -14,6 +14,7 @@
   gap: var(--spacing-4);
   background-color: var(--color-background);
   justify-content: space-between;
+  padding: var(--spacing-2) 0;
 }
 
 .checklists-overview__controls {
@@ -554,9 +555,7 @@
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .checklists-overview__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-3);
+    gap: var(--spacing-2);
   }
 
   .overall-progress {

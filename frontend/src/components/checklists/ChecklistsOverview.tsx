@@ -122,7 +122,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
 
         
         <div className="character-info">
-          <Text variant="header-1">{character?.name}</Text>
+          <Text variant="header-1" ellipsis={true}>{character?.name}</Text>
           {character?.description && <p>{character.description}</p>}
         </div>
           <Button

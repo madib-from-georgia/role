@@ -55,10 +55,9 @@ a:hover {
   padding: 0 24px;
 }
 
-.main-content {
-  flex: 1;
-  padding: 32px 0;
-}
+  .main-content {
+    padding: 24px 0;
+  }
 
 /* ===== ХЕДЕР ===== */
 .header {
@@ -628,11 +627,7 @@ a:hover {
   .container {
     padding: 0 16px;
   }
-  
-  .main-content {
-    padding: 24px 0;
-  }
-  
+    
   .header-inner {
     flex-direction: column;
     height: auto;
@@ -2804,6 +2799,8 @@ a:hover {
 
 .character-info {
   margin-bottom: 32px;
+  overflow: hidden;
+    display: flex;
 }
 
 .character-header {
