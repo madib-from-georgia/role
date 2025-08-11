@@ -16,6 +16,7 @@ from app.middleware.performance_middleware import (
 from app.routers import auth, projects, texts, characters, checklists, export, security
 from app.config.settings import settings
 from app.utils.logging_config import LoggingConfig
+from app.services.auto_import_service import auto_import_service
 
 
 @asynccontextmanager
@@ -23,6 +24,14 @@ async def lifespan(app: FastAPI):
     """Управление жизненным циклом приложения."""
     # Startup
     await init_db()
+    
+    # Автоматический импорт чеклистов при старте
+    try:
+        await auto_import_service.import_checklists_on_startup()
+    except Exception as e:
+        # Не останавливаем приложение, если импорт не удался
+        print(f"Предупреждение: Ошибка автоматического импорта чеклистов: {e}")
+    
     yield
     # Shutdown
     await close_db()

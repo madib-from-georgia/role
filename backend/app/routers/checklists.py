@@ -15,6 +15,7 @@ from app.schemas.checklist import (
     ChecklistResponseHistory, RestoreResponseVersion
 )
 from app.services.checklist_service import checklist_service
+from app.services.auto_import_service import auto_import_service
 
 
 router = APIRouter()
@@ -245,3 +246,66 @@ async def get_character_progress(
     
     progress = checklist_service.get_character_progress(db, character_id)
     return progress
+
+
+@router.post("/import")
+async def import_checklists_manually(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Ручной импорт чеклистов из файла checklists_to_import.txt.
+    
+    Импортирует все чеклисты, указанные в конфигурационном файле.
+    Доступно только авторизованным пользователям.
+    """
+    try:
+        result = await auto_import_service.manual_import_checklists()
+        
+        if result["success"]:
+            return {
+                "message": result["message"],
+                "imported": result["imported"],
+                "skipped": result["skipped"],
+                "errors": result["errors"]
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=result["message"]
+            )
+            
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при импорте чеклистов: {str(e)}"
+        )
+
+
+@router.get("/import/status")
+async def get_import_status(
+    current_user: User = Depends(get_current_active_user)
+):
+    """
+    Получение информации о доступных для импорта чеклистах.
+    
+    Возвращает список чеклистов из конфигурационного файла.
+    """
+    try:
+        checklists = auto_import_service.load_checklist_list()
+        
+        return {
+            "total_checklists": len(checklists),
+            "checklists": [
+                {
+                    "file_path": file_path
+                }
+                for file_path in checklists
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при получении статуса импорта: {str(e)}"
+        )
