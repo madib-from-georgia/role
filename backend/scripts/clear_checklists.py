@@ -11,6 +11,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from app.database.connection import SessionLocal, init_db
 from app.database.crud.crud_checklist import checklist
 from app.database.crud.crud_checklist_response import checklist_response
@@ -63,34 +64,40 @@ async def clear_all_checklists(force=False):
         
         logger.info("Начинаю удаление...")
         
+        # Отключаем проверку внешних ключей для SQLite
+        db.execute(text("PRAGMA foreign_keys = OFF"))
+        
         # Удаляем в правильном порядке (сначала зависимые таблицы)
         
         # 1. Удаляем ответы
-        deleted_responses = db.query(checklist_response.model).delete()
+        deleted_responses = db.query(checklist_response.model).delete(synchronize_session=False)
         logger.info(f"Удалено ответов: {deleted_responses}")
         
         # 2. Удаляем вопросы
-        deleted_questions = db.query(ChecklistQuestion).delete()
+        deleted_questions = db.query(ChecklistQuestion).delete(synchronize_session=False)
         logger.info(f"Удалено вопросов: {deleted_questions}")
         
         # 3. Удаляем группы вопросов
-        deleted_groups = db.query(ChecklistQuestionGroup).delete()
+        deleted_groups = db.query(ChecklistQuestionGroup).delete(synchronize_session=False)
         logger.info(f"Удалено групп вопросов: {deleted_groups}")
         
         # 4. Удаляем подсекции
-        deleted_subsections = db.query(ChecklistSubsection).delete()
+        deleted_subsections = db.query(ChecklistSubsection).delete(synchronize_session=False)
         logger.info(f"Удалено подсекций: {deleted_subsections}")
         
         # 5. Удаляем секции
-        deleted_sections = db.query(ChecklistSection).delete()
+        deleted_sections = db.query(ChecklistSection).delete(synchronize_session=False)
         logger.info(f"Удалено секций: {deleted_sections}")
         
         # 6. Удаляем чеклисты
-        deleted_checklists = db.query(Checklist).delete()
+        deleted_checklists = db.query(Checklist).delete(synchronize_session=False)
         logger.info(f"Удалено чеклистов: {deleted_checklists}")
         
         # Подтверждаем изменения
         db.commit()
+        
+        # Включаем проверку внешних ключей обратно
+        db.execute(text("PRAGMA foreign_keys = ON"))
         
         logger.success("✅ Все чеклисты успешно удалены из базы данных!")
         
