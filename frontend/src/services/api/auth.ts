@@ -1,6 +1,6 @@
 import { User, LoginRequest, RegisterRequest, TokenResponse, AuthResponse } from '../../types/auth'
 
-const API_BASE_URL = 'http://localhost:8000/api'
+const API_BASE_URL = `${window.location.origin}/api`
 
 class AuthApi {
   private async request<T>(

@@ -4,7 +4,7 @@ export const config = {
   authEnabled: false, // Флаг для включения/отключения авторизации
   
   // API
-  apiBaseUrl: 'http://localhost:8000',
+  apiBaseUrl: window.location.origin,
   
   // Mock пользователь для разработки (используется когда authEnabled = false)
   mockUser: {

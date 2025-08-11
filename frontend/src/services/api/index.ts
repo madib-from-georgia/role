@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = window.location.origin
 
 // Создаем axios instance
 const apiClient: AxiosInstance = axios.create({
