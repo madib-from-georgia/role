@@ -152,7 +152,7 @@ BRANCH="$1"
 SKIP_BACKUP="$2"
 FORCE_UPDATE="$3"
 APP_DIR="/home/yc-user/role"
-BACKUP_DIR="/opt/backups"
+BACKUP_DIR="/home/yc-user/backups"
 
 log "🔄 Начинаем обновление на сервере"
 
@@ -249,18 +249,18 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 # Выполнение миграций базы данных (если есть)
-if [ -f "backend/alembic.ini" ]; then
+if [ -f "alembic.ini" ]; then
     log "🗄️ Выполнение миграций базы данных..."
     # Установка PYTHONPATH для корректной работы Alembic
     # Используем абсолютный путь к backend директории
     export PYTHONPATH="$APP_DIR/backend:$PYTHONPATH"
-    cd backend
     if python -m alembic upgrade head 2>/dev/null; then
         log "✅ Миграции выполнены успешно"
     else
         warn "⚠️ Миграции пропущены (возможны проблемы с PYTHONPATH)"
     fi
-    cd ..
+else
+    warn "⚠️ Файл alembic.ini не найден, миграции пропущены"
 fi
 
 cd ..
