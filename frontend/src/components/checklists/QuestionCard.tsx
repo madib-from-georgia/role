@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  Alert,
+  Label,
   Text,
   Button,
   Radio,
@@ -56,7 +56,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   onAnswerUpdate,
   onAnswerDelete,
-  isLoading,
   allQuestions,
   currentQuestionIndex,
   onQuestionSelect,
@@ -441,14 +440,19 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       <div className="question-card__actions">
+        {question.current_response && (
+          <Label theme="success" size="m">
+            {`Сохранено ${new Date(question.current_response.updated_at).toLocaleString("ru")}`}
+          </Label>
+        )}
+
         <div className="action-buttons">
           <Button
             onClick={handleSave}
-            disabled={isLoading}
-            view="action"
-            size="xl"
+            view="normal"
+            size="m"
           >
-            {isLoading ? "Сохранение..." : "Сохранить"}
+            Сохранить
           </Button>
 
           {question.current_response && onAnswerDelete && (
@@ -457,7 +461,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 onClick={() => onAnswerDelete(question.current_response.id)}
                 title="Удалить ответ"
                 view="normal"
-                size="l"
+                size="m"
               >
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -471,15 +475,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             </div>
           )}
         </div>
-        {question.current_response && (
-          <Alert
-            theme="success"
-            // title="Сохранено"
-            message={`Сохранено ${new Date(
-              question.current_response.updated_at
-            ).toLocaleString("ru")}`}
-          />
-        )}
       </div>
     </div>
   );

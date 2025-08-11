@@ -9,13 +9,6 @@
 @import './question-flow.css';
 @import './export.css';
 
-/* Global application styles */
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 /* Page layouts */
 .page-loading {
   display: flex;

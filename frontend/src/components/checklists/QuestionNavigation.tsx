@@ -84,7 +84,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
         <Button
           onClick={onPrevious}
           disabled={!canGoBack}
-          view="raised"
+          view="action"
           size="xl"
           title="Предыдущий вопрос (Ctrl+←)"
         >
@@ -103,12 +103,12 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
         <Button
           onClick={onNext}
           disabled={!canGoForward}
-          view="raised"
+          view="action"
           size="xl"
           title="Следующий вопрос (Ctrl+→)"
         >
           <span className="nav-text">
-            {currentIndex === totalQuestions - 1 ? "Завершить" : "Далее"}
+            {currentIndex === totalQuestions - 1 ? "Завершить" : "Вперёд"}
           </span>
           <span className="nav-icon">→</span>
         </Button>

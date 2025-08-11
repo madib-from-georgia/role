@@ -43,12 +43,6 @@ a:hover {
 }
 
 /* ===== ЛЕЙАУТ ===== */
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -773,21 +767,21 @@ a:hover {
     max-width: 100%;
     overflow-x: hidden;
   }
-    
+
   .header-inner {
     height: 64px;
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   .mobile-menu-btn {
     display: block;
   }
-  
+
   .desktop-nav {
     display: none;
   }
-  
+
   .search-bar {
     flex-direction: column;
     align-items: stretch;
@@ -810,45 +804,45 @@ a:hover {
   .form-actions {
     flex-direction: column;
   }
-  
+
   /* Предотвращение горизонтального скролла */
   * {
     max-width: 100%;
     box-sizing: border-box;
   }
-  
+
   .card, .project-card, .checklist-card {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
   }
-  
+
   .grid, .grid-2, .grid-3 {
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   .stats-grid, .progress-grid {
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   .checklist-sections, .checklist-section {
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   .modal-content {
     width: 95%;
     max-width: 95vw;
     margin: 0 auto;
   }
-  
+
   .auth-modal {
     width: 95%;
     max-width: 95vw;
   }
-  
+
   .mobile-menu {
     width: min(280px, 85vw);
   }
@@ -3313,11 +3307,11 @@ a:hover {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .progress-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .section-header-content,
   .subsection-header-content,
   .group-header-content {
@@ -3325,28 +3319,28 @@ a:hover {
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .section-status-container {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .question-header-content {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .question-actions {
     align-self: flex-end;
   }
-  
+
   .checklist-card-content {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
-  
+
   .checklist-status {
     align-self: flex-end;
   }
@@ -3474,15 +3468,15 @@ a:hover {
   .form-actions {
     flex-direction: column;
   }
-  
+
   .form-actions .btn {
     width: 100%;
   }
-  
+
   .security-info {
     gap: 12px;
   }
-  
+
   .btn-outline {
     width: 100%;
     text-align: center;

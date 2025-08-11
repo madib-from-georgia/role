@@ -4,7 +4,6 @@
 
 /* Page container */
 .checklist-page-v2 {
-  min-height: 100vh;
   background-color: var(--color-background);
 }
 
@@ -52,7 +51,7 @@
 }
 
 .question-flow__footer {
-  padding: 0 var(--spacing-4);
+  padding: 0 var(--spacing-6);
   margin-top: var(--spacing-4);
 }
 
@@ -347,7 +346,7 @@
 
 .question-card__main {
   margin: 0;
-  padding: var(--spacing-6);
+  padding: var(--spacing-8) var(--spacing-6);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
 
@@ -385,7 +384,7 @@
 
 /* Additional fields */
 .question-card__additional {
-  padding: var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-6);
 
   display: flex;
   gap: var(--spacing-4);
@@ -398,8 +397,12 @@
 
 /* Actions */
 .question-card__actions {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+  margin-top: var(--spacing-3);
+
   padding: var(--spacing-6);
-  border-top: 1px solid var(--color-border);
 }
 
 .question-card__delete {
@@ -415,7 +418,7 @@
   display: flex;
   gap: var(--spacing-3);
   align-items: center;
-  margin-bottom: var(--spacing-3);
+  margin-left: auto;
 }
 
 .save-status {
@@ -758,10 +761,6 @@
     margin: 0;
   }
 
-  .question-card__context {
-    margin-bottom: var(--spacing-4);
-  }
-
   .question-text {
     font-size: var(--font-size-lg);
     line-height: 1.5;
@@ -794,10 +793,6 @@
     min-height: 48px;
     font-size: var(--font-size-base);
     padding: var(--spacing-3) var(--spacing-4);
-  }
-
-  .position-indicator {
-    margin-bottom: var(--spacing-3);
   }
 
   .keyboard-shortcuts {
@@ -839,6 +834,12 @@
     flex-direction: column;
     gap: var(--spacing-3);
     align-items: stretch;
+    padding: var(--spacing-3) var(--spacing-6);
+  }
+
+  .action-buttons {
+    margin: 0;
+    justify-content: space-between;
   }
 
   .save-status {
@@ -852,9 +853,14 @@
   }
 
   .comment-field {
-    margin-top: var(--spacing-8);
+    margin-top: var(--spacing-4);
     width: 100%;
   }
+
+  .question-flow__footer {
+    padding: 0 var(--spacing-4);
+  }
+
 }
 
 /* ==========================================================================
