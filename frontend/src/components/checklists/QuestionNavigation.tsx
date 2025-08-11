@@ -94,38 +94,6 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
 
         {/* Position indicator */}
         <div className="position-indicator">
-          <div className="position-dots">
-            {Array.from({ length: Math.min(totalQuestions, 7) }, (_, index) => {
-              let dotIndex: number;
-
-              if (totalQuestions <= 7) {
-                dotIndex = index;
-              } else {
-                // Smart positioning for large question sets
-                if (currentIndex <= 3) {
-                  dotIndex = index;
-                } else if (currentIndex >= totalQuestions - 3) {
-                  dotIndex = totalQuestions - 7 + index;
-                } else {
-                  dotIndex = currentIndex - 3 + index;
-                }
-              }
-
-              const isActive = dotIndex === currentIndex;
-              const isPast = dotIndex < currentIndex;
-
-              return (
-                <div
-                  key={`dot-${index}`}
-                  className={`position-dot ${
-                    isActive ? "active" : isPast ? "completed" : "upcoming"
-                  }`}
-                  title={`Вопрос ${dotIndex + 1}`}
-                />
-              );
-            })}
-          </div>
-
           <div className="position-text">
             {currentIndex + 1} / {totalQuestions}
           </div>

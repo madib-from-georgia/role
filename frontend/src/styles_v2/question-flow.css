@@ -10,9 +10,6 @@
 
 /* QuestionFlow container */
 .question-flow {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
   background-color: var(--color-background);
 }
 
@@ -55,7 +52,8 @@
 }
 
 .question-flow__footer {
-  padding: 0 var(--spacing-6);
+  padding: 0 var(--spacing-4);
+  margin-top: var(--spacing-4);
 }
 
 /* ProgressBar container */
@@ -349,7 +347,7 @@
 
 .question-card__main {
   margin: 0;
-  padding: var(--spacing-12);
+  padding: var(--spacing-6);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
 
@@ -465,58 +463,47 @@
   gap: var(--spacing-2);
 }
 
-.position-dots {
-  display: flex;
-  gap: var(--spacing-2);
-}
-
-.position-dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: var(--radius-full);
-  background-color: var(--color-border);
-  transition: all var(--transition-fast);
-}
-
-.position-dot.active {
-  background-color: var(--color-primary);
-  transform: scale(1.2);
-}
-
-.position-dot.completed {
-  background-color: var(--color-success);
-}
-
-.position-dot.upcoming {
-  background-color: var(--color-border);
-}
-
 .position-text {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-medium);
 }
 
+/* Enhanced shortcuts display */
 .keyboard-shortcuts {
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
   justify-content: center;
-  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-3);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-3);
 }
 
 .shortcut-hint {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--spacing-2);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
+  gap: var(--spacing-1);
+  min-width: 80px;
 }
 
 .shortcut-key {
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-background);
+  color: var(--color-text);
   padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-base);
-  font-family: var(--font-family-mono);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-family: monospace;
   border: 1px solid var(--color-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.shortcut-description {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-align: center;
 }
 
 /* NavigationSidebar */
@@ -798,8 +785,7 @@
   }
 
   .navigation-content {
-    gap: var(--spacing-4);
-    padding: var(--spacing-4);
+    gap: var(--spacing-2);
   }
 
   .nav-button {
@@ -812,16 +798,6 @@
 
   .position-indicator {
     margin-bottom: var(--spacing-3);
-  }
-
-  .position-dots {
-    justify-content: center;
-    gap: var(--spacing-2);
-  }
-
-  .position-dot {
-    width: 12px;
-    height: 12px;
   }
 
   .keyboard-shortcuts {
@@ -1240,42 +1216,6 @@
   flex-wrap: wrap;
 }
 
-/* Enhanced shortcuts display */
-.keyboard-shortcuts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-3);
-  justify-content: center;
-  padding: var(--spacing-3);
-  background-color: var(--color-background-secondary);
-  border-radius: var(--radius-md);
-  margin-top: var(--spacing-3);
-}
-
-.shortcut-hint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-1);
-  min-width: 80px;
-}
-
-.shortcut-key {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-family: monospace;
-  border: 1px solid var(--color-border);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.shortcut-description {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  text-align: center;
-}
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {

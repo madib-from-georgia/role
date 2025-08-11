@@ -13,6 +13,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
@@ -22,6 +23,9 @@ body {
   color: var(--color-text-primary);
   background-color: var(--color-background);
   line-height: var(--line-height-normal);
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* Typography */
@@ -260,6 +264,8 @@ p {
   max-width: var(--container-xl);
   margin: 0 auto;
   padding: 0 var(--spacing-4);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 @media (min-width: 640px) {
@@ -272,6 +278,35 @@ p {
 @media (max-width: 768px) {
   .hidden-mobile {
     display: none;
+  }
+  
+  /* Предотвращение горизонтального скролла на мобильных */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Обеспечиваем, что все элементы помещаются в экран */
+  .card, .btn, .form-input, .form-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Предотвращаем переполнение в flex контейнерах */
+  .flex {
+    flex-wrap: wrap;
+  }
+  
+  /* Ограничиваем ширину изображений и медиа */
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
   }
 }
 
