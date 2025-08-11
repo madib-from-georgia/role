@@ -18,6 +18,30 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   canGoBack,
   canGoForward,
 }) => {
+  // Refs for touch handling
+  const nextButtonRef = React.useRef<HTMLButtonElement>(null);
+  const prevButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  // Touch event handlers to prevent double-tap issues on mobile
+  const handleTouchStart = React.useCallback((callback: () => void) => {
+    return (event: React.TouchEvent) => {
+      event.preventDefault();
+      callback();
+    };
+  }, []);
+
+  // Click handlers with touch prevention
+  const handleNextClick = React.useCallback((event: React.MouseEvent) => {
+    // Prevent click if it was triggered by touch
+    if (event.detail === 0) return;
+    onNext();
+  }, [onNext]);
+
+  const handlePrevClick = React.useCallback((event: React.MouseEvent) => {
+    // Prevent click if it was triggered by touch
+    if (event.detail === 0) return;
+    onPrevious();
+  }, [onPrevious]);
   // Enhanced keyboard shortcuts
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -82,11 +106,14 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
       <div className="navigation-content">
         {/* Previous button */}
         <Button
-          onClick={onPrevious}
+          ref={prevButtonRef}
+          onClick={handlePrevClick}
+          onTouchStart={canGoBack ? handleTouchStart(onPrevious) : undefined}
           disabled={!canGoBack}
           view="action"
           size="xl"
           title="Предыдущий вопрос (Ctrl+←)"
+          className="navigation-content__button"
         >
           <span className="nav-icon">←</span>
           <span className="nav-text">Назад</span>
@@ -101,11 +128,14 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
 
         {/* Next button */}
         <Button
-          onClick={onNext}
+          ref={nextButtonRef}
+          onClick={handleNextClick}
+          onTouchStart={canGoForward ? handleTouchStart(onNext) : undefined}
           disabled={!canGoForward}
           view="action"
           size="xl"
           title="Следующий вопрос (Ctrl+→)"
+          className="navigation-content__button"
         >
           <span className="nav-text">
             {currentIndex === totalQuestions - 1 ? "Завершить" : "Вперёд"}

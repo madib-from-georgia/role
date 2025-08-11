@@ -454,6 +454,17 @@
   margin-bottom: var(--spacing-3);
 }
 
+/* Общие стили для кнопок навигации */
+.navigation-content__button {
+  /* Предотвращение двойного тапа на мобильных */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
 .nav-icon {
   font-size: var(--font-size-lg);
   margin: 0 var(--spacing-1);
