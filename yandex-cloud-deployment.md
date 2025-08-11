@@ -139,7 +139,7 @@ CACHE_DIR=./cache
 python -m alembic upgrade head
 
 # Или создайте тестового пользователя
-python scripts/create_test_user.py
+python scripts/create_mock_user.py
 ```
 
 ## Шаг 6: Настройка PM2 для автозапуска
