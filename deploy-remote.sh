@@ -258,6 +258,12 @@ if [ ! -f "frontend/dist/index.html" ]; then
     error "Файл index.html не найден в сборке фронтенда"
 fi
 
+# Исправление прав доступа к файлам фронтенда и директориям
+log "🔧 Настройка прав доступа к файлам фронтенда..."
+sudo chmod 755 /home/yc-user /home/yc-user/role /home/yc-user/role/frontend
+sudo chown -R yc-user:www-data frontend/dist
+sudo chmod -R 755 frontend/dist
+
 # Создание конфигурации PM2
 log "🔧 Создание конфигурации PM2..."
 cat > ecosystem.config.js << EOFPM2
@@ -322,54 +328,12 @@ fi
 
 # Настройка Nginx
 log "🌐 Настройка Nginx..."
-cat > /tmp/nginx-role-app.conf << 'EOFNGINX'
-server {
-    listen 80;
-    server_name $DOMAIN;
+# Копирование шаблона конфигурации Nginx
+cp nginx.conf.template /tmp/nginx-role-app.conf
 
-    # Статические файлы фронтенда
-    location / {
-        root /home/yc-user/role/frontend/dist;
-        try_files \$uri \$uri/ /index.html;
-        
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
-            expires 1y;
-            add_header Cache-Control "public, immutable";
-        }
-    }
-
-    # API бэкенда
-    location /api/ {
-        proxy_pass http://127.0.0.1:8000/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        
-        proxy_connect_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_read_timeout 60s;
-        client_max_body_size 100M;
-    }
-
-    # Документация API
-    location /docs {
-        proxy_pass http://127.0.0.1:8000/docs;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-
-    location /openapi.json {
-        proxy_pass http://127.0.0.1:8000/openapi.json;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-}
-EOFNGINX
+# Замена переменных в конфигурации
+sed -i "s|{{DOMAIN}}|$DOMAIN|g" /tmp/nginx-role-app.conf
+sed -i "s|{{APP_DIR}}|$APP_DIR|g" /tmp/nginx-role-app.conf
 
 # Проверка наличия директории sites-available
 if [ ! -d "/etc/nginx/sites-available" ]; then
@@ -473,7 +437,7 @@ if [ $? -eq 0 ]; then
     echo -e "${YELLOW}  pm2 status${NC}"
     echo -e "${YELLOW}  pm2 logs role-backend${NC}"
     echo ""
-    
+
     # Предложение настройки SSL
     if [[ "$DOMAIN" != "$SERVER_IP" ]]; then
         echo -e "${YELLOW}💡 Для настройки SSL сертификата выполните на сервере:${NC}"
