@@ -1,17 +1,17 @@
 {
   "id": "fizicheskiy-portret",
-  "title": "Физический портрет X",
+  "title": "Физический портрет ===",
   "sections": [
     {
       "id": "vneshnost-i-fizicheskie-dannye",
-      "title": "1. Внешность и физические данные Y",
+      "title": "1. Внешность и физические данные ===",
       "subsections": [
         {
           "id": "teloslozhenie-i-antropometriya",
-          "title": "1.1 Телосложение и антропометрия Z",
+          "title": "1.1 Телосложение и антропометрия ===",
           "questionGroups": [
             {
-              "id": "rost-i-proportsii-tela T",
+              "id": "rost-i-proportsii-tela",
               "title": "Рост и пропорции тела",
               "questions": [
                 {
