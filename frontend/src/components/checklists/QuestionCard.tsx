@@ -87,7 +87,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const customTextTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const answerChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const commentTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  
+
   // Ref для отслеживания инициализации
   const isInitializedRef = React.useRef<boolean>(false);
   const currentQuestionIdRef = React.useRef<number | null>(null);
@@ -97,42 +97,75 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     return characterGender === 'male' ? answer.value_male : answer.value_female;
   };
 
-  // Update all form states when question changes
+  // Update all form states when question changes (only question ID, not response)
   React.useEffect(() => {
-    const response = question?.current_response;
-
-    if (response) {
-      // Инициализация на основе существующего ответа
-      if (response.answer_id) {
-        if (question.answer_type === 'single') {
-          setSelectedAnswerId(response.answer_id);
-        } else if (question.answer_type === 'multiple') {
-          // Для множественного выбора нужно парсить answer_text или использовать отдельное поле
-          // Пока используем простую логику - один ID
-          setSelectedAnswerIds([response.answer_id]);
-        }
+    // Cleanup функция - сохраняем данные перед сменой вопроса
+    return () => {
+      // Очищаем все таймеры
+      if (customTextTimeoutRef.current) {
+        clearTimeout(customTextTimeoutRef.current);
+        customTextTimeoutRef.current = null;
+      }
+      if (answerChangeTimeoutRef.current) {
+        clearTimeout(answerChangeTimeoutRef.current);
+        answerChangeTimeoutRef.current = null;
+      }
+      if (commentTimeoutRef.current) {
+        clearTimeout(commentTimeoutRef.current);
+        commentTimeoutRef.current = null;
       }
 
-      // Обновляем customAnswerText только если нет активного таймера (пользователь не печатает)
-      if (!customTextTimeoutRef.current) {
+      // Сохраняем текущие данные перед сменой вопроса
+      if (currentQuestionIdRef.current && (selectedAnswerId || customAnswerText.trim() || localComment.trim())) {
+        handleSave();
+      }
+    };
+  }, [question?.id, selectedAnswerId, customAnswerText, localComment, sourceType]);
+
+  // Инициализация состояния при смене вопроса
+  React.useEffect(() => {
+    // Проверяем, изменился ли вопрос
+    const questionChanged = currentQuestionIdRef.current !== question?.id;
+
+    if (questionChanged) {
+      currentQuestionIdRef.current = question?.id || null;
+
+      const response = question?.current_response;
+
+      if (response) {
+        // Инициализация на основе существующего ответа
+        if (response.answer_id) {
+          if (question.answer_type === 'single') {
+            setSelectedAnswerId(response.answer_id);
+          } else if (question.answer_type === 'multiple') {
+            // Для множественного выбора нужно парсить answer_text или использовать отдельное поле
+            // Пока используем простую логику - один ID
+            setSelectedAnswerIds([response.answer_id]);
+          }
+        } else {
+          setSelectedAnswerId(null);
+          setSelectedAnswerIds([]);
+        }
+
+        // Обновляем customAnswerText только при смене вопроса
         if (response.answer_text) {
           setCustomAnswerText(response.answer_text);
         } else {
           setCustomAnswerText("");
         }
-      }
 
-      setLocalComment(response.comment || "");
-      setSourceType(response.source_type || "FOUND_IN_TEXT");
-    } else {
-      // Сброс состояния для нового вопроса
-      setSelectedAnswerId(null);
-      setSelectedAnswerIds([]);
-      setCustomAnswerText("");
-      setLocalComment("");
-      setSourceType("FOUND_IN_TEXT");
+        setLocalComment(response.comment || "");
+        setSourceType(response.source_type || "FOUND_IN_TEXT");
+      } else {
+        // Сброс состояния для нового вопроса
+        setSelectedAnswerId(null);
+        setSelectedAnswerIds([]);
+        setCustomAnswerText("");
+        setLocalComment("");
+        setSourceType("FOUND_IN_TEXT");
+      }
     }
-  }, [question?.id, question?.current_response]);
+  }, [question?.id]); // Убираем question?.current_response из зависимостей!
 
   // Cleanup timeouts on unmount
   React.useEffect(() => {
@@ -162,7 +195,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       handleSave();
       // Очищаем таймер после сохранения
       commentTimeoutRef.current = null;
-    }, 1000);
+    }, 2000);
   };
 
   // Debounced auto-save for custom text
@@ -176,9 +209,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     customTextTimeoutRef.current = setTimeout(() => {
       handleSave();
-      // Очищаем таймер после сохранения
       customTextTimeoutRef.current = null;
-    }, 1000);
+    }, 2000);
   };
 
   if (!question) {
@@ -202,7 +234,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       if (selectedAnswerId) {
         const selectedAnswer = question.answers?.find(answer => answer.id === selectedAnswerId);
         const isCustomAnswer = selectedAnswer?.external_id === "custom";
-        
+
         if (isCustomAnswer && customAnswerText.trim()) {
           // Для варианта "свой ответ" отправляем и ID варианта, и текст
           data.answer_id = selectedAnswerId;
@@ -237,11 +269,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   const handleSingleChoiceChange = (answerId: number) => {
     setSelectedAnswerId(answerId);
-    
+
     // Проверяем, выбран ли вариант "свой ответ"
     const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
     const isCustomAnswer = selectedAnswer?.external_id === "custom";
-    
+
     if (!isCustomAnswer) {
       setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенного ответа
     }
@@ -304,7 +336,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       const isCustomAnswerSelected = question.answers?.find(answer =>
         answer.external_id === "custom" && selectedAnswerId === answer.id
       );
-      
+
       if (isCustomAnswerSelected || customAnswerText.trim() !== "") {
         return (
           <TextInput
