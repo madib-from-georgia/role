@@ -22,6 +22,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={null}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[]}
@@ -45,6 +46,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -70,6 +72,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -96,6 +99,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -121,6 +125,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -143,6 +148,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -165,6 +171,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -200,6 +207,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -234,6 +242,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -266,6 +275,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -304,6 +314,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -332,6 +343,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -365,6 +377,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -423,6 +436,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -517,6 +531,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -547,6 +562,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -573,6 +589,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -597,6 +614,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}

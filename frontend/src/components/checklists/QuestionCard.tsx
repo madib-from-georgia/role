@@ -87,9 +87,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const customTextTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const answerChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const commentTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-
-  // Ref для отслеживания инициализации
-  const isInitializedRef = React.useRef<boolean>(false);
+  
+  // Ref для отслеживания текущего вопроса
   const currentQuestionIdRef = React.useRef<number | null>(null);
 
   // Получить отображаемое значение ответа в зависимости от пола персонажа
