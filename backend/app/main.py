@@ -13,7 +13,7 @@ from app.middleware.auth_middleware import AuthMiddleware, SecurityMiddleware, L
 from app.middleware.performance_middleware import (
     get_performance_middleware, get_cache_middleware, get_compression_middleware
 )
-from app.routers import auth, projects, texts, characters, checklists, export, security
+from app.routers import auth, projects, texts, characters, checklists, checklist_versions, export, security
 from app.config.settings import settings
 from app.utils.logging_config import LoggingConfig
 from app.services.auto_import_service import auto_import_service
@@ -79,6 +79,7 @@ app.include_router(projects.router)
 app.include_router(texts.router, prefix="/api/texts", tags=["texts"])
 app.include_router(characters.router, prefix="/api/characters", tags=["characters"])
 app.include_router(checklists.router, prefix="/api/checklists", tags=["checklists"])
+app.include_router(checklist_versions.router, prefix="/api", tags=["checklist-versions"])
 app.include_router(export.router)
 app.include_router(security.router)
 

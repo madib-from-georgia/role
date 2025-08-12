@@ -186,6 +186,30 @@ class ChecklistJsonParserNew:
         logger.success(f"Успешно распарсен чеклист новой структуры: {structure.title}")
         return structure
     
+    def parse_json_string(self, json_string: str) -> Dict[str, Any]:
+        """
+        Парсит JSON строку и возвращает словарь данных
+        
+        Args:
+            json_string: JSON строка
+            
+        Returns:
+            Словарь с данными чеклиста
+        """
+        try:
+            data = json.loads(json_string)
+            
+            # Вычисляем хеш содержимого
+            file_hash = hashlib.sha256(json_string.encode('utf-8')).hexdigest()
+            
+            # Добавляем хеш в данные
+            data['file_hash'] = file_hash
+            
+            return data
+            
+        except Exception as e:
+            raise ValueError(f"Ошибка парсинга JSON строки: {e}")
+    
     def _parse_section(self, section_data: Dict[str, Any], order_index: int) -> ChecklistSection:
         """Парсит секцию"""
         section = ChecklistSection()

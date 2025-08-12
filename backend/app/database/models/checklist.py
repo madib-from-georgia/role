@@ -138,7 +138,7 @@ class ChecklistAnswer(BaseModel):
     
     # Relationships
     question = relationship("ChecklistQuestion", back_populates="answers")
-    responses = relationship("ChecklistResponse", back_populates="selected_answer", cascade="all, delete-orphan")
+    responses = relationship("ChecklistResponse", back_populates="answer", cascade="all, delete-orphan")
 
 
 class ChecklistQuestion(BaseModel):
@@ -173,10 +173,9 @@ class ChecklistResponse(BaseModel):
     
     question_id = Column(Integer, ForeignKey("checklist_questions.id"), nullable=False)
     character_id = Column(Integer, ForeignKey("characters.id"), nullable=False)
-    selected_answer_id = Column(Integer, ForeignKey("checklist_answers.id"), nullable=True)
+    answer_id = Column(Integer, ForeignKey("checklist_answers.id"), nullable=True)
     
     # Основной ответ
-    custom_answer = Column(Text)  # Кастомный текст ответа (для "свой вариант")
     source_type = Column(Enum(SourceType))  # Тип источника ответа
     comment = Column(Text)  # Комментарий (цитата, обоснование и т.д.)
     
@@ -187,7 +186,7 @@ class ChecklistResponse(BaseModel):
     # Relationships
     question = relationship("ChecklistQuestion", back_populates="responses")
     character = relationship("Character", back_populates="checklist_responses")
-    selected_answer = relationship("ChecklistAnswer", back_populates="responses")
+    answer = relationship("ChecklistAnswer", back_populates="responses")
 
 
 class ChecklistResponseHistory(BaseModel):
