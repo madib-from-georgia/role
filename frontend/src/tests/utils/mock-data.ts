@@ -53,9 +53,15 @@ export const createMockChecklist = (overrides: any = {}) => ({
 export const createMockQuestion = (overrides: any = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
   text: faker.lorem.sentence() + '?',
+  answer_type: 'text' as 'single' | 'multiple' | 'text',
   checklist_id: faker.number.int({ min: 1, max: 20 }),
   order: faker.number.int({ min: 1, max: 20 }),
   source: 'system',
+  answers: [],
+  current_response: null,
+  sectionTitle: faker.lorem.words(2),
+  subsectionTitle: faker.lorem.words(2),
+  groupTitle: null,
   ...overrides
 })
 
