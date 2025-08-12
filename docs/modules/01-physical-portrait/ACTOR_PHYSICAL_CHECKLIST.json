@@ -1,14 +1,14 @@
 {
   "id": "fizicheskiy-portret",
-  "title": "Физический портрет ===",
+  "title": "Физический портрет",
   "sections": [
     {
       "id": "vneshnost-i-fizicheskie-dannye",
-      "title": "1. Внешность и физические данные ===",
+      "title": "1. Внешность и физические данные",
       "subsections": [
         {
           "id": "teloslozhenie-i-antropometriya",
-          "title": "1.1 Телосложение и антропометрия ===",
+          "title": "1.1 Телосложение и антропометрия",
           "questionGroups": [
             {
               "id": "rost-i-proportsii-tela",
@@ -21,7 +21,7 @@
                     {
                       "id": "vysokiy",
                       "value": {
-                        "male": "высокий очень",
+                        "male": "высокий",
                         "female": "высокая"
                       },
                       "exportedValue": {
