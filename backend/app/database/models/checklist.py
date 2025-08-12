@@ -24,6 +24,9 @@ class Checklist(BaseModel):
     """
     __tablename__ = "checklists"
     
+    # Идентификатор из JSON (например, "physical-portrait")
+    external_id = Column(String(100), unique=True, nullable=False)
+    
     title = Column(String(500), nullable=False)  # "Физический портрет персонажа"
     description = Column(Text)  # Описание чеклиста
     slug = Column(String(100), unique=True, nullable=False)  # "physical-portrait"
@@ -33,6 +36,10 @@ class Checklist(BaseModel):
     
     # Новые поля для текстовых блоков
     goal = Column(Text)  # Цель чеклиста
+    
+    # Поля для версионирования
+    file_hash = Column(String(64))  # SHA-256 хеш JSON файла
+    version = Column(String(20), default="1.0.0")  # Версия чеклиста
     
     # Relationships
     sections = relationship("ChecklistSection", back_populates="checklist", cascade="all, delete-orphan")
@@ -46,6 +53,9 @@ class ChecklistSection(BaseModel):
     __tablename__ = "checklist_sections"
     
     checklist_id = Column(Integer, ForeignKey("checklists.id"), nullable=False)
+    
+    # Идентификатор из JSON (например, "appearance")
+    external_id = Column(String(100), nullable=False)
     
     title = Column(String(500), nullable=False)  # "ВНЕШНОСТЬ И ФИЗИЧЕСКИЕ ДАННЫЕ"
     number = Column(String(10))  # "1"
@@ -65,6 +75,9 @@ class ChecklistSubsection(BaseModel):
     __tablename__ = "checklist_subsections"
     
     section_id = Column(Integer, ForeignKey("checklist_sections.id"), nullable=False)
+    
+    # Идентификатор из JSON (например, "physique")
+    external_id = Column(String(100), nullable=False)
     
     title = Column(String(500), nullable=False)  # "Телосложение и антропометрия"
     number = Column(String(20))  # "1.1"
@@ -88,12 +101,44 @@ class ChecklistQuestionGroup(BaseModel):
     
     subsection_id = Column(Integer, ForeignKey("checklist_subsections.id"), nullable=False)
     
+    # Идентификатор из JSON (например, "height-proportions")
+    external_id = Column(String(100), nullable=False)
+    
     title = Column(String(500), nullable=False)  # "Рост и пропорции тела"
     order_index = Column(Integer, default=0)
     
     # Relationships
     subsection = relationship("ChecklistSubsection", back_populates="question_groups")
     questions = relationship("ChecklistQuestion", back_populates="question_group", cascade="all, delete-orphan")
+
+
+class ChecklistAnswer(BaseModel):
+    """
+    Вариант ответа на вопрос чеклиста
+    """
+    __tablename__ = "checklist_answers"
+    
+    question_id = Column(Integer, ForeignKey("checklist_questions.id"), nullable=False)
+    
+    # Идентификатор из JSON (например, "short", "average", "tall")
+    external_id = Column(String(100), nullable=False)
+    
+    # Значения для разных полов
+    value_male = Column(String(500), nullable=False)  # "высокий"
+    value_female = Column(String(500), nullable=False)  # "высокая"
+    
+    # Экспортируемые значения для разных полов
+    exported_value_male = Column(Text)  # "Я высокий"
+    exported_value_female = Column(Text)  # "Я высокая"
+    
+    # Подсказка для актера
+    hint = Column(Text)  # "Рост влияет на самооценку и поведение"
+    
+    order_index = Column(Integer, default=0)
+    
+    # Relationships
+    question = relationship("ChecklistQuestion", back_populates="answers")
+    responses = relationship("ChecklistResponse", back_populates="selected_answer", cascade="all, delete-orphan")
 
 
 class ChecklistQuestion(BaseModel):
@@ -104,19 +149,19 @@ class ChecklistQuestion(BaseModel):
     
     question_group_id = Column(Integer, ForeignKey("checklist_question_groups.id"), nullable=False)
     
+    # Идентификатор из JSON (например, "height", "weight")
+    external_id = Column(String(100), nullable=False)
+    
     text = Column(Text, nullable=False)  # Текст вопроса
-    hint = Column(Text)  # Подсказка к вопросу
     order_index = Column(Integer, default=0)
     
-    # Новые поля для вариантов ответов
-    options = Column(JSON)  # Список вариантов ответов
-    option_type = Column(String(20), default="none")  # "single", "multiple", "none"
-    
-    # Новое поле для источников ответа из JSON
-    source = Column(JSON)  # Список источников: ["text", "logic", "imagination"]
+    # Новые поля для новой структуры
+    answer_type = Column(String(20), default="single")  # "single", "multiple"
+    source_type = Column(String(50))  # "text", "logic", "imagination"
     
     # Relationships
     question_group = relationship("ChecklistQuestionGroup", back_populates="questions")
+    answers = relationship("ChecklistAnswer", back_populates="question", cascade="all, delete-orphan")
     responses = relationship("ChecklistResponse", back_populates="question", cascade="all, delete-orphan")
 
 
@@ -128,9 +173,10 @@ class ChecklistResponse(BaseModel):
     
     question_id = Column(Integer, ForeignKey("checklist_questions.id"), nullable=False)
     character_id = Column(Integer, ForeignKey("characters.id"), nullable=False)
+    selected_answer_id = Column(Integer, ForeignKey("checklist_answers.id"), nullable=True)
     
     # Основной ответ
-    answer = Column(Text)  # Текст ответа пользователя
+    custom_answer = Column(Text)  # Кастомный текст ответа (для "свой вариант")
     source_type = Column(Enum(SourceType))  # Тип источника ответа
     comment = Column(Text)  # Комментарий (цитата, обоснование и т.д.)
     
@@ -141,6 +187,7 @@ class ChecklistResponse(BaseModel):
     # Relationships
     question = relationship("ChecklistQuestion", back_populates="responses")
     character = relationship("Character", back_populates="checklist_responses")
+    selected_answer = relationship("ChecklistAnswer", back_populates="responses")
 
 
 class ChecklistResponseHistory(BaseModel):

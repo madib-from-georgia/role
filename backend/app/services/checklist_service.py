@@ -7,18 +7,19 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 from loguru import logger
 
-from app.services.checklist_json_parser import ChecklistJsonParser, ChecklistStructure
+from app.services.checklist_json_parser_new import ChecklistJsonParserNew
 from app.database.crud.crud_checklist import (
     checklist as checklist_crud,
     checklist_section,
     checklist_subsection,
     checklist_question_group,
-    checklist_question
+    checklist_question,
+    checklist_answer
 )
 from app.database.crud.crud_checklist_response import checklist_response
 from app.database.models.checklist import (
     Checklist, ChecklistSection, ChecklistSubsection,
-    ChecklistQuestionGroup, ChecklistQuestion
+    ChecklistQuestionGroup, ChecklistQuestion, ChecklistAnswer
 )
 from app.schemas.checklist import (
     ChecklistCreate, ChecklistWithResponses, ChecklistStats,
@@ -35,15 +36,15 @@ class ChecklistService:
     """
     
     def __init__(self):
-        self.parser = ChecklistJsonParser()
+        self.parser = ChecklistJsonParserNew()
     
     def import_checklist_from_file(self, db: Session, file_path: str) -> Checklist:
         """
-        Импорт чеклиста из Markdown файла в базу данных
+        Импорт чеклиста из JSON файла в базу данных
         
         Args:
             db: Сессия базы данных
-            file_path: Путь к файлу чеклиста
+            file_path: Путь к JSON файлу чеклиста
             
         Returns:
             Созданный чеклист
@@ -53,21 +54,24 @@ class ChecklistService:
         # Парсим файл
         structure = self.parser.parse_file(file_path)
         
-        # Проверяем, не существует ли уже чеклист с таким slug
-        existing = checklist_crud.get_by_slug(db, structure.slug)
+        # Проверяем, не существует ли уже чеклист с таким external_id
+        existing = checklist_crud.get_by_external_id(db, structure.external_id)
         if existing:
-            logger.warning(f"Чеклист с slug '{structure.slug}' уже существует")
-            raise ValueError(f"Чеклист с slug '{structure.slug}' уже существует")
+            logger.warning(f"Чеклист с external_id '{structure.external_id}' уже существует")
+            raise ValueError(f"Чеклист с external_id '{structure.external_id}' уже существует")
         
         # Создаем чеклист
         checklist_data = ChecklistCreate(
+            external_id=structure.external_id,
             title=structure.title,
-            description=f"Импортирован из файла {Path(file_path).name}",
+            description=structure.description or f"Импортирован из файла {Path(file_path).name}",
             slug=structure.slug,
             icon=structure.icon,
             order_index=0,
             is_active=True,
-            goal=structure.goal  # Добавляем поле goal
+            goal=structure.goal,
+            file_hash=structure.file_hash,
+            version=structure.version
         )
         
         checklist_obj = checklist_crud.create(db, obj_in=checklist_data)
@@ -78,24 +82,14 @@ class ChecklistService:
         logger.success(f"Чеклист '{structure.title}' успешно импортирован")
         return checklist_obj
     
-    def _create_checklist_structure(
-        self, 
-        db: Session, 
-        checklist_id: int, 
-        structure: ChecklistStructure
-    ):
+    def _create_checklist_structure(self, db: Session, checklist_id: int, structure):
         """Создает структуру чеклиста в базе данных"""
-        
-        # Обновляем чеклист с новыми полями
-        checklist_obj = checklist_crud.get(db, id=checklist_id)
-        if checklist_obj:
-            checklist_obj.goal = structure.goal
-            db.add(checklist_obj)
         
         for section_data in structure.sections:
             # Создаем секцию
             section_obj = ChecklistSection(
                 checklist_id=checklist_id,
+                external_id=section_data.external_id,
                 title=section_data.title,
                 number=section_data.number,
                 icon=section_data.icon,
@@ -108,11 +102,10 @@ class ChecklistService:
                 # Создаем подсекцию
                 subsection_obj = ChecklistSubsection(
                     section_id=section_obj.id,
+                    external_id=subsection_data.external_id,
                     title=subsection_data.title,
                     number=subsection_data.number,
-                    order_index=subsection_data.order_index,
-                    examples=subsection_data.examples,
-                    why_important=subsection_data.why_important
+                    order_index=subsection_data.order_index
                 )
                 db.add(subsection_obj)
                 db.flush()
@@ -121,6 +114,7 @@ class ChecklistService:
                     # Создаем группу вопросов
                     group_obj = ChecklistQuestionGroup(
                         subsection_id=subsection_obj.id,
+                        external_id=group_data.external_id,
                         title=group_data.title,
                         order_index=group_data.order_index
                     )
@@ -131,14 +125,28 @@ class ChecklistService:
                         # Создаем вопрос
                         question_obj = ChecklistQuestion(
                             question_group_id=group_obj.id,
+                            external_id=question_data.external_id,
                             text=question_data.text,
-                            hint=question_data.hint,
                             order_index=question_data.order_index,
-                            options=question_data.options,
-                            option_type=question_data.option_type,
-                            source=question_data.source
+                            answer_type=question_data.answer_type,
+                            source_type=question_data.source_type
                         )
                         db.add(question_obj)
+                        db.flush()
+                        
+                        # Создаем ответы для вопроса
+                        for answer_data in question_data.answers:
+                            answer_obj = ChecklistAnswer(
+                                question_id=question_obj.id,
+                                external_id=answer_data.external_id,
+                                value_male=answer_data.value_male,
+                                value_female=answer_data.value_female,
+                                exported_value_male=answer_data.exported_value_male,
+                                exported_value_female=answer_data.exported_value_female,
+                                hint=answer_data.hint,
+                                order_index=answer_data.order_index
+                            )
+                            db.add(answer_obj)
         
         db.commit()
     
@@ -213,12 +221,13 @@ class ChecklistService:
                         # Создаем обогащенный вопрос
                         enriched_question = ChecklistQuestionWithResponse(
                             id=question.id,
+                            external_id=question.external_id,
                             text=question.text,
-                            hint=question.hint,
                             order_index=question.order_index,
-                            options=question.options,
-                            option_type=question.option_type,
+                            answer_type=question.answer_type,
+                            source_type=question.source_type,
                             question_group_id=question.question_group_id,
+                            answers=question.answers,
                             created_at=question.created_at,
                             current_response=current_response,
                             response_history=[]  # TODO: Добавить историю ответов
@@ -228,6 +237,7 @@ class ChecklistService:
                     # Создаем обогащенную группу вопросов
                     enriched_group = ChecklistQuestionGroupWithResponses(
                         id=question_group.id,
+                        external_id=question_group.external_id,
                         title=question_group.title,
                         order_index=question_group.order_index,
                         subsection_id=question_group.subsection_id,
@@ -238,11 +248,10 @@ class ChecklistService:
                 # Создаем обогащенную подсекцию
                 enriched_subsection = ChecklistSubsectionWithResponses(
                     id=subsection.id,
+                    external_id=subsection.external_id,
                     title=subsection.title,
                     number=subsection.number,
                     order_index=subsection.order_index,
-                    examples=subsection.examples,
-                    why_important=subsection.why_important,
                     section_id=subsection.section_id,
                     question_groups=enriched_question_groups
                 )
@@ -251,6 +260,7 @@ class ChecklistService:
             # Создаем обогащенную секцию
             enriched_section = ChecklistSectionWithResponses(
                 id=section.id,
+                external_id=section.external_id,
                 title=section.title,
                 number=section.number,
                 icon=section.icon,
@@ -263,13 +273,16 @@ class ChecklistService:
         # Создаем обогащенный чеклист
         enriched_checklist = ChecklistWithResponses(
             id=checklist_obj.id,
+            external_id=checklist_obj.external_id,
             title=checklist_obj.title,
             description=checklist_obj.description,
             slug=checklist_obj.slug,
             icon=checklist_obj.icon,
             order_index=checklist_obj.order_index,
             is_active=checklist_obj.is_active,
-            goal=checklist_obj.goal,  # Добавляем поле goal
+            goal=checklist_obj.goal,
+            file_hash=checklist_obj.file_hash,
+            version=checklist_obj.version,
             created_at=checklist_obj.created_at,
             updated_at=checklist_obj.updated_at,
             sections=enriched_sections
@@ -421,6 +434,7 @@ class ChecklistService:
                 from app.schemas.checklist import Checklist
                 enriched_checklist = Checklist(
                     id=checklist_obj.id,
+                    external_id=checklist_obj.external_id,
                     title=checklist_obj.title,
                     description=checklist_obj.description,
                     slug=checklist_obj.slug,
@@ -428,6 +442,8 @@ class ChecklistService:
                     order_index=checklist_obj.order_index,
                     is_active=checklist_obj.is_active,
                     goal=checklist_obj.goal,
+                    file_hash=checklist_obj.file_hash,
+                    version=checklist_obj.version,
                     created_at=checklist_obj.created_at,
                     updated_at=checklist_obj.updated_at,
                     sections=[],  # Для списка чеклистов секции не нужны

@@ -15,19 +15,39 @@ class SourceType(str, Enum):
     IMAGINED = "IMAGINED"
 
 
+# Схемы для ответов на вопросы
+class ChecklistAnswerBase(BaseModel):
+    external_id: str = Field(..., description="Идентификатор из JSON")
+    value_male: str = Field(..., description="Значение для мужского пола")
+    value_female: str = Field(..., description="Значение для женского пола")
+    exported_value_male: Optional[str] = Field(None, description="Экспортируемое значение для мужского пола")
+    exported_value_female: Optional[str] = Field(None, description="Экспортируемое значение для женского пола")
+    hint: Optional[str] = Field(None, description="Подсказка для актера")
+    order_index: int = Field(0, description="Порядок отображения")
+
+
+class ChecklistAnswer(ChecklistAnswerBase):
+    id: int
+    question_id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
 # Базовые схемы для вопросов
 class ChecklistQuestionBase(BaseModel):
+    external_id: str = Field(..., description="Идентификатор из JSON")
     text: str = Field(..., description="Текст вопроса")
-    hint: Optional[str] = Field(None, description="Подсказка к вопросу")
     order_index: int = Field(0, description="Порядок отображения")
-    options: Optional[List[str]] = Field(None, description="Варианты ответов")
-    option_type: str = Field("none", description="Тип вариантов: single, multiple, none")
-    source: Optional[List[str]] = Field(None, description="Источники ответа: text, logic, imagination")
+    answer_type: str = Field("single", description="Тип ответа: single, multiple")
+    source_type: Optional[str] = Field(None, description="Источник ответа: text, logic, imagination")
 
 
 class ChecklistQuestion(ChecklistQuestionBase):
     id: int
     question_group_id: int
+    answers: List[ChecklistAnswer] = []
     created_at: datetime
     
     class Config:
@@ -36,6 +56,7 @@ class ChecklistQuestion(ChecklistQuestionBase):
 
 # Базовые схемы для групп вопросов
 class ChecklistQuestionGroupBase(BaseModel):
+    external_id: str = Field(..., description="Идентификатор из JSON")
     title: str = Field(..., description="Название группы вопросов")
     order_index: int = Field(0, description="Порядок отображения")
 
@@ -51,11 +72,10 @@ class ChecklistQuestionGroup(ChecklistQuestionGroupBase):
 
 # Базовые схемы для подсекций
 class ChecklistSubsectionBase(BaseModel):
+    external_id: str = Field(..., description="Идентификатор из JSON")
     title: str = Field(..., description="Название подсекции")
     number: Optional[str] = Field(None, description="Номер подсекции")
     order_index: int = Field(0, description="Порядок отображения")
-    examples: Optional[str] = Field(None, description="Примеры из литературы")
-    why_important: Optional[str] = Field(None, description="Почему это важно")
 
 
 class ChecklistSubsection(ChecklistSubsectionBase):
@@ -69,6 +89,7 @@ class ChecklistSubsection(ChecklistSubsectionBase):
 
 # Базовые схемы для секций
 class ChecklistSectionBase(BaseModel):
+    external_id: str = Field(..., description="Идентификатор из JSON")
     title: str = Field(..., description="Название секции")
     number: Optional[str] = Field(None, description="Номер секции")
     icon: Optional[str] = Field(None, description="Иконка секции")
@@ -86,6 +107,7 @@ class ChecklistSection(ChecklistSectionBase):
 
 # Базовые схемы для чеклистов
 class ChecklistBase(BaseModel):
+    external_id: str = Field(..., description="Идентификатор из JSON")
     title: str = Field(..., description="Название чеклиста")
     description: Optional[str] = Field(None, description="Описание чеклиста")
     slug: str = Field(..., description="URL slug")
@@ -93,6 +115,8 @@ class ChecklistBase(BaseModel):
     order_index: int = Field(0, description="Порядок отображения")
     is_active: bool = Field(True, description="Активен ли чеклист")
     goal: Optional[str] = Field(None, description="Цель чеклиста")
+    file_hash: Optional[str] = Field(None, description="SHA-256 хеш JSON файла")
+    version: Optional[str] = Field(None, description="Версия чеклиста")
 
 
 class ChecklistCreate(ChecklistBase):
@@ -121,8 +145,7 @@ class Checklist(ChecklistBase):
 
 # Схемы для ответов
 class ChecklistResponseBase(BaseModel):
-    answer: Optional[str] = Field(None, description="Текст ответа")
-    source_type: Optional[SourceType] = Field(None, description="Источник ответа")
+    answer_id: int = Field(..., description="ID выбранного ответа")
     comment: Optional[str] = Field(None, description="Комментарий к ответу")
 
 
@@ -131,7 +154,9 @@ class ChecklistResponseCreate(ChecklistResponseBase):
     character_id: int = Field(..., description="ID персонажа")
 
 
-class ChecklistResponseUpdate(ChecklistResponseBase):
+class ChecklistResponseUpdate(BaseModel):
+    answer_id: Optional[int] = Field(None, description="ID выбранного ответа")
+    comment: Optional[str] = Field(None, description="Комментарий к ответу")
     change_reason: Optional[str] = Field(None, description="Причина изменения")
 
 
@@ -139,6 +164,7 @@ class ChecklistResponse(ChecklistResponseBase):
     id: int
     question_id: int
     character_id: int
+    answer: ChecklistAnswer
     is_current: bool
     version: int
     created_at: datetime
@@ -151,8 +177,7 @@ class ChecklistResponse(ChecklistResponseBase):
 class ChecklistResponseHistory(BaseModel):
     id: int
     response_id: int
-    previous_answer: Optional[str]
-    previous_source_type: Optional[SourceType]
+    previous_answer_id: Optional[int]
     previous_comment: Optional[str]
     previous_version: int
     change_reason: Optional[str]
@@ -166,9 +191,6 @@ class ChecklistResponseHistory(BaseModel):
 class ChecklistQuestionWithResponse(ChecklistQuestion):
     current_response: Optional[ChecklistResponse] = None
     response_history: List[ChecklistResponseHistory] = []
-    custom_answer: Optional[str] = Field(None, description="Пользовательский ответ (когда выбран 'отвечу сам')")
-    selected_options: Optional[List[str]] = Field(None, description="Выбранные варианты ответов")
-    show_custom_answer_field: bool = Field(False, description="Показывать ли поле для собственного ответа")
 
 
 class ChecklistQuestionGroupWithResponses(ChecklistQuestionGroup):

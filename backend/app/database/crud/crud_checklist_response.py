@@ -8,7 +8,7 @@ from sqlalchemy import and_, desc
 from datetime import datetime
 
 from app.database.crud.base import CRUDBase
-from app.database.models.checklist import ChecklistResponse, ChecklistResponseHistory, SourceType
+from app.database.models.checklist import ChecklistResponse, ChecklistResponseHistory, ChecklistAnswer
 from app.schemas.checklist import ChecklistResponseCreate, ChecklistResponseUpdate
 
 
@@ -40,15 +40,17 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         ).all()
     
     def get_by_character_and_checklist(
-        self, 
-        db: Session, 
-        character_id: int, 
+        self,
+        db: Session,
+        character_id: int,
         checklist_id: int
     ) -> List[ChecklistResponse]:
         """Получение ответов персонажа по конкретному чеклисту"""
         from app.database.models.checklist import ChecklistQuestion, ChecklistQuestionGroup, ChecklistSubsection, ChecklistSection
         
-        return db.query(ChecklistResponse).join(
+        return db.query(ChecklistResponse).options(
+            selectinload(ChecklistResponse.answer)
+        ).join(
             ChecklistQuestion, ChecklistResponse.question_id == ChecklistQuestion.id
         ).join(
             ChecklistQuestionGroup, ChecklistQuestion.question_group_id == ChecklistQuestionGroup.id
@@ -86,8 +88,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
             create_data = ChecklistResponseCreate(
                 question_id=question_id,
                 character_id=character_id,
-                answer=response_data.answer,
-                source_type=response_data.source_type,
+                answer_id=response_data.answer_id,
                 comment=response_data.comment
             )
             return self.create(db, obj_in=create_data)
@@ -103,8 +104,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем предыдущую версию в историю
         history_entry = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer=response.answer,
-            previous_source_type=response.source_type,
+            previous_answer_id=response.answer_id,
             previous_comment=response.comment,
             previous_version=response.version,
             change_reason=change_reason or "Обновление ответа"
@@ -112,8 +112,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         db.add(history_entry)
         
         # Обновляем текущий ответ
-        response.answer = update_data.answer
-        response.source_type = update_data.source_type
+        response.answer_id = update_data.answer_id
         response.comment = update_data.comment
         response.version += 1
         response.updated_at = datetime.utcnow()
@@ -138,8 +137,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем в историю перед удалением
         history_entry = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer=response.answer,
-            previous_source_type=response.source_type,
+            previous_answer_id=response.answer_id,
             previous_comment=response.comment,
             previous_version=response.version,
             change_reason=delete_reason
@@ -176,8 +174,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем текущее состояние в историю
         current_history = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer=response.answer,
-            previous_source_type=response.source_type,
+            previous_answer_id=response.answer_id,
             previous_comment=response.comment,
             previous_version=response.version,
             change_reason=f"Перед восстановлением: {restore_reason}"
@@ -185,8 +182,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         db.add(current_history)
         
         # Восстанавливаем из истории
-        response.answer = history_entry.previous_answer
-        response.source_type = history_entry.previous_source_type
+        response.answer_id = history_entry.previous_answer_id
         response.comment = history_entry.previous_comment
         response.version += 1
         response.updated_at = datetime.utcnow()
@@ -205,14 +201,10 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         
         # Количество отвеченных вопросов
         answered_responses = self.get_by_character_and_checklist(db, character_id, checklist_id)
-        answered_count = len([r for r in answered_responses if r.answer])
+        answered_count = len([r for r in answered_responses if r.answer_id])
         
-        # Распределение по источникам ответов
+        # Распределение по источникам ответов (пока убираем, так как source_type больше не используется)
         source_distribution = {}
-        for response in answered_responses:
-            if response.source_type:
-                source_type = response.source_type.value
-                source_distribution[source_type] = source_distribution.get(source_type, 0) + 1
         
         # Процент заполнения
         completion_percentage = (answered_count / total_count * 100) if total_count > 0 else 0
@@ -245,8 +237,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 continue
             
             response_update = ChecklistResponseUpdate(
-                answer=update_data.get("answer"),
-                source_type=update_data.get("source_type"),
+                answer_id=update_data.get("answer_id"),
                 comment=update_data.get("comment"),
                 change_reason=update_data.get("change_reason", "Массовое обновление")
             )
