@@ -20,7 +20,7 @@
     "list-checklists": "cd backend && . ../.venv/bin/activate && python scripts/clear_checklists.py --list",
     "logs": "cd backend && . ../.venv/bin/activate && python scripts/view_nlp_logs.py",
     "reset_db": "cd backend && . ../.venv/bin/activate && python scripts/reset_database.py",
-    "convert-md": "./scripts/convert-md.sh"
+    "convert-portrait": "ts-node scripts/convert-portrait.ts \"$@\""
   },
   "keywords": [
     "character-analysis",
