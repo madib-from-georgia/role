@@ -21,7 +21,7 @@ describe('QuestionCard', () => {
     it('should render question not found when no question provided', () => {
       render(
         <QuestionCard
-          question={null}
+          question={null as any}
           characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
@@ -416,6 +416,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={true}
           allQuestions={[question]}
@@ -474,6 +475,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           onAnswerDelete={mockOnAnswerDelete}
           isLoading={false}
@@ -502,6 +504,7 @@ describe('QuestionCard', () => {
       render(
         <QuestionCard
           question={question}
+          characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           onAnswerDelete={mockOnAnswerDelete}
           isLoading={false}
