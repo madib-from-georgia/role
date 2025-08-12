@@ -176,6 +176,7 @@ class ChecklistResponse(BaseModel):
     answer_id = Column(Integer, ForeignKey("checklist_answers.id"), nullable=True)
     
     # Основной ответ
+    answer_text = Column(Text)  # Текстовый ответ (для свободного ввода)
     source_type = Column(Enum(SourceType))  # Тип источника ответа
     comment = Column(Text)  # Комментарий (цитата, обоснование и т.д.)
     

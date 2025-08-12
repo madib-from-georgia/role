@@ -294,6 +294,11 @@ class ChecklistJsonParserNew:
             answer = self._parse_answer(answer_data, i)
             question.answers.append(answer)
         
+        # Автоматически добавляем вариант "свой ответ" для типов single и multiple
+        if question.answer_type in ['single', 'multiple']:
+            custom_answer = self._create_custom_answer(len(question.answers))
+            question.answers.append(custom_answer)
+        
         return question
     
     def _parse_answer(self, answer_data: Dict[str, Any], order_index: int) -> ChecklistAnswer:
@@ -323,6 +328,18 @@ class ChecklistJsonParserNew:
             answer.exported_value_male = str(exported_value_data) if exported_value_data else ""
             answer.exported_value_female = str(exported_value_data) if exported_value_data else ""
         
+        return answer
+    
+    def _create_custom_answer(self, order_index: int) -> ChecklistAnswer:
+        """Создает вариант ответа 'свой вариант'"""
+        answer = ChecklistAnswer()
+        answer.external_id = "custom"
+        answer.value_male = "свой вариант"
+        answer.value_female = "свой вариант"
+        answer.exported_value_male = ""
+        answer.exported_value_female = ""
+        answer.hint = ""
+        answer.order_index = order_index
         return answer
     
     def _extract_icon(self, title: str) -> str:

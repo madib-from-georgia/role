@@ -89,6 +89,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 question_id=question_id,
                 character_id=character_id,
                 answer_id=response_data.answer_id,
+                answer_text=response_data.answer_text,
                 comment=response_data.comment,
                 source_type=response_data.source_type
             )
@@ -105,7 +106,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем предыдущую версию в историю
         history_entry = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer=str(response.answer_id) if response.answer_id else None,
+            previous_answer=str(response.answer_id) if response.answer_id else response.answer_text,
             previous_source_type=response.source_type,
             previous_comment=response.comment,
             previous_version=response.version,
@@ -115,6 +116,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         
         # Обновляем текущий ответ
         response.answer_id = update_data.answer_id
+        response.answer_text = update_data.answer_text
         response.comment = update_data.comment
         response.source_type = update_data.source_type
         response.version += 1
@@ -140,7 +142,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем в историю перед удалением
         history_entry = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer=str(response.answer_id) if response.answer_id else None,
+            previous_answer=str(response.answer_id) if response.answer_id else response.answer_text,
             previous_source_type=response.source_type,
             previous_comment=response.comment,
             previous_version=response.version,
@@ -178,7 +180,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем текущее состояние в историю
         current_history = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer=str(response.answer_id) if response.answer_id else None,
+            previous_answer=str(response.answer_id) if response.answer_id else response.answer_text,
             previous_source_type=response.source_type,
             previous_comment=response.comment,
             previous_version=response.version,
@@ -207,7 +209,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         
         # Количество отвеченных вопросов
         answered_responses = self.get_by_character_and_checklist(db, character_id, checklist_id)
-        answered_count = len([r for r in answered_responses if r.answer_id])
+        answered_count = len([r for r in answered_responses if r.answer_id or r.answer_text])
         
         # Распределение по источникам ответов (пока убираем, так как source_type больше не используется)
         source_distribution = {}

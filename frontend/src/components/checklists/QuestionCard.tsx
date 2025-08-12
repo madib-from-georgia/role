@@ -12,7 +12,6 @@ import {
 } from "@gravity-ui/uikit";
 import { NavigationSidebar } from "./NavigationSidebar";
 import { ChecklistQuestion, ChecklistAnswer, Gender } from "../../types/checklist";
-import { renderWithoutRouter } from "src/tests/utils/test-utils.tsx";
 
 interface QuestionCardProps {
   question: ChecklistQuestion;
@@ -88,6 +87,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const customTextTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const answerChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const commentTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  
+  // Ref для отслеживания инициализации
+  const isInitializedRef = React.useRef<boolean>(false);
+  const currentQuestionIdRef = React.useRef<number | null>(null);
 
   // Получить отображаемое значение ответа в зависимости от пола персонажа
   const getAnswerDisplayValue = (answer: ChecklistAnswer): string => {
@@ -110,8 +113,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         }
       }
 
-      if (response.answer_text) {
-        setCustomAnswerText(response.answer_text);
+      // Обновляем customAnswerText только если нет активного таймера (пользователь не печатает)
+      if (!customTextTimeoutRef.current) {
+        if (response.answer_text) {
+          setCustomAnswerText(response.answer_text);
+        } else {
+          setCustomAnswerText("");
+        }
       }
 
       setLocalComment(response.comment || "");
@@ -152,6 +160,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     commentTimeoutRef.current = setTimeout(() => {
       handleSave();
+      // Очищаем таймер после сохранения
+      commentTimeoutRef.current = null;
     }, 1000);
   };
 
@@ -166,6 +176,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     customTextTimeoutRef.current = setTimeout(() => {
       handleSave();
+      // Очищаем таймер после сохранения
+      customTextTimeoutRef.current = null;
     }, 1000);
   };
 
@@ -188,7 +200,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     // Определяем тип данных для отправки в зависимости от типа вопроса
     if (question.answer_type === 'single') {
       if (selectedAnswerId) {
-        data.answer_id = selectedAnswerId;
+        const selectedAnswer = question.answers?.find(answer => answer.id === selectedAnswerId);
+        const isCustomAnswer = selectedAnswer?.external_id === "custom";
+        
+        if (isCustomAnswer && customAnswerText.trim()) {
+          // Для варианта "свой ответ" отправляем и ID варианта, и текст
+          data.answer_id = selectedAnswerId;
+          data.answer_text = customAnswerText.trim();
+        } else if (!isCustomAnswer) {
+          // Для обычных ответов отправляем только ID
+          data.answer_id = selectedAnswerId;
+        }
       } else if (customAnswerText.trim()) {
         data.answer_text = customAnswerText.trim();
       }
@@ -215,22 +237,31 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   const handleSingleChoiceChange = (answerId: number) => {
     setSelectedAnswerId(answerId);
-    setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенного ответа
+    
+    // Проверяем, выбран ли вариант "свой ответ"
+    const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
+    const isCustomAnswer = selectedAnswer?.external_id === "custom";
+    
+    if (!isCustomAnswer) {
+      setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенного ответа
+    }
 
     // Clear previous timeout
     if (answerChangeTimeoutRef.current) {
       clearTimeout(answerChangeTimeoutRef.current);
     }
 
-    // Debounced auto-save
-    answerChangeTimeoutRef.current = setTimeout(() => {
-      const data = {
-        answer_id: answerId,
-        comment: localComment,
-        source_type: sourceType,
-      };
-      onAnswerUpdate(question.id, data);
-    }, 500);
+    // Debounced auto-save (только для не-кастомных ответов)
+    if (!isCustomAnswer) {
+      answerChangeTimeoutRef.current = setTimeout(() => {
+        const data = {
+          answer_id: answerId,
+          comment: localComment,
+          source_type: sourceType,
+        };
+        onAnswerUpdate(question.id, data);
+      }, 500);
+    }
   };
 
   const handleMultipleChoiceChange = (answerId: number, checked: boolean) => {
@@ -269,39 +300,37 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     // Render custom option input if "свой вариант" is selected
     const renderCustomOptionInput = () => {
-      if (customAnswerText.trim() !== "") {
+      // Проверяем, выбран ли вариант "свой ответ" (external_id === "custom")
+      const isCustomAnswerSelected = question.answers?.find(answer =>
+        answer.external_id === "custom" && selectedAnswerId === answer.id
+      );
+      
+      if (isCustomAnswerSelected || customAnswerText.trim() !== "") {
         return (
           <TextInput
             value={customAnswerText}
             onUpdate={handleCustomTextChange}
-            onFocus={() => setSelectedAnswerId(null)}
+            onFocus={() => {
+              // При фокусе на поле ввода выбираем вариант "свой ответ"
+              const customAnswer = question.answers?.find(answer => answer.external_id === "custom");
+              if (customAnswer) {
+                setSelectedAnswerId(customAnswer.id);
+              }
+            }}
             placeholder="Введите свой вариант..."
             className="custom-answer-input"
           />
-
         );
       }
       return null;
     };
-
-    const answers = [
-      ...question.answers,
-      {
-        id:  question.id + 10000,
-        external_id:  question.external_id + 'custom-answer',
-        value_male: 'Свой ответ',
-        value_female: 'Свой ответ',
-        order_index: question.answers.length + 1,
-        created_at: new Date().toString()
-      }
-    ];
 
     switch (questionType) {
       case "single":
         return (
           <>
             <div className="question-options">
-              {answers?.map((answer: ChecklistAnswer) => (
+              {question.answers?.map((answer: ChecklistAnswer) => (
                 <Radio
                   key={answer.id}
                   value={answer.id.toString()}

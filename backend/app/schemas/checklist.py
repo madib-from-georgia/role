@@ -145,7 +145,8 @@ class Checklist(ChecklistBase):
 
 # Схемы для ответов
 class ChecklistResponseBase(BaseModel):
-    answer_id: int = Field(..., description="ID выбранного ответа")
+    answer_id: Optional[int] = Field(None, description="ID выбранного ответа")
+    answer_text: Optional[str] = Field(None, description="Текстовый ответ (для свободного ввода)")
     comment: Optional[str] = Field(None, description="Комментарий к ответу")
 
 
@@ -157,6 +158,7 @@ class ChecklistResponseCreate(ChecklistResponseBase):
 
 class ChecklistResponseUpdate(BaseModel):
     answer_id: Optional[int] = Field(None, description="ID выбранного ответа")
+    answer_text: Optional[str] = Field(None, description="Текстовый ответ (для свободного ввода)")
     comment: Optional[str] = Field(None, description="Комментарий к ответу")
     source_type: Optional[SourceType] = Field(None, description="Источник ответа")
     change_reason: Optional[str] = Field(None, description="Причина изменения")
@@ -166,7 +168,7 @@ class ChecklistResponse(ChecklistResponseBase):
     id: int
     question_id: int
     character_id: int
-    answer: ChecklistAnswer
+    answer: Optional[ChecklistAnswer] = None
     source_type: Optional[SourceType]
     is_current: bool
     version: int
