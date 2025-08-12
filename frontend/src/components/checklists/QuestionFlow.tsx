@@ -11,6 +11,9 @@ import { QuestionNavigation } from "./QuestionNavigation";
 import { ChecklistSwitcher } from "./ChecklistSwitcher";
 import { ExportDialog } from "./ExportDialog";
 
+// Import types
+import { Checklist, ChecklistQuestion, Gender } from "../../types/checklist";
+
 interface QuestionFlowProps {
   checklistSlug: string;
   characterId: number;
@@ -22,7 +25,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [localData, setLocalData] = useState<any>(null);
+  const [localData, setLocalData] = useState<Checklist | null>(null);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -60,7 +63,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     }: {
       questionId: number;
       data: {
-        answer?: string;
+        answer_id?: number;
+        answer_text?: string;
         source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
         comment?: string;
       };
@@ -76,20 +80,25 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         const updatedData = { ...localData };
 
         // Find and update question in hierarchical structure
-        updatedData.sections?.forEach((section: any) => {
-          section.subsections?.forEach((subsection: any) => {
-            subsection.question_groups?.forEach((group: any) => {
+        updatedData.sections?.forEach((section) => {
+          section.subsections?.forEach((subsection) => {
+            subsection.question_groups?.forEach((group) => {
               const question = group.questions?.find(
-                (q: any) => q.id === variables.questionId
+                (q) => q.id === variables.questionId
               );
               if (question) {
                 question.current_response = {
                   id: response.id,
-                  answer: response.answer,
+                  question_id: response.question_id,
+                  character_id: response.character_id,
+                  answer_id: response.answer_id,
+                  answer_text: response.answer_text,
                   source_type: response.source_type,
                   comment: response.comment,
                   version: response.version,
+                  created_at: response.created_at,
                   updated_at: response.updated_at,
+                  answer: response.answer, // Связанный объект ответа
                 };
               }
             });
@@ -141,15 +150,15 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   });
 
   // Convert hierarchical data to flat question array
-  const getAllQuestions = () => {
+  const getAllQuestions = (): ChecklistQuestion[] => {
     if (!localData) return [];
 
-    const questions: any[] = [];
+    const questions: ChecklistQuestion[] = [];
 
-    localData.sections?.forEach((section: any) => {
-      section.subsections?.forEach((subsection: any) => {
-        subsection.question_groups?.forEach((group: any) => {
-          group.questions?.forEach((question: any) => {
+    localData.sections?.forEach((section) => {
+      section.subsections?.forEach((subsection) => {
+        subsection.question_groups?.forEach((group) => {
+          group.questions?.forEach((question) => {
             questions.push({
               ...question,
               sectionTitle: section.title,
@@ -167,7 +176,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const allQuestions = getAllQuestions();
   const currentQuestion = allQuestions[currentQuestionIndex];
 
-  const handleAnswerUpdate = (questionId: number, data: any) => {
+  const handleAnswerUpdate = (questionId: number, data: {
+    answer_id?: number;
+    answer_text?: string;
+    source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
+    comment?: string;
+  }) => {
     updateAnswerMutation.mutate({ questionId, data });
   };
 
@@ -312,6 +326,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           />
           <QuestionCard
             question={currentQuestion}
+            characterGender={(character?.gender as Gender) || 'male'}
             onAnswerUpdate={handleAnswerUpdate}
             onAnswerDelete={handleAnswerDelete}
             isLoading={updateAnswerMutation.isLoading}

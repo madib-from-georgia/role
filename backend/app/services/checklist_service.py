@@ -38,16 +38,17 @@ class ChecklistService:
     def __init__(self):
         self.parser = ChecklistJsonParserNew()
     
-    def import_checklist_from_file(self, db: Session, file_path: str) -> Checklist:
+    def import_checklist_from_file(self, db: Session, file_path: str, force_update: bool = False) -> Checklist:
         """
         Импорт чеклиста из JSON файла в базу данных
         
         Args:
             db: Сессия базы данных
             file_path: Путь к JSON файлу чеклиста
+            force_update: Принудительно обновить существующий чеклист
             
         Returns:
-            Созданный чеклист
+            Созданный или обновленный чеклист
         """
         logger.info(f"Импорт чеклиста из файла: {file_path}")
         
@@ -57,8 +58,12 @@ class ChecklistService:
         # Проверяем, не существует ли уже чеклист с таким external_id
         existing = checklist_crud.get_by_external_id(db, structure.external_id)
         if existing:
-            logger.warning(f"Чеклист с external_id '{structure.external_id}' уже существует")
-            raise ValueError(f"Чеклист с external_id '{structure.external_id}' уже существует")
+            if force_update:
+                logger.info(f"Обновляем существующий чеклист '{structure.external_id}'")
+                return self._update_existing_checklist(db, existing, structure)
+            else:
+                logger.warning(f"Чеклист с external_id '{structure.external_id}' уже существует")
+                raise ValueError(f"Чеклист с external_id '{structure.external_id}' уже существует")
         
         # Создаем чеклист
         checklist_data = ChecklistCreate(
@@ -147,6 +152,160 @@ class ChecklistService:
                                 order_index=answer_data.order_index
                             )
                             db.add(answer_obj)
+        
+        db.commit()
+    
+    def _update_existing_checklist(self, db: Session, existing_checklist: Checklist, structure) -> Checklist:
+        """Обновляет существующий чеклист, сохраняя пользовательские ответы"""
+        logger.info(f"Обновление чеклиста '{existing_checklist.title}'")
+        
+        # Обновляем основные поля чеклиста
+        existing_checklist.title = structure.title
+        existing_checklist.description = structure.description or existing_checklist.description
+        existing_checklist.file_hash = structure.file_hash
+        existing_checklist.version = structure.version
+        existing_checklist.goal = structure.goal
+        
+        # Обновляем структуру по external_id
+        self._update_checklist_structure(db, existing_checklist.id, structure)
+        
+        logger.success(f"Чеклист '{structure.title}' успешно обновлен")
+        return existing_checklist
+    
+    def _update_checklist_structure(self, db: Session, checklist_id: int, structure):
+        """Обновляет структуру чеклиста по external_id, сохраняя существующие записи"""
+        
+        for section_data in structure.sections:
+            # Ищем существующую секцию по external_id
+            section_obj = db.query(ChecklistSection).filter(
+                ChecklistSection.checklist_id == checklist_id,
+                ChecklistSection.external_id == section_data.external_id
+            ).first()
+            
+            if section_obj:
+                # Обновляем существующую секцию
+                section_obj.title = section_data.title
+                section_obj.number = section_data.number
+                section_obj.icon = section_data.icon
+                section_obj.order_index = section_data.order_index
+            else:
+                # Создаем новую секцию
+                section_obj = ChecklistSection(
+                    checklist_id=checklist_id,
+                    external_id=section_data.external_id,
+                    title=section_data.title,
+                    number=section_data.number,
+                    icon=section_data.icon,
+                    order_index=section_data.order_index
+                )
+                db.add(section_obj)
+            
+            db.flush()  # Получаем ID
+            
+            for subsection_data in section_data.subsections:
+                # Ищем существующую подсекцию по external_id
+                subsection_obj = db.query(ChecklistSubsection).filter(
+                    ChecklistSubsection.section_id == section_obj.id,
+                    ChecklistSubsection.external_id == subsection_data.external_id
+                ).first()
+                
+                if subsection_obj:
+                    # Обновляем существующую подсекцию
+                    subsection_obj.title = subsection_data.title
+                    subsection_obj.number = subsection_data.number
+                    subsection_obj.order_index = subsection_data.order_index
+                else:
+                    # Создаем новую подсекцию
+                    subsection_obj = ChecklistSubsection(
+                        section_id=section_obj.id,
+                        external_id=subsection_data.external_id,
+                        title=subsection_data.title,
+                        number=subsection_data.number,
+                        order_index=subsection_data.order_index
+                    )
+                    db.add(subsection_obj)
+                
+                db.flush()
+                
+                for group_data in subsection_data.question_groups:
+                    # Ищем существующую группу вопросов по external_id
+                    group_obj = db.query(ChecklistQuestionGroup).filter(
+                        ChecklistQuestionGroup.subsection_id == subsection_obj.id,
+                        ChecklistQuestionGroup.external_id == group_data.external_id
+                    ).first()
+                    
+                    if group_obj:
+                        # Обновляем существующую группу
+                        group_obj.title = group_data.title
+                        group_obj.order_index = group_data.order_index
+                    else:
+                        # Создаем новую группу вопросов
+                        group_obj = ChecklistQuestionGroup(
+                            subsection_id=subsection_obj.id,
+                            external_id=group_data.external_id,
+                            title=group_data.title,
+                            order_index=group_data.order_index
+                        )
+                        db.add(group_obj)
+                    
+                    db.flush()
+                    
+                    for question_data in group_data.questions:
+                        # Ищем существующий вопрос по external_id
+                        question_obj = db.query(ChecklistQuestion).filter(
+                            ChecklistQuestion.question_group_id == group_obj.id,
+                            ChecklistQuestion.external_id == question_data.external_id
+                        ).first()
+                        
+                        if question_obj:
+                            # Обновляем существующий вопрос
+                            question_obj.text = question_data.text
+                            question_obj.order_index = question_data.order_index
+                            question_obj.answer_type = question_data.answer_type
+                            question_obj.source_type = question_data.source_type
+                        else:
+                            # Создаем новый вопрос
+                            question_obj = ChecklistQuestion(
+                                question_group_id=group_obj.id,
+                                external_id=question_data.external_id,
+                                text=question_data.text,
+                                order_index=question_data.order_index,
+                                answer_type=question_data.answer_type,
+                                source_type=question_data.source_type
+                            )
+                            db.add(question_obj)
+                        
+                        db.flush()
+                        
+                        # Обновляем ответы для вопроса
+                        for answer_data in question_data.answers:
+                            # Ищем существующий ответ по external_id
+                            answer_obj = db.query(ChecklistAnswer).filter(
+                                ChecklistAnswer.question_id == question_obj.id,
+                                ChecklistAnswer.external_id == answer_data.external_id
+                            ).first()
+                            
+                            if answer_obj:
+                                # Обновляем существующий ответ
+                                answer_obj.value_male = answer_data.value_male
+                                answer_obj.value_female = answer_data.value_female
+                                answer_obj.exported_value_male = answer_data.exported_value_male
+                                answer_obj.exported_value_female = answer_data.exported_value_female
+                                answer_obj.hint = answer_data.hint
+                                answer_obj.order_index = answer_data.order_index
+                            else:
+                                # Создаем новый ответ
+                                answer_obj = ChecklistAnswer(
+                                    question_id=question_obj.id,
+                                    external_id=answer_data.external_id,
+                                    value_male=answer_data.value_male,
+                                    value_female=answer_data.value_female,
+                                    exported_value_male=answer_data.exported_value_male,
+                                    exported_value_female=answer_data.exported_value_female,
+                                    hint=answer_data.hint,
+                                    order_index=answer_data.order_index
+                                )
+                                db.add(answer_obj)
         
         db.commit()
     

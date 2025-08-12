@@ -8,19 +8,25 @@ import {
   TextInput,
   TextArea,
   SegmentedRadioGroup,
-  Breadcrumbs,
-  Tooltip,
-  Icon,
+  Breadcrumbs
 } from "@gravity-ui/uikit";
 import { NavigationSidebar } from "./NavigationSidebar";
+import { ChecklistQuestion, ChecklistAnswer, Gender } from "../../types/checklist";
+import { renderWithoutRouter } from "src/tests/utils/test-utils.tsx";
 
 interface QuestionCardProps {
-  question: any;
-  onAnswerUpdate: (questionId: number, data: any) => void;
+  question: ChecklistQuestion;
+  characterGender: Gender;
+  onAnswerUpdate: (questionId: number, data: {
+    answer_id?: number;
+    answer_text?: string;
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+    comment?: string;
+  }) => void;
   onAnswerDelete?: (responseId: number) => void;
   isLoading: boolean;
   // New props for NavigationSidebar
-  allQuestions: any[];
+  allQuestions: ChecklistQuestion[];
   currentQuestionIndex: number;
   onQuestionSelect: (index: number) => void;
   completionPercentage: number;
@@ -54,6 +60,7 @@ export function CheckIcon() {
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
+  characterGender,
   onAnswerUpdate,
   onAnswerDelete,
   allQuestions,
@@ -61,8 +68,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onQuestionSelect,
   completionPercentage,
 }) => {
-  const [localAnswer, setLocalAnswer] = useState(
-    question?.current_response?.answer || ""
+  // Состояние для текущего ответа
+  const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(
+    question?.current_response?.answer_id || null
+  );
+  const [selectedAnswerIds, setSelectedAnswerIds] = useState<number[]>([]);
+  const [customAnswerText, setCustomAnswerText] = useState(
+    question?.current_response?.answer_text || ""
   );
   const [localComment, setLocalComment] = useState(
     question?.current_response?.comment || ""
@@ -71,84 +83,57 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     question?.current_response?.source_type || "FOUND_IN_TEXT"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [customOptionText, setCustomOptionText] = useState("");
-  const lastAnswerRef = React.useRef<string | null>(null);
-  const customOptionTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const optionChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  // Refs для debouncing
+  const customTextTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const answerChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const commentTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  // Determine question type from either 'type' or 'option_type' field
-  const getQuestionType = () => {
-    return (
-      question.type ||
-      (question.option_type === "single"
-        ? "SINGLE_CHOICE"
-        : question.option_type === "multiple"
-        ? "MULTIPLE_CHOICE"
-        : "OPEN_TEXT")
-    );
+  // Получить отображаемое значение ответа в зависимости от пола персонажа
+  const getAnswerDisplayValue = (answer: ChecklistAnswer): string => {
+    return characterGender === 'male' ? answer.value_male : answer.value_female;
   };
 
   // Update all form states when question changes
   React.useEffect(() => {
-    setLocalAnswer(question?.current_response?.answer || "");
-    setLocalComment(question?.current_response?.comment || "");
-    setSourceType(question?.current_response?.source_type || "FOUND_IN_TEXT");
-    setCustomOptionText("");
-    lastAnswerRef.current = null; // Reset to trigger answer initialization
-  }, [question?.id]);
+    const response = question?.current_response;
 
-  // Initialize selected options from existing answer
-  React.useEffect(() => {
-    const currentAnswer = question?.current_response?.answer || "";
-
-    // Only update if the answer has actually changed from external source
-    if (currentAnswer !== lastAnswerRef.current) {
-      lastAnswerRef.current = currentAnswer;
-
-      if (currentAnswer) {
-        const questionType = getQuestionType();
-
-        if (
-          questionType === "SINGLE_CHOICE" ||
-          questionType === "MULTIPLE_CHOICE"
-        ) {
-          // Check if the answer is a custom option (not starting with any predefined option)
-          const predefinedOptions = question.options || [];
-          const isCustomAnswer =
-            currentAnswer &&
-            !predefinedOptions.some((opt: string) =>
-              currentAnswer.includes(opt)
-            );
-
-          if (isCustomAnswer) {
-            // This is a custom answer, set it as custom text and select "свой вариант"
-            setCustomOptionText(currentAnswer);
-            setSelectedOptions(["свой вариант"]);
-          } else {
-            // This is a regular option selection
-            const options = currentAnswer
-              .split(", ")
-              .filter((opt: string) => opt.trim());
-            setSelectedOptions(options);
-          }
+    if (response) {
+      // Инициализация на основе существующего ответа
+      if (response.answer_id) {
+        if (question.answer_type === 'single') {
+          setSelectedAnswerId(response.answer_id);
+        } else if (question.answer_type === 'multiple') {
+          // Для множественного выбора нужно парсить answer_text или использовать отдельное поле
+          // Пока используем простую логику - один ID
+          setSelectedAnswerIds([response.answer_id]);
         }
-      } else {
-        // Clear selection if no answer exists
-        setSelectedOptions([]);
       }
+
+      if (response.answer_text) {
+        setCustomAnswerText(response.answer_text);
+      }
+
+      setLocalComment(response.comment || "");
+      setSourceType(response.source_type || "FOUND_IN_TEXT");
+    } else {
+      // Сброс состояния для нового вопроса
+      setSelectedAnswerId(null);
+      setSelectedAnswerIds([]);
+      setCustomAnswerText("");
+      setLocalComment("");
+      setSourceType("FOUND_IN_TEXT");
     }
-  }, [question?.current_response?.answer]);
+  }, [question?.id, question?.current_response]);
 
   // Cleanup timeouts on unmount
   React.useEffect(() => {
     return () => {
-      if (customOptionTimeoutRef.current) {
-        clearTimeout(customOptionTimeoutRef.current);
+      if (customTextTimeoutRef.current) {
+        clearTimeout(customTextTimeoutRef.current);
       }
-      if (optionChangeTimeoutRef.current) {
-        clearTimeout(optionChangeTimeoutRef.current);
+      if (answerChangeTimeoutRef.current) {
+        clearTimeout(answerChangeTimeoutRef.current);
       }
       if (commentTimeoutRef.current) {
         clearTimeout(commentTimeoutRef.current);
@@ -156,7 +141,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     };
   }, []);
 
-  // Debounced auto-save for text fields
+  // Debounced auto-save for comment field
   const handleCommentChange = (text: string) => {
     setLocalComment(text);
 
@@ -166,9 +151,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     }
 
     commentTimeoutRef.current = setTimeout(() => {
-      if (text.trim() || localAnswer.trim()) {
-        handleSave();
-      }
+      handleSave();
+    }, 1000);
+  };
+
+  // Debounced auto-save for custom text
+  const handleCustomTextChange = (text: string) => {
+    setCustomAnswerText(text);
+
+    // Clear previous timeout
+    if (customTextTimeoutRef.current) {
+      clearTimeout(customTextTimeoutRef.current);
+    }
+
+    customTextTimeoutRef.current = setTimeout(() => {
+      handleSave();
     }, 1000);
   };
 
@@ -188,129 +185,130 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       source_type: sourceType,
     };
 
-    const questionType = getQuestionType();
-
-    // Handle different question types
-    if (
-      questionType === "SINGLE_CHOICE" ||
-      questionType === "MULTIPLE_CHOICE"
-    ) {
-      // If "свой вариант" is selected, send the custom text instead
-      if (selectedOptions.includes("свой вариант")) {
-        data.answer = customOptionText;
-      } else {
-        data.answer = selectedOptions.join(", ");
+    // Определяем тип данных для отправки в зависимости от типа вопроса
+    if (question.answer_type === 'single') {
+      if (selectedAnswerId) {
+        data.answer_id = selectedAnswerId;
+      } else if (customAnswerText.trim()) {
+        data.answer_text = customAnswerText.trim();
+      }
+    } else if (question.answer_type === 'multiple') {
+      if (selectedAnswerIds.length > 0) {
+        // Для множественного выбора пока используем первый выбранный ответ
+        // В будущем можно расширить API для поддержки множественных answer_id
+        data.answer_id = selectedAnswerIds[0];
+      } else if (customAnswerText.trim()) {
+        data.answer_text = customAnswerText.trim();
       }
     } else {
-      data.answer = localAnswer;
+      // text
+      if (customAnswerText.trim()) {
+        data.answer_text = customAnswerText.trim();
+      }
     }
 
-    onAnswerUpdate(question.id, data);
+    // Отправляем данные только если есть что сохранять
+    if (data.answer_id || data.answer_text || data.comment?.trim()) {
+      onAnswerUpdate(question.id, data);
+    }
   };
 
-  const handleOptionChange = (
-    option: string,
-    checked: boolean | React.ChangeEvent<HTMLInputElement>
-  ) => {
-    // Handle both boolean (from gravity-ui components) and ChangeEvent (from native inputs)
-    const isChecked =
-      typeof checked === "boolean" ? checked : checked.target.checked;
-    const questionType = getQuestionType();
-    let newOptions: string[] = [];
-
-    if (questionType === "SINGLE_CHOICE") {
-      newOptions = isChecked ? [option] : [];
-      setSelectedOptions(newOptions);
-    } else if (questionType === "MULTIPLE_CHOICE") {
-      newOptions = isChecked
-        ? [...selectedOptions, option]
-        : selectedOptions.filter((o) => o !== option);
-      setSelectedOptions(newOptions);
-    }
+  const handleSingleChoiceChange = (answerId: number) => {
+    setSelectedAnswerId(answerId);
+    setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенного ответа
 
     // Clear previous timeout
-    if (optionChangeTimeoutRef.current) {
-      clearTimeout(optionChangeTimeoutRef.current);
+    if (answerChangeTimeoutRef.current) {
+      clearTimeout(answerChangeTimeoutRef.current);
     }
 
-    // Debounced auto-save for options with the new selection
-    optionChangeTimeoutRef.current = setTimeout(() => {
-      const data: any = {
+    // Debounced auto-save
+    answerChangeTimeoutRef.current = setTimeout(() => {
+      const data = {
+        answer_id: answerId,
         comment: localComment,
         source_type: sourceType,
       };
-
-      // If "свой вариант" is selected, send the custom text instead
-      if (newOptions.includes("свой вариант")) {
-        data.answer = customOptionText;
-      } else {
-        data.answer = newOptions.join(", ");
-      }
-
-      if (newOptions.length > 0 || question?.current_response?.answer) {
-        onAnswerUpdate(question.id, data);
-      }
-    }, 500); // Increased delay to 500ms
+      onAnswerUpdate(question.id, data);
+    }, 500);
   };
 
-  const handleCustomOptionChange = (text: string) => {
-    setCustomOptionText(text);
+  const handleMultipleChoiceChange = (answerId: number, checked: boolean) => {
+    let newSelectedIds: number[];
 
-    // Clear previous timeout
-    if (customOptionTimeoutRef.current) {
-      clearTimeout(customOptionTimeoutRef.current);
+    if (checked) {
+      newSelectedIds = [...selectedAnswerIds, answerId];
+    } else {
+      newSelectedIds = selectedAnswerIds.filter(id => id !== answerId);
     }
 
-    // Debounced auto-save with the custom text as the answer
-    customOptionTimeoutRef.current = setTimeout(() => {
-      const data: any = {
-        comment: localComment,
-        source_type: sourceType,
-        answer: text.trim(),
-      };
+    setSelectedAnswerIds(newSelectedIds);
+    setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенных ответов
 
-      if (text.trim() || question?.current_response?.answer) {
+    // Clear previous timeout
+    if (answerChangeTimeoutRef.current) {
+      clearTimeout(answerChangeTimeoutRef.current);
+    }
+
+    // Debounced auto-save
+    answerChangeTimeoutRef.current = setTimeout(() => {
+      if (newSelectedIds.length > 0) {
+        // Пока используем первый выбранный ответ
+        const data = {
+          answer_id: newSelectedIds[0],
+          comment: localComment,
+          source_type: sourceType,
+        };
         onAnswerUpdate(question.id, data);
       }
-    }, 1000); // Increased delay to 1 second
+    }, 500);
   };
 
   const renderQuestionInput = () => {
-    const questionType = getQuestionType();
+    const questionType = question.answer_type;
 
     // Render custom option input if "свой вариант" is selected
     const renderCustomOptionInput = () => {
-      if (selectedOptions.includes("свой вариант")) {
+      if (customAnswerText.trim() !== "") {
         return (
           <TextInput
-            value={customOptionText}
-            onUpdate={(value) => handleCustomOptionChange(value)}
+            value={customAnswerText}
+            onUpdate={handleCustomTextChange}
+            onFocus={() => setSelectedAnswerId(null)}
             placeholder="Введите свой вариант..."
-            className="custom-option-text-input"
+            className="custom-answer-input"
           />
+
         );
       }
       return null;
     };
 
+    const answers = [
+      ...question.answers,
+      {
+        id:  question.id + 10000,
+        external_id:  question.external_id + 'custom-answer',
+        value_male: 'Свой ответ',
+        value_female: 'Свой ответ',
+        order_index: question.answers.length + 1,
+        created_at: new Date().toString()
+      }
+    ];
+
     switch (questionType) {
-      case "SINGLE_CHOICE":
+      case "single":
         return (
           <>
             <div className="question-options">
-              {question.options?.map((option: string, index: number) => (
+              {answers?.map((answer: ChecklistAnswer) => (
                 <Radio
-                  key={index}
-                  value={option}
+                  key={answer.id}
+                  value={answer.id.toString()}
                   size="l"
-                  checked={selectedOptions.includes(option)}
-                  onChange={() =>
-                    handleOptionChange(
-                      option,
-                      !selectedOptions.includes(option)
-                    )
-                  }
-                  content={option}
+                  checked={selectedAnswerId === answer.id}
+                  onChange={() => handleSingleChoiceChange(answer.id)}
+                  content={getAnswerDisplayValue(answer)}
                 />
               ))}
             </div>
@@ -318,17 +316,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           </>
         );
 
-      case "MULTIPLE_CHOICE":
+      case "multiple":
         return (
           <>
             <div className="question-options">
-              {question.options?.map((option: string, index: number) => (
+              {question.answers?.map((answer: ChecklistAnswer) => (
                 <Checkbox
-                  key={index}
+                  key={answer.id}
                   size="l"
-                  checked={selectedOptions.includes(option)}
-                  onChange={(checked) => handleOptionChange(option, checked)}
-                  content={option}
+                  checked={selectedAnswerIds.includes(answer.id)}
+                  onChange={(event) => handleMultipleChoiceChange(answer.id, event.target.checked)}
+                  content={getAnswerDisplayValue(answer)}
                 />
               ))}
             </div>
@@ -336,13 +334,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           </>
         );
 
-      case "OPEN_TEXT":
+      case "text":
       default:
         return (
           <div className="question-text-input">
             <TextArea
-              value={localAnswer}
-              onUpdate={(value) => setLocalAnswer(value)}
+              value={customAnswerText}
+              onUpdate={handleCustomTextChange}
               onBlur={handleSave}
               placeholder="Введите ваш ответ..."
               className="answer-textarea"
@@ -390,11 +388,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div className="question-card__main">
         <Text variant="header-1">
           {question.text}
-          {question.hint ? (
-            <Tooltip content={question.hint} openDelay={0}>
-              <Icon data={CheckIcon} size={16} className="question-text-icon" />
-            </Tooltip>
-          ) : null}
         </Text>
 
         <div className="question-input">{renderQuestionInput()}</div>
@@ -458,7 +451,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           {question.current_response && onAnswerDelete && (
             <div className="question-card__delete">
               <Button
-                onClick={() => onAnswerDelete(question.current_response.id)}
+                onClick={() => onAnswerDelete(question.current_response!.id)}
                 title="Удалить ответ"
                 view="normal"
                 size="m"

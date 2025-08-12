@@ -150,7 +150,8 @@ async def create_or_update_response(
         # Преобразуем в ChecklistResponseUpdate для единообразия
         update_data = ChecklistResponseUpdate(
             answer_id=response_data.answer_id,
-            comment=response_data.comment
+            comment=response_data.comment,
+            source_type=response_data.source_type
         )
         
         response = checklist_service.update_response(

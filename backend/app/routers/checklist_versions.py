@@ -7,10 +7,10 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from loguru import logger
 
-from app.database.database import get_db
+from app.database.connection import get_db
 from app.services.checklist_version_service import checklist_version_service
 from app.services.response_migration_service import response_migration_service
-from app.schemas.checklist import ChecklistRead
+from app.schemas.checklist import Checklist
 from app.database.crud.crud_checklist import checklist as checklist_crud
 
 

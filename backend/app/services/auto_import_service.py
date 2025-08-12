@@ -91,18 +91,14 @@ class AutoImportService:
                         logger.error(f"Файл не прошел валидацию: {validation['errors']}")
                         continue
                     
-                    # Импортируем в базу данных
-                    checklist = checklist_service.import_checklist_from_file(db, str(full_path))
+                    # Импортируем в базу данных с принудительным обновлением
+                    checklist = checklist_service.import_checklist_from_file(db, str(full_path), force_update=True)
                     
                     logger.success(f"Чеклист '{checklist.title}' успешно импортирован (ID: {checklist.id})")
                     imported_count += 1
                     
                 except ValueError as e:
-                    if "уже существует" in str(e):
-                        logger.info(f"Чеклист уже существует: {file_path}")
-                        skipped_count += 1
-                    else:
-                        logger.error(f"Ошибка валидации: {e}")
+                    logger.error(f"Ошибка валидации: {e}")
                 except Exception as e:
                     logger.error(f"Ошибка импорта файла {file_path}: {e}")
             
@@ -156,20 +152,16 @@ class AutoImportService:
                         errors.append(error_msg)
                         continue
                     
-                    # Импортируем в базу данных
-                    checklist = checklist_service.import_checklist_from_file(db, str(full_path))
+                    # Импортируем в базу данных с принудительным обновлением
+                    checklist = checklist_service.import_checklist_from_file(db, str(full_path), force_update=True)
                     
                     logger.success(f"Чеклист '{checklist.title}' успешно импортирован (ID: {checklist.id})")
                     imported_count += 1
                     
                 except ValueError as e:
-                    if "уже существует" in str(e):
-                        logger.info(f"Чеклист уже существует: {file_path}")
-                        skipped_count += 1
-                    else:
-                        error_msg = f"Ошибка валидации: {e}"
-                        logger.error(error_msg)
-                        errors.append(error_msg)
+                    error_msg = f"Ошибка валидации: {e}"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
                 except Exception as e:
                     error_msg = f"Ошибка импорта файла {file_path}: {e}"
                     logger.error(error_msg)

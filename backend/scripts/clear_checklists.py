@@ -16,8 +16,8 @@ from app.database.connection import SessionLocal, init_db
 from app.database.crud.crud_checklist import checklist
 from app.database.crud.crud_checklist_response import checklist_response
 from app.database.models.checklist import (
-    Checklist, ChecklistSection, ChecklistSubsection, 
-    ChecklistQuestionGroup, ChecklistQuestion
+    Checklist, ChecklistSection, ChecklistSubsection,
+    ChecklistQuestionGroup, ChecklistQuestion, ChecklistAnswer, ChecklistResponse, ChecklistResponseHistory
 )
 from loguru import logger
 
@@ -40,7 +40,9 @@ async def clear_all_checklists(force=False):
         subsections_count = db.query(ChecklistSubsection).count()
         question_groups_count = db.query(ChecklistQuestionGroup).count()
         questions_count = db.query(ChecklistQuestion).count()
-        responses_count = db.query(checklist_response.model).count()
+        answers_count = db.query(ChecklistAnswer).count()
+        responses_count = db.query(ChecklistResponse).count()
+        history_count = db.query(ChecklistResponseHistory).count()
         
         logger.info(f"Найдено записей для удаления:")
         logger.info(f"  - Чеклистов: {checklists_count}")
@@ -48,7 +50,9 @@ async def clear_all_checklists(force=False):
         logger.info(f"  - Подсекций: {subsections_count}")
         logger.info(f"  - Групп вопросов: {question_groups_count}")
         logger.info(f"  - Вопросов: {questions_count}")
-        logger.info(f"  - Ответов: {responses_count}")
+        logger.info(f"  - Вариантов ответов: {answers_count}")
+        logger.info(f"  - Ответов пользователей: {responses_count}")
+        logger.info(f"  - Истории ответов: {history_count}")
         
         if checklists_count == 0:
             logger.info("База данных уже пуста. Ничего удалять не нужно.")
@@ -69,27 +73,35 @@ async def clear_all_checklists(force=False):
         
         # Удаляем в правильном порядке (сначала зависимые таблицы)
         
-        # 1. Удаляем ответы
-        deleted_responses = db.query(checklist_response.model).delete(synchronize_session=False)
-        logger.info(f"Удалено ответов: {deleted_responses}")
+        # 1. Удаляем историю ответов
+        deleted_history = db.query(ChecklistResponseHistory).delete(synchronize_session=False)
+        logger.info(f"Удалено записей истории: {deleted_history}")
         
-        # 2. Удаляем вопросы
+        # 2. Удаляем ответы пользователей
+        deleted_responses = db.query(ChecklistResponse).delete(synchronize_session=False)
+        logger.info(f"Удалено ответов пользователей: {deleted_responses}")
+        
+        # 3. Удаляем варианты ответов
+        deleted_answers = db.query(ChecklistAnswer).delete(synchronize_session=False)
+        logger.info(f"Удалено вариантов ответов: {deleted_answers}")
+        
+        # 4. Удаляем вопросы
         deleted_questions = db.query(ChecklistQuestion).delete(synchronize_session=False)
         logger.info(f"Удалено вопросов: {deleted_questions}")
         
-        # 3. Удаляем группы вопросов
+        # 5. Удаляем группы вопросов
         deleted_groups = db.query(ChecklistQuestionGroup).delete(synchronize_session=False)
         logger.info(f"Удалено групп вопросов: {deleted_groups}")
         
-        # 4. Удаляем подсекции
+        # 6. Удаляем подсекции
         deleted_subsections = db.query(ChecklistSubsection).delete(synchronize_session=False)
         logger.info(f"Удалено подсекций: {deleted_subsections}")
         
-        # 5. Удаляем секции
+        # 7. Удаляем секции
         deleted_sections = db.query(ChecklistSection).delete(synchronize_session=False)
         logger.info(f"Удалено секций: {deleted_sections}")
         
-        # 6. Удаляем чеклисты
+        # 8. Удаляем чеклисты
         deleted_checklists = db.query(Checklist).delete(synchronize_session=False)
         logger.info(f"Удалено чеклистов: {deleted_checklists}")
         
@@ -105,11 +117,17 @@ async def clear_all_checklists(force=False):
         remaining_checklists = db.query(Checklist).count()
         remaining_sections = db.query(ChecklistSection).count()
         remaining_questions = db.query(ChecklistQuestion).count()
+        remaining_answers = db.query(ChecklistAnswer).count()
+        remaining_responses = db.query(ChecklistResponse).count()
+        remaining_history = db.query(ChecklistResponseHistory).count()
         
         logger.info(f"Проверка после удаления:")
         logger.info(f"  - Осталось чеклистов: {remaining_checklists}")
         logger.info(f"  - Осталось секций: {remaining_sections}")
         logger.info(f"  - Осталось вопросов: {remaining_questions}")
+        logger.info(f"  - Осталось вариантов ответов: {remaining_answers}")
+        logger.info(f"  - Осталось ответов пользователей: {remaining_responses}")
+        logger.info(f"  - Осталось записей истории: {remaining_history}")
         
     except Exception as e:
         logger.error(f"Ошибка при удалении чеклистов: {e}")
@@ -150,7 +168,33 @@ async def clear_specific_checklist(slug: str, force=False):
             ChecklistSection.checklist_id == checklist_obj.id
         ).count()
         
-        responses_count = db.query(checklist_response.model).join(
+        answers_count = db.query(ChecklistAnswer).join(
+            ChecklistQuestion
+        ).join(
+            ChecklistQuestionGroup
+        ).join(
+            ChecklistSubsection
+        ).join(
+            ChecklistSection
+        ).filter(
+            ChecklistSection.checklist_id == checklist_obj.id
+        ).count()
+        
+        responses_count = db.query(ChecklistResponse).join(
+            ChecklistQuestion
+        ).join(
+            ChecklistQuestionGroup
+        ).join(
+            ChecklistSubsection
+        ).join(
+            ChecklistSection
+        ).filter(
+            ChecklistSection.checklist_id == checklist_obj.id
+        ).count()
+        
+        history_count = db.query(ChecklistResponseHistory).join(
+            ChecklistResponse
+        ).join(
             ChecklistQuestion
         ).join(
             ChecklistQuestionGroup
@@ -165,7 +209,9 @@ async def clear_specific_checklist(slug: str, force=False):
         logger.info(f"Найдено связанных записей:")
         logger.info(f"  - Секций: {sections_count}")
         logger.info(f"  - Вопросов: {questions_count}")
-        logger.info(f"  - Ответов: {responses_count}")
+        logger.info(f"  - Вариантов ответов: {answers_count}")
+        logger.info(f"  - Ответов пользователей: {responses_count}")
+        logger.info(f"  - Истории ответов: {history_count}")
         
         # Запрашиваем подтверждение только если не force
         if not force:
@@ -176,7 +222,10 @@ async def clear_specific_checklist(slug: str, force=False):
                 return
         
         # Удаляем связанные записи
-        deleted_responses = db.query(checklist_response.model).join(
+        # 1. Удаляем историю ответов
+        deleted_history = db.query(ChecklistResponseHistory).join(
+            ChecklistResponse
+        ).join(
             ChecklistQuestion
         ).join(
             ChecklistQuestionGroup
@@ -188,6 +237,33 @@ async def clear_specific_checklist(slug: str, force=False):
             ChecklistSection.checklist_id == checklist_obj.id
         ).delete(synchronize_session=False)
         
+        # 2. Удаляем ответы пользователей
+        deleted_responses = db.query(ChecklistResponse).join(
+            ChecklistQuestion
+        ).join(
+            ChecklistQuestionGroup
+        ).join(
+            ChecklistSubsection
+        ).join(
+            ChecklistSection
+        ).filter(
+            ChecklistSection.checklist_id == checklist_obj.id
+        ).delete(synchronize_session=False)
+        
+        # 3. Удаляем варианты ответов
+        deleted_answers = db.query(ChecklistAnswer).join(
+            ChecklistQuestion
+        ).join(
+            ChecklistQuestionGroup
+        ).join(
+            ChecklistSubsection
+        ).join(
+            ChecklistSection
+        ).filter(
+            ChecklistSection.checklist_id == checklist_obj.id
+        ).delete(synchronize_session=False)
+        
+        # 4. Удаляем вопросы
         deleted_questions = db.query(ChecklistQuestion).join(
             ChecklistQuestionGroup
         ).join(
@@ -223,7 +299,9 @@ async def clear_specific_checklist(slug: str, force=False):
         
         logger.success(f"✅ Чеклист '{checklist_obj.title}' успешно удален!")
         logger.info(f"Удалено записей:")
-        logger.info(f"  - Ответов: {deleted_responses}")
+        logger.info(f"  - Истории ответов: {deleted_history}")
+        logger.info(f"  - Ответов пользователей: {deleted_responses}")
+        logger.info(f"  - Вариантов ответов: {deleted_answers}")
         logger.info(f"  - Вопросов: {deleted_questions}")
         logger.info(f"  - Групп: {deleted_groups}")
         logger.info(f"  - Подсекций: {deleted_subsections}")

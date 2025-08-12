@@ -19,8 +19,8 @@ class User(BaseModel):
     is_active = Column(Boolean, default=True, nullable=False)
     
     # Relationships
-    projects = relationship("Project", back_populates="user", cascade="all, delete-orphan")
-    tokens = relationship("UserToken", back_populates="user", cascade="all, delete-orphan")
+    projects = relationship("Project", back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
+    tokens = relationship("UserToken", back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
     
     def __repr__(self):
         return f"<User(id={self.id}, email='{self.email}', username='{self.username}')>"

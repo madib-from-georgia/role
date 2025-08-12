@@ -130,28 +130,63 @@ export const checklistApi = {
   createOrUpdateResponse: (data: {
     question_id: number;
     character_id: number;
-    answer?: string;
+    answer_id?: number;
+    answer_text?: string;
     source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
   }) => api.post('/api/checklists/responses', data),
   updateResponse: (responseId: number, data: {
-    answer?: string;
+    answer_id?: number;
+    answer_text?: string;
     source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
     change_reason?: string;
   }) => api.put(`/api/checklists/responses/${responseId}`, data),
-  deleteResponse: (responseId: number, deleteReason?: string) => 
+  deleteResponse: (responseId: number, deleteReason?: string) =>
     api.delete(`/api/checklists/responses/${responseId}`, {
       params: deleteReason ? { delete_reason: deleteReason } : undefined
     }),
-  getResponseHistory: (responseId: number) => 
+  getResponseHistory: (responseId: number) =>
     api.get(`/api/checklists/responses/${responseId}/history`),
   restoreResponseVersion: (responseId: number, data: {
     history_id: number;
     restore_reason?: string;
   }) => api.post(`/api/checklists/responses/${responseId}/restore`, data),
-  getCharacterProgress: (characterId: number) => 
+  getCharacterProgress: (characterId: number) =>
     api.get(`/api/checklists/character/${characterId}/progress`),
+}
+
+// API для работы с версионированием чеклистов
+export const checklistVersionsApi = {
+  getVersions: (checklistId: number) =>
+    api.get(`/api/checklist-versions/${checklistId}/versions`),
+  compareVersions: (checklistId: number, fromVersion: number, toVersion: number) =>
+    api.get(`/api/checklist-versions/${checklistId}/compare/${fromVersion}/${toVersion}`),
+  updateToLatest: (checklistId: number) =>
+    api.post(`/api/checklist-versions/${checklistId}/update-to-latest`),
+  migrateResponses: (checklistId: number, fromVersion: number, toVersion: number) =>
+    api.post(`/api/checklist-versions/${checklistId}/migrate-responses`, {
+      from_version: fromVersion,
+      to_version: toVersion
+    }),
+  getUpdateStatus: (checklistId: number) =>
+    api.get(`/api/checklist-versions/${checklistId}/update-status`),
+  detectChanges: (checklistId: number) =>
+    api.post(`/api/checklist-versions/${checklistId}/detect-changes`),
+  getChangesSummary: (checklistId: number, fromVersion: number, toVersion: number) =>
+    api.get(`/api/checklist-versions/${checklistId}/changes-summary/${fromVersion}/${toVersion}`),
+  rollbackToVersion: (checklistId: number, targetVersion: number) =>
+    api.post(`/api/checklist-versions/${checklistId}/rollback`, {
+      target_version: targetVersion
+    }),
+  createSnapshot: (checklistId: number, description?: string) =>
+    api.post(`/api/checklist-versions/${checklistId}/snapshot`, {
+      description
+    }),
+  getEntityMatches: (checklistId: number, fromVersion: number, toVersion: number) =>
+    api.get(`/api/checklist-versions/${checklistId}/entity-matches/${fromVersion}/${toVersion}`),
+  previewMigration: (checklistId: number, fromVersion: number, toVersion: number) =>
+    api.get(`/api/checklist-versions/${checklistId}/preview-migration/${fromVersion}/${toVersion}`)
 }
 
 export const exportApi = {

@@ -152,11 +152,13 @@ class ChecklistResponseBase(BaseModel):
 class ChecklistResponseCreate(ChecklistResponseBase):
     question_id: int = Field(..., description="ID вопроса")
     character_id: int = Field(..., description="ID персонажа")
+    source_type: Optional[SourceType] = Field(None, description="Источник ответа")
 
 
 class ChecklistResponseUpdate(BaseModel):
     answer_id: Optional[int] = Field(None, description="ID выбранного ответа")
     comment: Optional[str] = Field(None, description="Комментарий к ответу")
+    source_type: Optional[SourceType] = Field(None, description="Источник ответа")
     change_reason: Optional[str] = Field(None, description="Причина изменения")
 
 
@@ -165,6 +167,7 @@ class ChecklistResponse(ChecklistResponseBase):
     question_id: int
     character_id: int
     answer: ChecklistAnswer
+    source_type: Optional[SourceType]
     is_current: bool
     version: int
     created_at: datetime
@@ -177,9 +180,10 @@ class ChecklistResponse(ChecklistResponseBase):
 class ChecklistResponseHistory(BaseModel):
     id: int
     response_id: int
-    previous_answer_id: Optional[int]
+    previous_answer: Optional[str]
+    previous_source_type: Optional[SourceType]
     previous_comment: Optional[str]
-    previous_version: int
+    previous_version: Optional[int]
     change_reason: Optional[str]
     created_at: datetime
     

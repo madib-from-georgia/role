@@ -89,7 +89,8 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 question_id=question_id,
                 character_id=character_id,
                 answer_id=response_data.answer_id,
-                comment=response_data.comment
+                comment=response_data.comment,
+                source_type=response_data.source_type
             )
             return self.create(db, obj_in=create_data)
     
@@ -104,7 +105,8 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем предыдущую версию в историю
         history_entry = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer_id=response.answer_id,
+            previous_answer=str(response.answer_id) if response.answer_id else None,
+            previous_source_type=response.source_type,
             previous_comment=response.comment,
             previous_version=response.version,
             change_reason=change_reason or "Обновление ответа"
@@ -114,6 +116,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Обновляем текущий ответ
         response.answer_id = update_data.answer_id
         response.comment = update_data.comment
+        response.source_type = update_data.source_type
         response.version += 1
         response.updated_at = datetime.utcnow()
         
@@ -137,7 +140,8 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем в историю перед удалением
         history_entry = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer_id=response.answer_id,
+            previous_answer=str(response.answer_id) if response.answer_id else None,
+            previous_source_type=response.source_type,
             previous_comment=response.comment,
             previous_version=response.version,
             change_reason=delete_reason
@@ -174,7 +178,8 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         # Сохраняем текущее состояние в историю
         current_history = ChecklistResponseHistory(
             response_id=response.id,
-            previous_answer_id=response.answer_id,
+            previous_answer=str(response.answer_id) if response.answer_id else None,
+            previous_source_type=response.source_type,
             previous_comment=response.comment,
             previous_version=response.version,
             change_reason=f"Перед восстановлением: {restore_reason}"
@@ -182,7 +187,8 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         db.add(current_history)
         
         # Восстанавливаем из истории
-        response.answer_id = history_entry.previous_answer_id
+        response.answer_id = int(history_entry.previous_answer) if history_entry.previous_answer else None
+        response.source_type = history_entry.previous_source_type
         response.comment = history_entry.previous_comment
         response.version += 1
         response.updated_at = datetime.utcnow()
