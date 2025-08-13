@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { debounce, BatchProcessor } from '../../utils/debounce'
 
 // API Types
 interface ProjectData {
@@ -57,7 +58,7 @@ apiClient.interceptors.response.use(
           })
 
           const { access_token, refresh_token: newRefreshToken } = response.data
-          
+
           // Сохраняем новые токены
           localStorage.setItem('access_token', access_token)
           localStorage.setItem('refresh_token', newRefreshToken)
@@ -91,16 +92,16 @@ export default apiClient
 export const api = {
   get: <T = unknown>(url: string, config?: AxiosRequestConfig) =>
     apiClient.get<T>(url, config).then(response => response.data),
-  
+
   post: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiClient.post<T>(url, data, config).then(response => response.data),
-  
+
   put: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiClient.put<T>(url, data, config).then(response => response.data),
-  
+
   delete: <T = unknown>(url: string, config?: AxiosRequestConfig) =>
     apiClient.delete<T>(url, config).then(response => response.data),
-  
+
   patch: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiClient.patch<T>(url, data, config).then(response => response.data),
 }
@@ -116,13 +117,13 @@ export const projectsApi = {
 
 export const textsApi = {
   getByProject: (projectId: string) => api.get(`/api/projects/${projectId}/texts`),
-  upload: (projectId: string, formData: FormData) => 
+  upload: (projectId: string, formData: FormData) =>
     apiClient.post(`/api/projects/${projectId}/texts/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     }).then(response => response.data),
-  delete: (projectId: string, textId: string) => 
+  delete: (projectId: string, textId: string) =>
     api.delete(`/api/projects/${projectId}/texts/${textId}`),
 }
 
@@ -134,14 +135,59 @@ export const charactersApi = {
     api.put(`/api/characters/${characterId}`, data),
 }
 
+// Создаем debounced версии для частых запросов
+const debouncedGetChecklistForCharacter = debounce(
+  (checklistSlug: string, characterId: number) =>
+    api.get(`/api/checklists/${checklistSlug}/character/${characterId}`),
+  300 // 300ms задержка
+);
+
+// Batch processor для множественных ответов
+const responseBatchProcessor = new BatchProcessor(
+  async (batch: Array<{
+    question_id: number;
+    character_id: number;
+    answer_id?: number;
+    answer_text?: string;
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+    comment?: string;
+  }>) => {
+    // Группируем по character_id для оптимизации
+    const groupedByCharacter = batch.reduce((groups, item) => {
+      const key = item.character_id;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(item);
+      return groups;
+    }, {} as Record<number, typeof batch>);
+
+    const results = [];
+    for (const [items] of Object.entries(groupedByCharacter)) {
+      for (const item of items) {
+        const result = await api.post('/api/checklists/responses', item);
+        results.push(result);
+      }
+    }
+    return results;
+  },
+  200, // 200ms delay
+  5    // max 5 items per batch
+);
+
 export const checklistApi = {
   getAll: (characterId?: number) => {
     const params = characterId ? { character_id: characterId } : {};
     return api.get('/api/checklists/', { params });
   },
-  getChecklistForCharacter: (checklistSlug: string, characterId: number) =>
-    api.get(`/api/checklists/${checklistSlug}/character/${characterId}`),
+  getChecklistForCharacter: debouncedGetChecklistForCharacter,
   createOrUpdateResponse: (data: {
+    question_id: number;
+    character_id: number;
+    answer_id?: number;
+    answer_text?: string;
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+    comment?: string;
+  }) => responseBatchProcessor.add(data),
+  createOrUpdateResponseDirect: (data: {
     question_id: number;
     character_id: number;
     answer_id?: number;
@@ -218,9 +264,9 @@ export const exportApi = {
       // Извлекаем имя файла из заголовков ответа
       const contentDisposition = response.headers['content-disposition'] || '';
       const fileNameMatch = contentDisposition.match(/filename=(.+)/);
-      const fileName = fileNameMatch ? fileNameMatch[1].replace(/"/g, '') : 
+      const fileName = fileNameMatch ? fileNameMatch[1].replace(/"/g, '') :
         `character_export_${Date.now()}.${data.format}`;
-      
+
       return {
         data: response.data,
         fileName,
@@ -250,9 +296,9 @@ export const exportApi = {
     }).then(response => {
       const contentDisposition = response.headers['content-disposition'] || '';
       const fileNameMatch = contentDisposition.match(/filename=(.+)/);
-      const fileName = fileNameMatch ? fileNameMatch[1].replace(/"/g, '') : 
+      const fileName = fileNameMatch ? fileNameMatch[1].replace(/"/g, '') :
         `characters_export_${Date.now()}.${data.format}`;
-      
+
       return {
         data: response.data,
         fileName,

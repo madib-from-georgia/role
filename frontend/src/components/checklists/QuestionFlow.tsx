@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { checklistApi, charactersApi } from "../../services/api";
+import { checklistApi, charactersApi, api } from "../../services/api";
 import { Button, Text } from "@gravity-ui/uikit";
 import { useNavigate } from "react-router-dom";
 
@@ -71,7 +71,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   } = useQuery<Checklist>({
     queryKey: ["checklist", checklistSlug, characterId],
     queryFn: () =>
-      checklistApi.getChecklistForCharacter(checklistSlug, characterId) as Promise<Checklist>,
+      api.get(`/api/checklists/${checklistSlug}/character/${characterId}`) as Promise<Checklist>,
     staleTime: 5 * 60 * 1000, // 5 минут
   });
 

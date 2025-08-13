@@ -62,7 +62,7 @@ app.add_middleware(get_performance_middleware(), max_request_time=30.0)
 
 # Затем middleware для безопасности и логирования
 app.add_middleware(LoggingMiddleware)
-app.add_middleware(SecurityMiddleware, rate_limit_requests=100, rate_limit_window=60)
+app.add_middleware(SecurityMiddleware, rate_limit_requests=200, rate_limit_window=60)
 
 # Включаем middleware (после исправления конфликтов с бинарными файлами)
 # ВРЕМЕННО ОТКЛЮЧЕНЫ из-за конфликтов с response body

@@ -24,6 +24,21 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         self.rate_limit_requests = rate_limit_requests
         self.rate_limit_window = rate_limit_window
         self.request_counts: Dict[str, Dict[str, Any]] = {}
+        
+        # Настройки лимитов для разных типов запросов
+        self.endpoint_limits = {
+            # Более высокие лимиты для чтения данных
+            "GET:/api/checklists": 300,
+            "GET:/api/characters": 300,
+            # Умеренные лимиты для записи
+            "POST:/api/checklists/responses": 150,
+            "PUT:/api/checklists/responses": 150,
+            # Стандартные лимиты для всего остального
+            "default": rate_limit_requests
+        }
+        
+        # Локальные IP адреса получают более высокие лимиты
+        self.local_ips = {"127.0.0.1", "::1", "localhost"}
     
     async def dispatch(self, request: StarletteRequest, call_next) -> StarletteResponse:
         """Обработка запроса через middleware."""
@@ -31,7 +46,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         
         # Rate limiting
         client_ip = self._get_client_ip(request)
-        if not self._check_rate_limit(client_ip):
+        if not self._check_rate_limit(client_ip, request):
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content={"detail": "Слишком много запросов. Попробуйте позже."}
@@ -65,9 +80,30 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         
         return request.client.host if request.client else "unknown"
     
-    def _check_rate_limit(self, client_ip: str) -> bool:
-        """Проверка rate limiting."""
+    def _check_rate_limit(self, client_ip: str, request: StarletteRequest) -> bool:
+        """Проверка rate limiting с учетом endpoint-специфичных лимитов."""
         current_time = time.time()
+        
+        # Определяем лимит для данного endpoint
+        method = request.method
+        path = request.url.path
+        endpoint_key = f"{method}:{path}"
+        
+        # Получаем базовый лимит для endpoint
+        base_limit = self.rate_limit_requests
+        for pattern, limit in self.endpoint_limits.items():
+            if pattern == "default":
+                continue
+            if endpoint_key.startswith(pattern) or path.startswith(pattern.split(":")[1] if ":" in pattern else pattern):
+                base_limit = limit
+                break
+        else:
+            base_limit = self.endpoint_limits.get("default", self.rate_limit_requests)
+        
+        # Увеличиваем лимит для локальных IP
+        effective_limit = base_limit
+        if any(local_ip in client_ip for local_ip in self.local_ips):
+            effective_limit = base_limit * 3  # Утроенный лимит для локальных IP
         
         # Очищаем старые записи
         if client_ip in self.request_counts:
@@ -79,7 +115,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
             self.request_counts[client_ip] = {"requests": []}
         
         # Проверяем лимит
-        if len(self.request_counts[client_ip]["requests"]) >= self.rate_limit_requests:
+        if len(self.request_counts[client_ip]["requests"]) >= effective_limit:
             return False
         
         # Добавляем текущий запрос
