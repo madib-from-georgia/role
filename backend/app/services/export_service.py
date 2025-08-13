@@ -194,13 +194,16 @@ class ExportService:
             story.append(char_table)
             story.append(Spacer(1, 20))
             
+            # Определяем пол персонажа (можно расширить логику)
+            character_gender = self._detect_character_gender(character)
+            
             # Чеклисты
             if format_type == "detailed":
-                story.extend(self._add_detailed_checklists_to_pdf(checklists, styles))
+                story.extend(self._add_detailed_checklists_to_pdf(checklists, styles, character_gender))
             elif format_type == "summary":
-                story.extend(self._add_summary_checklists_to_pdf(checklists, styles))
+                story.extend(self._add_summary_checklists_to_pdf(checklists, styles, character_gender))
             else:  # compact
-                story.extend(self._add_compact_checklists_to_pdf(checklists, styles))
+                story.extend(self._add_compact_checklists_to_pdf(checklists, styles, character_gender))
             
             # Генерация PDF
             doc.build(story)
@@ -251,7 +254,7 @@ class ExportService:
                     details=str(e)
                 )
     
-    def _add_detailed_checklists_to_pdf(self, checklists: list, styles) -> list:
+    def _add_detailed_checklists_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
         """Добавить детальные чеклисты в PDF."""
         story = []
         
@@ -262,7 +265,7 @@ class ExportService:
                 story.append(Paragraph(checklist.description, styles['CustomNormal']))
                 story.append(Spacer(1, 6))
             
-            # Проходим по структуре чеклиста напрямую
+            # Проходим по новой структуре чеклиста: Section → Subsection → QuestionGroup → Question
             for section in checklist.sections:
                 if not section.subsections:
                     continue
@@ -270,12 +273,25 @@ class ExportService:
                 story.append(Paragraph(f"📝 {section.title}", styles['CustomHeading']))
                 
                 for subsection in section.subsections:
-                    for group in subsection.question_groups:
-                        for question in group.questions:
-                            if question.current_response and question.current_response.answer:
-                                story.append(Paragraph(f"• {question.text}", styles['CustomNormal']))
-                                story.append(Paragraph(question.current_response.answer, styles['CustomNormal']))
-                                story.append(Spacer(1, 4))
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                story.append(Paragraph(f"🔹 {group.title}", styles['CustomBold']))
+                            
+                            for question in group.questions:
+                                if question.current_response:
+                                    story.append(Paragraph(f"• {question.text}", styles['CustomNormal']))
+                                    
+                                    # Получаем ответ в зависимости от типа и пола персонажа
+                                    answer_text = self._get_answer_text(question.current_response, character_gender)
+                                    if answer_text:
+                                        story.append(Paragraph(answer_text, styles['CustomNormal']))
+                                    
+                                    # Добавляем комментарий если есть
+                                    if question.current_response.comment:
+                                        story.append(Paragraph(f"Комментарий: {question.current_response.comment}", styles['CustomNormal']))
+                                    
+                                    story.append(Spacer(1, 4))
                 
                 story.append(Spacer(1, 8))
             
@@ -283,14 +299,14 @@ class ExportService:
         
         return story
     
-    def _add_summary_checklists_to_pdf(self, checklists: list, styles) -> list:
+    def _add_summary_checklists_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
         """Добавить краткие чеклисты в PDF."""
         story = []
         
         story.append(Paragraph("Краткий обзор чеклистов", styles['CustomHeading']))
         
         for checklist in checklists:
-            # Подсчитываем общее количество вопросов и ответов
+            # Подсчитываем общее количество вопросов и ответов по новой структуре
             total_questions = 0
             answered_questions = 0
             
@@ -299,7 +315,7 @@ class ExportService:
                     for group in subsection.question_groups:
                         for question in group.questions:
                             total_questions += 1
-                            if question.current_response and question.current_response.answer:
+                            if question.current_response and self._has_answer(question.current_response):
                                 answered_questions += 1
             
             completion_rate = (answered_questions / total_questions * 100) if total_questions > 0 else 0
@@ -324,7 +340,7 @@ class ExportService:
         
         return story
     
-    def _add_compact_checklists_to_pdf(self, checklists: list, styles) -> list:
+    def _add_compact_checklists_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
         """Добавить компактные чеклисты в PDF."""
         story = []
         
@@ -334,7 +350,7 @@ class ExportService:
         total_questions = 0
         
         for checklist in checklists:
-            # Подсчитываем вопросы из структуры checklist
+            # Подсчитываем вопросы из новой структуры checklist
             questions_count = 0
             answered_count = 0
             for section in checklist.sections:
@@ -342,7 +358,7 @@ class ExportService:
                     for group in subsection.question_groups:
                         for question in group.questions:
                             questions_count += 1
-                            if question.current_response and question.current_response.answer:
+                            if question.current_response and self._has_answer(question.current_response):
                                 answered_count += 1
             total_questions += questions_count
             total_answered += answered_count
@@ -403,13 +419,16 @@ class ExportService:
                 row.cells[0].text = 'Псевдонимы:'
                 row.cells[1].text = ', '.join(character.aliases)
             
+            # Определяем пол персонажа
+            character_gender = self._detect_character_gender(character)
+            
             # Добавляем чеклисты в зависимости от формата
             if format_type == "detailed":
-                self._add_detailed_checklists_to_docx(doc, checklists)
+                self._add_detailed_checklists_to_docx(doc, checklists, character_gender)
             elif format_type == "summary":
-                self._add_summary_checklists_to_docx(doc, checklists)
+                self._add_summary_checklists_to_docx(doc, checklists, character_gender)
             else:  # compact
-                self._add_compact_checklists_to_docx(doc, checklists)
+                self._add_compact_checklists_to_docx(doc, checklists, character_gender)
             
             # Сохранение в байты
             buffer = io.BytesIO()
@@ -456,7 +475,7 @@ class ExportService:
                     details=str(e)
                 )
     
-    def _add_detailed_checklists_to_docx(self, doc: Document, checklists: list):
+    def _add_detailed_checklists_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
         """Добавить детальные чеклисты в DOCX."""
         for checklist in checklists:
             doc.add_heading(f'Чеклист: {checklist.title}', level=1)
@@ -464,7 +483,7 @@ class ExportService:
             if checklist.description:
                 doc.add_paragraph(checklist.description)
             
-            # Проходим по структуре чеклиста для DOCX
+            # Проходим по новой структуре чеклиста: Section → Subsection → QuestionGroup → Question
             for section in checklist.sections:
                 if not section.subsections:
                     continue
@@ -472,40 +491,46 @@ class ExportService:
                 doc.add_heading(section.title, level=2)
                 
                 for subsection in section.subsections:
-                    for group in subsection.question_groups:
-                        for question in group.questions:
-                            if question.current_response and question.current_response.answer:
-                                # Вопрос
-                                question_p = doc.add_paragraph()
-                                question_p.add_run('Вопрос: ').bold = True
-                                question_p.add_run(question.text)
-                                
-                                # Ответ
-                                answer_p = doc.add_paragraph()
-                                answer_p.add_run('Ответ: ').bold = True
-                                answer_p.add_run(question.current_response.answer)
-                    
-                    # Источник и уверенность (только если есть response)
-                    if question.current_response and hasattr(question.current_response, 'source_type'):
-                        source_text = {
-                            "FOUND_IN_TEXT": "Найдено в тексте",
-                            "LOGICALLY_DERIVED": "Логически выведено",
-                            "IMAGINED": "Придумано"
-                        }.get(question.current_response.source_type.value if question.current_response.source_type else "UNKNOWN", "Неизвестно")
-                        
-                        source_p = doc.add_paragraph()
-                        source_p.add_run('Источник: ').bold = True
-                        source_p.add_run(source_text)
-                    
-                    # Note: ChecklistResponse doesn't have confidence_score field
-                    # if question.current_response.confidence_score:
-                    #     confidence_p = doc.add_paragraph()
-                    #     confidence_p.add_run('Уверенность: ').bold = True
-                    #     confidence_p.add_run(f"{question.current_response.confidence_score:.2f}")
-                    
-                    doc.add_paragraph("")  # Пустая строка для разделения
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                doc.add_heading(group.title, level=3)
+                            
+                            for question in group.questions:
+                                if question.current_response:
+                                    # Вопрос
+                                    question_p = doc.add_paragraph()
+                                    question_p.add_run('Вопрос: ').bold = True
+                                    question_p.add_run(question.text)
+                                    
+                                    # Ответ
+                                    answer_text = self._get_answer_text(question.current_response, character_gender)
+                                    if answer_text:
+                                        answer_p = doc.add_paragraph()
+                                        answer_p.add_run('Ответ: ').bold = True
+                                        answer_p.add_run(answer_text)
+                                    
+                                    # Комментарий
+                                    if question.current_response.comment:
+                                        comment_p = doc.add_paragraph()
+                                        comment_p.add_run('Комментарий: ').bold = True
+                                        comment_p.add_run(question.current_response.comment)
+                                    
+                                    # Источник
+                                    if hasattr(question.current_response, 'source_type') and question.current_response.source_type:
+                                        source_text = {
+                                            "FOUND_IN_TEXT": "Найдено в тексте",
+                                            "LOGICALLY_DERIVED": "Логически выведено",
+                                            "IMAGINED": "Придумано"
+                                        }.get(question.current_response.source_type.value if hasattr(question.current_response.source_type, 'value') else str(question.current_response.source_type), "Неизвестно")
+                                        
+                                        source_p = doc.add_paragraph()
+                                        source_p.add_run('Источник: ').bold = True
+                                        source_p.add_run(source_text)
+                                    
+                                    doc.add_paragraph("")  # Пустая строка для разделения
     
-    def _add_summary_checklists_to_docx(self, doc: Document, checklists: list):
+    def _add_summary_checklists_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
         """Добавить краткие чеклисты в DOCX."""
         doc.add_heading('Краткий обзор чеклистов', level=1)
         
@@ -520,7 +545,7 @@ class ExportService:
         
         for checklist in checklists:
             row_cells = summary_table.add_row().cells
-            # Подсчитываем вопросы из структуры checklist для DOCX summary
+            # Подсчитываем вопросы из новой структуры checklist для DOCX summary
             total_questions = 0
             answered_questions = 0
             for section in checklist.sections:
@@ -528,7 +553,7 @@ class ExportService:
                     for group in subsection.question_groups:
                         for question in group.questions:
                             total_questions += 1
-                            if question.current_response and question.current_response.answer:
+                            if question.current_response and self._has_answer(question.current_response):
                                 answered_questions += 1
             completion_rate = (answered_questions / total_questions * 100) if total_questions > 0 else 0
             
@@ -536,7 +561,7 @@ class ExportService:
             row_cells[1].text = f"{answered_questions}/{total_questions}"
             row_cells[2].text = f"{completion_rate:.1f}%"
     
-    def _add_compact_checklists_to_docx(self, doc: Document, checklists: list):
+    def _add_compact_checklists_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
         """Добавить компактные чеклисты в DOCX."""
         doc.add_heading('Компактный отчет', level=1)
         
@@ -544,7 +569,7 @@ class ExportService:
         total_questions = 0
         
         for checklist in checklists:
-            # Подсчитываем вопросы из структуры checklist
+            # Подсчитываем вопросы из новой структуры checklist
             questions_count = 0
             answered_count = 0
             for section in checklist.sections:
@@ -552,7 +577,7 @@ class ExportService:
                     for group in subsection.question_groups:
                         for question in group.questions:
                             questions_count += 1
-                            if question.current_response and question.current_response.answer:
+                            if question.current_response and self._has_answer(question.current_response):
                                 answered_count += 1
             total_questions += questions_count
             total_answered += answered_count
@@ -560,6 +585,103 @@ class ExportService:
         overall_completion = (total_answered / total_questions * 100) if total_questions > 0 else 0
         
         doc.add_paragraph(f"Общая статистика: {total_answered}/{total_questions} вопросов ({overall_completion:.1f}%)")
+
+
+    def _get_answer_text(self, response, character_gender: Optional[str] = None) -> Optional[str]:
+        """
+        Получить текст ответа из ChecklistResponse с учетом новой архитектуры.
+        
+        Args:
+            response: ChecklistResponse объект
+            character_gender: Пол персонажа ('male', 'female') для выбора правильного значения
+            
+        Returns:
+            Текст ответа или None
+        """
+        # Если есть связанный ответ (ChecklistAnswer)
+        if hasattr(response, 'answer') and response.answer:
+            # Выбираем значение в зависимости от пола персонажа
+            if character_gender == 'female':
+                # Приоритет: exported_value_female -> value_female -> exported_value_male -> value_male
+                if response.answer.exported_value_female:
+                    return response.answer.exported_value_female
+                elif response.answer.value_female:
+                    return response.answer.value_female
+                elif response.answer.exported_value_male:
+                    return response.answer.exported_value_male
+                elif response.answer.value_male:
+                    return response.answer.value_male
+            else:
+                # Приоритет: exported_value_male -> value_male -> exported_value_female -> value_female
+                if response.answer.exported_value_male:
+                    return response.answer.exported_value_male
+                elif response.answer.value_male:
+                    return response.answer.value_male
+                elif response.answer.exported_value_female:
+                    return response.answer.exported_value_female
+                elif response.answer.value_female:
+                    return response.answer.value_female
+        
+        # Если есть текстовый ответ (свободный ввод)
+        if hasattr(response, 'answer_text') and response.answer_text:
+            return response.answer_text
+        
+        # Fallback на старое поле (для совместимости)
+        if hasattr(response, 'answer') and isinstance(response.answer, str):
+            return response.answer
+        
+        return None
+    
+    def _has_answer(self, response) -> bool:
+        """
+        Проверить, есть ли ответ в ChecklistResponse.
+        
+        Args:
+            response: ChecklistResponse объект
+            
+        Returns:
+            True если есть ответ, False иначе
+        """
+        return self._get_answer_text(response) is not None
+    
+    def _detect_character_gender(self, character: Character) -> Optional[str]:
+        """
+        Определить пол персонажа на основе доступных данных.
+        
+        Args:
+            character: Объект персонажа
+            
+        Returns:
+            'male', 'female' или None если не удалось определить
+        """
+        # Используем поле gender из модели персонажа
+        if hasattr(character, 'gender') and character.gender:
+            # Проверяем разные способы получения значения enum
+            gender_value = None
+            if hasattr(character.gender, 'value'):
+                gender_value = character.gender.value
+            else:
+                gender_value = str(character.gender).lower()
+            
+            if gender_value == 'male':
+                return 'male'
+            elif gender_value == 'female':
+                return 'female'
+            elif 'male' in gender_value:
+                return 'male'
+            elif 'female' in gender_value:
+                return 'female'
+        
+        # Fallback: анализ имени персонажа (простая эвристика)
+        if character.name:
+            name_lower = character.name.lower()
+            # Простые женские окончания в русских именах
+            female_endings = ['а', 'я', 'ия', 'ья', 'на', 'ка']
+            if any(name_lower.endswith(ending) for ending in female_endings):
+                return 'female'
+        
+        # По умолчанию возвращаем мужской пол
+        return 'male'
 
 
 # Создание экземпляра сервиса

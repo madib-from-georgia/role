@@ -2,9 +2,17 @@
 Модель персонажа.
 """
 
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, JSON
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, JSON, Enum
 from sqlalchemy.orm import relationship
 from app.database.models.base import BaseModel
+import enum
+
+
+class GenderEnum(str, enum.Enum):
+    """Перечисление полов персонажа."""
+    MALE = "male"
+    FEMALE = "female"
+    UNKNOWN = "unknown"
 
 
 class Character(BaseModel):
@@ -17,6 +25,7 @@ class Character(BaseModel):
     aliases = Column(JSON, nullable=True)  # Альтернативные имена и прозвища
     importance_score = Column(Float, nullable=True)  # Оценка важности персонажа (0-1)
     speech_attribution = Column(JSON, nullable=True)  # Атрибуция речи от NLP
+    gender = Column(Enum(GenderEnum), nullable=True, default=GenderEnum.UNKNOWN)  # Пол персонажа
     
     # Relationships
     text = relationship("Text", back_populates="characters")

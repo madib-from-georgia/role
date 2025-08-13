@@ -14,6 +14,7 @@ from loguru import logger
 
 from .nlp.extractors.character_extractor import CharacterExtractor
 from .nlp.models import NLPResult, CharacterData, SpeechData, ExtractionStats
+from .nlp.gender_detector import GenderDetector
 from ..database.crud import character as character_crud, text as text_crud
 from ..database.models.character import Character
 from ..schemas.character import CharacterCreate, CharacterUpdate
@@ -33,6 +34,7 @@ class NLPProcessor:
     
     def __init__(self, logs_dir: Optional[str] = None):
         self.character_extractor = CharacterExtractor()
+        self.gender_detector = GenderDetector()
         
         # Настройка путей для логов
         if logs_dir is None:
@@ -217,6 +219,9 @@ class NLPProcessor:
         # Подсчитываем метрики для всех персонажей
         self._calculate_character_metrics_from_content(characters, content)
         
+        # Определяем пол для всех персонажей
+        characters = self._add_gender_to_characters_from_content(characters, content)
+        
         logger.info(f"Извлечено {len(characters)} персонажей из структурированного контента")
         return characters
     
@@ -281,6 +286,68 @@ class NLPProcessor:
             
             character.importance_score = min(base_score + source_bonus, 1.0)
     
+    def _add_gender_to_characters_from_content(self, characters: List[CharacterData], content: StructuredContent) -> List[CharacterData]:
+        """
+        Добавляет информацию о поле к персонажам из структурированного контента
+        
+        Args:
+            characters: Список персонажей
+            content: Структурированный контент для контекста
+            
+        Returns:
+            Список персонажей с определенным полом
+        """
+        logger.info(f"Определяю пол для {len(characters)} персонажей из структурированного контента")
+        
+        for character in characters:
+            try:
+                # Определяем пол персонажа
+                gender = self.gender_detector.detect_gender(
+                    name=character.name,
+                    description=character.description,
+                    context=self._extract_character_context_from_content(character.name, content)
+                )
+                
+                # Обновляем пол персонажа
+                character.gender = gender
+                
+                logger.debug(f"Персонаж '{character.name}': пол={gender.value}")
+                
+            except Exception as e:
+                logger.warning(f"Ошибка при определении пола для персонажа '{character.name}': {e}")
+                # Оставляем значение по умолчанию (UNKNOWN)
+        
+        return characters
+    
+    def _extract_character_context_from_content(self, character_name: str, content: StructuredContent) -> str:
+        """
+        Извлекает контекст упоминания персонажа из структурированного контента
+        
+        Args:
+            character_name: Имя персонажа
+            content: Структурированный контент
+            
+        Returns:
+            Контекст упоминания персонажа
+        """
+        import re
+        
+        # Ищем упоминания персонажа в элементах контента
+        pattern = rf'\b{re.escape(character_name)}\b'
+        contexts = []
+        
+        for element in content.elements:
+            if re.search(pattern, element.content, re.IGNORECASE):
+                # Берем контекст вокруг упоминания
+                start = max(0, element.position - 100)
+                end = min(len(content.raw_content), element.position + len(element.content) + 100)
+                context = content.raw_content[start:end].strip()
+                contexts.append(context)
+        
+        # Возвращаем объединенный контекст (максимум 500 символов)
+        full_context = " ... ".join(contexts)
+        return full_context[:500] if len(full_context) > 500 else full_context
+    
     async def _save_characters_to_db(
         self, 
         text_id: int, 
@@ -327,6 +394,7 @@ class NLPProcessor:
                 name=char_data.name,
                 aliases=char_data.aliases,
                 importance_score=char_data.importance_score,
+                gender=char_data.gender,  # Добавляем пол персонажа
                 speech_attribution={
                     "speech_count": speech_count,
                     "source": char_data.source,
@@ -370,7 +438,8 @@ class NLPProcessor:
                 mentions_count=speech_attr.get("mentions_count", 0),
                 first_mention_position=speech_attr.get("first_mention_position", 0),
                 importance_score=db_char.importance_score or 0.0,
-                source=speech_attr.get("source", "database")
+                source=speech_attr.get("source", "database"),
+                gender=db_char.gender  # Восстанавливаем пол персонажа из БД
             )
             characters.append(char_data)
         
@@ -492,7 +561,8 @@ class NLPProcessor:
                     "mentions_count": char.mentions_count,
                     "first_mention_position": char.first_mention_position,
                     "importance_score": char.importance_score,
-                    "source": char.source
+                    "source": char.source,
+                    "gender": char.gender.value if hasattr(char.gender, 'value') else str(char.gender)
                 }
                 for char in result.characters
             ],

@@ -5,6 +5,14 @@ Pydantic схемы для персонажа.
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 from datetime import datetime
+from enum import Enum
+
+
+class Gender(str, Enum):
+    """Перечисление полов персонажа."""
+    MALE = "male"
+    FEMALE = "female"
+    UNKNOWN = "unknown"
 
 
 class CharacterBase(BaseModel):
@@ -13,6 +21,7 @@ class CharacterBase(BaseModel):
     aliases: Optional[List[str]] = None
     importance_score: Optional[float] = Field(None, ge=0.0, le=1.0)
     speech_attribution: Optional[Dict[str, Any]] = None
+    gender: Optional[Gender] = Field(None, description="Пол персонажа")
 
 
 class CharacterCreate(CharacterBase):
@@ -26,6 +35,7 @@ class CharacterUpdate(BaseModel):
     aliases: Optional[List[str]] = None
     importance_score: Optional[float] = Field(None, ge=0.0, le=1.0)
     speech_attribution: Optional[Dict[str, Any]] = None
+    gender: Optional[Gender] = Field(None, description="Пол персонажа")
 
 
 class CharacterInDBBase(CharacterBase):

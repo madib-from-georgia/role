@@ -137,6 +137,7 @@ async def get_text_characters(
             "aliases": character.aliases,
             "importance_score": character.importance_score,
             "speech_attribution": character.speech_attribution,
+            "gender": character.gender.value if character.gender else None,
             "created_at": character.created_at.isoformat() if character.created_at else None
         }
         for character in text.characters

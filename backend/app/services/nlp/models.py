@@ -15,6 +15,13 @@ class SpeechType(str, Enum):
     AUTHOR = "author"
 
 
+class Gender(str, Enum):
+    """Пол персонажа"""
+    MALE = "male"
+    FEMALE = "female"
+    UNKNOWN = "unknown"
+
+
 class CharacterData(BaseModel):
     """
     Данные персонажа, извлеченные из текста
@@ -26,6 +33,7 @@ class CharacterData(BaseModel):
     first_mention_position: int = Field(0, description="Позиция первого упоминания")
     importance_score: float = Field(0.0, description="Оценка важности персонажа (0.0-1.0)")
     source: str = Field(..., description="Источник извлечения (character_list, dialogue, etc.)")
+    gender: Gender = Field(default=Gender.UNKNOWN, description="Пол персонажа")
     
     class Config:
         json_schema_extra = {
@@ -36,7 +44,8 @@ class CharacterData(BaseModel):
                 "mentions_count": 12,
                 "first_mention_position": 150,
                 "importance_score": 0.85,
-                "source": "character_list"
+                "source": "character_list",
+                "gender": "male"
             }
         }
 

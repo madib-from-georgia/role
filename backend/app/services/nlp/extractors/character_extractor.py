@@ -9,6 +9,7 @@ from loguru import logger
 
 from .play_parser import PlayParser
 from ..models import CharacterData, SpeechData, ExtractionStats
+from ..gender_detector import GenderDetector
 
 
 class CharacterExtractor:
@@ -21,6 +22,7 @@ class CharacterExtractor:
     
     def __init__(self):
         self.play_parser = PlayParser()
+        self.gender_detector = GenderDetector()
     
     async def extract_characters_and_speech(self, text: str) -> Tuple[List[CharacterData], List[SpeechData], ExtractionStats]:
         """
@@ -45,6 +47,9 @@ class CharacterExtractor:
                 
                 # Извлекаем персонажей
                 characters = self.play_parser.extract_characters(text)
+                
+                # Определяем пол для каждого персонажа
+                characters = self._add_gender_to_characters(characters, text)
                 
                 # Извлекаем атрибуции речи
                 speech_attributions = self.play_parser.extract_speech_attributions(text, characters)
@@ -71,6 +76,10 @@ class CharacterExtractor:
                 
                 # Пытаемся извлечь персонажей принудительно
                 characters = self.play_parser._extract_characters_from_dialogues(text)
+                
+                # Определяем пол для каждого персонажа
+                characters = self._add_gender_to_characters(characters, text)
+                
                 speech_attributions = self.play_parser.extract_speech_attributions(text, characters)
                 
                 stats = ExtractionStats(
@@ -153,3 +162,69 @@ class CharacterExtractor:
                 "Не подходит для прозы и романов"
             ]
         }
+    
+    def _add_gender_to_characters(self, characters: List[CharacterData], text: str) -> List[CharacterData]:
+        """
+        Добавляет информацию о поле к персонажам
+        
+        Args:
+            characters: Список персонажей
+            text: Исходный текст для контекста
+            
+        Returns:
+            Список персонажей с определенным полом
+        """
+        logger.info(f"Определяю пол для {len(characters)} персонажей")
+        
+        for character in characters:
+            try:
+                # Определяем пол персонажа
+                gender = self.gender_detector.detect_gender(
+                    name=character.name,
+                    description=character.description,
+                    context=self._extract_character_context(character.name, text)
+                )
+                
+                # Обновляем пол персонажа
+                character.gender = gender
+                
+                # Получаем уверенность в определении
+                confidence = self.gender_detector.get_confidence_score(
+                    character.name,
+                    character.description
+                )
+                
+                logger.debug(f"Персонаж '{character.name}': пол={gender.value}, уверенность={confidence:.2f}")
+                
+            except Exception as e:
+                logger.warning(f"Ошибка при определении пола для персонажа '{character.name}': {e}")
+                # Оставляем значение по умолчанию (UNKNOWN)
+        
+        return characters
+    
+    def _extract_character_context(self, character_name: str, text: str) -> str:
+        """
+        Извлекает контекст упоминания персонажа из текста
+        
+        Args:
+            character_name: Имя персонажа
+            text: Исходный текст
+            
+        Returns:
+            Контекст упоминания персонажа
+        """
+        import re
+        
+        # Ищем упоминания персонажа в тексте
+        pattern = rf'\b{re.escape(character_name)}\b'
+        matches = []
+        
+        for match in re.finditer(pattern, text, re.IGNORECASE):
+            start = max(0, match.start() - 100)
+            end = min(len(text), match.end() + 100)
+            context = text[start:end].strip()
+            matches.append(context)
+        
+        # Возвращаем объединенный контекст (максимум 500 символов)
+        full_context = " ... ".join(matches)
+        return full_context[:500] if len(full_context) > 500 else full_context
