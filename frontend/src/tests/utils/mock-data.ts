@@ -1,7 +1,10 @@
 import { faker } from '@faker-js/faker'
 
+// Types for mock data
+type MockOverrides = Record<string, unknown>;
+
 // Mock project data
-export const createMockProject = (overrides: any = {}) => ({
+export const createMockProject = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
   title: faker.lorem.words(3),
   description: faker.lorem.paragraph(),
@@ -13,7 +16,7 @@ export const createMockProject = (overrides: any = {}) => ({
 })
 
 // Mock character data
-export const createMockCharacter = (overrides: any = {}) => ({
+export const createMockCharacter = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
   name: faker.person.fullName(),
   description: faker.lorem.paragraph(),
@@ -34,7 +37,7 @@ export const createMockCharacter = (overrides: any = {}) => ({
 })
 
 // Mock checklist data
-export const createMockChecklist = (overrides: any = {}) => ({
+export const createMockChecklist = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 20 }),
   title: faker.lorem.words(3),
   description: faker.lorem.paragraph(),
@@ -50,23 +53,37 @@ export const createMockChecklist = (overrides: any = {}) => ({
 })
 
 // Mock checklist question
-export const createMockQuestion = (overrides: any = {}) => ({
+export const createMockQuestion = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
+  external_id: faker.string.uuid(),
   text: faker.lorem.sentence() + '?',
   answer_type: 'text' as 'single' | 'multiple' | 'text',
-  checklist_id: faker.number.int({ min: 1, max: 20 }),
-  order: faker.number.int({ min: 1, max: 20 }),
-  source: 'system',
+  source_type: 'FOUND_IN_TEXT' as 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED',
   answers: [],
-  current_response: null,
+  current_response: undefined,
+  created_at: faker.date.past().toISOString(),
+  updated_at: faker.date.recent().toISOString(),
+  // Контекстная информация для отображения
   sectionTitle: faker.lorem.words(2),
   subsectionTitle: faker.lorem.words(2),
-  groupTitle: null,
+  groupTitle: undefined,
+  ...overrides
+})
+
+// Mock checklist answer
+export const createMockAnswer = (overrides: MockOverrides = {}) => ({
+  id: faker.number.int({ min: 1, max: 1000 }),
+  external_id: faker.string.uuid(),
+  value_male: faker.lorem.words(2),
+  value_female: faker.lorem.words(2),
+  order_index: faker.number.int({ min: 1, max: 10 }),
+  created_at: faker.date.past().toISOString(),
+  updated_at: faker.date.recent().toISOString(),
   ...overrides
 })
 
 // Mock checklist response
-export const createMockResponse = (overrides: any = {}) => ({
+export const createMockResponse = (overrides: MockOverrides = {}) => ({
   id: faker.string.uuid(),
   character_id: faker.number.int({ min: 1, max: 100 }),
   checklist_id: faker.number.int({ min: 1, max: 20 }),
@@ -78,7 +95,7 @@ export const createMockResponse = (overrides: any = {}) => ({
 })
 
 // Mock user data
-export const createMockUser = (overrides: any = {}) => ({
+export const createMockUser = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
   email: faker.internet.email(),
   username: faker.internet.userName(),
@@ -89,7 +106,7 @@ export const createMockUser = (overrides: any = {}) => ({
 })
 
 // Mock pagination data
-export const createMockPagination = (items: any[], page = 1, limit = 10) => ({
+export const createMockPagination = (items: unknown[], page = 1, limit = 10) => ({
   items: items.slice((page - 1) * limit, page * limit),
   total: items.length,
   page,
@@ -104,7 +121,7 @@ export const createMockApiError = (message = 'An error occurred', status = 400) 
 })
 
 // Mock file data
-export const createMockFile = (overrides: any = {}) => ({
+export const createMockFile = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
   title: faker.lorem.words(2),
   filename: faker.system.fileName(),
@@ -131,7 +148,7 @@ export const createMockQuestions = (count = 10, checklistId = 1) =>
     order: i + 1 
   }))
 
-export const createMockResponses = (characterId: number, checklistId: number, questions: any[]) =>
+export const createMockResponses = (characterId: number, checklistId: number, questions: Array<{ id: number }>) =>
   questions.slice(0, faker.number.int({ min: 0, max: questions.length }))
     .map(q => createMockResponse({
       character_id: characterId,

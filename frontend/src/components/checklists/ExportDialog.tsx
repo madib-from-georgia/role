@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import { exportApi } from '../../services/api';
 import { downloadFile, formatFileSize } from '../../utils/downloadFile';
+import { ApiError } from '../../types/common';
 
 interface ExportDialogProps {
   characterId: number;
@@ -37,7 +38,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       // Закрываем диалог
       onClose();
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       console.error('Ошибка экспорта:', error);
       
       // Более детальное сообщение об ошибке
@@ -46,7 +47,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         errorMessage = 'Нет доступа к данному персонажу.';
       } else if (error.response?.status === 404) {
         errorMessage = 'Персонаж не найден.';
-      } else if (error.response?.status >= 500) {
+      } else if (error.response?.status && error.response.status >= 500) {
         errorMessage = 'Внутренняя ошибка сервера. Попробуйте позже.';
       }
       

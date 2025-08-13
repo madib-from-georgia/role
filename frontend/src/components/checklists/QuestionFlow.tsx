@@ -12,12 +12,39 @@ import { ChecklistSwitcher } from "./ChecklistSwitcher";
 import { ExportDialog } from "./ExportDialog";
 
 // Import types
-import { Checklist, ChecklistQuestion, Gender } from "../../types/checklist";
+import { Checklist, ChecklistQuestion, Gender, ChecklistAnswer } from "../../types/checklist";
 
 interface QuestionFlowProps {
   checklistSlug: string;
   characterId: number;
 }
+
+// API Response types
+interface ResponseData {
+  id: number;
+  question_id: number;
+  character_id: number;
+  answer_id?: number;
+  answer_text?: string;
+  source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
+  comment?: string;
+  version: number;
+  created_at: string;
+  updated_at: string;
+  answer?: unknown;
+}
+
+interface MutationVariables {
+  questionId: number;
+  data: {
+    answer_id?: number;
+    answer_text?: string;
+    source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
+    comment?: string;
+  };
+}
+
+// Удалил неиспользуемый интерфейс SectionData
 
 export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   checklistSlug,
@@ -30,9 +57,9 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const navigate = useNavigate();
 
   // Загружаем данные персонажа
-  const { data: character } = useQuery({
+  const { data: character } = useQuery<{ name: string; gender?: string; description?: string; [key: string]: unknown }>({
     queryKey: ["character", characterId],
-    queryFn: () => charactersApi.getById(String(characterId!)),
+    queryFn: () => charactersApi.getById(String(characterId!)) as Promise<{ name: string; gender?: string; description?: string; [key: string]: unknown }>,
     enabled: !!characterId,
   });
 
@@ -41,10 +68,10 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     data: checklistData,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<Checklist>({
     queryKey: ["checklist", checklistSlug, characterId],
     queryFn: () =>
-      checklistApi.getChecklistForCharacter(checklistSlug, characterId),
+      checklistApi.getChecklistForCharacter(checklistSlug, characterId) as Promise<Checklist>,
     staleTime: 5 * 60 * 1000, // 5 минут
   });
 
@@ -56,25 +83,17 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   }, [checklistData]);
 
   // Мутация для обновления ответа
-  const updateAnswerMutation = useMutation({
+  const updateAnswerMutation = useMutation<ResponseData, Error, MutationVariables>({
     mutationFn: ({
       questionId,
       data,
-    }: {
-      questionId: number;
-      data: {
-        answer_id?: number;
-        answer_text?: string;
-        source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
-        comment?: string;
-      };
-    }) =>
+    }: MutationVariables) =>
       checklistApi.createOrUpdateResponse({
         question_id: questionId,
         character_id: characterId,
         ...data,
-      }),
-    onSuccess: (response: any, variables: any) => {
+      }) as Promise<ResponseData>,
+    onSuccess: (response: ResponseData, variables: MutationVariables) => {
       // Update local data
       if (localData) {
         const updatedData = { ...localData };
@@ -93,12 +112,12 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                   character_id: response.character_id,
                   answer_id: response.answer_id,
                   answer_text: response.answer_text,
-                  source_type: response.source_type,
+                  source_type: response.source_type || "FOUND_IN_TEXT",
                   comment: response.comment,
                   version: response.version,
                   created_at: response.created_at,
                   updated_at: response.updated_at,
-                  answer: response.answer, // Связанный объект ответа
+                  answer: response.answer as ChecklistAnswer | undefined, // Связанный объект ответа
                 };
               }
             });
@@ -118,16 +137,16 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   // Мутация для удаления ответа
   const deleteAnswerMutation = useMutation({
     mutationFn: (responseId: number) => checklistApi.deleteResponse(responseId),
-    onSuccess: (_response: any, responseId: number) => {
+    onSuccess: (_response: unknown, responseId: number) => {
       // Update local data
       if (localData) {
         const updatedData = { ...localData };
 
         // Find and remove answer in hierarchical structure
-        updatedData.sections?.forEach((section: any) => {
-          section.subsections?.forEach((subsection: any) => {
-            subsection.question_groups?.forEach((group: any) => {
-              group.questions?.forEach((question: any) => {
+        updatedData.sections?.forEach((section) => {
+          section.subsections?.forEach((subsection) => {
+            subsection.question_groups?.forEach((group) => {
+              group.questions?.forEach((question) => {
                 if (question.current_response?.id === responseId) {
                   question.current_response = undefined;
                 }
@@ -144,7 +163,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         queryKey: ["checklist", checklistSlug, characterId],
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Ошибка при удалении ответа:", error);
     },
   });

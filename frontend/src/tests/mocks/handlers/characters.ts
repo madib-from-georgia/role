@@ -13,7 +13,7 @@ const generateMockCharacter = (id: number, projectId: number) => ({
 })
 
 // Mock characters for different projects
-const mockCharacters: Record<number, any[]> = {}
+const mockCharacters: Record<number, Array<Record<string, unknown>>> = {}
 for (let projectId = 1; projectId <= 10; projectId++) {
   mockCharacters[projectId] = Array.from(
     { length: faker.number.int({ min: 1, max: 5 }) },

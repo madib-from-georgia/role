@@ -17,7 +17,7 @@ interface FileUploadResponse {
   filename: string;
   format: string;
   content_length: number;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   created_at: string;
   message?: string;
 }
@@ -37,16 +37,16 @@ interface Character {
   name: string;
   aliases?: string[];
   importance_score?: number;
-  speech_attribution?: any;
+  speech_attribution?: Record<string, unknown>;
   created_at?: string;
 }
 
 const fetchProject = async (id: string): Promise<Project> => {
-  return await projectsApi.getById(id);
+  return await projectsApi.getById(id) as Project;
 };
 
 const fetchProjectTexts = async (projectId: string): Promise<ProjectText[]> => {
-  return await textsApi.getByProject(projectId);
+  return await textsApi.getByProject(projectId) as ProjectText[];
 };
 
 const uploadText = async (
@@ -63,7 +63,7 @@ const deleteProject = async (id: string): Promise<void> => {
 };
 
 const fetchCharacters = async (textId: string): Promise<Character[]> => {
-  return await charactersApi.getByText(textId);
+  return await charactersApi.getByText(textId) as Character[];
 };
 
 // Компонент для отображения персонажа с прогрессом
@@ -75,9 +75,9 @@ const CharacterItem: React.FC<{
     data: progress,
     isLoading,
     error,
-  } = useQuery(
+  } = useQuery<Array<{ completion_percentage?: number }>>(
     ["character-progress", character.id],
-    () => checklistApi.getCharacterProgress(character.id),
+    () => checklistApi.getCharacterProgress(character.id) as Promise<Array<{ completion_percentage?: number }>>,
     {
       staleTime: 2 * 60 * 1000, // 2 минуты
       enabled: !!character.id,
@@ -86,10 +86,10 @@ const CharacterItem: React.FC<{
 
   // Вычисляем общий процент заполненности
   const overallProgress =
-    progress?.length > 0
+    progress && progress.length > 0
       ? Math.round(
           progress.reduce(
-            (sum: number, item: any) => sum + (item.completion_percentage || 0),
+            (sum: number, item) => sum + (item.completion_percentage || 0),
             0
           ) / progress.length
         )
@@ -134,7 +134,7 @@ const TextSection: React.FC<{
     data: characters,
     isLoading: charactersLoading,
     error: charactersError,
-  } = useQuery(
+  } = useQuery<Character[]>(
     ["text-characters", text.id],
     () => fetchCharacters(text.id.toString()),
     {
@@ -263,9 +263,9 @@ const ProjectDetail: React.FC = () => {
     data: project,
     isLoading,
     error,
-  } = useQuery(["project", id], () => fetchProject(id!), { enabled: !!id });
+  } = useQuery<Project>(["project", id], () => fetchProject(id!), { enabled: !!id });
 
-  const { data: texts } = useQuery(
+  const { data: texts } = useQuery<ProjectText[]>(
     ["project-texts", id],
     () => fetchProjectTexts(id!),
     { enabled: !!id }

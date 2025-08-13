@@ -8,6 +8,14 @@ import { ChecklistGroup } from './ChecklistGroup';
 import { OverallProgress } from './OverallProgress';
 import { ChecklistSwitcher } from './ChecklistSwitcher';
 import { ExportDialog } from './ExportDialog';
+import { ChecklistItem, ChecklistProgress } from '../../types/common';
+
+interface Character {
+  id: number;
+  name: string;
+  description?: string;
+  [key: string]: unknown;
+}
 
 interface ChecklistsOverviewProps {}
 
@@ -17,24 +25,24 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
   const [isExportDialogOpen, setIsExportDialogOpen] = React.useState(false);
 
   // Загружаем данные персонажа
-  const { data: character, isLoading: characterLoading } = useQuery({
+  const { data: character, isLoading: characterLoading } = useQuery<Character>({
     queryKey: ['character', characterId],
-    queryFn: () => charactersApi.getById(characterId!),
+    queryFn: () => charactersApi.getById(characterId!) as Promise<Character>,
     enabled: !!characterId
   });
 
   // Загружаем список доступных чеклистов
-  const { data: checklists, isLoading: checklistsLoading } = useQuery({
+  const { data: checklists, isLoading: checklistsLoading } = useQuery<ChecklistItem[]>({
     queryKey: ['checklists', characterId],
-    queryFn: () => checklistApi.getAll(characterId ? parseInt(characterId) : undefined),
+    queryFn: () => checklistApi.getAll(characterId ? parseInt(characterId) : undefined) as Promise<ChecklistItem[]>,
     enabled: !!characterId,
     staleTime: 10 * 60 * 1000, // 10 минут
   });
 
   // Загружаем прогресс по чеклистам для персонажа
-  const { data: progress } = useQuery({
+  const { data: progress } = useQuery<ChecklistProgress[]>({
     queryKey: ['checklist-progress', characterId],
-    queryFn: () => checklistApi.getCharacterProgress(parseInt(characterId!)),
+    queryFn: () => checklistApi.getCharacterProgress(parseInt(characterId!)) as Promise<ChecklistProgress[]>,
     enabled: !!characterId,
     staleTime: 2 * 60 * 1000, // 2 минуты
   });
@@ -46,11 +54,11 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
       return { basic: [], advanced: [], psychological: [] };
     }
 
-    const basic: any[] = [];
-    const advanced: any[] = [];
-    const psychological: any[] = [];
+    const basic: ChecklistItem[] = [];
+    const advanced: ChecklistItem[] = [];
+    const psychological: ChecklistItem[] = [];
 
-    checklists.forEach((checklist: any) => {
+    checklists.forEach((checklist: ChecklistItem) => {
       const slug = checklist.slug.toLowerCase();
       
       // Базовый анализ
@@ -137,9 +145,9 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
       <div className="checklists-overview__content">
         
         {/* Overall Progress */}
-        <OverallProgress 
-          progress={progress}
-          character={character}
+        <OverallProgress
+          progress={progress || []}
+          character={character || { id: 0, name: 'Unknown' }}
         />
 
         {/* Checklist Groups */}
@@ -148,7 +156,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
             title="Базовый анализ"
             description="Фундаментальные аспекты персонажа: внешность, эмоции, речь"
             checklists={groupedChecklists.basic}
-            progress={progress}
+            progress={progress || []}
             characterId={parseInt(characterId)}
             type="basic"
           />
@@ -157,7 +165,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
             title="Углубленный анализ"
             description="Детальное изучение характера: мотивация, отношения, биография"
             checklists={groupedChecklists.advanced}
-            progress={progress}
+            progress={progress || []}
             characterId={parseInt(characterId)}
             type="advanced"
           />
@@ -166,7 +174,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
             title="Психологический анализ"
             description="Глубинные психологические аспекты: подтекст, защиты, травмы"
             checklists={groupedChecklists.psychological}
-            progress={progress}
+            progress={progress || []}
             characterId={parseInt(characterId)}
             type="psychological"
           />
@@ -177,7 +185,7 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
       {character && (
         <ExportDialog
           characterId={parseInt(characterId)}
-          characterName={character.name}
+          characterName={character?.name || 'Unknown'}
           isOpen={isExportDialogOpen}
           onClose={() => setIsExportDialogOpen(false)}
         />

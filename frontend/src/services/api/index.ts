@@ -1,5 +1,19 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
+// API Types
+interface ProjectData {
+  name?: string;
+  description?: string;
+  [key: string]: unknown;
+}
+
+interface CharacterData {
+  name?: string;
+  description?: string;
+  gender?: 'male' | 'female';
+  [key: string]: unknown;
+}
+
 const API_BASE_URL = window.location.origin
 
 // Создаем axios instance
@@ -75,19 +89,19 @@ export default apiClient
 
 // Утилиты для работы с API
 export const api = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig) => 
+  get: <T = unknown>(url: string, config?: AxiosRequestConfig) =>
     apiClient.get<T>(url, config).then(response => response.data),
   
-  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => 
+  post: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiClient.post<T>(url, data, config).then(response => response.data),
   
-  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => 
+  put: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiClient.put<T>(url, data, config).then(response => response.data),
   
-  delete: <T = any>(url: string, config?: AxiosRequestConfig) => 
+  delete: <T = unknown>(url: string, config?: AxiosRequestConfig) =>
     apiClient.delete<T>(url, config).then(response => response.data),
   
-  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => 
+  patch: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiClient.patch<T>(url, data, config).then(response => response.data),
 }
 
@@ -95,8 +109,8 @@ export const api = {
 export const projectsApi = {
   getAll: () => api.get('/api/projects/'),
   getById: (id: string) => api.get(`/api/projects/${id}`),
-  create: (data: any) => api.post('/api/projects/', data),
-  update: (id: string, data: any) => api.put(`/api/projects/${id}`, data),
+  create: (data: ProjectData) => api.post('/api/projects/', data),
+  update: (id: string, data: ProjectData) => api.put(`/api/projects/${id}`, data),
   delete: (id: string) => api.delete(`/api/projects/${id}`),
 }
 
@@ -114,9 +128,9 @@ export const textsApi = {
 
 export const charactersApi = {
   getByText: (textId: string) => api.get(`/api/texts/${textId}/characters`),
-  getById: (characterId: string) => 
+  getById: (characterId: string) =>
     api.get(`/api/characters/${characterId}`),
-  update: (characterId: string, data: any) => 
+  update: (characterId: string, data: CharacterData) =>
     api.put(`/api/characters/${characterId}`, data),
 }
 

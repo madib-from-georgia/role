@@ -1,10 +1,11 @@
 import React from "react";
 import { Progress, Text } from "@gravity-ui/uikit";
+import { ChecklistItem } from "../../types/common";
 
 interface ProgressBarProps {
   currentIndex: number;
   totalQuestions: number;
-  checklist: any;
+  checklist: ChecklistItem;
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({ checklist }) => {

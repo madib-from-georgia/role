@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { checklistApi } from "../../services/api";
 import { Button } from "@gravity-ui/uikit";
+import { ChecklistItem, ChecklistProgress } from "../../types/common";
 
 interface ChecklistSwitcherProps {
   characterId: number;
@@ -16,15 +17,15 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { data: checklists } = useQuery({
+  const { data: checklists } = useQuery<ChecklistItem[]>({
     queryKey: ["checklists", characterId],
-    queryFn: () => checklistApi.getAll(characterId),
+    queryFn: () => checklistApi.getAll(characterId) as Promise<ChecklistItem[]>,
     staleTime: 10 * 60 * 1000, // 10 минут
   });
 
-  const { data: progress } = useQuery({
+  const { data: progress } = useQuery<ChecklistProgress[]>({
     queryKey: ["checklist-progress", characterId],
-    queryFn: () => checklistApi.getCharacterProgress(characterId),
+    queryFn: () => checklistApi.getCharacterProgress(characterId) as Promise<ChecklistProgress[]>,
     staleTime: 2 * 60 * 1000, // 2 минуты
   });
 
@@ -39,7 +40,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
 
   const getChecklistProgress = (checklistId: number) => {
     const checklistProgress = progress?.find(
-      (p: any) => p.checklist_id === checklistId
+      (p: ChecklistProgress) => p.checklist_id === checklistId
     );
     return checklistProgress?.completion_percentage || 0;
   };
@@ -92,8 +93,8 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
             <div className="switcher-divider"></div>
 
             {/* Checklist options */}
-            {checklists.map((checklist: any) => {
-              const completionPercentage = getChecklistProgress(checklist.id);
+            {checklists.map((checklist: ChecklistItem) => {
+              const completionPercentage = getChecklistProgress(Number(checklist.id));
               const isActive = currentChecklist === checklist.slug;
 
               return (

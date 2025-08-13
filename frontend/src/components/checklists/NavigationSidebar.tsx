@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { Button, TextInput, Progress, Label, ArrowToggle } from "@gravity-ui/uikit";
+import { ChecklistQuestion } from "../../types/checklist";
+
+interface QuestionWithIndex extends ChecklistQuestion {
+  index: number;
+}
 
 interface NavigationSidebarProps {
   isOpen: boolean;
-  questions: any[];
+  questions: ChecklistQuestion[];
   currentIndex: number;
   completionPercentage: number;
   onQuestionSelect: (index: number) => void;
@@ -31,7 +36,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 
   // Group questions by section/subsection
   const groupedQuestions = React.useMemo(() => {
-    const groups: { [key: string]: any[] } = {};
+    const groups: { [key: string]: QuestionWithIndex[] } = {};
 
     questions.forEach((question, index) => {
       const groupKey = `${question.sectionTitle} → ${question.subsectionTitle}`;
@@ -46,7 +51,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 
   // Filter questions based on search and filter mode
   const filteredGroups = React.useMemo(() => {
-    const filtered: { [key: string]: any[] } = {};
+    const filtered: { [key: string]: QuestionWithIndex[] } = {};
 
     Object.entries(groupedQuestions).forEach(([groupKey, groupQuestions]) => {
       let matchingQuestions = groupQuestions;
@@ -73,8 +78,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
         matchingQuestions = matchingQuestions.filter(
           (q) =>
             q.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            q.sectionTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            q.subsectionTitle.toLowerCase().includes(searchTerm.toLowerCase())
+            (q.sectionTitle && q.sectionTitle.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (q.subsectionTitle && q.subsectionTitle.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       }
 
@@ -96,7 +101,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
     setExpandedSections(newExpanded);
   };
 
-  const getQuestionStatus = (question: any) => {
+  const getQuestionStatus = (question: QuestionWithIndex) => {
     if (question.current_response?.answer) {
       return "answered";
     }

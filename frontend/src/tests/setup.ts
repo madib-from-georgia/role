@@ -46,7 +46,7 @@ vi.mock('@gravity-ui/uikit', () => ({
       'data-testid': 'text-input',
       type: 'text',
       value,
-      onChange: (e: any) => onUpdate?.(e.target.value),
+      onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => onUpdate?.(e.target.value),
       onFocus,
       placeholder,
       ...props
@@ -56,7 +56,7 @@ vi.mock('@gravity-ui/uikit', () => ({
     React.createElement('textarea', {
       'data-testid': 'textarea',
       value,
-      onChange: (e: any) => onUpdate?.(e.target.value),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => onUpdate?.(e.target.value),
       onBlur,
       placeholder,
       ...props
@@ -64,7 +64,7 @@ vi.mock('@gravity-ui/uikit', () => ({
   ),
   SegmentedRadioGroup: vi.fn(({ value, onUpdate, options, ...props }) =>
     React.createElement('div', { 'data-testid': 'segmented-radio-group', ...props },
-      options?.map((option: any) =>
+      options?.map((option: { value: string; content: React.ReactNode; title?: string }) =>
         React.createElement('label', { key: option.value }, [
           React.createElement('input', {
             key: 'input',

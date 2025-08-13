@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card } from "@gravity-ui/uikit";
+import { ChecklistProgress, Character } from '../../types/common';
 
 interface OverallProgressProps {
-  progress: any[];
-  character: any;
+  progress: ChecklistProgress[];
+  character: Character;
 }
 
 export const OverallProgress: React.FC<OverallProgressProps> = ({ progress}) => {
@@ -19,8 +20,8 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({ progress}) => 
   }
 
   // Calculate overall stats
-  const totalQuestions = progress.reduce((sum, p) => sum + p.total_questions, 0);
-  const answeredQuestions = progress.reduce((sum, p) => sum + p.answered_questions, 0);
+  const totalQuestions = progress.reduce((sum, p) => sum + (p.total_questions || 0), 0);
+  const answeredQuestions = progress.reduce((sum, p) => sum + (p.answered_questions || 0), 0);
   const overallPercentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
   
   const completedChecklists = progress.filter(p => p.completion_percentage === 100).length;

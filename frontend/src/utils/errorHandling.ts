@@ -68,10 +68,26 @@ export const validatePassword = (password: string): { isValid: boolean; message?
 /**
  * Обрабатывает ошибки API и возвращает понятное пользователю сообщение
  */
-export const handleApiError = (error: any): string => {
+export const handleApiError = (error: unknown): string => {
+  // Type guards для работы с unknown
+  const isErrorWithResponse = (err: unknown): err is { response: { status: number; data?: { detail?: string } } } => {
+    return typeof err === 'object' && err !== null && 'response' in err;
+  }
+  
+  const isErrorWithStatus = (err: unknown): err is { status: number } => {
+    return typeof err === 'object' && err !== null && 'status' in err;
+  }
+  
+  const isErrorWithCode = (err: unknown): err is { code: string } => {
+    return typeof err === 'object' && err !== null && 'code' in err;
+  }
+  
+  const isErrorWithDetail = (err: unknown): err is { detail: string } => {
+    return typeof err === 'object' && err !== null && 'detail' in err;
+  }
   
   // Если это сетевая ошибка
-  if (!error.response && error.code === 'NETWORK_ERROR') {
+  if (!isErrorWithResponse(error) && isErrorWithCode(error) && error.code === 'NETWORK_ERROR') {
     return ERROR_MESSAGES.NETWORK_ERROR
   }
   
@@ -81,8 +97,11 @@ export const handleApiError = (error: any): string => {
   }
   
   // Получаем детали ошибки (учитываем разные форматы)
-  const status = error.response?.status || error.status || 0
-  const detail = error.response?.data?.detail || error.detail || error.message || ''
+  const status = isErrorWithResponse(error) ? error.response.status :
+               isErrorWithStatus(error) ? error.status : 0
+  const detail = isErrorWithResponse(error) ? error.response.data?.detail || '' :
+                isErrorWithDetail(error) ? error.detail :
+                error instanceof Error ? error.message : ''
   
   // Маппинг по статус кодам
   switch (status) {
@@ -138,9 +157,24 @@ export const handleApiError = (error: any): string => {
 /**
  * Создает специфичное для аутентификации сообщение об ошибке
  */
-export const handleAuthError = (error: any): string => {
-  const status = error.response?.status || error.status || 0
-  const detail = error.response?.data?.detail || error.detail || error.message || ''
+export const handleAuthError = (error: unknown): string => {
+  const isErrorWithResponse = (err: unknown): err is { response: { status: number; data?: { detail?: string } } } => {
+    return typeof err === 'object' && err !== null && 'response' in err;
+  }
+  
+  const isErrorWithStatus = (err: unknown): err is { status: number } => {
+    return typeof err === 'object' && err !== null && 'status' in err;
+  }
+  
+  const isErrorWithDetail = (err: unknown): err is { detail: string } => {
+    return typeof err === 'object' && err !== null && 'detail' in err;
+  }
+  
+  const status = isErrorWithResponse(error) ? error.response.status :
+               isErrorWithStatus(error) ? error.status : 0
+  const detail = isErrorWithResponse(error) ? error.response.data?.detail || '' :
+                isErrorWithDetail(error) ? error.detail :
+                error instanceof Error ? error.message : ''
   
   // Специальная обработка для 401 в контексте входа
   if (status === 401) {
@@ -157,8 +191,18 @@ export const handleAuthError = (error: any): string => {
 /**
  * Создает специфичное для регистрации сообщение об ошибке
  */
-export const handleRegistrationError = (error: any): string => {
-  const detail = error.response?.data?.detail || error.detail || error.message || ''
+export const handleRegistrationError = (error: unknown): string => {
+  const isErrorWithResponse = (err: unknown): err is { response: { data?: { detail?: string } } } => {
+    return typeof err === 'object' && err !== null && 'response' in err;
+  }
+  
+  const isErrorWithDetail = (err: unknown): err is { detail: string } => {
+    return typeof err === 'object' && err !== null && 'detail' in err;
+  }
+  
+  const detail = isErrorWithResponse(error) ? error.response.data?.detail || '' :
+                isErrorWithDetail(error) ? error.detail :
+                error instanceof Error ? error.message : ''
   
   if (detail.includes('email уже существует')) {
     return 'Пользователь с таким email уже зарегистрирован. Попробуйте войти или восстановить пароль.'

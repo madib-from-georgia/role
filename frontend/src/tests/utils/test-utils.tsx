@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { AuthProvider } from '../../contexts/AuthContext'
 
 // Test wrapper component
+// eslint-disable-next-line react-refresh/only-export-components
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -36,6 +37,7 @@ const customRender = (
 ) => render(ui, { wrapper: TestWrapper, ...options })
 
 // Test wrapper without router (for components that don't need routing)
+// eslint-disable-next-line react-refresh/only-export-components
 const TestWrapperNoRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -83,5 +85,6 @@ export const mockTokens = {
 }
 
 // Re-export everything
+// eslint-disable-next-line react-refresh/only-export-components
 export * from '@testing-library/react'
 export { customRender as render, renderWithoutRouter }

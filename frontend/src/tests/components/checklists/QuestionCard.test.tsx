@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from '../../utils/test-utils'
 import { QuestionCard } from '../../../components/checklists/QuestionCard'
-import { createMockQuestion } from '../../utils/mock-data'
+import { createMockQuestion, createMockAnswer } from '../../utils/mock-data'
 
 describe('QuestionCard', () => {
   const mockOnAnswerUpdate = vi.fn()
@@ -21,7 +21,7 @@ describe('QuestionCard', () => {
     it('should render question not found when no question provided', () => {
       render(
         <QuestionCard
-          question={null as any}
+          question={null as never}
           characterGender="male"
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
@@ -221,9 +221,9 @@ describe('QuestionCard', () => {
       const questionWithAnswers = {
         ...question,
         answers: [
-          { id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' },
-          { id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' },
-          { id: 3, value_male: 'Вариант 3', value_female: 'Вариант 3', external_id: 'option3' }
+          createMockAnswer({ id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' }),
+          createMockAnswer({ id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' }),
+          createMockAnswer({ id: 3, value_male: 'Вариант 3', value_female: 'Вариант 3', external_id: 'option3' })
         ]
       }
 
@@ -281,8 +281,8 @@ describe('QuestionCard', () => {
       const questionWithAnswers = {
         ...question,
         answers: [
-          { id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' },
-          { id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' }
+          createMockAnswer({ id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' }),
+          createMockAnswer({ id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' })
         ]
       }
 
@@ -336,9 +336,9 @@ describe('QuestionCard', () => {
       const questionWithAnswers = {
         ...question,
         answers: [
-          { id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' },
-          { id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' },
-          { id: 3, value_male: 'Вариант 3', value_female: 'Вариант 3', external_id: 'option3' }
+          createMockAnswer({ id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' }),
+          createMockAnswer({ id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' }),
+          createMockAnswer({ id: 3, value_male: 'Вариант 3', value_female: 'Вариант 3', external_id: 'option3' })
         ]
       }
 
@@ -398,8 +398,8 @@ describe('QuestionCard', () => {
       const questionWithAnswers = {
         ...question,
         answers: [
-          { id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' },
-          { id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' }
+          createMockAnswer({ id: 1, value_male: 'Вариант 1', value_female: 'Вариант 1', external_id: 'option1' }),
+          createMockAnswer({ id: 2, value_male: 'Вариант 2', value_female: 'Вариант 2', external_id: 'option2' })
         ]
       }
 

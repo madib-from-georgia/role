@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@gravity-ui/uikit";
+import { ChecklistItem, ChecklistProgress } from "../../types/common";
 
 interface ChecklistGroupProps {
   title: string;
   description: string;
-  checklists: any[];
-  progress: any[];
+  checklists: ChecklistItem[];
+  progress: ChecklistProgress[];
   characterId: number;
   type: "basic" | "advanced" | "psychological";
 }
@@ -50,7 +51,7 @@ export const ChecklistGroup: React.FC<ChecklistGroupProps> = ({
     );
   };
 
-  const handleChecklistClick = (checklist: any) => {
+  const handleChecklistClick = (checklist: ChecklistItem) => {
     navigate(`/characters/${characterId}/checklists/${checklist.slug}`);
   };
 

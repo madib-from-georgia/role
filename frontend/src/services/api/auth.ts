@@ -2,6 +2,16 @@ import { User, LoginRequest, RegisterRequest, TokenResponse, AuthResponse } from
 
 const API_BASE_URL = `${window.location.origin}/api`
 
+// Extended Error type for API errors
+interface ApiError extends Error {
+  response?: {
+    status: number;
+    data: unknown;
+  };
+  status?: number;
+  detail?: string;
+}
+
 class AuthApi {
   private async request<T>(
     endpoint: string,
@@ -21,14 +31,14 @@ class AuthApi {
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      const error = new Error(errorData.detail || `HTTP error! status: ${response.status}`)
+      const error = new Error(errorData.detail || `HTTP error! status: ${response.status}`) as ApiError
       // Добавляем информацию для системы обработки ошибок
-      ;(error as any).response = {
+      error.response = {
         status: response.status,
         data: errorData
       }
-      ;(error as any).status = response.status
-      ;(error as any).detail = errorData.detail
+      error.status = response.status
+      error.detail = errorData.detail
       throw error
     }
 
@@ -106,13 +116,13 @@ class AuthApi {
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      const error = new Error(errorData.detail || `HTTP error! status: ${response.status}`)
-      ;(error as any).response = {
+      const error = new Error(errorData.detail || `HTTP error! status: ${response.status}`) as ApiError
+      error.response = {
         status: response.status,
         data: errorData
       }
-      ;(error as any).status = response.status
-      ;(error as any).detail = errorData.detail
+      error.status = response.status
+      error.detail = errorData.detail
       throw error
     }
 

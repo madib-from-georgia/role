@@ -103,9 +103,9 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
       // Просто очищаем локальное состояние
       clearAuth()
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Change password error:', err)
-      setError(err.message || 'Ошибка смены пароля')
+      setError(err instanceof Error ? err.message : 'Ошибка смены пароля')
     } finally {
       setIsLoading(false)
     }

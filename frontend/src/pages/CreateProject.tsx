@@ -6,10 +6,16 @@ import { projectsApi } from '../services/api'
 interface CreateProjectData {
   title: string
   description?: string
+  [key: string]: unknown;
 }
 
-const createProject = async (data: CreateProjectData) => {
-  return await projectsApi.create(data)
+interface CreatedProject {
+  id: string;
+  [key: string]: unknown;
+}
+
+const createProject = async (data: CreateProjectData): Promise<CreatedProject> => {
+  return await projectsApi.create(data as CreateProjectData & { [key: string]: unknown }) as CreatedProject
 }
 
 const CreateProject: React.FC = () => {
@@ -18,7 +24,7 @@ const CreateProject: React.FC = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const mutation = useMutation(createProject, {
+  const mutation = useMutation<CreatedProject, Error, CreateProjectData>(createProject, {
     onSuccess: (data) => {
       queryClient.invalidateQueries('projects')
       navigate(`/projects/${data.id}`)

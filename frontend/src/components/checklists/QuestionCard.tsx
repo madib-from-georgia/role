@@ -78,8 +78,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const [localComment, setLocalComment] = useState(
     question?.current_response?.comment || ""
   );
-  const [sourceType, setSourceType] = useState(
-    question?.current_response?.source_type || "FOUND_IN_TEXT"
+  const [sourceType, setSourceType] = useState<'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED'>(
+    (question?.current_response?.source_type as 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED') || "FOUND_IN_TEXT"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -95,6 +95,58 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const getAnswerDisplayValue = (answer: ChecklistAnswer): string => {
     return characterGender === 'male' ? answer.value_male : answer.value_female;
   };
+
+  // handleSave должен быть определен до useEffect
+  const handleSave = React.useCallback(() => {
+    if (!question) return;
+    
+    const data: {
+      answer_id?: number;
+      answer_text?: string;
+      comment: string;
+      source_type: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+    } = {
+      comment: localComment,
+      source_type: sourceType,
+    };
+
+    // Определяем тип данных для отправки в зависимости от типа вопроса
+    if (question.answer_type === 'single') {
+      if (selectedAnswerId) {
+        const selectedAnswer = question.answers?.find(answer => answer.id === selectedAnswerId);
+        const isCustomAnswer = selectedAnswer?.external_id === "custom";
+
+        if (isCustomAnswer && customAnswerText.trim()) {
+          // Для варианта "свой ответ" отправляем и ID варианта, и текст
+          data.answer_id = selectedAnswerId;
+          data.answer_text = customAnswerText.trim();
+        } else if (!isCustomAnswer) {
+          // Для обычных ответов отправляем только ID
+          data.answer_id = selectedAnswerId;
+        }
+      } else if (customAnswerText.trim()) {
+        data.answer_text = customAnswerText.trim();
+      }
+    } else if (question.answer_type === 'multiple') {
+      if (selectedAnswerIds.length > 0) {
+        // Для множественного выбора пока используем первый выбранный ответ
+        // В будущем можно расширить API для поддержки множественных answer_id
+        data.answer_id = selectedAnswerIds[0];
+      } else if (customAnswerText.trim()) {
+        data.answer_text = customAnswerText.trim();
+      }
+    } else {
+      // text
+      if (customAnswerText.trim()) {
+        data.answer_text = customAnswerText.trim();
+      }
+    }
+
+    // Отправляем данные только если есть что сохранять
+    if (data.answer_id || data.answer_text || data.comment?.trim()) {
+      onAnswerUpdate(question.id, data);
+    }
+  }, [question, selectedAnswerId, customAnswerText, localComment, sourceType, selectedAnswerIds, onAnswerUpdate]);
 
   // Update all form states when question changes (only question ID, not response)
   React.useEffect(() => {
@@ -119,7 +171,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         handleSave();
       }
     };
-  }, [question?.id, selectedAnswerId, customAnswerText, localComment, sourceType]);
+  }, [question?.id, selectedAnswerId, customAnswerText, localComment, sourceType, handleSave]);
 
   // Инициализация состояния при смене вопроса
   React.useEffect(() => {
@@ -164,7 +216,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         setSourceType("FOUND_IN_TEXT");
       }
     }
-  }, [question?.id]); // Убираем question?.current_response из зависимостей!
+  }, [question?.id, question.answer_type, question?.current_response]);
 
   // Cleanup timeouts on unmount
   React.useEffect(() => {
@@ -222,49 +274,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     );
   }
 
-  const handleSave = () => {
-    const data: any = {
-      comment: localComment,
-      source_type: sourceType,
-    };
-
-    // Определяем тип данных для отправки в зависимости от типа вопроса
-    if (question.answer_type === 'single') {
-      if (selectedAnswerId) {
-        const selectedAnswer = question.answers?.find(answer => answer.id === selectedAnswerId);
-        const isCustomAnswer = selectedAnswer?.external_id === "custom";
-
-        if (isCustomAnswer && customAnswerText.trim()) {
-          // Для варианта "свой ответ" отправляем и ID варианта, и текст
-          data.answer_id = selectedAnswerId;
-          data.answer_text = customAnswerText.trim();
-        } else if (!isCustomAnswer) {
-          // Для обычных ответов отправляем только ID
-          data.answer_id = selectedAnswerId;
-        }
-      } else if (customAnswerText.trim()) {
-        data.answer_text = customAnswerText.trim();
-      }
-    } else if (question.answer_type === 'multiple') {
-      if (selectedAnswerIds.length > 0) {
-        // Для множественного выбора пока используем первый выбранный ответ
-        // В будущем можно расширить API для поддержки множественных answer_id
-        data.answer_id = selectedAnswerIds[0];
-      } else if (customAnswerText.trim()) {
-        data.answer_text = customAnswerText.trim();
-      }
-    } else {
-      // text
-      if (customAnswerText.trim()) {
-        data.answer_text = customAnswerText.trim();
-      }
-    }
-
-    // Отправляем данные только если есть что сохранять
-    if (data.answer_id || data.answer_text || data.comment?.trim()) {
-      onAnswerUpdate(question.id, data);
-    }
-  };
+  // handleSave уже определен выше
 
   const handleSingleChoiceChange = (answerId: number) => {
     setSelectedAnswerId(answerId);

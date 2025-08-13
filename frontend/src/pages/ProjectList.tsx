@@ -14,7 +14,7 @@ interface Project {
 
 const fetchProjects = async (): Promise<Project[]> => {
   const projects = await projectsApi.getAll()
-  return projects
+  return projects as Project[]
 }
 
 const deleteProject = async (id: string): Promise<void> => {
@@ -26,7 +26,7 @@ const ProjectList: React.FC = () => {
   const [filterValue, setFilterValue] = useState('Все')
 
   const queryClient = useQueryClient()
-  const { data: projects, isLoading, error } = useQuery('projects', fetchProjects)
+  const { data: projects, isLoading, error } = useQuery<Project[]>('projects', fetchProjects)
 
   const deleteMutation = useMutation(deleteProject, {
     onSuccess: () => {

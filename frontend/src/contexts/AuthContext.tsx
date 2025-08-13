@@ -6,6 +6,7 @@ import { config } from '../config'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (context === undefined) {
@@ -54,21 +55,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     loadTokensFromStorage()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Загрузка профиля пользователя
-  const loadUserProfile = async (token: string) => {
+  const loadUserProfile = React.useCallback(async (token: string) => {
     try {
       const userData = await authApi.getProfile(token)
       setUser(userData)
     } catch (error) {
       console.error('Error loading user profile:', error)
       // Если токен недействителен, очищаем авторизацию
-      await logout()
+      clearTokens()
+      setIsLoading(false)
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   // Сохранение токенов
   const saveTokens = (tokenData: { access_token: string, refresh_token: string }) => {
