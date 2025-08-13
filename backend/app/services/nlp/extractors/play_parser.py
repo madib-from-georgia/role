@@ -171,7 +171,7 @@ class PlayParser:
                 # Проверяем, есть ли такой персонаж в нашем списке (используем очищенное имя)
                 character_found = None
                 for char in characters:
-                    if (char.name == speaker_name_clean or 
+                    if (char.name == speaker_name_clean or
                         speaker_name_clean in char.aliases or
                         self._names_similar(char.name, speaker_name_clean)):
                         character_found = char

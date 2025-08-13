@@ -136,7 +136,7 @@ class EPUBParser(BaseParser):
         return content_files
     
     def extract_text_from_html(self, html_content: str) -> str:
-        """Извлечение текста из HTML"""
+        """Извлечение текста из HTML с преобразованием диалогов в нужный формат"""
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
             
@@ -144,8 +144,95 @@ class EPUBParser(BaseParser):
             for element in soup(['script', 'style', 'meta', 'link']):
                 element.decompose()
             
-            # Извлекаем текст
-            text = soup.get_text()
+            # Специальная обработка параграфов с диалогами
+            for p in soup.find_all('p'):
+                # Ищем структуру: <strong>Имя</strong><em>(ремарка)</em><span>текст</span>
+                strong_tag = p.find('strong')
+                if strong_tag:
+                    speaker_name = strong_tag.get_text().strip()
+                    
+                    # Собираем текст реплики, исключая ремарки в <em>
+                    speech_parts = []
+                    stage_directions = []
+                    
+                    for content in p.contents:
+                        if hasattr(content, 'name'):
+                            if content.name == 'strong':
+                                continue  # Пропускаем имя персонажа
+                            elif content.name == 'em':
+                                # Это ремарка - сохраняем отдельно
+                                em_text = content.get_text().strip()
+                                if em_text:
+                                    stage_directions.append(em_text)
+                            else:
+                                # Это текст реплики
+                                text_content = content.get_text().strip()
+                                if text_content:
+                                    speech_parts.append(text_content)
+                        else:
+                            # Это текстовый узел
+                            text_content = str(content).strip()
+                            if text_content:
+                                speech_parts.append(text_content)
+                    
+                    # Определяем контекст: диалог или список персонажей
+                    speech_text = ' '.join(speech_parts).strip()
+                    
+                    # Если текст начинается с запятой и содержит описание профессии/роли - это список персонажей
+                    if (speech_text.startswith(',') or
+                        any(word in speech_text.lower() for word in ['профессор', 'врач', 'помещик', 'няня', 'жена', 'дочь', 'сын', 'мать', 'вдова'])):
+                        # Это секция персонажей - не добавляем двоеточие
+                        if stage_directions:
+                            stage_dir_text = ' '.join(f"({sd})" for sd in stage_directions)
+                            formatted_line = f"{speaker_name} {stage_dir_text}{speech_text}"
+                        else:
+                            formatted_line = f"{speaker_name}{speech_text}"
+                        p.replace_with(formatted_line + '\n')
+                    else:
+                        # Это диалог - добавляем двоеточие и ремарки в [[]]
+                        formatted_parts = []
+                        if stage_directions:
+                            stage_dir_text = ' '.join(f"[[{sd}]]" for sd in stage_directions)
+                            formatted_parts.append(stage_dir_text)
+                        if speech_text:
+                            formatted_parts.append(speech_text)
+                        
+                        if formatted_parts:
+                            full_speech_text = ' '.join(formatted_parts)
+                            formatted_line = f"{speaker_name}: {full_speech_text}"
+                        else:
+                            formatted_line = f"{speaker_name}:"
+                        
+                        p.replace_with(formatted_line + '\n')
+            
+            # Добавляем переносы строк после блочных элементов
+            block_elements = ['div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                            'li', 'ul', 'ol', 'blockquote', 'pre', 'hr']
+            
+            for tag in block_elements:
+                for element in soup.find_all(tag):
+                    # Добавляем перенос строки после элемента
+                    if element.string:
+                        element.string.replace_with(element.string + '\n')
+                    else:
+                        # Если элемент содержит другие теги, добавляем перенос в конец
+                        if element.contents:
+                            if isinstance(element.contents[-1], str):
+                                element.contents[-1] = element.contents[-1] + '\n'
+                            else:
+                                element.append('\n')
+            
+            # Специальная обработка для тега <br>
+            for br in soup.find_all('br'):
+                br.replace_with('\n')
+            
+            # Извлекаем текст с разделителями
+            text = soup.get_text(separator='\n', strip=True)
+            
+            # Очищаем множественные переносы строк
+            import re
+            text = re.sub(r'\n\s*\n', '\n\n', text)  # Заменяем множественные пустые строки на двойной перенос
+            text = re.sub(r'\n{3,}', '\n\n', text)   # Ограничиваем максимум двумя переносами подряд
             
             return text.strip()
             

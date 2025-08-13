@@ -1,93 +1,111 @@
-import React, { useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { Button, Progress,Text } from "@gravity-ui/uikit";
-import { projectsApi, textsApi, charactersApi, checklistApi } from '../services/api'
-import { Project } from '../../../shared/types'
+import React, { useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { Button, Progress, Text } from "@gravity-ui/uikit";
+import {
+  projectsApi,
+  textsApi,
+  charactersApi,
+  checklistApi,
+} from "../services/api";
+import { Project } from "../../../shared/types";
 
 // Фактический тип ответа загрузки файла от backend
 interface FileUploadResponse {
-  success: boolean
-  text_id: number
-  filename: string
-  format: string
-  content_length: number
-  metadata: Record<string, any>
-  created_at: string
-  message?: string
+  success: boolean;
+  text_id: number;
+  filename: string;
+  format: string;
+  content_length: number;
+  metadata: Record<string, any>;
+  created_at: string;
+  message?: string;
 }
 
 // Фактический тип данных текста, которые возвращает API /projects/{id}/texts
 interface ProjectText {
-  id: number
-  filename: string
-  original_format: string
-  processed_at?: string
-  created_at: string
+  id: number;
+  filename: string;
+  original_format: string;
+  processed_at?: string;
+  created_at: string;
 }
 
 // Интерфейс для персонажа
 interface Character {
-  id: number
-  name: string
-  aliases?: string[]
-  importance_score?: number
-  speech_attribution?: any
-  created_at?: string
+  id: number;
+  name: string;
+  aliases?: string[];
+  importance_score?: number;
+  speech_attribution?: any;
+  created_at?: string;
 }
 
 const fetchProject = async (id: string): Promise<Project> => {
-  return await projectsApi.getById(id)
-}
+  return await projectsApi.getById(id);
+};
 
 const fetchProjectTexts = async (projectId: string): Promise<ProjectText[]> => {
-  return await textsApi.getByProject(projectId)
-}
+  return await textsApi.getByProject(projectId);
+};
 
-const uploadText = async (projectId: string, file: File): Promise<FileUploadResponse> => {
-  const formData = new FormData()
-  formData.append('file', file)
-  return await textsApi.upload(projectId, formData)
-}
+const uploadText = async (
+  projectId: string,
+  file: File
+): Promise<FileUploadResponse> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return await textsApi.upload(projectId, formData);
+};
 
 const deleteProject = async (id: string): Promise<void> => {
-  await projectsApi.delete(id)
-}
+  await projectsApi.delete(id);
+};
 
 const fetchCharacters = async (textId: string): Promise<Character[]> => {
-  return await charactersApi.getByText(textId)
-}
+  return await charactersApi.getByText(textId);
+};
 
 // Компонент для отображения персонажа с прогрессом
-const CharacterItem: React.FC<{ character: Character; onCharacterClick: (character: Character) => void }> = ({ character, onCharacterClick }) => {
-  const { data: progress, isLoading, error } = useQuery(
-    ['character-progress', character.id],
+const CharacterItem: React.FC<{
+  character: Character;
+  onCharacterClick: (character: Character) => void;
+}> = ({ character, onCharacterClick }) => {
+  const {
+    data: progress,
+    isLoading,
+    error,
+  } = useQuery(
+    ["character-progress", character.id],
     () => checklistApi.getCharacterProgress(character.id),
     {
       staleTime: 2 * 60 * 1000, // 2 минуты
-      enabled: !!character.id
+      enabled: !!character.id,
     }
-  )
+  );
 
   // Вычисляем общий процент заполненности
-  const overallProgress = progress?.length > 0
-    ? Math.round(progress.reduce((sum: number, item: any) => sum + (item.completion_percentage || 0), 0) / progress.length)
-    : 0
+  const overallProgress =
+    progress?.length > 0
+      ? Math.round(
+          progress.reduce(
+            (sum: number, item: any) => sum + (item.completion_percentage || 0),
+            0
+          ) / progress.length
+        )
+      : 0;
 
   return (
-    <div
-      className="character-item"
-      onClick={() => onCharacterClick(character)}
-    >
+    <div className="character-item" onClick={() => onCharacterClick(character)}>
       <div className="character-name">
-        <Text variant='body-3'>{character.name}</Text>
+        <Text variant="body-3">{character.name}</Text>
         {character.aliases && character.aliases.length > 0 && (
           <div className="character-aliases">
-            Алиасы: {character.aliases.join(', ')}
+            Алиасы: {character.aliases.join(", ")}
           </div>
         )}
       </div>
-      
+
       <div className="character-progress">
         {isLoading ? (
           <div className="character-progress-loading"></div>
@@ -104,26 +122,37 @@ const CharacterItem: React.FC<{ character: Character; onCharacterClick: (charact
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 // Компонент для отображения секции текста с персонажами
-const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: Character) => void }> = ({ text, onCharacterClick }) => {
-  const { data: characters, isLoading: charactersLoading, error: charactersError } = useQuery(
-    ['text-characters', text.id],
+const TextSection: React.FC<{
+  text: ProjectText;
+  onCharacterClick: (character: Character) => void;
+}> = ({ text, onCharacterClick }) => {
+  const {
+    data: characters,
+    isLoading: charactersLoading,
+    error: charactersError,
+  } = useQuery(
+    ["text-characters", text.id],
     () => fetchCharacters(text.id.toString()),
-    { 
+    {
       enabled: !!text.processed_at, // Загружаем персонажей только если текст обработан
-      staleTime: 5 * 60 * 1000 // 5 минут
+      staleTime: 5 * 60 * 1000, // 5 минут
     }
-  )
+  );
 
   return (
     <div className="text-section">
       <div className="text-header">
         <h3>{text.filename}</h3>
-        <span className={`status-badge ${text.processed_at ? 'processed' : 'pending'}`}>
-          {text.processed_at ? 'Обработан' : 'В ожидании'}
+        <span
+          className={`status-badge ${
+            text.processed_at ? "processed" : "pending"
+          }`}
+        >
+          {text.processed_at ? "Обработан" : "В ожидании"}
         </span>
       </div>
 
@@ -131,15 +160,25 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
         {text.processed_at ? (
           <div className="processed-info">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Файл успешно обработан</span>
-            <small>{new Date(text.processed_at).toLocaleString('ru-RU')}</small>
+            <small>{new Date(text.processed_at).toLocaleString("ru-RU")}</small>
           </div>
         ) : (
           <div className="pending-info">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Ожидает обработки</span>
           </div>
@@ -159,7 +198,12 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
           {charactersError && (
             <div className="error-state">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
               </svg>
               <p>Ошибка загрузки персонажей</p>
             </div>
@@ -180,7 +224,12 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
           {characters && characters.length === 0 && (
             <div className="empty-characters">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
               </svg>
               <p>Персонажи не найдены</p>
             </div>
@@ -188,82 +237,86 @@ const TextSection: React.FC<{ text: ProjectText; onCharacterClick: (character: C
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
 const ProjectDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation(deleteProject, {
     onSuccess: () => {
       // Перенаправляем пользователя на список проектов после удаления
-      queryClient.invalidateQueries('projects')
-      navigate('/')
+      queryClient.invalidateQueries("projects");
+      navigate("/");
     },
     onError: (error) => {
-      console.error('Ошибка удаления проекта:', error)
-      alert('Не удалось удалить проект. Попробуйте еще раз.')
-    }
-  })
-  
-  const { data: project, isLoading, error } = useQuery(
-    ['project', id],
-    () => fetchProject(id!),
-    { enabled: !!id }
-  )
+      console.error("Ошибка удаления проекта:", error);
+      alert("Не удалось удалить проект. Попробуйте еще раз.");
+    },
+  });
+
+  const {
+    data: project,
+    isLoading,
+    error,
+  } = useQuery(["project", id], () => fetchProject(id!), { enabled: !!id });
 
   const { data: texts } = useQuery(
-    ['project-texts', id],
+    ["project-texts", id],
     () => fetchProjectTexts(id!),
     { enabled: !!id }
-  )
+  );
 
-  const uploadMutation = useMutation(
-    (file: File) => uploadText(id!, file),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['project', id])
-        queryClient.invalidateQueries(['project-texts', id])
-        setSelectedFile(null)
-      },
-      onError: (error) => {
-        console.error('Ошибка загрузки файла:', error)
-      }
-    }
-  )
+  const uploadMutation = useMutation((file: File) => uploadText(id!, file), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["project", id]);
+      queryClient.invalidateQueries(["project-texts", id]);
+      setSelectedFile(null);
+    },
+    onError: (error) => {
+      console.error("Ошибка загрузки файла:", error);
+    },
+  });
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file && (file.type === 'text/plain' || file.name.toLowerCase().endsWith('.fb2'))) {
-      setSelectedFile(file)
+    const file = event.target.files?.[0];
+    if (
+      file &&
+      (file.type === "text/plain" ||
+        file.name.toLowerCase().endsWith(".fb2") ||
+        file.name.toLowerCase().endsWith(".epub"))
+    ) {
+      setSelectedFile(file);
     } else {
-      alert('Пожалуйста, выберите файл в формате TXT или FB2')
+      alert("Пожалуйста, выберите файл в формате TXT или FB2");
     }
-  }
+  };
 
   const handleUpload = () => {
     if (selectedFile) {
-      uploadMutation.mutate(selectedFile)
+      uploadMutation.mutate(selectedFile);
     }
-  }
+  };
 
   const handleCharacterClick = (character: Character) => {
-    navigate(`/characters/${character.id}/checklists`)
-  }
-
-
+    navigate(`/characters/${character.id}/checklists`);
+  };
 
   const handleDeleteProject = () => {
     if (!project) return;
-    
-    if (window.confirm(`Вы уверены, что хотите удалить проект "${project.title}"? Это действие нельзя отменить и все данные проекта будут удалены.`)) {
-      deleteMutation.mutate(id!)
+
+    if (
+      window.confirm(
+        `Вы уверены, что хотите удалить проект "${project.title}"? Это действие нельзя отменить и все данные проекта будут удалены.`
+      )
+    ) {
+      deleteMutation.mutate(id!);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -272,7 +325,7 @@ const ProjectDetail: React.FC = () => {
           <div className="spinner"></div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !project) {
@@ -281,15 +334,24 @@ const ProjectDetail: React.FC = () => {
         <div className="empty-state">
           <div className="empty-icon">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
             </svg>
           </div>
           <h3 className="empty-title">Проект не найден</h3>
-          <p className="empty-description">Проект с указанным ID не существует</p>
-          <Link to="/" className="btn btn-primary">Вернуться к проектам</Link>
+          <p className="empty-description">
+            Проект с указанным ID не существует
+          </p>
+          <Link to="/" className="btn btn-primary">
+            Вернуться к проектам
+          </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -297,31 +359,32 @@ const ProjectDetail: React.FC = () => {
       <div className="project-detail-header">
         <div className="project-detail-header-top">
           <div>
-            <Text variant='display-1'>{project.title}</Text>
-            {project.description && (
-              <p>{project.description}</p>
-            )}
+            <Text variant="display-1">{project.title}</Text>
+            {project.description && <p>{project.description}</p>}
           </div>
           <Button
             onClick={handleDeleteProject}
             disabled={deleteMutation.isLoading}
-            size='l'
-
+            size="l"
           >
             {deleteMutation.isLoading ? (
-              <div className='project-detail-delete'>
+              <div className="project-detail-delete">
                 <span className="spinner small"></span>
                 <span>Удаление...</span>
               </div>
             ) : (
-              'Удалить проект'
+              "Удалить проект"
             )}
           </Button>
         </div>
         <div className="project-meta">
-          <span>Создан: {new Date(project.created_at).toLocaleDateString('ru-RU')}</span>
+          <span>
+            Создан: {new Date(project.created_at).toLocaleDateString("ru-RU")}
+          </span>
           <span>•</span>
-          <span>Обновлен: {new Date(project.updated_at).toLocaleDateString('ru-RU')}</span>
+          <span>
+            Обновлен: {new Date(project.updated_at).toLocaleDateString("ru-RU")}
+          </span>
         </div>
       </div>
 
@@ -331,25 +394,38 @@ const ProjectDetail: React.FC = () => {
             <div className="card-header">
               <h2 className="card-title">Загрузка текста</h2>
             </div>
-            
+
             <div className="file-upload">
               <div className="upload-area">
                 <div className="upload-content">
                   <label htmlFor="file-upload" className="upload-label">
                     <div className="upload-icon">
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        />
                       </svg>
                     </div>
-                    {selectedFile ? selectedFile.name : 'Перетащите файл сюда или нажмите для выбора'}
-                    <p className="upload-help">Поддерживаются файлы TXT и FB2 до 10MB</p>
+                    {selectedFile
+                      ? selectedFile.name
+                      : "Перетащите файл сюда или нажмите для выбора"}
+                    <p className="upload-help">
+                      Поддерживаются файлы TXT и FB2 до 10MB
+                    </p>
                   </label>
                   <input
                     id="file-upload"
                     type="file"
-                    accept=".txt,.fb2"
+                    accept=".txt,.fb2,.epub"
                     onChange={handleFileSelect}
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
               </div>
@@ -357,23 +433,25 @@ const ProjectDetail: React.FC = () => {
               <Button
                 disabled={!selectedFile || uploadMutation.isLoading}
                 onClick={handleUpload}
-                view='action'
+                view="action"
                 size="l"
               >
                 {uploadMutation.isLoading ? (
-                  <div className='project-detail-button'>
+                  <div className="project-detail-button">
                     <span className="spinner small"></span>
                     Обработка файла...
                   </div>
                 ) : (
-                  'Загрузить и обработать текст'
+                  "Загрузить и обработать текст"
                 )}
               </Button>
 
               {uploadMutation.isError && (
                 <div className="error-message">
                   <strong>Ошибка загрузки файла</strong>
-                  <p>Не удалось загрузить и обработать файл. Попробуйте еще раз.</p>
+                  <p>
+                    Не удалось загрузить и обработать файл. Попробуйте еще раз.
+                  </p>
                 </div>
               )}
 
@@ -383,7 +461,12 @@ const ProjectDetail: React.FC = () => {
                   <div className="upload-stats">
                     <p>Имя файла: {uploadMutation.data.filename}</p>
                     <p>Формат: {uploadMutation.data.format?.toUpperCase()}</p>
-                    <p>Размер содержимого: {uploadMutation.data.content_length?.toLocaleString() || 'N/A'} символов</p>
+                    <p>
+                      Размер содержимого:{" "}
+                      {uploadMutation.data.content_length?.toLocaleString() ||
+                        "N/A"}{" "}
+                      символов
+                    </p>
                   </div>
                 </div>
               )}
@@ -396,12 +479,12 @@ const ProjectDetail: React.FC = () => {
               <div className="card-header">
                 <h2 className="card-title">Найденные персонажи</h2>
               </div>
-              
+
               {texts.map((text) => (
-                <TextSection 
-                  key={text.id} 
-                  text={text} 
-                  onCharacterClick={handleCharacterClick} 
+                <TextSection
+                  key={text.id}
+                  text={text}
+                  onCharacterClick={handleCharacterClick}
                 />
               ))}
             </div>
@@ -411,7 +494,7 @@ const ProjectDetail: React.FC = () => {
         <div className="sidebar">
           <div className="card">
             <h3>Статистика проекта</h3>
-            
+
             <div className="stats-list">
               <div className="stat-item">
                 <span>Загружено текстов:</span>
@@ -419,11 +502,19 @@ const ProjectDetail: React.FC = () => {
               </div>
               <div className="stat-item">
                 <span>Обработано:</span>
-                <strong>{texts?.filter(text => text.processed_at).length || 0}</strong>
+                <strong>
+                  {texts?.filter((text) => text.processed_at).length || 0}
+                </strong>
               </div>
               <div className="stat-item">
                 <span>Форматы:</span>
-                <strong>{texts ? [...new Set(texts.map(t => t.original_format))].join(', ').toUpperCase() : 'Нет'}</strong>
+                <strong>
+                  {texts
+                    ? [...new Set(texts.map((t) => t.original_format))]
+                        .join(", ")
+                        .toUpperCase()
+                    : "Нет"}
+                </strong>
               </div>
             </div>
 
@@ -436,14 +527,22 @@ const ProjectDetail: React.FC = () => {
                     <div className="file-info">
                       <div className="filename">{text.filename}</div>
                       <div className="file-details">
-                        <span className="format">{text.original_format.toUpperCase()}</span>
-                        <span className={`status ${text.processed_at ? 'processed' : 'pending'}`}>
-                          {text.processed_at ? '✓ Обработан' : '⏳ В ожидании'}
+                        <span className="format">
+                          {text.original_format.toUpperCase()}
+                        </span>
+                        <span
+                          className={`status ${
+                            text.processed_at ? "processed" : "pending"
+                          }`}
+                        >
+                          {text.processed_at ? "✓ Обработан" : "⏳ В ожидании"}
                         </span>
                       </div>
                       {text.processed_at && (
                         <div className="processed-date">
-                          {new Date(text.processed_at).toLocaleDateString('ru-RU')}
+                          {new Date(text.processed_at).toLocaleDateString(
+                            "ru-RU"
+                          )}
                         </div>
                       )}
                     </div>
@@ -454,10 +553,8 @@ const ProjectDetail: React.FC = () => {
           </div>
         </div>
       </div>
-
-
     </div>
-  )
-}
+  );
+};
 
-export default ProjectDetail
+export default ProjectDetail;
