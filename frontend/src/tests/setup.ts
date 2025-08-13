@@ -108,7 +108,7 @@ vi.mock('@gravity-ui/uikit', () => ({
 
 // Mock NavigationSidebar component
 vi.mock('../../components/checklists/NavigationSidebar', () => ({
-  NavigationSidebar: vi.fn(({ isOpen, onClose, ...props }) => 
+  NavigationSidebar: vi.fn(({ isOpen, ...props }) =>
     isOpen ? React.createElement('div', { 'data-testid': 'navigation-sidebar', ...props }, 'Navigation Sidebar') : null
   )
 }))

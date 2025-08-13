@@ -71,20 +71,22 @@ const ProjectList: React.FC = () => {
             new Date(project.updated_at) >= sevenDaysAgo
           )
           break
-        case 'Завершенные':
+        case 'Завершенные': {
           // Пока что считаем завершенными проекты старше 30 дней без обновлений
           const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
           filtered = filtered.filter(project =>
             new Date(project.updated_at) < thirtyDaysAgo
           )
           break
-        case 'В работе':
+        }
+        case 'В работе': {
           // Проекты, обновленные в последние 30 дней (активные проекты)
           const thirtyDaysAgoActive = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
           filtered = filtered.filter(project =>
             new Date(project.updated_at) >= thirtyDaysAgoActive
           )
           break
+        }
       }
     }
 

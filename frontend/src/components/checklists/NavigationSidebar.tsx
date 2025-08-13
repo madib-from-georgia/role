@@ -46,7 +46,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 
   // Filter questions based on search and filter mode
   const filteredGroups = React.useMemo(() => {
-    let filtered: { [key: string]: any[] } = {};
+    const filtered: { [key: string]: any[] } = {};
 
     Object.entries(groupedQuestions).forEach(([groupKey, groupQuestions]) => {
       let matchingQuestions = groupQuestions;
