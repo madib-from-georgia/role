@@ -2,14 +2,14 @@
  * Debouncing utility для оптимизации API запросов
  */
 
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
+export function debounce<TArgs extends readonly unknown[], TReturn>(
+  func: (...args: TArgs) => TReturn,
   wait: number,
   immediate = false
-): (...args: Parameters<T>) => void {
+): (...args: TArgs) => void {
   let timeout: NodeJS.Timeout | null = null;
   
-  return function executedFunction(...args: Parameters<T>) {
+  return function executedFunction(...args: TArgs) {
     const later = () => {
       timeout = null;
       if (!immediate) func(...args);
@@ -27,13 +27,13 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttling utility для ограничения частоты вызовов
  */
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
+export function throttle<TArgs extends readonly unknown[], TReturn>(
+  func: (...args: TArgs) => TReturn,
   limit: number
-): (...args: Parameters<T>) => void {
+): (...args: TArgs) => void {
   let inThrottle = false;
   
-  return function executedFunction(...args: Parameters<T>) {
+  return function executedFunction(...args: TArgs) {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
@@ -49,7 +49,7 @@ export class BatchProcessor<T, R> {
   private queue: Array<{
     data: T;
     resolve: (value: R) => void;
-    reject: (error: any) => void;
+    reject: (error: unknown) => void;
   }> = [];
   
   private processing = false;
