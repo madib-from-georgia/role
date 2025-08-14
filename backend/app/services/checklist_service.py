@@ -461,11 +461,30 @@ class ChecklistService:
         
         return enriched_checklist
     
+    def get_current_responses_for_question(
+        self,
+        db: Session,
+        character_id: int,
+        question_id: int
+    ) -> List[Any]:
+        """
+        Получение текущих ответов персонажа на вопрос
+        
+        Args:
+            db: Сессия базы данных
+            character_id: ID персонажа
+            question_id: ID вопроса
+            
+        Returns:
+            Список текущих ответов
+        """
+        return checklist_response.get_by_character_and_question(db, character_id, question_id)
+
     def update_response(
-        self, 
-        db: Session, 
-        character_id: int, 
-        question_id: int, 
+        self,
+        db: Session,
+        character_id: int,
+        question_id: int,
         response_data: ChecklistResponseUpdate
     ) -> Optional[Any]:
         """

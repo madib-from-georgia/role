@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Label,
   Text,
@@ -15,30 +15,39 @@ import {
   ChecklistQuestion,
   ChecklistAnswer,
   Gender,
+  SourceType,
 } from "../../types/checklist";
 
 interface QuestionCardProps {
   question: ChecklistQuestion;
   characterGender: Gender;
+  characterId: number;
   onAnswerUpdate: (
     questionId: number,
     data: {
       answer_id?: number;
       answer_text?: string;
-      source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
+      source_type?: SourceType;
       comment?: string;
     }
   ) => void;
+  onMultipleAnswersUpdate?: (
+    questionId: number,
+    characterId: number,
+    selectedAnswerIds: number[],
+    comment?: string,
+    sourceType?: SourceType,
+    customText?: string
+  ) => void;
   onAnswerDelete?: (responseId: number) => void;
   isLoading: boolean;
-  // New props for NavigationSidebar
   allQuestions: ChecklistQuestion[];
   currentQuestionIndex: number;
   onQuestionSelect: (index: number) => void;
   completionPercentage: number;
 }
 
-// CheckIcon.jsx
+// CheckIcon компонент (оставляем как есть)
 export function CheckIcon() {
   return (
     <svg
@@ -51,12 +60,12 @@ export function CheckIcon() {
       <path
         d="M15.5 8C15.5 12.1421 12.1421 15.5 8 15.5C3.85786 15.5 0.5 12.1421 0.5 8C0.5 3.85786 3.85786 0.5 8 0.5C12.1421 0.5 15.5 3.85786 15.5 8Z"
         stroke="currentColor"
-        stroke-opacity="0.5"
+        strokeOpacity="0.5"
       />
       <path
         opacity="0.7"
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M8.46436 9.92432H7.09473C7.09115 9.72738 7.08936 9.60742 7.08936 9.56445C7.08936 9.12044 7.16276 8.75521 7.30957 8.46875C7.45638 8.18229 7.75 7.86003 8.19043 7.50195C8.63086 7.14388 8.89404 6.90934 8.97998 6.79834C9.11247 6.62288 9.17871 6.42953 9.17871 6.21826C9.17871 5.92464 9.06144 5.6731 8.8269 5.46362C8.59237 5.25415 8.27637 5.14941 7.87891 5.14941C7.49577 5.14941 7.17529 5.25863 6.91748 5.47705C6.65967 5.69548 6.48242 6.02848 6.38574 6.47607L5 6.3042C5.03939 5.66325 5.31242 5.11898 5.81909 4.67139C6.32577 4.22379 6.99088 4 7.81445 4C8.68099 4 9.37028 4.22648 9.88232 4.67944C10.3944 5.13241 10.6504 5.65966 10.6504 6.26123C10.6504 6.59424 10.5564 6.90934 10.3684 7.20654C10.1804 7.50375 9.77849 7.90836 9.1626 8.42041C8.84391 8.68539 8.64608 8.89844 8.56909 9.05957C8.49211 9.2207 8.45719 9.50895 8.46436 9.92432ZM7.09473 11.9546V10.4453H8.604V11.9546H7.09473Z"
         fill="red"
       />
@@ -67,278 +76,358 @@ export function CheckIcon() {
 export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   characterGender,
+  characterId,
   onAnswerUpdate,
+  onMultipleAnswersUpdate,
   onAnswerDelete,
+  isLoading,
   allQuestions,
   currentQuestionIndex,
   onQuestionSelect,
   completionPercentage,
 }) => {
-  // Состояние для текущего ответа
-  const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(
-    question?.current_response?.answer_id || null
-  );
-  const [selectedAnswerIds, setSelectedAnswerIds] = useState<number[]>([]);
-  const [customAnswerText, setCustomAnswerText] = useState(
-    question?.current_response?.answer_text || ""
-  );
-  const [localComment, setLocalComment] = useState(
-    question?.current_response?.comment || ""
-  );
-  const [sourceType, setSourceType] = useState<
-    "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED"
-  >(
-    (question?.current_response?.source_type as
-      | "FOUND_IN_TEXT"
-      | "LOGICALLY_DERIVED"
-      | "IMAGINED") || "FOUND_IN_TEXT"
-  );
+  // Состояние формы
+  const [formState, setFormState] = useState({
+    selectedAnswerId: null as number | null,
+    selectedAnswerIds: [] as number[],
+    customText: "",
+    comment: "",
+    sourceType: "FOUND_IN_TEXT" as SourceType,
+  });
+
+  // Состояние UI
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Refs для debouncing
-  const customTextTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const answerChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const commentTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  // Инициализация состояния при смене вопроса
+  useEffect(() => {
+    if (!question) return;
 
-  // Ref для отслеживания текущего вопроса
-  const currentQuestionIdRef = React.useRef<number | null>(null);
+    const response = question.current_response;
+    const responses = question.current_responses || [];
 
-  // Получить отображаемое значение ответа в зависимости от пола персонажа
-  const getAnswerDisplayValue = (answer: ChecklistAnswer): string => {
+    // Для множественного выбора ищем ответ с текстом среди всех ответов
+    let customText = "";
+    if (question.answer_type === "multiple") {
+      // Ищем ответ с answer_text среди всех ответов
+      const responseWithText = responses.find(r => r.answer_text);
+      customText = responseWithText?.answer_text || "";
+    } else if (response || responses.length > 0) {
+      // Для single и text берем из основного ответа
+      const primaryResponse = response || responses[0];
+      customText = primaryResponse?.answer_text || "";
+    }
+
+    if (response || responses.length > 0) {
+      // Инициализация на основе существующих ответов
+      const primaryResponse = response || responses[0];
+      
+      setFormState({
+        selectedAnswerId: question.answer_type === "single" ? (primaryResponse?.answer_id || null) : null,
+        selectedAnswerIds: question.answer_type === "multiple"
+          ? responses.map(r => r.answer_id).filter(Boolean) as number[]
+          : [],
+        customText,
+        comment: primaryResponse?.comment || "",
+        sourceType: primaryResponse?.source_type || "FOUND_IN_TEXT",
+      });
+    } else {
+      // Полный сброс состояния для нового вопроса без ответов
+      setFormState({
+        selectedAnswerId: null,
+        selectedAnswerIds: [],
+        customText: "",
+        comment: "",
+        sourceType: "FOUND_IN_TEXT",
+      });
+    }
+  }, [question, question.id, question.answer_type]);
+
+  // Отдельный useEffect для обновления данных ответов без сброса состояния
+  useEffect(() => {
+    if (!question) return;
+
+    const response = question.current_response;
+    const responses = question.current_responses || [];
+
+    if (response || responses.length > 0) {
+      const primaryResponse = response || responses[0];
+      
+      setFormState(prev => {
+        // Для множественного выбора ищем ответ с текстом среди всех ответов
+        let customText = prev.customText;
+        if (!customText) {
+          if (question.answer_type === "multiple") {
+            // Ищем ответ с answer_text среди всех ответов
+            const responseWithText = responses.find(r => r.answer_text);
+            customText = responseWithText?.answer_text || "";
+          } else {
+            // Для single и text берем из основного ответа
+            customText = primaryResponse?.answer_text || "";
+          }
+        }
+
+        return {
+          ...prev,
+          // Обновляем только комментарий и источник, не трогая выбранные ответы
+          comment: primaryResponse?.comment || prev.comment,
+          sourceType: primaryResponse?.source_type || prev.sourceType,
+          // Обновляем customText только если он пустой в текущем состоянии
+          customText,
+        };
+      });
+    }
+  }, [question, question.current_response, question.current_responses]);
+
+  // Получение отображаемого значения ответа в зависимости от пола
+  const getAnswerDisplayValue = useCallback((answer: ChecklistAnswer): string => {
     return characterGender === "male" ? answer.value_male : answer.value_female;
-  };
+  }, [characterGender]);
 
-  // handleSave должен быть определен до useEffect
-  const handleSave = React.useCallback(() => {
+  // Поиск варианта "свой ответ"
+  const customAnswer = question?.answers?.find(answer => answer.external_id === "custom");
+
+  // Проверка, выбран ли вариант "свой ответ"
+  const isCustomAnswerSelected = useCallback(() => {
+    if (!customAnswer) return false;
+    
+    if (question.answer_type === "single") {
+      return formState.selectedAnswerId === customAnswer.id;
+    } else if (question.answer_type === "multiple") {
+      return formState.selectedAnswerIds.includes(customAnswer.id);
+    }
+    return false;
+  }, [customAnswer, formState.selectedAnswerId, formState.selectedAnswerIds, question?.answer_type]);
+
+  // Обработчики изменений
+  const handleSingleChoiceChange = useCallback((answerId: number) => {
+    const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
+    const isCustom = selectedAnswer?.external_id === "custom";
+
+    setFormState(prev => ({
+      ...prev,
+      selectedAnswerId: answerId,
+      customText: isCustom ? prev.customText : "", // Очищаем текст только если не "свой вариант"
+    }));
+  }, [question.answers]);
+
+  const handleMultipleChoiceChange = useCallback((answerId: number, checked: boolean) => {
+    setFormState(prev => {
+      const newSelectedIds = checked 
+        ? [...prev.selectedAnswerIds, answerId]
+        : prev.selectedAnswerIds.filter(id => id !== answerId);
+
+      // Очищаем кастомный текст только если не выбран "свой вариант"
+      const hasCustomAnswer = customAnswer && newSelectedIds.includes(customAnswer.id);
+      
+      return {
+        ...prev,
+        selectedAnswerIds: newSelectedIds,
+        customText: hasCustomAnswer ? prev.customText : "",
+      };
+    });
+  }, [customAnswer]);
+
+  const handleCustomTextChange = useCallback((text: string) => {
+    setFormState(prev => ({
+      ...prev,
+      customText: text,
+    }));
+
+    // Автоматически выбираем "свой вариант" при вводе текста
+    if (text.trim() && customAnswer) {
+      if (question.answer_type === "single" && formState.selectedAnswerId !== customAnswer.id) {
+        setFormState(prev => ({
+          ...prev,
+          selectedAnswerId: customAnswer.id,
+        }));
+      } else if (question.answer_type === "multiple" && !formState.selectedAnswerIds.includes(customAnswer.id)) {
+        setFormState(prev => ({
+          ...prev,
+          selectedAnswerIds: [...prev.selectedAnswerIds, customAnswer.id],
+        }));
+      }
+    }
+  }, [customAnswer, formState.selectedAnswerId, formState.selectedAnswerIds, question?.answer_type]);
+
+  const handleCommentChange = useCallback((text: string) => {
+    setFormState(prev => ({
+      ...prev,
+      comment: text,
+    }));
+  }, []);
+
+  const handleSourceTypeChange = useCallback((sourceType: SourceType) => {
+    setFormState(prev => ({
+      ...prev,
+      sourceType,
+    }));
+  }, []);
+
+  // Сохранение ответа
+  const handleSave = useCallback(() => {
     if (!question) return;
 
     const baseData = {
-      comment: localComment,
-      source_type: sourceType,
+      comment: formState.comment,
+      source_type: formState.sourceType,
     };
 
-    // Определяем тип данных для отправки в зависимости от типа вопроса
     if (question.answer_type === "single") {
-      if (selectedAnswerId) {
-        const selectedAnswer = question.answers?.find(
-          (answer) => answer.id === selectedAnswerId
-        );
-        const isCustomAnswer = selectedAnswer?.external_id === "custom";
+      // Одиночный выбор
+      if (formState.selectedAnswerId) {
+        const selectedAnswer = question.answers?.find(answer => answer.id === formState.selectedAnswerId);
+        const isCustom = selectedAnswer?.external_id === "custom";
 
-        const data: {
-          answer_id?: number;
-          answer_text?: string;
-          comment: string;
-          source_type: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
-        } = { ...baseData };
-
-        if (isCustomAnswer && customAnswerText.trim()) {
-          // Для варианта "свой ответ" отправляем и ID варианта, и текст
-          data.answer_id = selectedAnswerId;
-          data.answer_text = customAnswerText.trim();
-        } else if (!isCustomAnswer) {
-          // Для обычных ответов отправляем только ID
-          data.answer_id = selectedAnswerId;
-        }
-
-        onAnswerUpdate(question.id, data);
-      } else if (customAnswerText.trim()) {
         const data = {
           ...baseData,
-          answer_text: customAnswerText.trim(),
+          answer_id: formState.selectedAnswerId,
+          ...(isCustom && formState.customText.trim() && { answer_text: formState.customText.trim() }),
         };
+
         onAnswerUpdate(question.id, data);
+      } else if (formState.customText.trim()) {
+        // Только текст без выбранного варианта
+        onAnswerUpdate(question.id, {
+          ...baseData,
+          answer_text: formState.customText.trim(),
+        });
       }
     } else if (question.answer_type === "multiple") {
-      // Для множественного выбора отправляем каждый выбранный ответ отдельно
-      if (selectedAnswerIds.length > 0) {
-        selectedAnswerIds.forEach((answerId) => {
-          const selectedAnswer = question.answers?.find(
-            (answer) => answer.id === answerId
-          );
-          const isCustomAnswer = selectedAnswer?.external_id === "custom";
+      // Множественный выбор - используем специальный API метод
+      if (onMultipleAnswersUpdate) {
+        onMultipleAnswersUpdate(
+          question.id,
+          characterId,
+          formState.selectedAnswerIds,
+          formState.comment,
+          formState.sourceType,
+          formState.customText.trim() || undefined
+        );
+      } else {
+        // Fallback к старому методу
+        if (formState.selectedAnswerIds.length > 0) {
+          formState.selectedAnswerIds.forEach(answerId => {
+            const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
+            const isCustom = selectedAnswer?.external_id === "custom";
 
-          const data: {
-            answer_id: number;
-            answer_text?: string;
-            comment: string;
-            source_type: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
-          } = {
+            const data = {
+              ...baseData,
+              answer_id: answerId,
+              ...(isCustom && formState.customText.trim() && { answer_text: formState.customText.trim() }),
+            };
+
+            onAnswerUpdate(question.id, data);
+          });
+        } else if (formState.customText.trim()) {
+          // Только текст без выбранных вариантов
+          onAnswerUpdate(question.id, {
             ...baseData,
-            answer_id: answerId,
-          };
-
-          // Если это "свой вариант" и есть текст, добавляем его
-          if (isCustomAnswer && customAnswerText.trim()) {
-            data.answer_text = customAnswerText.trim();
-          }
-
-          onAnswerUpdate(question.id, data);
-        });
-      } else if (customAnswerText.trim()) {
-        const data = {
-          ...baseData,
-          answer_text: customAnswerText.trim(),
-        };
-        onAnswerUpdate(question.id, data);
+            answer_text: formState.customText.trim(),
+          });
+        }
       }
     } else {
-      // text
-      if (customAnswerText.trim()) {
-        const data = {
+      // Текстовый ответ
+      if (formState.customText.trim()) {
+        onAnswerUpdate(question.id, {
           ...baseData,
-          answer_text: customAnswerText.trim(),
-        };
-        onAnswerUpdate(question.id, data);
+          answer_text: formState.customText.trim(),
+        });
       }
     }
+  }, [question, formState, onAnswerUpdate, characterId, onMultipleAnswersUpdate]);
+
+  // Удаление ответа
+  const handleDelete = useCallback(() => {
+    if (question?.current_response && onAnswerDelete) {
+      onAnswerDelete(question.current_response.id);
+    }
+  }, [question?.current_response, onAnswerDelete]);
+
+  // Рендер поля для ввода кастомного ответа
+  const renderCustomInput = useCallback(() => {
+    const shouldShow = isCustomAnswerSelected() || formState.customText.trim() !== "";
+    
+    if (!shouldShow) return null;
+
+    return (
+      <TextInput
+        value={formState.customText}
+        onUpdate={handleCustomTextChange}
+        placeholder="Введите свой вариант..."
+        className="custom-answer-input"
+      />
+    );
+  }, [isCustomAnswerSelected, formState.customText, handleCustomTextChange]);
+
+  // Рендер вариантов ответов
+  const renderAnswerOptions = useCallback(() => {
+    if (!question?.answers) return null;
+
+    if (question.answer_type === "single") {
+      return (
+        <>
+          <div className="question-options">
+            {question.answers.map((answer: ChecklistAnswer) => (
+              <Radio
+                key={answer.id}
+                value={answer.id.toString()}
+                size="l"
+                checked={formState.selectedAnswerId === answer.id}
+                onChange={() => handleSingleChoiceChange(answer.id)}
+                content={getAnswerDisplayValue(answer)}
+              />
+            ))}
+          </div>
+          {renderCustomInput()}
+        </>
+      );
+    } else if (question.answer_type === "multiple") {
+      return (
+        <>
+          <div className="question-options">
+            {question.answers.map((answer: ChecklistAnswer) => (
+              <Checkbox
+                key={answer.id}
+                size="l"
+                checked={formState.selectedAnswerIds.includes(answer.id)}
+                onChange={(event) => handleMultipleChoiceChange(answer.id, event.target.checked)}
+                content={getAnswerDisplayValue(answer)}
+              />
+            ))}
+          </div>
+          {renderCustomInput()}
+        </>
+      );
+    }
+
+    return null;
   }, [
-    question,
-    selectedAnswerId,
-    customAnswerText,
-    localComment,
-    sourceType,
-    selectedAnswerIds,
-    onAnswerUpdate,
+    question?.answers,
+    question?.answer_type,
+    formState.selectedAnswerId,
+    formState.selectedAnswerIds,
+    handleSingleChoiceChange,
+    handleMultipleChoiceChange,
+    getAnswerDisplayValue,
+    renderCustomInput,
   ]);
 
-  // Update all form states when question changes (only question ID, not response)
-  React.useEffect(() => {
-    // Cleanup функция - очищаем таймеры
-    return () => {
-      // Очищаем все таймеры
-      if (customTextTimeoutRef.current) {
-        clearTimeout(customTextTimeoutRef.current);
-        customTextTimeoutRef.current = null;
-      }
-      if (answerChangeTimeoutRef.current) {
-        clearTimeout(answerChangeTimeoutRef.current);
-        answerChangeTimeoutRef.current = null;
-      }
-      if (commentTimeoutRef.current) {
-        clearTimeout(commentTimeoutRef.current);
-        commentTimeoutRef.current = null;
-      }
-    };
-  }, [question?.id]);
+  // Рендер текстового поля для типа "text"
+  const renderTextInput = useCallback(() => {
+    if (question?.answer_type !== "text") return null;
 
-  // Инициализация состояния при смене вопроса
-  React.useEffect(() => {
-    // Проверяем, изменился ли вопрос
-    const questionChanged = currentQuestionIdRef.current !== question?.id;
-
-    if (questionChanged) {
-      currentQuestionIdRef.current = question?.id || null;
-
-      const response = question?.current_response;
-
-      if (response) {
-        // Инициализация на основе существующего ответа
-        if (response.answer_id) {
-          if (question.answer_type === "single") {
-            setSelectedAnswerId(response.answer_id);
-          } else if (question.answer_type === "multiple") {
-            // Для множественного выбора используем current_responses если доступно
-            if (
-              question.current_responses &&
-              question.current_responses.length > 0
-            ) {
-              const multipleAnswerIds = question.current_responses
-                .map((resp) => resp.answer_id)
-                .filter((id) => id !== undefined) as number[];
-              setSelectedAnswerIds(multipleAnswerIds);
-            } else {
-              // Fallback к одному ответу для обратной совместимости
-              setSelectedAnswerIds([response.answer_id]);
-            }
-          }
-        } else {
-          setSelectedAnswerId(null);
-          setSelectedAnswerIds([]);
-        }
-
-        // Обновляем customAnswerText только при смене вопроса
-        if (response.answer_text) {
-          setCustomAnswerText(response.answer_text);
-        } else {
-          setCustomAnswerText("");
-        }
-
-        setLocalComment(response.comment || "");
-        setSourceType(response.source_type || "FOUND_IN_TEXT");
-      } else {
-        // Сброс состояния для нового вопроса
-        setSelectedAnswerId(null);
-        setSelectedAnswerIds([]);
-        setCustomAnswerText("");
-        setLocalComment("");
-        setSourceType("FOUND_IN_TEXT");
-      }
-    }
-  }, [
-    question?.id,
-    question.answer_type,
-    question?.current_response,
-    question?.current_responses,
-  ]);
-
-  // Cleanup timeouts on unmount
-  React.useEffect(() => {
-    return () => {
-      if (customTextTimeoutRef.current) {
-        clearTimeout(customTextTimeoutRef.current);
-      }
-      if (answerChangeTimeoutRef.current) {
-        clearTimeout(answerChangeTimeoutRef.current);
-      }
-      if (commentTimeoutRef.current) {
-        clearTimeout(commentTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Handle comment change without auto-save
-  const handleCommentChange = (text: string) => {
-    setLocalComment(text);
-  };
-
-  // Handle custom text change with debounced auto-save for custom answers
-  const handleCustomTextChange = (text: string) => {
-    setCustomAnswerText(text);
-
-    // Clear previous timeout
-    if (customTextTimeoutRef.current) {
-      clearTimeout(customTextTimeoutRef.current);
-    }
-
-    // Auto-save after user stops typing for 2 seconds
-    customTextTimeoutRef.current = setTimeout(() => {
-      // Проверяем, что выбран "свой вариант" или это текстовый вопрос
-      const isSingleCustomSelected =
-        question.answer_type === "single" &&
-        question.answers?.find(
-          (answer) =>
-            answer.external_id === "custom" && selectedAnswerId === answer.id
-        );
-
-      const isMultipleCustomSelected =
-        question.answer_type === "multiple" &&
-        question.answers?.find(
-          (answer) =>
-            answer.external_id === "custom" &&
-            selectedAnswerIds.includes(answer.id)
-        );
-
-      if (
-        isSingleCustomSelected ||
-        isMultipleCustomSelected ||
-        question.answer_type === "text"
-      ) {
-        handleSave();
-      }
-      customTextTimeoutRef.current = null;
-    }, 2000);
-  };
+    return (
+      <div className="question-text-input">
+        <TextArea
+          value={formState.customText}
+          onUpdate={handleCustomTextChange}
+          placeholder="Введите ваш ответ..."
+          className="answer-textarea"
+        />
+      </div>
+    );
+  }, [question?.answer_type, formState.customText, handleCustomTextChange]);
 
   if (!question) {
     return (
@@ -349,202 +438,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
     );
   }
-
-  // handleSave уже определен выше
-
-  const handleSingleChoiceChange = (answerId: number) => {
-    setSelectedAnswerId(answerId);
-
-    // Проверяем, выбран ли вариант "свой ответ"
-    const selectedAnswer = question.answers?.find(
-      (answer) => answer.id === answerId
-    );
-    const isCustomAnswer = selectedAnswer?.external_id === "custom";
-
-    if (!isCustomAnswer) {
-      setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенного ответа
-    }
-
-    // Clear previous timeout
-    if (answerChangeTimeoutRef.current) {
-      clearTimeout(answerChangeTimeoutRef.current);
-    }
-
-    // Автоматически сохраняем только при выборе предопределенного ответа
-    if (!isCustomAnswer) {
-      const data = {
-        answer_id: answerId,
-        comment: localComment,
-        source_type: sourceType,
-      };
-      onAnswerUpdate(question.id, data);
-    }
-  };
-
-  const handleMultipleChoiceChange = (answerId: number, checked: boolean) => {
-    let newSelectedIds: number[];
-
-    if (checked) {
-      newSelectedIds = [...selectedAnswerIds, answerId];
-    } else {
-      newSelectedIds = selectedAnswerIds.filter((id) => id !== answerId);
-    }
-
-    setSelectedAnswerIds(newSelectedIds);
-
-    // Очищаем кастомный текст только если не выбран "свой вариант"
-    const hasCustomAnswer = question.answers?.find(
-      (answer) =>
-        answer.external_id === "custom" && newSelectedIds.includes(answer.id)
-    );
-
-    if (!hasCustomAnswer) {
-      setCustomAnswerText("");
-    }
-
-    // Clear previous timeout
-    if (answerChangeTimeoutRef.current) {
-      clearTimeout(answerChangeTimeoutRef.current);
-    }
-
-    // Автосохранение для множественного выбора
-    answerChangeTimeoutRef.current = setTimeout(() => {
-      // Если ответ был снят (unchecked), отправляем запрос с отметкой на удаление
-      if (!checked) {
-        // Отправляем только этот конкретный answer_id для удаления
-        const data = {
-          answer_id: answerId,
-          comment: localComment,
-          source_type: sourceType,
-          _delete: true, // Флаг для удаления конкретного ответа
-        };
-        onAnswerUpdate(question.id, data);
-      } else {
-        // Для добавления нового ответа отправляем только новый answer_id
-        const data = {
-          answer_id: answerId,
-          comment: localComment,
-          source_type: sourceType,
-        };
-        onAnswerUpdate(question.id, data);
-      }
-    }, 100); // Небольшая задержка для группировки изменений
-  };
-
-  const renderQuestionInput = () => {
-    const questionType = question.answer_type;
-
-    // Render custom option input if "свой вариант" is selected
-    const renderCustomOptionInput = () => {
-      // Для одиночного выбора проверяем selectedAnswerId
-      const isSingleCustomSelected =
-        question.answer_type === "single" &&
-        question.answers?.find(
-          (answer) =>
-            answer.external_id === "custom" && selectedAnswerId === answer.id
-        );
-
-      // Для множественного выбора проверяем selectedAnswerIds
-      const isMultipleCustomSelected =
-        question.answer_type === "multiple" &&
-        question.answers?.find(
-          (answer) =>
-            answer.external_id === "custom" &&
-            selectedAnswerIds.includes(answer.id)
-        );
-
-      // Показываем поле, если выбран "свой вариант" ИЛИ есть сохранённый текст
-      if (
-        isSingleCustomSelected ||
-        isMultipleCustomSelected ||
-        customAnswerText.trim() !== ""
-      ) {
-        return (
-          <TextInput
-            value={customAnswerText}
-            onUpdate={handleCustomTextChange}
-            onFocus={() => {
-              // При фокусе на поле ввода выбираем вариант "свой ответ"
-              const customAnswer = question.answers?.find(
-                (answer) => answer.external_id === "custom"
-              );
-              if (customAnswer) {
-                if (question.answer_type === "single") {
-                  setSelectedAnswerId(customAnswer.id);
-                } else if (question.answer_type === "multiple") {
-                  // Для множественного выбора добавляем к уже выбранным
-                  if (!selectedAnswerIds.includes(customAnswer.id)) {
-                    setSelectedAnswerIds([
-                      ...selectedAnswerIds,
-                      customAnswer.id,
-                    ]);
-                  }
-                }
-              }
-            }}
-            placeholder="Введите свой вариант..."
-            className="custom-answer-input"
-          />
-        );
-      }
-      return null;
-    };
-
-    switch (questionType) {
-      case "single":
-        return (
-          <>
-            <div className="question-options">
-              {question.answers?.map((answer: ChecklistAnswer) => (
-                <Radio
-                  key={answer.id}
-                  value={answer.id.toString()}
-                  size="l"
-                  checked={selectedAnswerId === answer.id}
-                  onChange={() => handleSingleChoiceChange(answer.id)}
-                  content={getAnswerDisplayValue(answer)}
-                />
-              ))}
-            </div>
-            {renderCustomOptionInput()}
-          </>
-        );
-
-      case "multiple":
-        return (
-          <>
-            <div className="question-options">
-              {question.answers?.map((answer: ChecklistAnswer) => (
-                <Checkbox
-                  key={answer.id}
-                  size="l"
-                  checked={selectedAnswerIds.includes(answer.id)}
-                  onChange={(event) =>
-                    handleMultipleChoiceChange(answer.id, event.target.checked)
-                  }
-                  content={getAnswerDisplayValue(answer)}
-                />
-              ))}
-            </div>
-            {renderCustomOptionInput()}
-          </>
-        );
-
-      case "text":
-      default:
-        return (
-          <div className="question-text-input">
-            <TextArea
-              value={customAnswerText}
-              onUpdate={handleCustomTextChange}
-              onBlur={handleSave}
-              placeholder="Введите ваш ответ..."
-              className="answer-textarea"
-            />
-          </div>
-        );
-    }
-  };
 
   return (
     <div className="question-card">
@@ -583,15 +476,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div className="question-card__main">
         <Text variant="header-1">{question.text}</Text>
 
-        <div className="question-input">{renderQuestionInput()}</div>
+        <div className="question-input">
+          {renderAnswerOptions()}
+          {renderTextInput()}
+        </div>
       </div>
 
       <div className="question-card__additional">
         <div className="source-selection">
           <div className="field-label">Источник ответа:</div>
           <SegmentedRadioGroup
-            value={sourceType}
-            onUpdate={(value) => setSourceType(value)}
+            value={formState.sourceType}
+            onUpdate={handleSourceTypeChange}
             size="m"
             options={[
               {
@@ -602,8 +498,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               {
                 value: "LOGICALLY_DERIVED",
                 content: "Предположение",
-                title:
-                  "Логически выведено на основе фактов и обстоятельств в первоисточнике",
+                title: "Логически выведено на основе фактов и обстоятельств в первоисточнике",
               },
               {
                 value: "IMAGINED",
@@ -617,9 +512,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         <div className="comment-field">
           <div className="field-label">Дополнить ответ:</div>
           <TextArea
-            value={localComment}
-            onUpdate={(value) => handleCommentChange(value)}
-            onBlur={handleSave}
+            value={formState.comment}
+            onUpdate={handleCommentChange}
             placeholder="Цитаты, обоснование, свои мысли..."
           />
         </div>
@@ -628,24 +522,28 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div className="question-card__actions">
         {question.current_response && (
           <Label theme="success" size="m">
-            {`Сохранено ${new Date(
-              question.current_response.updated_at
-            ).toLocaleString("ru")}`}
+            {`Сохранено ${new Date(question.current_response.updated_at).toLocaleString("ru")}`}
           </Label>
         )}
 
         <div className="action-buttons">
-          <Button onClick={handleSave} view="normal" size="m">
+          <Button 
+            onClick={handleSave} 
+            view="normal" 
+            size="m"
+            loading={isLoading}
+          >
             Сохранить
           </Button>
 
           {question.current_response && onAnswerDelete && (
             <div className="question-card__delete">
               <Button
-                onClick={() => onAnswerDelete(question.current_response!.id)}
+                onClick={handleDelete}
                 title="Удалить ответ"
                 view="normal"
                 size="m"
+                loading={isLoading}
               >
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

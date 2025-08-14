@@ -99,7 +99,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
       // Обновляем только локальное состояние, не перезагружаем данные
       if (localData && response) {
         const updatedData = { ...localData };
-        
+
         // Безопасное обновление структуры
         updatedData.sections?.forEach((section) => {
           section.subsections?.forEach((subsection) => {
@@ -125,7 +125,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             });
           });
         });
-        
+
         setLocalData(updatedData);
       }
       console.log("Ответ успешно сохранен локально");
@@ -203,6 +203,35 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     comment?: string;
   }) => {
     updateAnswerMutation.mutate({ questionId, data });
+  };
+
+  const handleMultipleAnswersUpdate = async (
+    questionId: number,
+    characterId: number,
+    selectedAnswerIds: number[],
+    comment?: string,
+    sourceType?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED",
+    customText?: string
+  ) => {
+    try {
+      await checklistApi.manageMultipleResponses({
+        question_id: questionId,
+        character_id: characterId,
+        selected_answer_ids: selectedAnswerIds,
+        comment,
+        source_type: sourceType,
+        custom_text: customText,
+      });
+
+      // Обновляем локальные данные после успешного сохранения
+      queryClient.invalidateQueries({
+        queryKey: ["checklist", checklistSlug, characterId],
+      });
+
+      console.log("Множественные ответы успешно обновлены");
+    } catch (error) {
+      console.error("Ошибка при обновлении множественных ответов:", error);
+    }
   };
 
   const handleAnswerDelete = (responseId: number) => {
@@ -347,7 +376,9 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           <QuestionCard
             question={currentQuestion}
             characterGender={(character?.gender as Gender) || 'male'}
+            characterId={characterId}
             onAnswerUpdate={handleAnswerUpdate}
+            onMultipleAnswersUpdate={handleMultipleAnswersUpdate}
             onAnswerDelete={handleAnswerDelete}
             isLoading={updateAnswerMutation.isLoading}
             allQuestions={allQuestions}

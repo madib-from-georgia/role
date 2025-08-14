@@ -5,6 +5,7 @@ API endpoints для работы с чеклистами
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Depends, status, Query
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 
 from app.dependencies.auth import get_db, get_current_active_user
 from app.database.crud import character as character_crud
@@ -117,6 +118,87 @@ async def get_checklist_for_character(
         )
     
     return checklist_with_responses
+
+
+class MultipleResponsesRequest(BaseModel):
+    question_id: int
+    character_id: int
+    selected_answer_ids: List[int]
+    comment: Optional[str] = None
+    source_type: Optional[str] = "FOUND_IN_TEXT"
+    custom_text: Optional[str] = None
+
+@router.post("/responses/multiple")
+async def manage_multiple_responses(
+    request: MultipleResponsesRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Управление множественными ответами на вопрос.
+    
+    Синхронизирует состояние ответов: добавляет новые, удаляет снятые.
+    """
+    question_id = request.question_id
+    character_id = request.character_id
+    selected_answer_ids = request.selected_answer_ids
+    comment = request.comment
+    source_type = request.source_type
+    custom_text = request.custom_text
+    # Проверяем права доступа к персонажу
+    character = character_crud.get(db, id=character_id)
+    if not character:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Персонаж не найден"
+        )
+    
+    from app.database.crud import text as text_crud
+    text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
+    if not text:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Нет прав доступа к этому персонажу"
+        )
+    
+    # Получаем текущие ответы
+    current_responses = checklist_service.get_current_responses_for_question(db, character_id, question_id)
+    current_answer_ids = [r.answer_id for r in current_responses if r.answer_id]
+    
+    # Определяем изменения
+    to_add = [aid for aid in selected_answer_ids if aid not in current_answer_ids]
+    to_remove = [aid for aid in current_answer_ids if aid not in selected_answer_ids]
+    
+    # Добавляем новые ответы
+    for answer_id in to_add:
+        response_data = ChecklistResponseUpdate(
+            answer_id=answer_id,
+            comment=comment,
+            source_type=source_type,
+            answer_text=custom_text if answer_id == get_custom_answer_id(db, question_id) else None
+        )
+        checklist_service.update_response(db, character_id, question_id, response_data)
+    
+    # Удаляем снятые ответы
+    for answer_id in to_remove:
+        # Используем алиас _delete вместо delete_flag
+        response_data = ChecklistResponseUpdate(
+            answer_id=answer_id,
+            **{"_delete": True}  # Используем алиас из схемы
+        )
+        result = checklist_service.update_response(db, character_id, question_id, response_data)
+    
+    return {"message": "Ответы успешно обновлены", "added": len(to_add), "removed": len(to_remove)}
+
+
+def get_custom_answer_id(db: Session, question_id: int) -> Optional[int]:
+    """Получить ID варианта 'свой ответ' для вопроса"""
+    from app.database.models.checklist import ChecklistAnswer
+    custom_answer = db.query(ChecklistAnswer).filter(
+        ChecklistAnswer.question_id == question_id,
+        ChecklistAnswer.external_id == "custom"
+    ).first()
+    return custom_answer.id if custom_answer else None
 
 
 @router.post("/responses", response_model=ChecklistResponse)

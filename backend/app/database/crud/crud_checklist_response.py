@@ -93,8 +93,10 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         Создание нового ответа или обновление существующего с версионированием
         Поддерживает множественные ответы для одного вопроса
         """
-        # Проверяем флаг удаления
-        if response_data.delete_flag and response_data.answer_id:
+        # Проверяем флаг удаления (используем getattr для совместимости с алиасом _delete)
+        delete_flag = getattr(response_data, 'delete_flag', None) or getattr(response_data, '_delete', None)
+        
+        if delete_flag and response_data.answer_id:
             # Удаляем конкретный ответ по answer_id
             existing_response = db.query(ChecklistResponse).filter(
                 and_(
@@ -203,8 +205,9 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         )
         db.add(history_entry)
         
-        # Удаляем ответ
-        db.delete(response)
+        # Мягкое удаление - устанавливаем is_current = False
+        response.is_current = False
+        response.updated_at = datetime.utcnow()
         db.commit()
         return True
     

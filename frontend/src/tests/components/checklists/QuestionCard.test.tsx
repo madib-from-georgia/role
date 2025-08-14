@@ -23,6 +23,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={null as never}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[]}
@@ -47,6 +48,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -73,6 +75,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -100,6 +103,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -126,6 +130,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -149,6 +154,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -172,6 +178,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -208,6 +215,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -231,6 +239,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={questionWithAnswers}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[questionWithAnswers]}
@@ -268,6 +277,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -290,6 +300,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={questionWithAnswers}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[questionWithAnswers]}
@@ -323,6 +334,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -346,6 +358,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={questionWithAnswers}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[questionWithAnswers]}
@@ -385,6 +398,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -407,6 +421,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={questionWithAnswers}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[questionWithAnswers]}
@@ -436,6 +451,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -471,6 +487,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -510,6 +527,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={true}
           allQuestions={[question]}
@@ -533,6 +551,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -573,6 +592,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           onAnswerDelete={mockOnAnswerDelete}
           isLoading={false}
@@ -602,6 +622,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           onAnswerDelete={mockOnAnswerDelete}
           isLoading={false}
@@ -632,6 +653,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -662,6 +684,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -693,6 +716,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
@@ -718,6 +742,7 @@ describe('QuestionCard', () => {
         <QuestionCard
           question={question}
           characterGender="male"
+          characterId={1}
           onAnswerUpdate={mockOnAnswerUpdate}
           isLoading={false}
           allQuestions={[question]}
