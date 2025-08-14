@@ -8,20 +8,27 @@ import {
   TextInput,
   TextArea,
   SegmentedRadioGroup,
-  Breadcrumbs
+  Breadcrumbs,
 } from "@gravity-ui/uikit";
 import { NavigationSidebar } from "./NavigationSidebar";
-import { ChecklistQuestion, ChecklistAnswer, Gender } from "../../types/checklist";
+import {
+  ChecklistQuestion,
+  ChecklistAnswer,
+  Gender,
+} from "../../types/checklist";
 
 interface QuestionCardProps {
   question: ChecklistQuestion;
   characterGender: Gender;
-  onAnswerUpdate: (questionId: number, data: {
-    answer_id?: number;
-    answer_text?: string;
-    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
-    comment?: string;
-  }) => void;
+  onAnswerUpdate: (
+    questionId: number,
+    data: {
+      answer_id?: number;
+      answer_text?: string;
+      source_type?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
+      comment?: string;
+    }
+  ) => void;
   onAnswerDelete?: (responseId: number) => void;
   isLoading: boolean;
   // New props for NavigationSidebar
@@ -78,8 +85,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const [localComment, setLocalComment] = useState(
     question?.current_response?.comment || ""
   );
-  const [sourceType, setSourceType] = useState<'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED'>(
-    (question?.current_response?.source_type as 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED') || "FOUND_IN_TEXT"
+  const [sourceType, setSourceType] = useState<
+    "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED"
+  >(
+    (question?.current_response?.source_type as
+      | "FOUND_IN_TEXT"
+      | "LOGICALLY_DERIVED"
+      | "IMAGINED") || "FOUND_IN_TEXT"
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -87,35 +99,37 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const customTextTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const answerChangeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const commentTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  
+
   // Ref для отслеживания текущего вопроса
   const currentQuestionIdRef = React.useRef<number | null>(null);
 
   // Получить отображаемое значение ответа в зависимости от пола персонажа
   const getAnswerDisplayValue = (answer: ChecklistAnswer): string => {
-    return characterGender === 'male' ? answer.value_male : answer.value_female;
+    return characterGender === "male" ? answer.value_male : answer.value_female;
   };
 
   // handleSave должен быть определен до useEffect
   const handleSave = React.useCallback(() => {
     if (!question) return;
-    
+
     const baseData = {
       comment: localComment,
       source_type: sourceType,
     };
 
     // Определяем тип данных для отправки в зависимости от типа вопроса
-    if (question.answer_type === 'single') {
+    if (question.answer_type === "single") {
       if (selectedAnswerId) {
-        const selectedAnswer = question.answers?.find(answer => answer.id === selectedAnswerId);
+        const selectedAnswer = question.answers?.find(
+          (answer) => answer.id === selectedAnswerId
+        );
         const isCustomAnswer = selectedAnswer?.external_id === "custom";
 
         const data: {
           answer_id?: number;
           answer_text?: string;
           comment: string;
-          source_type: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+          source_type: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
         } = { ...baseData };
 
         if (isCustomAnswer && customAnswerText.trim()) {
@@ -126,29 +140,45 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           // Для обычных ответов отправляем только ID
           data.answer_id = selectedAnswerId;
         }
-        
+
         onAnswerUpdate(question.id, data);
       } else if (customAnswerText.trim()) {
         const data = {
           ...baseData,
-          answer_text: customAnswerText.trim()
+          answer_text: customAnswerText.trim(),
         };
         onAnswerUpdate(question.id, data);
       }
-    } else if (question.answer_type === 'multiple') {
+    } else if (question.answer_type === "multiple") {
       // Для множественного выбора отправляем каждый выбранный ответ отдельно
       if (selectedAnswerIds.length > 0) {
-        selectedAnswerIds.forEach(answerId => {
-          const data = {
+        selectedAnswerIds.forEach((answerId) => {
+          const selectedAnswer = question.answers?.find(
+            (answer) => answer.id === answerId
+          );
+          const isCustomAnswer = selectedAnswer?.external_id === "custom";
+
+          const data: {
+            answer_id: number;
+            answer_text?: string;
+            comment: string;
+            source_type: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED";
+          } = {
             ...baseData,
             answer_id: answerId,
           };
+
+          // Если это "свой вариант" и есть текст, добавляем его
+          if (isCustomAnswer && customAnswerText.trim()) {
+            data.answer_text = customAnswerText.trim();
+          }
+
           onAnswerUpdate(question.id, data);
         });
       } else if (customAnswerText.trim()) {
         const data = {
           ...baseData,
-          answer_text: customAnswerText.trim()
+          answer_text: customAnswerText.trim(),
         };
         onAnswerUpdate(question.id, data);
       }
@@ -157,12 +187,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       if (customAnswerText.trim()) {
         const data = {
           ...baseData,
-          answer_text: customAnswerText.trim()
+          answer_text: customAnswerText.trim(),
         };
         onAnswerUpdate(question.id, data);
       }
     }
-  }, [question, selectedAnswerId, customAnswerText, localComment, sourceType, selectedAnswerIds, onAnswerUpdate]);
+  }, [
+    question,
+    selectedAnswerId,
+    customAnswerText,
+    localComment,
+    sourceType,
+    selectedAnswerIds,
+    onAnswerUpdate,
+  ]);
 
   // Update all form states when question changes (only question ID, not response)
   React.useEffect(() => {
@@ -197,14 +235,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       if (response) {
         // Инициализация на основе существующего ответа
         if (response.answer_id) {
-          if (question.answer_type === 'single') {
+          if (question.answer_type === "single") {
             setSelectedAnswerId(response.answer_id);
-          } else if (question.answer_type === 'multiple') {
+          } else if (question.answer_type === "multiple") {
             // Для множественного выбора используем current_responses если доступно
-            if (question.current_responses && question.current_responses.length > 0) {
+            if (
+              question.current_responses &&
+              question.current_responses.length > 0
+            ) {
               const multipleAnswerIds = question.current_responses
-                .map(resp => resp.answer_id)
-                .filter(id => id !== undefined) as number[];
+                .map((resp) => resp.answer_id)
+                .filter((id) => id !== undefined) as number[];
               setSelectedAnswerIds(multipleAnswerIds);
             } else {
               // Fallback к одному ответу для обратной совместимости
@@ -234,7 +275,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         setSourceType("FOUND_IN_TEXT");
       }
     }
-  }, [question?.id, question.answer_type, question?.current_response]);
+  }, [
+    question?.id,
+    question.answer_type,
+    question?.current_response,
+    question?.current_responses,
+  ]);
 
   // Cleanup timeouts on unmount
   React.useEffect(() => {
@@ -268,11 +314,26 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     // Auto-save after user stops typing for 2 seconds
     customTextTimeoutRef.current = setTimeout(() => {
       // Проверяем, что выбран "свой вариант" или это текстовый вопрос
-      const isCustomAnswerSelected = question.answers?.find(answer =>
-        answer.external_id === "custom" && selectedAnswerId === answer.id
-      );
-      
-      if (isCustomAnswerSelected || question.answer_type === 'text') {
+      const isSingleCustomSelected =
+        question.answer_type === "single" &&
+        question.answers?.find(
+          (answer) =>
+            answer.external_id === "custom" && selectedAnswerId === answer.id
+        );
+
+      const isMultipleCustomSelected =
+        question.answer_type === "multiple" &&
+        question.answers?.find(
+          (answer) =>
+            answer.external_id === "custom" &&
+            selectedAnswerIds.includes(answer.id)
+        );
+
+      if (
+        isSingleCustomSelected ||
+        isMultipleCustomSelected ||
+        question.answer_type === "text"
+      ) {
         handleSave();
       }
       customTextTimeoutRef.current = null;
@@ -295,7 +356,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     setSelectedAnswerId(answerId);
 
     // Проверяем, выбран ли вариант "свой ответ"
-    const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
+    const selectedAnswer = question.answers?.find(
+      (answer) => answer.id === answerId
+    );
     const isCustomAnswer = selectedAnswer?.external_id === "custom";
 
     if (!isCustomAnswer) {
@@ -324,11 +387,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     if (checked) {
       newSelectedIds = [...selectedAnswerIds, answerId];
     } else {
-      newSelectedIds = selectedAnswerIds.filter(id => id !== answerId);
+      newSelectedIds = selectedAnswerIds.filter((id) => id !== answerId);
     }
 
     setSelectedAnswerIds(newSelectedIds);
-    setCustomAnswerText(""); // Очищаем кастомный текст при выборе предопределенных ответов
+
+    // Очищаем кастомный текст только если не выбран "свой вариант"
+    const hasCustomAnswer = question.answers?.find(
+      (answer) =>
+        answer.external_id === "custom" && newSelectedIds.includes(answer.id)
+    );
+
+    if (!hasCustomAnswer) {
+      setCustomAnswerText("");
+    }
 
     // Clear previous timeout
     if (answerChangeTimeoutRef.current) {
@@ -344,7 +416,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           answer_id: answerId,
           comment: localComment,
           source_type: sourceType,
-          _delete: true // Флаг для удаления конкретного ответа
+          _delete: true, // Флаг для удаления конкретного ответа
         };
         onAnswerUpdate(question.id, data);
       } else {
@@ -364,21 +436,50 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     // Render custom option input if "свой вариант" is selected
     const renderCustomOptionInput = () => {
-      // Проверяем, выбран ли вариант "свой ответ" (external_id === "custom")
-      const isCustomAnswerSelected = question.answers?.find(answer =>
-        answer.external_id === "custom" && selectedAnswerId === answer.id
-      );
+      // Для одиночного выбора проверяем selectedAnswerId
+      const isSingleCustomSelected =
+        question.answer_type === "single" &&
+        question.answers?.find(
+          (answer) =>
+            answer.external_id === "custom" && selectedAnswerId === answer.id
+        );
 
-      if (isCustomAnswerSelected || customAnswerText.trim() !== "") {
+      // Для множественного выбора проверяем selectedAnswerIds
+      const isMultipleCustomSelected =
+        question.answer_type === "multiple" &&
+        question.answers?.find(
+          (answer) =>
+            answer.external_id === "custom" &&
+            selectedAnswerIds.includes(answer.id)
+        );
+
+      // Показываем поле, если выбран "свой вариант" ИЛИ есть сохранённый текст
+      if (
+        isSingleCustomSelected ||
+        isMultipleCustomSelected ||
+        customAnswerText.trim() !== ""
+      ) {
         return (
           <TextInput
             value={customAnswerText}
             onUpdate={handleCustomTextChange}
             onFocus={() => {
               // При фокусе на поле ввода выбираем вариант "свой ответ"
-              const customAnswer = question.answers?.find(answer => answer.external_id === "custom");
+              const customAnswer = question.answers?.find(
+                (answer) => answer.external_id === "custom"
+              );
               if (customAnswer) {
-                setSelectedAnswerId(customAnswer.id);
+                if (question.answer_type === "single") {
+                  setSelectedAnswerId(customAnswer.id);
+                } else if (question.answer_type === "multiple") {
+                  // Для множественного выбора добавляем к уже выбранным
+                  if (!selectedAnswerIds.includes(customAnswer.id)) {
+                    setSelectedAnswerIds([
+                      ...selectedAnswerIds,
+                      customAnswer.id,
+                    ]);
+                  }
+                }
               }
             }}
             placeholder="Введите свой вариант..."
@@ -418,7 +519,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   key={answer.id}
                   size="l"
                   checked={selectedAnswerIds.includes(answer.id)}
-                  onChange={(event) => handleMultipleChoiceChange(answer.id, event.target.checked)}
+                  onChange={(event) =>
+                    handleMultipleChoiceChange(answer.id, event.target.checked)
+                  }
                   content={getAnswerDisplayValue(answer)}
                 />
               ))}
@@ -467,21 +570,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </Button>
 
         <div className="question-card__breadcrumbs">
-
-        <Breadcrumbs>
-          <Breadcrumbs.Item>{question.sectionTitle}</Breadcrumbs.Item>
-          <Breadcrumbs.Item>{question.subsectionTitle}</Breadcrumbs.Item>
-          {question.groupTitle && (
-            <Breadcrumbs.Item>{question.groupTitle}</Breadcrumbs.Item>
-          )}
-        </Breadcrumbs>
+          <Breadcrumbs>
+            <Breadcrumbs.Item>{question.sectionTitle}</Breadcrumbs.Item>
+            <Breadcrumbs.Item>{question.subsectionTitle}</Breadcrumbs.Item>
+            {question.groupTitle && (
+              <Breadcrumbs.Item>{question.groupTitle}</Breadcrumbs.Item>
+            )}
+          </Breadcrumbs>
         </div>
       </div>
 
       <div className="question-card__main">
-        <Text variant="header-1">
-          {question.text}
-        </Text>
+        <Text variant="header-1">{question.text}</Text>
 
         <div className="question-input">{renderQuestionInput()}</div>
       </div>
@@ -528,16 +628,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div className="question-card__actions">
         {question.current_response && (
           <Label theme="success" size="m">
-            {`Сохранено ${new Date(question.current_response.updated_at).toLocaleString("ru")}`}
+            {`Сохранено ${new Date(
+              question.current_response.updated_at
+            ).toLocaleString("ru")}`}
           </Label>
         )}
 
         <div className="action-buttons">
-          <Button
-            onClick={handleSave}
-            view="normal"
-            size="m"
-          >
+          <Button onClick={handleSave} view="normal" size="m">
             Сохранить
           </Button>
 

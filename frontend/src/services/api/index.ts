@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { debounce, BatchProcessor } from '../../utils/debounce'
+import { debounce } from '../../utils/debounce'
 
 // API Types
 interface ProjectData {
@@ -142,53 +142,7 @@ const debouncedGetChecklistForCharacter = debounce(
   300 // 300ms задержка
 );
 
-// Debounced функция для создания/обновления ответов
-const debouncedCreateOrUpdateResponse = debounce(
-  (data: {
-    question_id: number;
-    character_id: number;
-    answer_id?: number;
-    answer_text?: string;
-    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
-    comment?: string;
-  }) => {
-    console.log('Sending debounced API request with data:', data);
-    return api.post('/api/checklists/responses', data);
-  },
-  1000 // Увеличиваем задержку до 1 секунды
-);
-
 // Batch processor для множественных ответов
-const responseBatchProcessor = new BatchProcessor(
-  async (batch: Array<{
-    question_id: number;
-    character_id: number;
-    answer_id?: number;
-    answer_text?: string;
-    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
-    comment?: string;
-  }>) => {
-    // Группируем по character_id для оптимизации
-    const groupedByCharacter = batch.reduce((groups, item) => {
-      const key = item.character_id;
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(item);
-      return groups;
-    }, {} as Record<number, typeof batch>);
-
-    const results = [];
-    for (const [items] of Object.entries(groupedByCharacter)) {
-      for (const item of items) {
-        const result = await api.post('/api/checklists/responses', item);
-        results.push(result);
-      }
-    }
-    return results;
-  },
-  200, // 200ms delay
-  5    // max 5 items per batch
-);
-
 export const checklistApi = {
   getAll: (characterId?: number) => {
     const params = characterId ? { character_id: characterId } : {};
