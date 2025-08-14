@@ -337,7 +337,12 @@ class ChecklistService:
         )
         
         # Создаем словарь ответов по question_id для быстрого поиска
-        responses_dict = {r.question_id: r for r in responses}
+        # Для множественного выбора может быть несколько ответов на один вопрос
+        responses_dict = {}
+        for r in responses:
+            if r.question_id not in responses_dict:
+                responses_dict[r.question_id] = []
+            responses_dict[r.question_id].append(r)
         
         # Обогащаем структуру ответами
         enriched_checklist = self._enrich_checklist_with_responses(
@@ -351,9 +356,9 @@ class ChecklistService:
         return enriched_checklist
     
     def _enrich_checklist_with_responses(
-        self, 
-        checklist_obj: Checklist, 
-        responses_dict: Dict[int, Any]
+        self,
+        checklist_obj: Checklist,
+        responses_dict: Dict[int, list]
     ) -> ChecklistWithResponses:
         """Обогащает структуру чеклиста ответами"""
         from app.schemas.checklist import (
@@ -374,8 +379,14 @@ class ChecklistService:
                     enriched_questions = []
                     
                     for question in question_group.questions:
-                        # Получаем ответ для этого вопроса
-                        current_response = responses_dict.get(question.id)
+                        # Получаем ответы для этого вопроса (может быть несколько)
+                        question_responses = responses_dict.get(question.id, [])
+                        
+                        # Для обратной совместимости берем первый ответ как current_response
+                        current_response = question_responses[0] if question_responses else None
+                        
+                        # Для множественного выбора возвращаем все ответы
+                        current_responses = question_responses if question.answer_type == 'multiple' else []
                         
                         # Создаем обогащенный вопрос
                         enriched_question = ChecklistQuestionWithResponse(
@@ -389,6 +400,7 @@ class ChecklistService:
                             answers=question.answers,
                             created_at=question.created_at,
                             current_response=current_response,
+                            current_responses=current_responses,
                             response_history=[]  # TODO: Добавить историю ответов
                         )
                         enriched_questions.append(enriched_question)

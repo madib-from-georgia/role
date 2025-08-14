@@ -162,6 +162,7 @@ class ChecklistResponseUpdate(BaseModel):
     comment: Optional[str] = Field(None, description="Комментарий к ответу")
     source_type: Optional[SourceType] = Field(None, description="Источник ответа")
     change_reason: Optional[str] = Field(None, description="Причина изменения")
+    delete_flag: Optional[bool] = Field(None, alias="_delete", description="Флаг для удаления конкретного ответа")
 
 
 class ChecklistResponse(ChecklistResponseBase):
@@ -196,6 +197,7 @@ class ChecklistResponseHistory(BaseModel):
 # Схемы с ответами
 class ChecklistQuestionWithResponse(ChecklistQuestion):
     current_response: Optional[ChecklistResponse] = None
+    current_responses: List[ChecklistResponse] = []  # Для множественного выбора
     response_history: List[ChecklistResponseHistory] = []
 
 

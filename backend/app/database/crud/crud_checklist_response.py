@@ -16,12 +16,27 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
     """CRUD операции для ответов на вопросы чеклистов"""
     
     def get_by_character_and_question(
-        self, 
-        db: Session, 
-        character_id: int, 
+        self,
+        db: Session,
+        character_id: int,
+        question_id: int
+    ) -> List[ChecklistResponse]:
+        """Получение всех текущих ответов персонажа на вопрос (поддержка множественного выбора)"""
+        return db.query(ChecklistResponse).filter(
+            and_(
+                ChecklistResponse.character_id == character_id,
+                ChecklistResponse.question_id == question_id,
+                ChecklistResponse.is_current == True
+            )
+        ).all()
+    
+    def get_single_response_by_character_and_question(
+        self,
+        db: Session,
+        character_id: int,
         question_id: int
     ) -> Optional[ChecklistResponse]:
-        """Получение текущего ответа персонажа на вопрос"""
+        """Получение одного ответа персонажа на вопрос (для обратной совместимости)"""
         return db.query(ChecklistResponse).filter(
             and_(
                 ChecklistResponse.character_id == character_id,
@@ -67,18 +82,56 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         ).all()
     
     def create_or_update_response(
-        self, 
-        db: Session, 
-        character_id: int, 
-        question_id: int, 
+        self,
+        db: Session,
+        character_id: int,
+        question_id: int,
         response_data: ChecklistResponseUpdate,
         change_reason: Optional[str] = None
     ) -> ChecklistResponse:
         """
         Создание нового ответа или обновление существующего с версионированием
+        Поддерживает множественные ответы для одного вопроса
         """
-        # Ищем существующий ответ
-        existing_response = self.get_by_character_and_question(db, character_id, question_id)
+        # Проверяем флаг удаления
+        if response_data.delete_flag and response_data.answer_id:
+            # Удаляем конкретный ответ по answer_id
+            existing_response = db.query(ChecklistResponse).filter(
+                and_(
+                    ChecklistResponse.character_id == character_id,
+                    ChecklistResponse.question_id == question_id,
+                    ChecklistResponse.answer_id == response_data.answer_id,
+                    ChecklistResponse.is_current == True
+                )
+            ).first()
+            
+            if existing_response:
+                self.delete_response(db, existing_response.id, change_reason or "Удаление при множественном выборе")
+                return existing_response
+            else:
+                # Если ответ не найден, возвращаем пустой ответ для совместимости
+                return ChecklistResponse(id=0, character_id=character_id, question_id=question_id)
+        
+        # Для множественного выбора ищем ответ по конкретному answer_id
+        if response_data.answer_id:
+            existing_response = db.query(ChecklistResponse).filter(
+                and_(
+                    ChecklistResponse.character_id == character_id,
+                    ChecklistResponse.question_id == question_id,
+                    ChecklistResponse.answer_id == response_data.answer_id,
+                    ChecklistResponse.is_current == True
+                )
+            ).first()
+        else:
+            # Для текстовых ответов ищем по question_id и character_id без answer_id
+            existing_response = db.query(ChecklistResponse).filter(
+                and_(
+                    ChecklistResponse.character_id == character_id,
+                    ChecklistResponse.question_id == question_id,
+                    ChecklistResponse.answer_id.is_(None),
+                    ChecklistResponse.is_current == True
+                )
+            ).first()
         
         if existing_response:
             # Обновляем существующий ответ
@@ -91,7 +144,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 answer_id=response_data.answer_id,
                 answer_text=response_data.answer_text,
                 comment=response_data.comment,
-                source_type=response_data.source_type
+                source_type=response_data.source_type or "FOUND_IN_TEXT"  # Значение по умолчанию
             )
             return self.create(db, obj_in=create_data)
     
@@ -118,7 +171,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
         response.answer_id = update_data.answer_id
         response.answer_text = update_data.answer_text
         response.comment = update_data.comment
-        response.source_type = update_data.source_type
+        response.source_type = update_data.source_type or response.source_type or "FOUND_IN_TEXT"
         response.version += 1
         response.updated_at = datetime.utcnow()
         

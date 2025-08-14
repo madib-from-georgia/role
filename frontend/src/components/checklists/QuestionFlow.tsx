@@ -84,26 +84,28 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
   // Мутация для обновления ответа
   const updateAnswerMutation = useMutation<ResponseData, Error, MutationVariables>({
-    mutationFn: ({
+    mutationFn: async ({
       questionId,
       data,
-    }: MutationVariables) =>
-      checklistApi.createOrUpdateResponse({
+    }: MutationVariables) => {
+      const response = await checklistApi.createOrUpdateResponse({
         question_id: questionId,
         character_id: characterId,
         ...data,
-      }) as Promise<ResponseData>,
+      });
+      return response as ResponseData;
+    },
     onSuccess: (response: ResponseData, variables: MutationVariables) => {
-      // Update local data
-      if (localData) {
+      // Обновляем только локальное состояние, не перезагружаем данные
+      if (localData && response) {
         const updatedData = { ...localData };
-
-        // Find and update question in hierarchical structure
+        
+        // Безопасное обновление структуры
         updatedData.sections?.forEach((section) => {
           section.subsections?.forEach((subsection) => {
             subsection.question_groups?.forEach((group) => {
               const question = group.questions?.find(
-                (q) => q.id === variables.questionId
+                (q) => q?.id === variables.questionId
               );
               if (question) {
                 question.current_response = {
@@ -112,25 +114,24 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
                   character_id: response.character_id,
                   answer_id: response.answer_id,
                   answer_text: response.answer_text,
-                  source_type: response.source_type || "FOUND_IN_TEXT",
+                  source_type: response.source_type,
                   comment: response.comment,
                   version: response.version,
                   created_at: response.created_at,
                   updated_at: response.updated_at,
-                  answer: response.answer as ChecklistAnswer | undefined, // Связанный объект ответа
+                  answer: response.answer as ChecklistAnswer | undefined,
                 };
               }
             });
           });
         });
-
+        
         setLocalData(updatedData);
       }
-
-      // Invalidate cache
-      queryClient.invalidateQueries({
-        queryKey: ["checklist", checklistSlug, characterId],
-      });
+      console.log("Ответ успешно сохранен локально");
+    },
+    onError: (error: Error) => {
+      console.error("Ошибка при обновлении ответа:", error);
     },
   });
 

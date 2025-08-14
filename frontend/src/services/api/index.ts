@@ -142,6 +142,22 @@ const debouncedGetChecklistForCharacter = debounce(
   300 // 300ms задержка
 );
 
+// Debounced функция для создания/обновления ответов
+const debouncedCreateOrUpdateResponse = debounce(
+  (data: {
+    question_id: number;
+    character_id: number;
+    answer_id?: number;
+    answer_text?: string;
+    source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+    comment?: string;
+  }) => {
+    console.log('Sending debounced API request with data:', data);
+    return api.post('/api/checklists/responses', data);
+  },
+  1000 // Увеличиваем задержку до 1 секунды
+);
+
 // Batch processor для множественных ответов
 const responseBatchProcessor = new BatchProcessor(
   async (batch: Array<{
@@ -186,7 +202,10 @@ export const checklistApi = {
     answer_text?: string;
     source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
     comment?: string;
-  }) => responseBatchProcessor.add(data),
+  }) => {
+    console.log('Sending API request with data:', data);
+    return api.post('/api/checklists/responses', data);
+  },
   createOrUpdateResponseDirect: (data: {
     question_id: number;
     character_id: number;

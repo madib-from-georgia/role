@@ -100,12 +100,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const handleSave = React.useCallback(() => {
     if (!question) return;
     
-    const data: {
-      answer_id?: number;
-      answer_text?: string;
-      comment: string;
-      source_type: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
-    } = {
+    const baseData = {
       comment: localComment,
       source_type: sourceType,
     };
@@ -116,6 +111,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         const selectedAnswer = question.answers?.find(answer => answer.id === selectedAnswerId);
         const isCustomAnswer = selectedAnswer?.external_id === "custom";
 
+        const data: {
+          answer_id?: number;
+          answer_text?: string;
+          comment: string;
+          source_type: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+        } = { ...baseData };
+
         if (isCustomAnswer && customAnswerText.trim()) {
           // Для варианта "свой ответ" отправляем и ID варианта, и текст
           data.answer_id = selectedAnswerId;
@@ -124,33 +126,47 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           // Для обычных ответов отправляем только ID
           data.answer_id = selectedAnswerId;
         }
+        
+        onAnswerUpdate(question.id, data);
       } else if (customAnswerText.trim()) {
-        data.answer_text = customAnswerText.trim();
+        const data = {
+          ...baseData,
+          answer_text: customAnswerText.trim()
+        };
+        onAnswerUpdate(question.id, data);
       }
     } else if (question.answer_type === 'multiple') {
+      // Для множественного выбора отправляем каждый выбранный ответ отдельно
       if (selectedAnswerIds.length > 0) {
-        // Для множественного выбора пока используем первый выбранный ответ
-        // В будущем можно расширить API для поддержки множественных answer_id
-        data.answer_id = selectedAnswerIds[0];
+        selectedAnswerIds.forEach(answerId => {
+          const data = {
+            ...baseData,
+            answer_id: answerId,
+          };
+          onAnswerUpdate(question.id, data);
+        });
       } else if (customAnswerText.trim()) {
-        data.answer_text = customAnswerText.trim();
+        const data = {
+          ...baseData,
+          answer_text: customAnswerText.trim()
+        };
+        onAnswerUpdate(question.id, data);
       }
     } else {
       // text
       if (customAnswerText.trim()) {
-        data.answer_text = customAnswerText.trim();
+        const data = {
+          ...baseData,
+          answer_text: customAnswerText.trim()
+        };
+        onAnswerUpdate(question.id, data);
       }
-    }
-
-    // Отправляем данные только если есть что сохранять
-    if (data.answer_id || data.answer_text || data.comment?.trim()) {
-      onAnswerUpdate(question.id, data);
     }
   }, [question, selectedAnswerId, customAnswerText, localComment, sourceType, selectedAnswerIds, onAnswerUpdate]);
 
   // Update all form states when question changes (only question ID, not response)
   React.useEffect(() => {
-    // Cleanup функция - сохраняем данные перед сменой вопроса
+    // Cleanup функция - очищаем таймеры
     return () => {
       // Очищаем все таймеры
       if (customTextTimeoutRef.current) {
@@ -165,13 +181,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         clearTimeout(commentTimeoutRef.current);
         commentTimeoutRef.current = null;
       }
-
-      // Сохраняем текущие данные перед сменой вопроса
-      if (currentQuestionIdRef.current && (selectedAnswerId || customAnswerText.trim() || localComment.trim())) {
-        handleSave();
-      }
     };
-  }, [question?.id, selectedAnswerId, customAnswerText, localComment, sourceType, handleSave]);
+  }, [question?.id]);
 
   // Инициализация состояния при смене вопроса
   React.useEffect(() => {
@@ -189,9 +200,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           if (question.answer_type === 'single') {
             setSelectedAnswerId(response.answer_id);
           } else if (question.answer_type === 'multiple') {
-            // Для множественного выбора нужно парсить answer_text или использовать отдельное поле
-            // Пока используем простую логику - один ID
-            setSelectedAnswerIds([response.answer_id]);
+            // Для множественного выбора используем current_responses если доступно
+            if (question.current_responses && question.current_responses.length > 0) {
+              const multipleAnswerIds = question.current_responses
+                .map(resp => resp.answer_id)
+                .filter(id => id !== undefined) as number[];
+              setSelectedAnswerIds(multipleAnswerIds);
+            } else {
+              // Fallback к одному ответу для обратной совместимости
+              setSelectedAnswerIds([response.answer_id]);
+            }
           }
         } else {
           setSelectedAnswerId(null);
@@ -233,23 +251,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     };
   }, []);
 
-  // Debounced auto-save for comment field
+  // Handle comment change without auto-save
   const handleCommentChange = (text: string) => {
     setLocalComment(text);
-
-    // Clear previous timeout
-    if (commentTimeoutRef.current) {
-      clearTimeout(commentTimeoutRef.current);
-    }
-
-    commentTimeoutRef.current = setTimeout(() => {
-      handleSave();
-      // Очищаем таймер после сохранения
-      commentTimeoutRef.current = null;
-    }, 2000);
   };
 
-  // Debounced auto-save for custom text
+  // Handle custom text change with debounced auto-save for custom answers
   const handleCustomTextChange = (text: string) => {
     setCustomAnswerText(text);
 
@@ -258,8 +265,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       clearTimeout(customTextTimeoutRef.current);
     }
 
+    // Auto-save after user stops typing for 2 seconds
     customTextTimeoutRef.current = setTimeout(() => {
-      handleSave();
+      // Проверяем, что выбран "свой вариант" или это текстовый вопрос
+      const isCustomAnswerSelected = question.answers?.find(answer =>
+        answer.external_id === "custom" && selectedAnswerId === answer.id
+      );
+      
+      if (isCustomAnswerSelected || question.answer_type === 'text') {
+        handleSave();
+      }
       customTextTimeoutRef.current = null;
     }, 2000);
   };
@@ -292,16 +307,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       clearTimeout(answerChangeTimeoutRef.current);
     }
 
-    // Debounced auto-save (только для не-кастомных ответов)
+    // Автоматически сохраняем только при выборе предопределенного ответа
     if (!isCustomAnswer) {
-      answerChangeTimeoutRef.current = setTimeout(() => {
-        const data = {
-          answer_id: answerId,
-          comment: localComment,
-          source_type: sourceType,
-        };
-        onAnswerUpdate(question.id, data);
-      }, 500);
+      const data = {
+        answer_id: answerId,
+        comment: localComment,
+        source_type: sourceType,
+      };
+      onAnswerUpdate(question.id, data);
     }
   };
 
@@ -322,18 +335,28 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       clearTimeout(answerChangeTimeoutRef.current);
     }
 
-    // Debounced auto-save
+    // Автосохранение для множественного выбора
     answerChangeTimeoutRef.current = setTimeout(() => {
-      if (newSelectedIds.length > 0) {
-        // Пока используем первый выбранный ответ
+      // Если ответ был снят (unchecked), отправляем запрос с отметкой на удаление
+      if (!checked) {
+        // Отправляем только этот конкретный answer_id для удаления
         const data = {
-          answer_id: newSelectedIds[0],
+          answer_id: answerId,
+          comment: localComment,
+          source_type: sourceType,
+          _delete: true // Флаг для удаления конкретного ответа
+        };
+        onAnswerUpdate(question.id, data);
+      } else {
+        // Для добавления нового ответа отправляем только новый answer_id
+        const data = {
+          answer_id: answerId,
           comment: localComment,
           source_type: sourceType,
         };
         onAnswerUpdate(question.id, data);
       }
-    }, 500);
+    }, 100); // Небольшая задержка для группировки изменений
   };
 
   const renderQuestionInput = () => {

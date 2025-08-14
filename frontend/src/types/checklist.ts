@@ -18,9 +18,10 @@ export interface ChecklistQuestion {
   external_id: string;
   text: string;
   answer_type: 'single' | 'multiple' | 'text';
-  source_type: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+  source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
   answers: ChecklistAnswer[];
   current_response?: ChecklistResponse;
+  current_responses?: ChecklistResponse[]; // Для множественного выбора
   created_at: string;
   updated_at: string;
   // Контекстная информация для отображения
@@ -62,7 +63,7 @@ export interface ChecklistResponse {
   character_id: number;
   answer_id?: number;
   answer_text?: string;
-  source_type: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
+  source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
   comment?: string;
   version: number;
   created_at: string;
@@ -110,6 +111,7 @@ export interface UpdateResponseRequest {
   source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
   comment?: string;
   change_reason?: string;
+  _delete?: boolean; // Флаг для удаления конкретного ответа при множественном выборе
 }
 
 // Типы для версионирования

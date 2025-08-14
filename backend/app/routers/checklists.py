@@ -130,9 +130,25 @@ async def create_or_update_response(
     
     Автоматически создает новый ответ или обновляет существующий с версионированием.
     """
+    # Логирование для отладки
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    try:
+        logger.info(f"Received response data: {response_data.dict()}")
+        logger.info(f"Character ID: {response_data.character_id}, Question ID: {response_data.question_id}")
+    except Exception as e:
+        logger.error(f"Error serializing response data: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Ошибка валидации данных: {str(e)}"
+        )
+    
     # Проверяем права доступа к персонажу
     character = character_crud.get(db, id=response_data.character_id)
     if not character:
+        logger.error(f"Character with ID {response_data.character_id} not found")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Персонаж не найден"
@@ -141,12 +157,52 @@ async def create_or_update_response(
     from app.database.crud import text as text_crud
     text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
     if not text:
+        logger.error(f"User {current_user.id} has no access to character {response_data.character_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Нет прав доступа к этому персонажу"
         )
     
+    # Проверяем существование вопроса
+    from app.database.crud.crud_checklist import checklist_question
+    question = checklist_question.get(db, id=response_data.question_id)
+    if not question:
+        logger.error(f"Question with ID {response_data.question_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Вопрос не найден"
+        )
     try:
+        # Логирование полученных данных
+        logger.info(f"Processing response for character_id={response_data.character_id}, question_id={response_data.question_id}")
+        logger.info(f"Answer data: answer_id={response_data.answer_id}, answer_text='{response_data.answer_text}', source_type={response_data.source_type}")
+        
+        # Валидация данных
+        if response_data.answer_id is None and not response_data.answer_text:
+            logger.error("Both answer_id and answer_text are empty")
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Необходимо указать либо answer_id, либо answer_text"
+            )
+        
+        # Если указан answer_id, проверяем его существование
+        if response_data.answer_id is not None:
+            from app.database.crud.crud_checklist import checklist_answer
+            answer = checklist_answer.get(db, id=response_data.answer_id)
+            if not answer:
+                logger.error(f"Answer with ID {response_data.answer_id} not found")
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Ответ не найден"
+                )
+            # Проверяем, что ответ принадлежит указанному вопросу
+            if answer.question_id != response_data.question_id:
+                logger.error(f"Answer {response_data.answer_id} does not belong to question {response_data.question_id}")
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Ответ не принадлежит указанному вопросу"
+                )
+        
         # Преобразуем в ChecklistResponseUpdate для единообразия
         update_data = ChecklistResponseUpdate(
             answer_id=response_data.answer_id,
@@ -155,16 +211,24 @@ async def create_or_update_response(
             source_type=response_data.source_type
         )
         
+        logger.info(f"Calling checklist_service.update_response with validated data")
         response = checklist_service.update_response(
             db, response_data.character_id, response_data.question_id, update_data
         )
         
+        logger.info(f"Successfully created/updated response with id={response.id}")
         return response
         
+    except HTTPException:
+        # Перебрасываем HTTPException как есть
+        raise
     except Exception as e:
+        logger.error(f"Unexpected error creating/updating response: {str(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Ошибка при сохранении ответа: {str(e)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Внутренняя ошибка сервера: {str(e)}"
         )
 
 
