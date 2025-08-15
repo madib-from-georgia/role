@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { checklistApi } from "../../services/api";
@@ -45,6 +45,25 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
     return checklistProgress?.completion_percentage || 0;
   };
 
+  // Handle Esc key
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+        // Remove focus from the button to avoid outline
+        (document.activeElement as HTMLElement)?.blur();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isOpen]);
+
   // Если нет чеклистов, не рендерим компонент
   if (!checklists) {
     return null;
@@ -62,12 +81,9 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
       </Button>
 
       {/* Full-screen sidebar */}
-      <div className={`checklist-switcher-wrapper ${isOpen ? "open" : "closed"}`}>
-        {/* Backdrop */}
-        <div className="checklist-switcher__backdrop" onClick={() => setIsOpen(false)} />
-
+      <div className={`checklist-switcher-wrapper ${isOpen ? "open" : "closed"}`} onClick={() => setIsOpen(false)}>
         {/* Sidebar */}
-        <div className="checklist-switcher-sidebar">
+        <div className="checklist-switcher-sidebar" onClick={(e) => e.stopPropagation()}>
           <div className="switcher-sidebar-header">
             <h3>Чеклисты</h3>
             <Button onClick={() => setIsOpen(false)} view="normal" size="l">

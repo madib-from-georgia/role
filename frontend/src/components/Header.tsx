@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button, User, ArrowToggle } from "@gravity-ui/uikit";
 import { useAuth } from "../contexts/AuthContext";
@@ -36,6 +36,25 @@ const Header: React.FC = () => {
   const handleCloseMobileMenu = useCallback(() => {
     setShowMobileMenu(false);
   }, []);
+
+  // Handle Esc key for mobile menu
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showMobileMenu) {
+        handleCloseMobileMenu();
+        // Remove focus from the button to avoid outline
+        (document.activeElement as HTMLElement)?.blur();
+      }
+    };
+
+    if (showMobileMenu) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [showMobileMenu, handleCloseMobileMenu]);
 
   return (
     <>

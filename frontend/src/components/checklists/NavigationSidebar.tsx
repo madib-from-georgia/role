@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextInput, Progress, Label, ArrowToggle } from "@gravity-ui/uikit";
 import { ChecklistQuestion } from "../../types/checklist";
 
@@ -122,13 +122,29 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
     (q) => q.current_response?.answer
   ).length;
 
-  return (
-    <div className={`navigation-sidebar-wrapper ${isOpen ? "open" : "closed"}`}>
-      {/* Backdrop */}
-      <div className="navigation-sidebar__backdrop" onClick={onClose} />
+  // Handle Esc key
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+        // Remove focus from the button to avoid outline
+        (document.activeElement as HTMLElement)?.blur();
+      }
+    };
 
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isOpen, onClose]);
+
+  return (
+    <div className={`navigation-sidebar-wrapper ${isOpen ? "open" : "closed"}`} onClick={onClose}>
       {/* Sidebar */}
-      <div className="navigation-sidebar">
+      <div className="navigation-sidebar" onClick={(e) => e.stopPropagation()}>
         <div className="sidebar-header">
           <h3>Навигация по вопросам</h3>
           <Button onClick={onClose} view="normal" size="l">

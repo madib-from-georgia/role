@@ -442,27 +442,26 @@
 }
 
 .checklist-switcher-wrapper.open {
-  display: block;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9997;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .checklist-switcher-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
+  background: white;
   width: var(--sidebar-width);
   height: 100vh;
-  background-color: var(--color-background);
-  border-left: 1px solid var(--color-border);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   display: flex;
   flex-direction: column;
+  animation: slideInLeft 0.3s ease-out;
 }
 
 .switcher-sidebar-header {
@@ -563,25 +562,18 @@
   gap: var(--spacing-2);
 }
 
-.checklist-switcher__backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9998;
-  width: 100vw;
-  height: 100vh;
-}
-
 /* Sidebar animations */
 .checklist-switcher-sidebar {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.checklist-switcher__backdrop {
-  transition: opacity 0.3s ease;
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 /* Mobile responsive adjustments */
@@ -624,7 +616,6 @@
   }
 
   .checklist-switcher-sidebar {
-    width: 100vw;
-    right: 0;
+    width: min(var(--sidebar-width), 85vw);
   }
 }
