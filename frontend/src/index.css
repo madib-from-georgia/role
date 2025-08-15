@@ -14,8 +14,10 @@ body {
   background-color: #fafafa;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   -webkit-text-size-adjust: none;
+}
+
+input, textarea {
   touch-action: manipulation;
 }
 
