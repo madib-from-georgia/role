@@ -143,26 +143,6 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
           <span className="nav-icon">→</span>
         </Button>
       </div>
-
-      {/* Enhanced keyboard shortcuts hint */}
-      <div className="keyboard-shortcuts">
-        <div className="shortcut-hint">
-          <span className="shortcut-key">←/→</span>
-          <span className="shortcut-description">Навигация</span>
-        </div>
-        <div className="shortcut-hint">
-          <span className="shortcut-key">Ctrl + ←/→</span>
-          <span className="shortcut-description">Быстрая навигация</span>
-        </div>
-        <div className="shortcut-hint">
-          <span className="shortcut-key">Home/End</span>
-          <span className="shortcut-description">В начало/конец</span>
-        </div>
-        <div className="shortcut-hint">
-          <span className="shortcut-key">Esc</span>
-          <span className="shortcut-description">Закрыть панели</span>
-        </div>
-      </div>
     </div>
   );
 };

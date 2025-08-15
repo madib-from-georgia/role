@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 // Import subcomponents
 import { QuestionCard } from "./QuestionCard";
 import { ProgressBar } from "./ProgressBar";
-import { QuestionNavigation } from "./QuestionNavigation";
 import { ChecklistSwitcher } from "./ChecklistSwitcher";
 import { ExportDialog } from "./ExportDialog";
 
@@ -181,15 +180,15 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     sortedSections.forEach((section) => {
       // Сортируем подсекции по order_index
       const sortedSubsections = [...(section.subsections || [])].sort((a, b) => a.order_index - b.order_index);
-      
+
       sortedSubsections.forEach((subsection) => {
         // Сортируем группы вопросов по order_index
         const sortedGroups = [...(subsection.question_groups || [])].sort((a, b) => a.order_index - b.order_index);
-        
+
         sortedGroups.forEach((group) => {
           // Сортируем вопросы по order_index
           const sortedQuestions = [...(group.questions || [])].sort((a, b) => a.order_index - b.order_index);
-          
+
           sortedQuestions.forEach((question) => {
             questions.push({
               ...question,
@@ -399,20 +398,32 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             completionPercentage={
               localData?.completion_stats?.completion_percentage || 0
             }
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            canGoBack={currentQuestionIndex > 0}
+            canGoForward={currentQuestionIndex < allQuestions.length - 1}
           />
         </div>
       </div>
 
-      {/* Navigation footer */}
-      <div className="question-flow__footer">
-        <QuestionNavigation
-          currentIndex={currentQuestionIndex}
-          totalQuestions={allQuestions.length}
-          onPrevious={handlePrevious}
-          onNext={handleNext}
-          canGoBack={currentQuestionIndex > 0}
-          canGoForward={currentQuestionIndex < allQuestions.length - 1}
-        />
+      {/* Enhanced keyboard shortcuts hint */}
+      <div className="keyboard-shortcuts">
+        <div className="shortcut-hint">
+          <span className="shortcut-key">←/→</span>
+          <span className="shortcut-description">Навигация</span>
+        </div>
+        <div className="shortcut-hint">
+          <span className="shortcut-key">Ctrl + ←/→</span>
+          <span className="shortcut-description">Быстрая навигация</span>
+        </div>
+        <div className="shortcut-hint">
+          <span className="shortcut-key">Home/End</span>
+          <span className="shortcut-description">В начало/конец</span>
+        </div>
+        <div className="shortcut-hint">
+          <span className="shortcut-key">Esc</span>
+          <span className="shortcut-description">Закрыть панели</span>
+        </div>
       </div>
 
       {/* Export Dialog */}

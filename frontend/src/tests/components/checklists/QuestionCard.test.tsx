@@ -8,6 +8,29 @@ import { createMockQuestion, createMockAnswer } from '../../utils/mock-data'
 describe('QuestionCard', () => {
   const mockOnAnswerUpdate = vi.fn()
   const mockOnAnswerDelete = vi.fn()
+  const mockOnMultipleAnswersUpdate = vi.fn()
+  const mockOnPrevious = vi.fn()
+  const mockOnNext = vi.fn()
+  const mockOnQuestionSelect = vi.fn()
+
+  // Helper function to create default props
+  const createDefaultProps = (overrides = {}) => ({
+    characterGender: "male" as const,
+    characterId: 1,
+    onAnswerUpdate: mockOnAnswerUpdate,
+    onMultipleAnswersUpdate: mockOnMultipleAnswersUpdate,
+    onAnswerDelete: mockOnAnswerDelete,
+    isLoading: false,
+    allQuestions: [],
+    currentQuestionIndex: 0,
+    onQuestionSelect: mockOnQuestionSelect,
+    completionPercentage: 0,
+    onPrevious: mockOnPrevious,
+    onNext: mockOnNext,
+    canGoBack: false,
+    canGoForward: false,
+    ...overrides
+  })
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -21,15 +44,8 @@ describe('QuestionCard', () => {
     it('should render question not found when no question provided', () => {
       render(
         <QuestionCard
+          {...createDefaultProps()}
           question={null as never}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -46,15 +62,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -73,15 +82,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -101,15 +103,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -128,15 +123,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -152,15 +140,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -176,15 +157,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -213,15 +187,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -237,15 +204,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [questionWithAnswers] })}
           question={questionWithAnswers}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[questionWithAnswers]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -275,15 +235,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -298,15 +251,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [questionWithAnswers] })}
           question={questionWithAnswers}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[questionWithAnswers]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -332,15 +278,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -356,15 +295,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [questionWithAnswers] })}
           question={questionWithAnswers}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[questionWithAnswers]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -396,15 +328,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -419,15 +344,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [questionWithAnswers] })}
           question={questionWithAnswers}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[questionWithAnswers]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -449,15 +367,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -485,15 +396,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -525,15 +429,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question], isLoading: true })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={true}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -549,15 +446,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -590,16 +480,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          onAnswerDelete={mockOnAnswerDelete}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -620,16 +502,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          onAnswerDelete={mockOnAnswerDelete}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -651,15 +525,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -682,15 +549,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -714,15 +574,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
@@ -740,15 +593,8 @@ describe('QuestionCard', () => {
 
       render(
         <QuestionCard
+          {...createDefaultProps({ allQuestions: [question] })}
           question={question}
-          characterGender="male"
-          characterId={1}
-          onAnswerUpdate={mockOnAnswerUpdate}
-          isLoading={false}
-          allQuestions={[question]}
-          currentQuestionIndex={0}
-          onQuestionSelect={() => {}}
-          completionPercentage={0}
         />
       )
 
