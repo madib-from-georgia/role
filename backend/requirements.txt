@@ -35,7 +35,7 @@ fpdf2==2.7.6  # Alternative PDF library
 markdown==3.5.2  # Markdown to HTML conversion
 
 # Optional export functionality (requires system dependencies)
-weasyprint==61.2  # HTML to PDF - commented out due to macOS compatibility issues
+weasyprint==66.0  # HTML to PDF - updated for compatibility
 
 # Testing
 pytest==7.4.3

@@ -1,0 +1,62 @@
+/* Профессиональная тема для PDF отчетов */
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #3b82f6;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --background-light: #f8fafc;
+    --background-white: #ffffff;
+    --border-color: #e5e7eb;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', 'DejaVu Sans', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--background-light);
+}
+
+.header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.checklist-header {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+    color: white;
+    padding: 20px 25px;
+}
+
+.question-block::before {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.source-badge.found-in-text {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+    color: white;
+}
+
+.source-badge.logically-derived {
+    background: linear-gradient(135deg, var(--warning-color), #d97706);
+    color: white;
+}
+
+.source-badge.imagined {
+    background: linear-gradient(135deg, var(--error-color), #dc2626);
+    color: white;
+}

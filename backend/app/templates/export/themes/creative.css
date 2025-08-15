@@ -1,0 +1,109 @@
+/* Творческая тема для PDF отчетов */
+
+:root {
+    --primary-color: #8b5cf6;
+    --secondary-color: #7c3aed;
+    --accent-color: #a78bfa;
+    --text-primary: #374151;
+    --text-secondary: #6b7280;
+    --background-light: #faf5ff;
+    --background-white: #ffffff;
+    --border-color: #e5e7eb;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --creative-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body {
+    font-family: 'Inter', 'Georgia', 'DejaVu Serif', serif;
+    line-height: 1.7;
+    color: var(--text-primary);
+    background: var(--background-light);
+}
+
+.header {
+    background: var(--creative-gradient);
+    color: white;
+    padding: 50px 30px;
+    text-align: center;
+    position: relative;
+    border-radius: 0 0 20px 20px;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="theater" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10,2 L18,10 L10,18 L2,10 Z" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23theater)"/></svg>');
+    opacity: 0.3;
+}
+
+.header h1 {
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 15px;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+    font-family: 'Georgia', serif;
+}
+
+.checklist-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 15px 15px 0 0;
+}
+
+.question-block {
+    border-radius: 15px;
+    border: 2px solid var(--accent-color);
+    background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+}
+
+.question-block::before {
+    background: var(--creative-gradient);
+    width: 6px;
+    border-radius: 15px 0 0 15px;
+}
+
+.source-badge {
+    border-radius: 25px;
+    padding: 8px 16px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+.source-badge.found-in-text {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.source-badge.logically-derived {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.source-badge.imagined {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.section-title::before {
+    content: '🎭';
+    margin-right: 12px;
+    font-size: 1.3em;
+}
+
+.hint::before {
+    content: '✨ ';
+    font-size: 1.2em;
+}
+
+.exercise::before {
+    content: '🎪 ';
+    font-size: 1.2em;
+}

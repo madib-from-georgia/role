@@ -273,12 +273,144 @@ async def update_checklist_responses(
 
 
 @router.get("/{character_id}/export/pdf")
-async def export_character_pdf(character_id: int, db: Session = Depends(get_db)):
+async def export_character_pdf(
+    character_id: int,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Экспорт анализа персонажа в PDF."""
-    return {"message": f"Export character {character_id} to PDF endpoint - в разработке"}
+    from fastapi.responses import StreamingResponse
+    from app.services.export_service import export_service
+    from app.services.checklist_service import checklist_service
+    from datetime import datetime
+    import io
+    
+    # Проверяем права доступа к персонажу
+    character = character_crud.get(db, id=character_id)
+    if not character:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Персонаж не найден"
+        )
+    
+    # Проверяем, что персонаж принадлежит пользователю через текст
+    text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
+    if not text:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Нет прав доступа к этому персонажу"
+        )
+    
+    try:
+        # Получаем все доступные чеклисты с ответами
+        all_checklists = checklist_service.get_available_checklists(db)
+        checklists = []
+        for checklist in all_checklists:
+            checklist_data = checklist_service.get_checklist_with_responses(
+                db, checklist.slug, character_id
+            )
+            if checklist_data:
+                checklists.append(checklist_data)
+        
+        # Генерируем PDF с улучшенным дизайном
+        file_content = await export_service.export_character_pdf(
+            character=character,
+            checklists=checklists,
+            format_type="detailed",
+            user_id=current_user.id,
+            use_weasyprint=True,
+            theme="professional"
+        )
+        
+        # Формируем имя файла
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        character_name_safe = "".join(c for c in character.name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        filename = f"character_{character_name_safe}_{timestamp}.pdf"
+        
+        # Возвращаем файл
+        from urllib.parse import quote
+        encoded_filename = quote(filename.encode('utf-8'))
+        return StreamingResponse(
+            io.BytesIO(file_content),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при экспорте PDF: {str(e)}"
+        )
 
 
 @router.get("/{character_id}/export/docx")
-async def export_character_docx(character_id: int, db: Session = Depends(get_db)):
+async def export_character_docx(
+    character_id: int,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Экспорт анализа персонажа в DOCX."""
-    return {"message": f"Export character {character_id} to DOCX endpoint - в разработке"}
+    from fastapi.responses import StreamingResponse
+    from app.services.export_service import export_service
+    from app.services.checklist_service import checklist_service
+    from datetime import datetime
+    import io
+    
+    # Проверяем права доступа к персонажу
+    character = character_crud.get(db, id=character_id)
+    if not character:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Персонаж не найден"
+        )
+    
+    # Проверяем, что персонаж принадлежит пользователю через текст
+    text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
+    if not text:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Нет прав доступа к этому персонажу"
+        )
+    
+    try:
+        # Получаем все доступные чеклисты с ответами
+        all_checklists = checklist_service.get_available_checklists(db)
+        checklists = []
+        for checklist in all_checklists:
+            checklist_data = checklist_service.get_checklist_with_responses(
+                db, checklist.slug, character_id
+            )
+            if checklist_data:
+                checklists.append(checklist_data)
+        
+        # Генерируем DOCX
+        file_content = await export_service.export_character_docx(
+            character=character,
+            checklists=checklists,
+            format_type="detailed",
+            user_id=current_user.id
+        )
+        
+        # Формируем имя файла
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        character_name_safe = "".join(c for c in character.name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        filename = f"character_{character_name_safe}_{timestamp}.docx"
+        
+        # Возвращаем файл
+        from urllib.parse import quote
+        encoded_filename = quote(filename.encode('utf-8'))
+        return StreamingResponse(
+            io.BytesIO(file_content),
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={
+                "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при экспорте DOCX: {str(e)}"
+        )

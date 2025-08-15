@@ -89,11 +89,14 @@ class ExportService:
         return None
     
     async def export_character_pdf(
-        self, 
-        character: Character, 
+        self,
+        character: Character,
         checklists: list[ChecklistWithResponses],
         format_type: str = "detailed",
-        user_id: Optional[int] = None
+        user_id: Optional[int] = None,
+        use_weasyprint: bool = True,
+        theme: str = "default",
+        custom_fonts: Optional[Dict[str, str]] = None
     ) -> bytes:
         """
         Экспорт персонажа в PDF формат.
@@ -103,6 +106,9 @@ class ExportService:
             checklists: Список чеклистов с ответами
             format_type: Тип отчета ('detailed', 'summary', 'compact')
             user_id: ID пользователя для логирования
+            use_weasyprint: Использовать WeasyPrint вместо ReportLab
+            theme: Тема оформления ('default', 'professional', 'creative', 'minimal')
+            custom_fonts: Словарь кастомных шрифтов {имя: путь_к_файлу}
             
         Returns:
             PDF файл в виде байтов
@@ -110,121 +116,16 @@ class ExportService:
         start_time = time.time()
         
         try:
-            buffer = io.BytesIO()
-            
-            # Создание PDF документа
-            doc = SimpleDocTemplate(
-                buffer,
-                pagesize=A4,
-                rightMargin=72,
-                leftMargin=72,
-                topMargin=72,
-                bottomMargin=18
-            )
-            
-            # Стили
-            styles = getSampleStyleSheet()
-            styles.add(ParagraphStyle(
-                name='CustomTitle',
-                parent=styles['Heading1'],
-                fontName=self.default_font,
-                fontSize=24,
-                spaceAfter=30,
-                alignment=1  # Центр
-            ))
-            
-            styles.add(ParagraphStyle(
-                name='CustomHeading',
-                parent=styles['Heading2'],
-                fontName=self.default_font,
-                fontSize=16,
-                spaceAfter=12
-            ))
-            
-            styles.add(ParagraphStyle(
-                name='CustomNormal',
-                parent=styles['Normal'],
-                fontName=self.default_font,
-                fontSize=12,
-                spaceAfter=6
-            ))
-            
-            styles.add(ParagraphStyle(
-                name='CustomBold',
-                parent=styles['Normal'],
-                fontName=self.default_font,
-                fontSize=12,
-                spaceAfter=4,
-                textColor=colors.black
-            ))
-            
-            # Контент документа
-            story = []
-            
-            # Заголовок
-            title = f"Анализ персонажа: {character.name}"
-            story.append(Paragraph(title, styles['CustomTitle']))
-            story.append(Spacer(1, 12))
-            
-            # Базовая информация о персонаже
-            story.append(Paragraph("Базовая информация", styles['CustomHeading']))
-            
-            char_info = [
-                ["Имя:", character.name],
-                ["Важность:", f"{character.importance_score:.2f}" if character.importance_score else "Не определена"],
-                ["Дата анализа:", datetime.now().strftime("%d.%m.%Y %H:%M")],
-            ]
-            
-            if character.aliases:
-                char_info.append(["Псевдонимы:", ", ".join(character.aliases)])
-            
-            # Таблица с информацией
-            char_table = Table(char_info, colWidths=[2*inch, 4*inch])
-            char_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (0, -1), colors.grey),
-                ('TEXTCOLOR', (0, 0), (0, -1), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (-1, -1), self.default_font),
-                ('FONTSIZE', (0, 0), (-1, -1), 10),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
-                ('BACKGROUND', (1, 0), (1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black)
-            ]))
-            
-            story.append(char_table)
-            story.append(Spacer(1, 20))
-            
-            # Определяем пол персонажа (можно расширить логику)
-            character_gender = self._detect_character_gender(character)
-            
-            # Чеклисты
-            if format_type == "detailed":
-                story.extend(self._add_detailed_checklists_to_pdf(checklists, styles, character_gender))
-            elif format_type == "summary":
-                story.extend(self._add_summary_checklists_to_pdf(checklists, styles, character_gender))
-            else:  # compact
-                story.extend(self._add_compact_checklists_to_pdf(checklists, styles, character_gender))
-            
-            # Генерация PDF
-            doc.build(story)
-            buffer.seek(0)
-            
-            duration_ms = (time.time() - start_time) * 1000
-            file_size = len(buffer.getvalue())
-            
-            LoggingConfig.log_export_operation(
-                operation="pdf_export",
-                character_id=character.id,
-                format_type=format_type,
-                export_type="pdf",
-                user_id=user_id,
-                duration_ms=duration_ms,
-                file_size=file_size,
-                success=True
-            )
-            
-            return buffer.getvalue()
-            
+            # Используем WeasyPrint если доступен и запрошен
+            if use_weasyprint and WEASYPRINT_AVAILABLE:
+                return await self._export_pdf_with_weasyprint(
+                    character, checklists, format_type, user_id, start_time, theme, custom_fonts
+                )
+            else:
+                return await self._export_pdf_with_reportlab(
+                    character, checklists, format_type, user_id, start_time
+                )
+                
         except Exception as e:
             duration_ms = (time.time() - start_time) * 1000
             LoggingConfig.log_export_operation(
@@ -243,6 +144,11 @@ class ExportService:
                     "Ошибка настройки шрифтов PDF",
                     details=f"Проблема с шрифтами: {str(e)}"
                 )
+            elif "weasyprint" in str(e).lower():
+                raise ExportError(
+                    "Ошибка WeasyPrint генерации PDF",
+                    details=f"WeasyPrint ошибка: {str(e)}"
+                )
             elif "reportlab" in str(e).lower():
                 raise ExportError(
                     "Ошибка генерации PDF документа",
@@ -253,6 +159,252 @@ class ExportService:
                     "Неизвестная ошибка при создании PDF",
                     details=str(e)
                 )
+    
+    async def _export_pdf_with_weasyprint(
+        self,
+        character: Character,
+        checklists: list[ChecklistWithResponses],
+        format_type: str,
+        user_id: Optional[int],
+        start_time: float,
+        theme: str = "default",
+        custom_fonts: Optional[Dict[str, str]] = None
+    ) -> bytes:
+        """Экспорт PDF с использованием WeasyPrint."""
+        try:
+            # Преобразуем format_type в строку если это enum
+            format_type_str = format_type
+            if hasattr(format_type, 'value'):
+                format_type_str = format_type.value.lower()
+            elif hasattr(format_type, 'name'):
+                format_type_str = format_type.name.lower()
+            else:
+                format_type_str = str(format_type).lower()
+            
+            # Определяем шаблон в зависимости от типа
+            template_name = f"character_{format_type_str}_weasy.html"
+            
+            # Проверяем существование шаблона
+            template_path = self.template_dir / template_name
+            if not template_path.exists():
+                # Fallback на обычный шаблон
+                template_name = f"character_{format_type_str}.html"
+            
+            template = self.jinja_env.get_template(template_name)
+            
+            # Определяем пол персонажа
+            character_gender = self._detect_character_gender(character)
+            
+            # Загружаем тему если указана
+            theme_css = self._load_theme_css(theme)
+            
+            # Подготавливаем контекст для шаблона
+            context = {
+                'character': character,
+                'checklists': checklists,
+                'export_date': datetime.now().strftime("%d.%m.%Y %H:%M"),
+                'format_type': format_type,
+                'character_gender': character_gender,
+                'theme_css': theme_css,
+                'custom_fonts': custom_fonts or {},
+                'get_answer_text': lambda response, gender: self._get_answer_text(response, gender)
+            }
+            
+            # Рендерим HTML
+            html_content = template.render(**context)
+            
+            # Генерируем PDF с помощью WeasyPrint
+            html_doc = weasyprint.HTML(string=html_content)
+            
+            # Настройки WeasyPrint для лучшего качества
+            weasy_options = {}
+            
+            # Добавляем кастомные шрифты если указаны
+            if custom_fonts:
+                font_config = self._create_font_config(custom_fonts)
+                if font_config:
+                    weasy_options['font_config'] = font_config
+            
+            pdf_bytes = html_doc.write_pdf(**weasy_options)
+            
+            duration_ms = (time.time() - start_time) * 1000
+            file_size = len(pdf_bytes)
+            
+            LoggingConfig.log_export_operation(
+                operation="pdf_export_weasyprint",
+                character_id=character.id,
+                format_type=format_type,
+                export_type="pdf",
+                user_id=user_id,
+                duration_ms=duration_ms,
+                file_size=file_size,
+                success=True
+            )
+            
+            return pdf_bytes
+            
+        except Exception as e:
+            # Fallback на ReportLab при ошибке WeasyPrint
+            LoggingConfig.get_export_logger().warning(
+                f"WeasyPrint failed, falling back to ReportLab: {str(e)}"
+            )
+            return await self._export_pdf_with_reportlab(
+                character, checklists, format_type, user_id, start_time
+            )
+    
+    def _load_theme_css(self, theme: str) -> str:
+        """Загружает CSS для указанной темы."""
+        if theme == "default":
+            return ""
+        
+        theme_path = self.template_dir / "themes" / f"{theme}.css"
+        if theme_path.exists():
+            try:
+                return theme_path.read_text(encoding='utf-8')
+            except Exception as e:
+                LoggingConfig.get_export_logger().warning(
+                    f"Failed to load theme {theme}: {str(e)}"
+                )
+        
+        return ""
+    
+    def _create_font_config(self, custom_fonts: Dict[str, str]):
+        """Создает конфигурацию шрифтов для WeasyPrint."""
+        try:
+            # Пока отключаем кастомные шрифты из-за проблем совместимости
+            LoggingConfig.get_export_logger().info(
+                "Custom fonts temporarily disabled for compatibility"
+            )
+            return None
+        except Exception as e:
+            LoggingConfig.get_export_logger().warning(
+                f"Failed to create font config: {str(e)}"
+            )
+            return None
+    
+    async def _export_pdf_with_reportlab(
+        self,
+        character: Character,
+        checklists: list[ChecklistWithResponses],
+        format_type: str,
+        user_id: Optional[int],
+        start_time: float
+    ) -> bytes:
+        """Экспорт PDF с использованием ReportLab (оригинальный метод)."""
+        buffer = io.BytesIO()
+        
+        # Создание PDF документа
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=A4,
+            rightMargin=72,
+            leftMargin=72,
+            topMargin=72,
+            bottomMargin=18
+        )
+        
+        # Стили
+        styles = getSampleStyleSheet()
+        styles.add(ParagraphStyle(
+            name='CustomTitle',
+            parent=styles['Heading1'],
+            fontName=self.default_font,
+            fontSize=24,
+            spaceAfter=30,
+            alignment=1  # Центр
+        ))
+        
+        styles.add(ParagraphStyle(
+            name='CustomHeading',
+            parent=styles['Heading2'],
+            fontName=self.default_font,
+            fontSize=16,
+            spaceAfter=12
+        ))
+        
+        styles.add(ParagraphStyle(
+            name='CustomNormal',
+            parent=styles['Normal'],
+            fontName=self.default_font,
+            fontSize=12,
+            spaceAfter=6
+        ))
+        
+        styles.add(ParagraphStyle(
+            name='CustomBold',
+            parent=styles['Normal'],
+            fontName=self.default_font,
+            fontSize=12,
+            spaceAfter=4,
+            textColor=colors.black
+        ))
+        
+        # Контент документа
+        story = []
+        
+        # Заголовок
+        title = f"Анализ персонажа: {character.name}"
+        story.append(Paragraph(title, styles['CustomTitle']))
+        story.append(Spacer(1, 12))
+        
+        # Базовая информация о персонаже
+        story.append(Paragraph("Базовая информация", styles['CustomHeading']))
+        
+        char_info = [
+            ["Имя:", character.name],
+            ["Важность:", f"{character.importance_score:.2f}" if character.importance_score else "Не определена"],
+            ["Дата анализа:", datetime.now().strftime("%d.%m.%Y %H:%M")],
+        ]
+        
+        if character.aliases:
+            char_info.append(["Псевдонимы:", ", ".join(character.aliases)])
+        
+        # Таблица с информацией
+        char_table = Table(char_info, colWidths=[2*inch, 4*inch])
+        char_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.grey),
+            ('TEXTCOLOR', (0, 0), (0, -1), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, -1), self.default_font),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('BACKGROUND', (1, 0), (1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        
+        story.append(char_table)
+        story.append(Spacer(1, 20))
+        
+        # Определяем пол персонажа (можно расширить логику)
+        character_gender = self._detect_character_gender(character)
+        
+        # Чеклисты
+        if format_type == "detailed":
+            story.extend(self._add_detailed_checklists_to_pdf(checklists, styles, character_gender))
+        elif format_type == "summary":
+            story.extend(self._add_summary_checklists_to_pdf(checklists, styles, character_gender))
+        else:  # compact
+            story.extend(self._add_compact_checklists_to_pdf(checklists, styles, character_gender))
+        
+        # Генерация PDF
+        doc.build(story)
+        buffer.seek(0)
+        
+        duration_ms = (time.time() - start_time) * 1000
+        file_size = len(buffer.getvalue())
+        
+        LoggingConfig.log_export_operation(
+            operation="pdf_export_reportlab",
+            character_id=character.id,
+            format_type=format_type,
+            export_type="pdf",
+            user_id=user_id,
+            duration_ms=duration_ms,
+            file_size=file_size,
+            success=True
+        )
+        
+        return buffer.getvalue()
     
     def _add_detailed_checklists_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
         """Добавить детальные чеклисты в PDF."""

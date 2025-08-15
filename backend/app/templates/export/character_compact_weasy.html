@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Компактный анализ: {{ character.name }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'DejaVu Sans', Arial, sans-serif;
+            line-height: 1.5;
+            color: #2d3748;
+            background: #f7fafc;
+            font-size: 14px;
+        }
+        
+        .page {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            font-size: 0.9rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .character-info {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .character-info h2 {
+            color: #2d3748;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #805ad5;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .info-table td {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+        
+        .info-table td:first-child {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #4a5568;
+            width: 25%;
+        }
+        
+        .overview-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .overview-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #805ad5;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #4a5568;
+            margin-top: 2px;
+        }
+        
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .checklist-mini {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .checklist-mini-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .mini-progress {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .mini-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #805ad5, #6b46c1);
+            border-radius: 3px;
+        }
+        
+        .mini-stats {
+            font-size: 0.75rem;
+            color: #4a5568;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .completion-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        
+        .completion-high {
+            background: #48bb78;
+        }
+        
+        .completion-medium {
+            background: #ed8936;
+        }
+        
+        .completion-low {
+            background: #e53e3e;
+        }
+        
+        .key-insights {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .insights-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .insight-icon {
+            margin-right: 8px;
+            margin-top: 2px;
+        }
+        
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .footer p {
+            margin: 0;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                font-size: 10pt;
+            }
+            
+            .page {
+                box-shadow: none;
+                max-width: none;
+            }
+        }
+        
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <h1>{{ character.name }}</h1>
+            <div class="subtitle">Компактный обзор анализа персонажа</div>
+        </div>
+
+        <div class="content">
+            <div class="character-info">
+                <h2>Базовая информация</h2>
+                <table class="info-table">
+                    <tr>
+                        <td>Имя:</td>
+                        <td>{{ character.name }}</td>
+                    </tr>
+                    {% if character.aliases %}
+                    <tr>
+                        <td>Псевдонимы:</td>
+                        <td>{{ character.aliases | join(', ') }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Важность:</td>
+                        <td>{{ "%.2f" | format(character.importance_score) if character.importance_score else "Не определена" }}</td>
+                    </tr>
+                    <tr>
+                        <td>Дата анализа:</td>
+                        <td>{{ export_date }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            {% set total_questions = 0 %}
+            {% set total_answered = 0 %}
+            {% set high_completion = 0 %}
+            {% set medium_completion = 0 %}
+            {% set low_completion = 0 %}
+
+            <div class="overview-section">
+                <h3 class="overview-title">Общий обзор анализа</h3>
+                
+                {% for checklist in checklists %}
+                {% set questions_count = 0 %}
+                {% set answered_count = 0 %}
+                
+                {% for section in checklist.sections %}
+                {% for subsection in section.subsections %}
+                {% for group in subsection.question_groups %}
+                {% for question in group.questions %}
+                {% set questions_count = questions_count + 1 %}
+                {% if question.current_response and get_answer_text(question.current_response, character_gender) %}
+                {% set answered_count = answered_count + 1 %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                {% endfor %}
+                {% endfor %}
+                
+                {% set completion_rate = (answered_count / questions_count * 100) if questions_count > 0 else 0 %}
+                {% set total_questions = total_questions + questions_count %}
+                {% set total_answered = total_answered + answered_count %}
+                
+                {% if completion_rate >= 80 %}
+                {% set high_completion = high_completion + 1 %}
+                {% elif completion_rate >= 50 %}
+                {% set medium_completion = medium_completion + 1 %}
+                {% else %}
+                {% set low_completion = low_completion + 1 %}
+                {% endif %}
+                {% endfor %}
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ total_answered }}</span>
+                        <div class="stat-label">Отвечено</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ total_questions }}</span>
+                        <div class="stat-label">Всего вопросов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ "%.0f" | format((total_answered / total_questions * 100) if total_questions > 0 else 0) }}%</span>
+                        <div class="stat-label">Завершенность</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ checklists | length }}</span>
+                        <div class="stat-label">Модулей</div>
+                    </div>
+                </div>
+
+                <div class="checklist-grid">
+                    {% for checklist in checklists %}
+                    {% set questions_count = 0 %}
+                    {% set answered_count = 0 %}
+                    
+                    {% for section in checklist.sections %}
+                    {% for subsection in section.subsections %}
+                    {% for group in subsection.question_groups %}
+                    {% for question in group.questions %}
+                    {% set questions_count = questions_count + 1 %}
+                    {% if question.current_response and get_answer_text(question.current_response, character_gender) %}
+                    {% set answered_count = answered_count + 1 %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                    {% endfor %}
+                    {% endfor %}
+                    
+                    {% set completion_rate = (answered_count / questions_count * 100) if questions_count > 0 else 0 %}
+                    
+                    <div class="checklist-mini">
+                        <div class="checklist-mini-title">
+                            {{ checklist.title }}
+                            <span class="completion-indicator {% if completion_rate >= 80 %}completion-high{% elif completion_rate >= 50 %}completion-medium{% else %}completion-low{% endif %}"></span>
+                        </div>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: {{ completion_rate }}%"></div>
+                        </div>
+                        <div class="mini-stats">
+                            <span>{{ answered_count }}/{{ questions_count }}</span>
+                            <span>{{ "%.0f" | format(completion_rate) }}%</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="key-insights">
+                <h3 class="insights-title">Ключевые показатели</h3>
+                <div class="insight-item">
+                    <span class="insight-icon">🎯</span>
+                    <span>Модулей с высокой завершенностью (≥80%): <strong>{{ high_completion }}</strong></span>
+                </div>
+                <div class="insight-item">
+                    <span class="insight-icon">⚡</span>
+                    <span>Модулей со средней завершенностью (50-79%): <strong>{{ medium_completion }}</strong></span>
+                </div>
+                <div class="insight-item">
+                    <span class="insight-icon">📝</span>
+                    <span>Модулей требующих доработки (<50%): <strong>{{ low_completion }}</strong></span>
+                </div>
+                <div class="insight-item">
+                    <span class="insight-icon">📊</span>
+                    <span>Общий прогресс анализа: <strong>{{ "%.1f" | format((total_answered / total_questions * 100) if total_questions > 0 else 0) }}%</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Компактный отчет создан {{ export_date }} системой анализа персонажей</p>
+        </div>
+    </div>
+</body>
+</html>

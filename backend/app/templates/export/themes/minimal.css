@@ -1,0 +1,169 @@
+/* Минималистичная тема для PDF отчетов */
+
+:root {
+    --primary-color: #1f2937;
+    --secondary-color: #374151;
+    --accent-color: #6b7280;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --background-light: #ffffff;
+    --background-white: #ffffff;
+    --border-color: #d1d5db;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --error-color: #dc2626;
+}
+
+body {
+    font-family: 'Inter', 'Helvetica Neue', 'DejaVu Sans', Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background: var(--background-light);
+    font-weight: 400;
+}
+
+.header {
+    background: var(--primary-color);
+    color: white;
+    padding: 30px;
+    text-align: left;
+    border-bottom: 4px solid var(--accent-color);
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    letter-spacing: -0.025em;
+}
+
+.header .subtitle {
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.character-info {
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.character-info h2 {
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.checklist-section {
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 20px;
+}
+
+.checklist-header {
+    background: var(--background-white);
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding: 20px;
+}
+
+.checklist-header h3 {
+    font-weight: 500;
+    margin: 0;
+}
+
+.question-block {
+    background: var(--background-white);
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    margin: 10px 0;
+    padding: 15px;
+}
+
+.question-block::before {
+    background: var(--accent-color);
+    width: 2px;
+    border-radius: 0;
+}
+
+.question {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.answer {
+    background: var(--background-white);
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    color: var(--text-secondary);
+}
+
+.source-badge {
+    border-radius: 0;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.source-badge.found-in-text {
+    background: var(--success-color);
+    color: white;
+}
+
+.source-badge.logically-derived {
+    background: var(--warning-color);
+    color: white;
+}
+
+.source-badge.imagined {
+    background: var(--error-color);
+    color: white;
+}
+
+.section-title {
+    font-weight: 500;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-title::before {
+    content: '';
+    margin-right: 0;
+}
+
+.hint, .exercise, .comment {
+    border-radius: 0;
+    border-left: 2px solid var(--accent-color);
+}
+
+.hint::before, .exercise::before, .comment::before {
+    content: '';
+}
+
+.footer {
+    background: var(--primary-color);
+    border-radius: 0;
+}
+
+/* Убираем все градиенты и тени */
+.header::before,
+.question-block:hover {
+    display: none;
+    transform: none;
+}
+
+/* Упрощаем прогресс-бары */
+.progress-fill, .mini-progress-fill {
+    background: var(--accent-color);
+}
+
+.completion-indicator {
+    border-radius: 0;
+    width: 6px;
+    height: 6px;
+}

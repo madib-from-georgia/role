@@ -89,7 +89,12 @@ async def export_character(
         # Генерируем файл в зависимости от формата
         if export_request.format == ExportFormat.PDF:
             file_content = await export_service.export_character_pdf(
-                character, checklists, export_request.export_type, current_user.id
+                character=character,
+                checklists=checklists,
+                format_type=export_request.export_type,
+                user_id=current_user.id,
+                use_weasyprint=True,
+                theme="professional"
             )
             content_type = "application/pdf"
             file_extension = "pdf"
