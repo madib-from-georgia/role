@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Label,
   Text,
@@ -66,10 +66,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   canGoBack,
   canGoForward,
 }) => {
-  // Состояние формы
+  // Состояние только для UI и комментариев
   const [formState, setFormState] = useState({
-    selectedAnswerId: null as number | null,
-    selectedAnswerIds: [] as number[],
     comment: "",
     sourceType: "FOUND_IN_TEXT" as SourceType,
   });
@@ -77,44 +75,33 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   // Состояние UI
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Инициализация состояния при смене вопроса
+  // Получаем данные напрямую из пропсов с мемоизацией
+  const response = question?.current_response;
+  const responses = useMemo(() => {
+    return question?.current_responses || [];
+  }, [question?.current_responses]);
+  const primaryResponse = response || responses[0];
+
+  // Вычисляем состояние выбранных ответов из пропсов с useMemo
+  const selectedAnswerId = useMemo(() => {
+    return question?.answer_type === "single" ? (response?.answer_id || null) : null;
+  }, [question?.answer_type, response?.answer_id]);
+
+  const selectedAnswerIds = useMemo(() => {
+    return question?.answer_type === "multiple"
+      ? (responses.map(r => r.answer_id).filter(Boolean) as number[])
+      : [];
+  }, [question?.answer_type, responses]);
+
+  // Инициализация комментария и источника при смене вопроса
   useEffect(() => {
     if (!question) return;
 
-    const response = question.current_response;
-    const responses = question.current_responses || [];
-
-    if (response || responses.length > 0) {
-      // Инициализация на основе существующих ответов
-      const primaryResponse = response || responses[0];
-
-      setFormState({
-        selectedAnswerId:
-          question.answer_type === "single"
-            ? primaryResponse?.answer_id || null
-            : null,
-        selectedAnswerIds:
-          question.answer_type === "multiple"
-            ? (responses.map((r) => r.answer_id).filter(Boolean) as number[])
-            : [],
-        comment: primaryResponse?.comment || "",
-        sourceType: primaryResponse?.source_type || "FOUND_IN_TEXT",
-      });
-    } else {
-      // Полный сброс состояния для нового вопроса без ответов
-      setFormState({
-        selectedAnswerId: null,
-        selectedAnswerIds: [],
-        comment: "",
-        sourceType: "FOUND_IN_TEXT",
-      });
-    }
-    // Только id и answer_type!
-    // Не включаем question, current_response и current_responses чтобы избежать моргания чекбоксов
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [question?.id, question?.answer_type]);
-
-  // Убираем второй useEffect полностью - он вызывает конфликты
+    setFormState({
+      comment: primaryResponse?.comment || "",
+      sourceType: primaryResponse?.source_type || "FOUND_IN_TEXT",
+    });
+  }, [question?.id, question, primaryResponse?.comment, primaryResponse?.source_type]);
 
   // Получение отображаемого значения ответа в зависимости от пола
   const getAnswerDisplayValue = useCallback(
@@ -133,29 +120,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         return null;
       }
 
-      setFormState((prev) => {
-        const newState = {
-          ...prev,
-          selectedAnswerId: answerId,
-        };
+      // Немедленно отправляем обновление на сервер
+      const data = {
+        comment: formState.comment,
+        source_type: formState.sourceType,
+        answer_id: answerId,
+      };
 
-        // Автосохранение для радиокнопок - вызываем после обновления состояния
-        setTimeout(() => {
-          if (newState.selectedAnswerId) {
-            const data = {
-              comment: newState.comment,
-              source_type: newState.sourceType,
-              answer_id: newState.selectedAnswerId,
-            };
-
-            onAnswerUpdate(question.id, data);
-          }
-        }, 0);
-
-        return newState;
-      });
+      onAnswerUpdate(question.id, data);
     },
-    [question, onAnswerUpdate]
+    [question, formState.comment, formState.sourceType, onAnswerUpdate]
   );
 
   const handleMultipleChoiceChange = useCallback(
@@ -164,29 +138,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         return null;
       }
 
-      setFormState((prev) => {
-        const newSelectedIds = checked
-          ? [...prev.selectedAnswerIds, answerId]
-          : prev.selectedAnswerIds.filter((id) => id !== answerId);
+      // Вычисляем новые выбранные ID на основе текущих данных из пропсов
+      const newSelectedIds = checked
+        ? [...selectedAnswerIds, answerId]
+        : selectedAnswerIds.filter((id: number) => id !== answerId);
 
-        const newState = {
-          ...prev,
-          selectedAnswerIds: newSelectedIds,
-        };
-
-        // Немедленно отправляем обновление на сервер
-        onMultipleAnswersUpdate(
-          question.id,
-          characterId,
-          newSelectedIds,
-          newState.comment,
-          newState.sourceType
-        );
-
-        return newState;
-      });
+      // Немедленно отправляем обновление на сервер
+      onMultipleAnswersUpdate(
+        question.id,
+        characterId,
+        newSelectedIds,
+        formState.comment,
+        formState.sourceType
+      );
     },
-    [question, characterId, onMultipleAnswersUpdate]
+    [question, characterId, selectedAnswerIds, formState.comment, formState.sourceType, onMultipleAnswersUpdate]
   );
 
   const handleCommentChange = useCallback((text: string) => {
@@ -214,7 +180,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       onMultipleAnswersUpdate(
         question.id,
         characterId,
-        formState.selectedAnswerIds,
+        selectedAnswerIds,
         formState.comment,
         formState.sourceType
       );
@@ -222,9 +188,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     }
 
     // single
-    if (formState.selectedAnswerId) {
+    if (selectedAnswerId) {
       const data = {
-        answer_id: formState.selectedAnswerId,
+        answer_id: selectedAnswerId,
         comment: formState.comment,
         source_type: formState.sourceType,
       };
@@ -234,6 +200,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   }, [
     question,
     formState,
+    selectedAnswerId,
+    selectedAnswerIds,
     onAnswerUpdate,
     characterId,
     onMultipleAnswersUpdate,
@@ -263,7 +231,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               key={answer.id}
               value={answer.id.toString()}
               size="l"
-              checked={formState.selectedAnswerId === answer.id}
+              checked={selectedAnswerId === answer.id}
               onChange={() => handleSingleChoiceChange(answer.id)}
               content={getAnswerDisplayValue(answer)}
             />
@@ -277,7 +245,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             <Checkbox
               key={answer.id}
               size="l"
-              checked={formState.selectedAnswerIds.includes(answer.id)}
+              checked={selectedAnswerIds.includes(answer.id)}
               onChange={(event) =>
                 handleMultipleChoiceChange(answer.id, event.target.checked)
               }
@@ -292,8 +260,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   }, [
     question?.answers,
     question?.answer_type,
-    formState.selectedAnswerId,
-    formState.selectedAnswerIds,
+    selectedAnswerId,
+    selectedAnswerIds,
     handleSingleChoiceChange,
     handleMultipleChoiceChange,
     getAnswerDisplayValue,
@@ -402,10 +370,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             onUpdate={handleCommentChange}
             onBlur={handleSave}
             disabled={
-              (question.answer_type === "single" &&
-                !formState.selectedAnswerId) ||
-              (question.answer_type === "multiple" &&
-                formState.selectedAnswerIds.length === 0)
+              (question.answer_type === "single" && !selectedAnswerId) ||
+              (question.answer_type === "multiple" && selectedAnswerIds.length === 0)
             }
             placeholder="Цитаты, обоснование, свои мысли..."
           />
