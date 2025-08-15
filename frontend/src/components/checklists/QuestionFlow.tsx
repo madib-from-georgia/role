@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { checklistApi, charactersApi, api } from "../../services/api";
 import { Button, Text } from "@gravity-ui/uikit";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Import subcomponents
 import { QuestionCard } from "./QuestionCard";
@@ -16,6 +16,7 @@ import { Checklist, ChecklistQuestion, Gender, ChecklistAnswer } from "../../typ
 interface QuestionFlowProps {
   checklistSlug: string;
   characterId: number;
+  initialQuestionExternalId?: string;
 }
 
 // API Response types
@@ -48,12 +49,14 @@ interface MutationVariables {
 export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   checklistSlug,
   characterId,
+  initialQuestionExternalId,
 }) => {
   const queryClient = useQueryClient();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [localData, setLocalData] = useState<Checklist | null>(null);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const { questionExternalId } = useParams<{ questionExternalId?: string }>();
 
   // Загружаем данные персонажа
   const { data: character } = useQuery<{ name: string; gender?: string; description?: string; [key: string]: unknown }>({
@@ -80,6 +83,93 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
       setLocalData(checklistData);
     }
   }, [checklistData]);
+
+  // Convert hierarchical data to flat question array
+  const getAllQuestions = useCallback((): ChecklistQuestion[] => {
+    if (!localData) return [];
+
+    const questions: ChecklistQuestion[] = [];
+
+    // Сортируем секции по order_index
+    const sortedSections = [...(localData.sections || [])].sort((a, b) => a.order_index - b.order_index);
+
+    sortedSections.forEach((section) => {
+      // Сортируем подсекции по order_index
+      const sortedSubsections = [...(section.subsections || [])].sort((a, b) => a.order_index - b.order_index);
+
+      sortedSubsections.forEach((subsection) => {
+        // Сортируем группы вопросов по order_index
+        const sortedGroups = [...(subsection.question_groups || [])].sort((a, b) => a.order_index - b.order_index);
+
+        sortedGroups.forEach((group) => {
+          // Сортируем вопросы по order_index
+          const sortedQuestions = [...(group.questions || [])].sort((a, b) => a.order_index - b.order_index);
+
+          sortedQuestions.forEach((question) => {
+            questions.push({
+              ...question,
+              sectionTitle: section.title,
+              subsectionTitle: subsection.title,
+              groupTitle: group.title,
+            });
+          });
+        });
+      });
+    });
+
+    return questions;
+  }, [localData]);
+
+  // Функция для поиска первого неотвеченного вопроса
+  const findFirstUnansweredQuestion = (questions: ChecklistQuestion[]): number => {
+    const unansweredIndex = questions.findIndex(q => !q.current_response);
+    return unansweredIndex >= 0 ? unansweredIndex : 0;
+  };
+
+  // Функция для поиска индекса вопроса по external_id
+  const findQuestionIndexByExternalId = (questions: ChecklistQuestion[], externalId: string): number => {
+    return questions.findIndex(q => q.external_id === externalId);
+  };
+
+  // Эффект для установки начального индекса вопроса
+  useEffect(() => {
+    if (localData && !questionExternalId && !initialQuestionExternalId) {
+      const allQuestions = getAllQuestions();
+      if (allQuestions.length > 0) {
+        const firstUnansweredIndex = findFirstUnansweredQuestion(allQuestions);
+        if (firstUnansweredIndex !== currentQuestionIndex) {
+          setCurrentQuestionIndex(firstUnansweredIndex);
+          // Обновляем URL без перезагрузки страницы
+          const questionExternalId = allQuestions[firstUnansweredIndex]?.external_id;
+          if (questionExternalId) {
+            navigate(`/characters/${characterId}/checklists/${checklistSlug}/${questionExternalId}`, { replace: true });
+          }
+        }
+      }
+    }
+  }, [localData, questionExternalId, initialQuestionExternalId, characterId, checklistSlug, navigate, currentQuestionIndex, getAllQuestions]);
+
+  // Эффект для синхронизации с URL параметром external_id
+  useEffect(() => {
+    if (questionExternalId && localData) {
+      const allQuestions = getAllQuestions();
+      const index = findQuestionIndexByExternalId(allQuestions, questionExternalId);
+      if (index >= 0 && index !== currentQuestionIndex) {
+        setCurrentQuestionIndex(index);
+      }
+    }
+  }, [questionExternalId, localData, currentQuestionIndex, getAllQuestions]);
+
+  // Эффект для установки начального вопроса по external_id
+  useEffect(() => {
+    if (initialQuestionExternalId && localData) {
+      const allQuestions = getAllQuestions();
+      const index = findQuestionIndexByExternalId(allQuestions, initialQuestionExternalId);
+      if (index >= 0) {
+        setCurrentQuestionIndex(index);
+      }
+    }
+  }, [initialQuestionExternalId, localData, getAllQuestions]);
 
   // Мутация для обновления ответа
   const updateAnswerMutation = useMutation<ResponseData, Error, MutationVariables>({
@@ -168,42 +258,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     },
   });
 
-  // Convert hierarchical data to flat question array
-  const getAllQuestions = (): ChecklistQuestion[] => {
-    if (!localData) return [];
-
-    const questions: ChecklistQuestion[] = [];
-
-    // Сортируем секции по order_index
-    const sortedSections = [...(localData.sections || [])].sort((a, b) => a.order_index - b.order_index);
-
-    sortedSections.forEach((section) => {
-      // Сортируем подсекции по order_index
-      const sortedSubsections = [...(section.subsections || [])].sort((a, b) => a.order_index - b.order_index);
-
-      sortedSubsections.forEach((subsection) => {
-        // Сортируем группы вопросов по order_index
-        const sortedGroups = [...(subsection.question_groups || [])].sort((a, b) => a.order_index - b.order_index);
-
-        sortedGroups.forEach((group) => {
-          // Сортируем вопросы по order_index
-          const sortedQuestions = [...(group.questions || [])].sort((a, b) => a.order_index - b.order_index);
-
-          sortedQuestions.forEach((question) => {
-            questions.push({
-              ...question,
-              sectionTitle: section.title,
-              subsectionTitle: subsection.title,
-              groupTitle: group.title,
-            });
-          });
-        });
-      });
-    });
-
-    return questions;
-  };
-
   const allQuestions = getAllQuestions();
   const currentQuestion = allQuestions[currentQuestionIndex];
 
@@ -249,19 +303,33 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
   const handleNext = () => {
     if (currentQuestionIndex < allQuestions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+      const newIndex = currentQuestionIndex + 1;
+      const questionExternalId = allQuestions[newIndex]?.external_id;
+      if (questionExternalId) {
+        setCurrentQuestionIndex(newIndex);
+        navigate(`/characters/${characterId}/checklists/${checklistSlug}/${questionExternalId}`, { replace: true });
+      }
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
+      const newIndex = currentQuestionIndex - 1;
+      const questionExternalId = allQuestions[newIndex]?.external_id;
+      if (questionExternalId) {
+        setCurrentQuestionIndex(newIndex);
+        navigate(`/characters/${characterId}/checklists/${checklistSlug}/${questionExternalId}`, { replace: true });
+      }
     }
   };
 
   const handleJumpToQuestion = (index: number) => {
     if (index >= 0 && index < allQuestions.length) {
-      setCurrentQuestionIndex(index);
+      const questionExternalId = allQuestions[index]?.external_id;
+      if (questionExternalId) {
+        setCurrentQuestionIndex(index);
+        navigate(`/characters/${characterId}/checklists/${checklistSlug}/${questionExternalId}`, { replace: true });
+      }
     }
   };
 

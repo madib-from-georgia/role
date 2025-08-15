@@ -79,13 +79,21 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-                <Route 
-                  path="/characters/:characterId/checklists/:checklistSlug" 
+                <Route
+                  path="/characters/:characterId/checklists/:checklistSlug"
                   element={
                     <ProtectedRoute>
                       <CharacterChecklistDetail />
                     </ProtectedRoute>
-                  } 
+                  }
+                />
+                <Route
+                  path="/characters/:characterId/checklists/:checklistSlug/:questionExternalId"
+                  element={
+                    <ProtectedRoute>
+                      <CharacterChecklistDetail />
+                    </ProtectedRoute>
+                  }
                 />
               </Routes>
             </main>

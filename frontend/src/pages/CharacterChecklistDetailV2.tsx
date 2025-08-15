@@ -9,9 +9,10 @@ import { charactersApi } from '../services/api';
 import '../styles_v2/index.css';
 
 const CharacterChecklistDetailV2: React.FC = () => {
-  const { characterId, checklistSlug } = useParams<{ 
-    characterId: string; 
-    checklistSlug: string 
+  const { characterId, checklistSlug, questionExternalId } = useParams<{
+    characterId: string;
+    checklistSlug: string;
+    questionExternalId?: string;
   }>();
   const navigate = useNavigate();
 
@@ -54,9 +55,10 @@ const CharacterChecklistDetailV2: React.FC = () => {
 
   return (
     <div className="checklist-page-v2">
-      <QuestionFlow 
+      <QuestionFlow
         checklistSlug={checklistSlug}
         characterId={parseInt(characterId)}
+        initialQuestionExternalId={questionExternalId}
       />
     </div>
   );
