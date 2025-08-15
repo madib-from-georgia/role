@@ -23,6 +23,7 @@ class ChecklistAnswerBase(BaseModel):
     exported_value_male: Optional[str] = Field(None, description="Экспортируемое значение для мужского пола")
     exported_value_female: Optional[str] = Field(None, description="Экспортируемое значение для женского пола")
     hint: Optional[str] = Field(None, description="Подсказка для актера")
+    exercise: Optional[str] = Field(None, description="Упражнения для актера")
     order_index: int = Field(0, description="Порядок отображения")
 
 

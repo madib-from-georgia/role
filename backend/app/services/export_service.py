@@ -287,6 +287,14 @@ class ExportService:
                                     if answer_text:
                                         story.append(Paragraph(answer_text, styles['CustomNormal']))
                                     
+                                    # Добавляем совет если есть
+                                    if question.current_response.answer and question.current_response.answer.hint:
+                                        story.append(Paragraph(f"Совет: {question.current_response.answer.hint}", styles['CustomNormal']))
+                                    
+                                    # Добавляем упражнения если есть
+                                    if question.current_response.answer and question.current_response.answer.exercise:
+                                        story.append(Paragraph(f"Упражнение: {question.current_response.answer.exercise}", styles['CustomNormal']))
+                                    
                                     # Добавляем комментарий если есть
                                     if question.current_response.comment:
                                         story.append(Paragraph(f"Комментарий: {question.current_response.comment}", styles['CustomNormal']))
@@ -509,6 +517,18 @@ class ExportService:
                                         answer_p = doc.add_paragraph()
                                         answer_p.add_run('Ответ: ').bold = True
                                         answer_p.add_run(answer_text)
+                                    
+                                    # Совет
+                                    if question.current_response.answer and question.current_response.answer.hint:
+                                        hint_p = doc.add_paragraph()
+                                        hint_p.add_run('Совет: ').bold = True
+                                        hint_p.add_run(question.current_response.answer.hint)
+                                    
+                                    # Упражнения
+                                    if question.current_response.answer and question.current_response.answer.exercise:
+                                        exercise_p = doc.add_paragraph()
+                                        exercise_p.add_run('Упражнение: ').bold = True
+                                        exercise_p.add_run(question.current_response.answer.exercise)
                                     
                                     # Комментарий
                                     if question.current_response.comment:

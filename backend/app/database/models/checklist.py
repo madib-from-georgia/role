@@ -134,6 +134,9 @@ class ChecklistAnswer(BaseModel):
     # Подсказка для актера
     hint = Column(Text)  # "Рост влияет на самооценку и поведение"
     
+    # Упражнения для актера
+    exercise = Column(Text)  # "Тренируйте переменную энергетику: 70-100% в начале активности..."
+    
     order_index = Column(Integer, default=0)
     
     # Relationships

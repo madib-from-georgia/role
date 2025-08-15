@@ -149,6 +149,7 @@ class ChecklistService:
                                 exported_value_male=answer_data.exported_value_male,
                                 exported_value_female=answer_data.exported_value_female,
                                 hint=answer_data.hint,
+                                exercise=answer_data.exercise,
                                 order_index=answer_data.order_index
                             )
                             db.add(answer_obj)
@@ -292,6 +293,7 @@ class ChecklistService:
                                 answer_obj.exported_value_male = answer_data.exported_value_male
                                 answer_obj.exported_value_female = answer_data.exported_value_female
                                 answer_obj.hint = answer_data.hint
+                                answer_obj.exercise = answer_data.exercise
                                 answer_obj.order_index = answer_data.order_index
                             else:
                                 # Создаем новый ответ
@@ -303,6 +305,7 @@ class ChecklistService:
                                     exported_value_male=answer_data.exported_value_male,
                                     exported_value_female=answer_data.exported_value_female,
                                     hint=answer_data.hint,
+                                    exercise=answer_data.exercise,
                                     order_index=answer_data.order_index
                                 )
                                 db.add(answer_obj)

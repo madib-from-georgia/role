@@ -81,6 +81,7 @@ class ChecklistAnswer:
         self.exported_value_male = ""
         self.exported_value_female = ""
         self.hint = ""
+        self.exercise = ""  # Упражнения для актера
         self.order_index = 0
 
 
@@ -322,6 +323,9 @@ class ChecklistJsonParserNew:
             # Если экспортируемое значение не разделено по полам
             answer.exported_value_male = str(exported_value_data) if exported_value_data else ""
             answer.exported_value_female = str(exported_value_data) if exported_value_data else ""
+        
+        # Обрабатываем упражнения
+        answer.exercise = answer_data.get('exercise', '')
         
         return answer
     

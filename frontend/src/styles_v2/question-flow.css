@@ -762,7 +762,7 @@
   }
 
   .question-flow__main {
-    padding: var(--spacing-3);
+    padding-top: var(--spacing-3);
   }
 
   .question-card {
