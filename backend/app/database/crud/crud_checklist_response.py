@@ -28,7 +28,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 ChecklistResponse.question_id == question_id,
                 ChecklistResponse.is_current == True
             )
-        ).all()
+        ).order_by(desc(ChecklistResponse.updated_at), desc(ChecklistResponse.created_at)).all()
     
     def get_single_response_by_character_and_question(
         self,
@@ -43,7 +43,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 ChecklistResponse.question_id == question_id,
                 ChecklistResponse.is_current == True
             )
-        ).first()
+        ).order_by(desc(ChecklistResponse.updated_at), desc(ChecklistResponse.created_at)).first()
     
     def get_by_character(self, db: Session, character_id: int) -> List[ChecklistResponse]:
         """Получение всех текущих ответов персонажа"""
@@ -79,7 +79,7 @@ class CRUDChecklistResponse(CRUDBase[ChecklistResponse, ChecklistResponseCreate,
                 ChecklistResponse.is_current == True,
                 ChecklistSection.checklist_id == checklist_id
             )
-        ).all()
+        ).order_by(desc(ChecklistResponse.updated_at), desc(ChecklistResponse.created_at)).all()
     
     def create_or_update_response(
         self,
