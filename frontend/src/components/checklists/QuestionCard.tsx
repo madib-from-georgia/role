@@ -183,32 +183,79 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   // Обработчики изменений
   const handleSingleChoiceChange = useCallback((answerId: number) => {
+    if (question?.answer_type !== "single") {
+      return null;
+    }
+
     const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
     const isCustom = selectedAnswer?.external_id === "custom";
 
-    setFormState(prev => ({
-      ...prev,
-      selectedAnswerId: answerId,
-      customText: isCustom ? prev.customText : "", // Очищаем текст только если не "свой вариант"
-    }));
-  }, [question.answers]);
+    setFormState(prev => {
+      const newState = {
+        ...prev,
+        selectedAnswerId: answerId,
+        customText: isCustom ? prev.customText : "", // Очищаем текст только если не "свой вариант"
+      };
+
+      // Автосохранение для радиокнопок - вызываем после обновления состояния
+      setTimeout(() => {
+        const baseData = {
+          comment: newState.comment,
+          source_type: newState.sourceType,
+        };
+
+        if (newState.selectedAnswerId) {
+          const selectedAnswer = question.answers?.find(answer => answer.id === newState.selectedAnswerId);
+          const isCustom = selectedAnswer?.external_id === "custom";
+
+          const data = {
+            ...baseData,
+            answer_id: newState.selectedAnswerId,
+            ...(isCustom && newState.customText.trim() && { answer_text: newState.customText.trim() }),
+          };
+
+          onAnswerUpdate(question.id, data);
+        }
+      }, 0);
+
+      return newState;
+    });
+  }, [question, onAnswerUpdate]);
 
   const handleMultipleChoiceChange = useCallback((answerId: number, checked: boolean) => {
-    setFormState(prev => {
+      if (question?.answer_type !== "multiple") {
+        return null;
+      }
+
+      setFormState(prev => {
       const newSelectedIds = checked
         ? [...prev.selectedAnswerIds, answerId]
         : prev.selectedAnswerIds.filter(id => id !== answerId);
 
       // Очищаем кастомный текст только если не выбран "свой вариант"
       const hasCustomAnswer = customAnswer && newSelectedIds.includes(customAnswer.id);
-
-      return {
+      
+      const newState = {
         ...prev,
         selectedAnswerIds: newSelectedIds,
         customText: hasCustomAnswer ? prev.customText : "",
       };
+
+      // Автосохранение для чекбоксов - вызываем после обновления состояния
+      setTimeout(() => {
+        onMultipleAnswersUpdate(
+          question.id,
+          characterId,
+          newState.selectedAnswerIds,
+          newState.comment,
+          newState.sourceType,
+          newState.customText.trim() || undefined
+        );
+      }, 0);
+
+      return newState;
     });
-  }, [customAnswer]);
+  }, [customAnswer, question, characterId, onMultipleAnswersUpdate]);
 
   const handleCustomTextChange = useCallback((text: string) => {
     setFormState(prev => ({
@@ -312,11 +359,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <TextInput
         value={formState.customText}
         onUpdate={handleCustomTextChange}
+        onBlur={handleSave}
         placeholder="Введите свой вариант..."
         className="custom-answer-input"
       />
     );
-  }, [isCustomAnswerSelected, formState.customText, handleCustomTextChange]);
+  }, [isCustomAnswerSelected, formState.customText, handleCustomTextChange, handleSave]);
 
   // Рендер вариантов ответов
   const renderAnswerOptions = useCallback(() => {
@@ -383,12 +431,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         <TextArea
           value={formState.customText}
           onUpdate={handleCustomTextChange}
+          onBlur={handleSave}
           placeholder="Введите ваш ответ..."
           className="answer-textarea"
         />
       </div>
     );
-  }, [question?.answer_type, formState.customText, handleCustomTextChange]);
+  }, [question?.answer_type, formState.customText, handleCustomTextChange, handleSave]);
 
   if (!question) {
     return (
@@ -475,6 +524,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           <TextArea
             value={formState.comment}
             onUpdate={handleCommentChange}
+            onBlur={handleSave}
             placeholder="Цитаты, обоснование, свои мысли..."
           />
         </div>
