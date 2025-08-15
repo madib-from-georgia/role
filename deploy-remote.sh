@@ -178,6 +178,10 @@ sudo apt install -y nodejs
 log "🔧 Установка дополнительных пакетов..."
 sudo apt install -y git nginx certbot python3-certbot-nginx curl build-essential htop
 
+# Установка системных пакетов для WeasyPrint
+log "📄 Установка системных пакетов для WeasyPrint..."
+sudo apt install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0
+
 # Установка PM2
 log "🌐 Установка PM2..."
 if ! sudo npm install -g pm2; then
