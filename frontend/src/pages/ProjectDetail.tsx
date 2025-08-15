@@ -417,7 +417,7 @@ const ProjectDetail: React.FC = () => {
                       ? selectedFile.name
                       : "Перетащите файл сюда или нажмите для выбора"}
                     <p className="upload-help">
-                      Поддерживаются файлы TXT и FB2 до 10MB
+                      Поддерживаются файлы TXT, FB2 и EPUB до 10MB
                     </p>
                   </label>
                   <input
