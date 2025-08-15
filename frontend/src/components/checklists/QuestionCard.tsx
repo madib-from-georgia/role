@@ -120,43 +120,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         sourceType: "FOUND_IN_TEXT",
       });
     }
-  }, [question, question.id, question.answer_type]);
+  // Только id и answer_type!
+  // Не включаем question, current_response и current_responses чтобы избежать моргания чекбоксов
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question?.id, question?.answer_type]); 
 
-  // Отдельный useEffect для обновления данных ответов без сброса состояния
-  useEffect(() => {
-    if (!question) return;
-
-    const response = question.current_response;
-    const responses = question.current_responses || [];
-
-    if (response || responses.length > 0) {
-      const primaryResponse = response || responses[0];
-
-      setFormState(prev => {
-        // Для множественного выбора ищем ответ с текстом среди всех ответов
-        let customText = prev.customText;
-        if (!customText) {
-          if (question.answer_type === "multiple") {
-            // Ищем ответ с answer_text среди всех ответов
-            const responseWithText = responses.find(r => r.answer_text);
-            customText = responseWithText?.answer_text || "";
-          } else {
-            // Для single и text берем из основного ответа
-            customText = primaryResponse?.answer_text || "";
-          }
-        }
-
-        return {
-          ...prev,
-          // Обновляем только комментарий и источник, не трогая выбранные ответы
-          comment: primaryResponse?.comment || prev.comment,
-          sourceType: primaryResponse?.source_type || prev.sourceType,
-          // Обновляем customText только если он пустой в текущем состоянии
-          customText,
-        };
-      });
-    }
-  }, [question, question.current_response, question.current_responses]);
+  // Убираем второй useEffect полностью - он вызывает конфликты
 
   // Получение отображаемого значения ответа в зависимости от пола
   const getAnswerDisplayValue = useCallback((answer: ChecklistAnswer): string => {
@@ -203,29 +172,27 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       }
 
       setFormState(prev => {
-      const newSelectedIds = checked
-        ? [...prev.selectedAnswerIds, answerId]
-        : prev.selectedAnswerIds.filter(id => id !== answerId);
+        const newSelectedIds = checked
+          ? [...prev.selectedAnswerIds, answerId]
+          : prev.selectedAnswerIds.filter(id => id !== answerId);
 
-      const newState = {
-        ...prev,
-        selectedAnswerIds: newSelectedIds,
-        customText: "", // Очищаем кастомный текст при любом изменении
-      };
+        const newState = {
+          ...prev,
+          selectedAnswerIds: newSelectedIds,
+          customText: "", // Очищаем кастомный текст при любом изменении
+        };
 
-      // Автосохранение для чекбоксов - вызываем после обновления состояния
-      setTimeout(() => {
+        // Немедленно отправляем обновление на сервер
         onMultipleAnswersUpdate(
           question.id,
           characterId,
-          newState.selectedAnswerIds,
+          newSelectedIds,
           newState.comment,
           newState.sourceType
         );
-      }, 0);
 
-      return newState;
-    });
+        return newState;
+      });
   }, [question, characterId, onMultipleAnswersUpdate]);
 
   const handleCustomTextChange = useCallback((text: string) => {
