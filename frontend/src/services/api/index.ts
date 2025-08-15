@@ -174,7 +174,6 @@ export const checklistApi = {
     selected_answer_ids: number[];
     comment?: string;
     source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
-    custom_text?: string;
   }) => api.post('/api/checklists/responses/multiple', data),
   updateResponse: (responseId: number, data: {
     answer_id?: number;

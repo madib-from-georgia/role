@@ -126,7 +126,6 @@ class MultipleResponsesRequest(BaseModel):
     selected_answer_ids: List[int]
     comment: Optional[str] = None
     source_type: Optional[str] = "FOUND_IN_TEXT"
-    custom_text: Optional[str] = None
 
 @router.post("/responses/multiple")
 async def manage_multiple_responses(
@@ -144,7 +143,6 @@ async def manage_multiple_responses(
     selected_answer_ids = request.selected_answer_ids
     comment = request.comment
     source_type = request.source_type
-    custom_text = request.custom_text
     # Проверяем права доступа к персонажу
     character = character_crud.get(db, id=character_id)
     if not character:
@@ -175,7 +173,7 @@ async def manage_multiple_responses(
             answer_id=answer_id,
             comment=comment,
             source_type=source_type,
-            answer_text=custom_text if answer_id == get_custom_answer_id(db, question_id) else None
+            answer_text=None  # Убираем обработку кастомного текста
         )
         checklist_service.update_response(db, character_id, question_id, response_data)
     
@@ -191,14 +189,6 @@ async def manage_multiple_responses(
     return {"message": "Ответы успешно обновлены", "added": len(to_add), "removed": len(to_remove)}
 
 
-def get_custom_answer_id(db: Session, question_id: int) -> Optional[int]:
-    """Получить ID варианта 'свой ответ' для вопроса"""
-    from app.database.models.checklist import ChecklistAnswer
-    custom_answer = db.query(ChecklistAnswer).filter(
-        ChecklistAnswer.question_id == question_id,
-        ChecklistAnswer.external_id == "custom"
-    ).first()
-    return custom_answer.id if custom_answer else None
 
 
 @router.post("/responses", response_model=ChecklistResponse)

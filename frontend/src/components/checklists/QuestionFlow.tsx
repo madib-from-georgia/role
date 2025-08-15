@@ -221,8 +221,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     characterId: number,
     selectedAnswerIds: number[],
     comment?: string,
-    sourceType?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED",
-    customText?: string
+    sourceType?: "FOUND_IN_TEXT" | "LOGICALLY_DERIVED" | "IMAGINED"
   ) => {
     try {
       await checklistApi.manageMultipleResponses({
@@ -231,7 +230,6 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         selected_answer_ids: selectedAnswerIds,
         comment,
         source_type: sourceType,
-        custom_text: customText,
       });
 
       // Обновляем локальные данные после успешного сохранения

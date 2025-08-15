@@ -5,7 +5,6 @@ import {
   Button,
   Radio,
   Checkbox,
-  TextInput,
   TextArea,
   SegmentedRadioGroup,
   Breadcrumbs,
@@ -37,8 +36,7 @@ interface QuestionCardProps {
     characterId: number,
     selectedAnswerIds: number[],
     comment?: string,
-    sourceType?: SourceType,
-    customText?: string
+    sourceType?: SourceType
   ) => void;
   onAnswerDelete?: (responseId: number) => void;
   isLoading: boolean;
@@ -59,7 +57,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onAnswerUpdate,
   onMultipleAnswersUpdate,
   onAnswerDelete,
-  isLoading,
   allQuestions,
   currentQuestionIndex,
   onQuestionSelect,
@@ -166,35 +163,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     return characterGender === "male" ? answer.value_male : answer.value_female;
   }, [characterGender]);
 
-  // Поиск варианта "свой ответ"
-  const customAnswer = question?.answers?.find(answer => answer.external_id === "custom");
-
-  // Проверка, выбран ли вариант "свой ответ"
-  const isCustomAnswerSelected = useCallback(() => {
-    if (!customAnswer) return false;
-
-    if (question.answer_type === "single") {
-      return formState.selectedAnswerId === customAnswer.id;
-    } else if (question.answer_type === "multiple") {
-      return formState.selectedAnswerIds.includes(customAnswer.id);
-    }
-    return false;
-  }, [customAnswer, formState.selectedAnswerId, formState.selectedAnswerIds, question?.answer_type]);
-
   // Обработчики изменений
   const handleSingleChoiceChange = useCallback((answerId: number) => {
     if (question?.answer_type !== "single") {
       return null;
     }
 
-    const selectedAnswer = question.answers?.find(answer => answer.id === answerId);
-    const isCustom = selectedAnswer?.external_id === "custom";
-
     setFormState(prev => {
       const newState = {
         ...prev,
         selectedAnswerId: answerId,
-        customText: isCustom ? prev.customText : "", // Очищаем текст только если не "свой вариант"
+        customText: "", // Очищаем текст при выборе любого варианта
       };
 
       // Автосохранение для радиокнопок - вызываем после обновления состояния
@@ -205,13 +184,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         };
 
         if (newState.selectedAnswerId) {
-          const selectedAnswer = question.answers?.find(answer => answer.id === newState.selectedAnswerId);
-          const isCustom = selectedAnswer?.external_id === "custom";
-
           const data = {
             ...baseData,
             answer_id: newState.selectedAnswerId,
-            ...(isCustom && newState.customText.trim() && { answer_text: newState.customText.trim() }),
           };
 
           onAnswerUpdate(question.id, data);
@@ -232,13 +207,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         ? [...prev.selectedAnswerIds, answerId]
         : prev.selectedAnswerIds.filter(id => id !== answerId);
 
-      // Очищаем кастомный текст только если не выбран "свой вариант"
-      const hasCustomAnswer = customAnswer && newSelectedIds.includes(customAnswer.id);
-      
       const newState = {
         ...prev,
         selectedAnswerIds: newSelectedIds,
-        customText: hasCustomAnswer ? prev.customText : "",
+        customText: "", // Очищаем кастомный текст при любом изменении
       };
 
       // Автосохранение для чекбоксов - вызываем после обновления состояния
@@ -248,36 +220,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           characterId,
           newState.selectedAnswerIds,
           newState.comment,
-          newState.sourceType,
-          newState.customText.trim() || undefined
+          newState.sourceType
         );
       }, 0);
 
       return newState;
     });
-  }, [customAnswer, question, characterId, onMultipleAnswersUpdate]);
+  }, [question, characterId, onMultipleAnswersUpdate]);
 
   const handleCustomTextChange = useCallback((text: string) => {
     setFormState(prev => ({
       ...prev,
       customText: text,
     }));
-
-    // Автоматически выбираем "свой вариант" при вводе текста
-    if (text.trim() && customAnswer) {
-      if (question.answer_type === "single" && formState.selectedAnswerId !== customAnswer.id) {
-        setFormState(prev => ({
-          ...prev,
-          selectedAnswerId: customAnswer.id,
-        }));
-      } else if (question.answer_type === "multiple" && !formState.selectedAnswerIds.includes(customAnswer.id)) {
-        setFormState(prev => ({
-          ...prev,
-          selectedAnswerIds: [...prev.selectedAnswerIds, customAnswer.id],
-        }));
-      }
-    }
-  }, [customAnswer, formState.selectedAnswerId, formState.selectedAnswerIds, question?.answer_type]);
+  }, []);
 
   const handleCommentChange = useCallback((text: string) => {
     setFormState(prev => ({
@@ -305,13 +261,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     if (question.answer_type === "single") {
       // Одиночный выбор
       if (formState.selectedAnswerId) {
-        const selectedAnswer = question.answers?.find(answer => answer.id === formState.selectedAnswerId);
-        const isCustom = selectedAnswer?.external_id === "custom";
-
         const data = {
           ...baseData,
           answer_id: formState.selectedAnswerId,
-          ...(isCustom && formState.customText.trim() && { answer_text: formState.customText.trim() }),
         };
 
         onAnswerUpdate(question.id, data);
@@ -328,8 +280,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         characterId,
         formState.selectedAnswerIds,
         formState.comment,
-        formState.sourceType,
-        formState.customText.trim() || undefined
+        formState.sourceType
       );
     } else {
       // Текстовый ответ
@@ -349,64 +300,44 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     }
   }, [question?.current_response, onAnswerDelete]);
 
-  // Рендер поля для ввода кастомного ответа
-  const renderCustomInput = useCallback(() => {
-    const shouldShow = isCustomAnswerSelected() || formState.customText.trim() !== "";
-
-    if (!shouldShow) return null;
-
-    return (
-      <TextInput
-        value={formState.customText}
-        onUpdate={handleCustomTextChange}
-        onBlur={handleSave}
-        placeholder="Введите свой вариант..."
-        className="custom-answer-input"
-      />
-    );
-  }, [isCustomAnswerSelected, formState.customText, handleCustomTextChange, handleSave]);
 
   // Рендер вариантов ответов
   const renderAnswerOptions = useCallback(() => {
     if (!question?.answers) return null;
 
-    // Сортируем ответы по order_index
-    const sortedAnswers = [...question.answers].sort((a, b) => a.order_index - b.order_index);
+    // Сортируем ответы по order_index и фильтруем кастомные варианты
+    const sortedAnswers = [...question.answers]
+      .filter(answer => answer.external_id !== "custom")
+      .sort((a, b) => a.order_index - b.order_index);
 
     if (question.answer_type === "single") {
       return (
-        <>
-          <div className="question-options">
-            {sortedAnswers.map((answer: ChecklistAnswer) => (
-              <Radio
-                key={answer.id}
-                value={answer.id.toString()}
-                size="l"
-                checked={formState.selectedAnswerId === answer.id}
-                onChange={() => handleSingleChoiceChange(answer.id)}
-                content={getAnswerDisplayValue(answer)}
-              />
-            ))}
-          </div>
-          {renderCustomInput()}
-        </>
+        <div className="question-options">
+          {sortedAnswers.map((answer: ChecklistAnswer) => (
+            <Radio
+              key={answer.id}
+              value={answer.id.toString()}
+              size="l"
+              checked={formState.selectedAnswerId === answer.id}
+              onChange={() => handleSingleChoiceChange(answer.id)}
+              content={getAnswerDisplayValue(answer)}
+            />
+          ))}
+        </div>
       );
     } else if (question.answer_type === "multiple") {
       return (
-        <>
-          <div className="question-options">
-            {sortedAnswers.map((answer: ChecklistAnswer) => (
-              <Checkbox
-                key={answer.id}
-                size="l"
-                checked={formState.selectedAnswerIds.includes(answer.id)}
-                onChange={(event) => handleMultipleChoiceChange(answer.id, event.target.checked)}
-                content={getAnswerDisplayValue(answer)}
-              />
-            ))}
-          </div>
-          {renderCustomInput()}
-        </>
+        <div className="question-options">
+          {sortedAnswers.map((answer: ChecklistAnswer) => (
+            <Checkbox
+              key={answer.id}
+              size="l"
+              checked={formState.selectedAnswerIds.includes(answer.id)}
+              onChange={(event) => handleMultipleChoiceChange(answer.id, event.target.checked)}
+              content={getAnswerDisplayValue(answer)}
+            />
+          ))}
+        </div>
       );
     }
 
@@ -419,7 +350,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     handleSingleChoiceChange,
     handleMultipleChoiceChange,
     getAnswerDisplayValue,
-    renderCustomInput,
   ]);
 
   // Рендер текстового поля для типа "text"
@@ -490,6 +420,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           {renderAnswerOptions()}
           {renderTextInput()}
         </div>
+
+        {question.current_response && onAnswerDelete && (
+          <div className="question-card__delete">
+            <Label theme="success" type="close" onCloseClick={handleDelete} size="m" title="Очистить ответ">
+              {`Сохранено ${new Date(question.current_response.updated_at).toLocaleString("ru")}`}
+            </Label>
+          </div>
+        )}
       </div>
 
       <div className="question-card__additional">
@@ -530,46 +468,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
       </div>
 
-      <div className="question-card__actions">
-        {question.current_response && (
-          <Label theme="success" size="m">
-            {`Сохранено ${new Date(question.current_response.updated_at).toLocaleString("ru")}`}
-          </Label>
-        )}
-
-        <div className="action-buttons">
-          <Button
-            onClick={handleSave}
-            view="normal"
-            size="m"
-            loading={isLoading}
-          >
-            Сохранить
-          </Button>
-
-          {question.current_response && onAnswerDelete && (
-            <div className="question-card__delete">
-              <Button
-                onClick={handleDelete}
-                title="Удалить ответ"
-                view="normal"
-                size="m"
-                loading={isLoading}
-              >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg> Очистить ответ
-              </Button>
-            </div>
-          )}
-        </div>
-
-      </div>
       <div className="question-flow__footer">
         <QuestionNavigation
           currentIndex={currentQuestionIndex}

@@ -345,6 +345,7 @@
 }
 
 .question-card__main {
+  position: relative;
   margin: 0;
   padding: var(--spacing-8) var(--spacing-6);
   border-top: 1px solid var(--color-border);
@@ -396,17 +397,10 @@
 }
 
 /* Actions */
-.question-card__actions {
-  display: flex;
-  gap: var(--spacing-3);
-  align-items: center;
-  margin-top: var(--spacing-3);
-
-  padding: var(--spacing-6);
-}
-
 .question-card__delete {
-  margin-left: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .question-card__delete svg {
@@ -839,13 +833,6 @@
     min-height: 48px;
     font-size: var(--font-size-base);
     padding: var(--spacing-3) var(--spacing-4);
-  }
-
-  .question-card__actions {
-    flex-direction: column;
-    gap: var(--spacing-3);
-    align-items: stretch;
-    padding: var(--spacing-3) var(--spacing-6);
   }
 
   .action-buttons {
