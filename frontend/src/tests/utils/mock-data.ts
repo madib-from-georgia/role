@@ -57,6 +57,7 @@ export const createMockQuestion = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
   external_id: faker.string.uuid(),
   text: faker.lorem.sentence() + '?',
+  order_index: faker.number.int({ min: 0, max: 10 }),
   answer_type: 'text' as 'single' | 'multiple' | 'text',
   source_type: 'FOUND_IN_TEXT' as 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED',
   answers: [],

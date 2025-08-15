@@ -175,10 +175,22 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
 
     const questions: ChecklistQuestion[] = [];
 
-    localData.sections?.forEach((section) => {
-      section.subsections?.forEach((subsection) => {
-        subsection.question_groups?.forEach((group) => {
-          group.questions?.forEach((question) => {
+    // Сортируем секции по order_index
+    const sortedSections = [...(localData.sections || [])].sort((a, b) => a.order_index - b.order_index);
+
+    sortedSections.forEach((section) => {
+      // Сортируем подсекции по order_index
+      const sortedSubsections = [...(section.subsections || [])].sort((a, b) => a.order_index - b.order_index);
+      
+      sortedSubsections.forEach((subsection) => {
+        // Сортируем группы вопросов по order_index
+        const sortedGroups = [...(subsection.question_groups || [])].sort((a, b) => a.order_index - b.order_index);
+        
+        sortedGroups.forEach((group) => {
+          // Сортируем вопросы по order_index
+          const sortedQuestions = [...(group.questions || [])].sort((a, b) => a.order_index - b.order_index);
+          
+          sortedQuestions.forEach((question) => {
             questions.push({
               ...question,
               sectionTitle: section.title,

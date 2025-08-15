@@ -364,11 +364,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const renderAnswerOptions = useCallback(() => {
     if (!question?.answers) return null;
 
+    // Сортируем ответы по order_index
+    const sortedAnswers = [...question.answers].sort((a, b) => a.order_index - b.order_index);
+
     if (question.answer_type === "single") {
       return (
         <>
           <div className="question-options">
-            {question.answers.map((answer: ChecklistAnswer) => (
+            {sortedAnswers.map((answer: ChecklistAnswer) => (
               <Radio
                 key={answer.id}
                 value={answer.id.toString()}
@@ -386,7 +389,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       return (
         <>
           <div className="question-options">
-            {question.answers.map((answer: ChecklistAnswer) => (
+            {sortedAnswers.map((answer: ChecklistAnswer) => (
               <Checkbox
                 key={answer.id}
                 size="l"

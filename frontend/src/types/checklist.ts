@@ -17,6 +17,7 @@ export interface ChecklistQuestion {
   id: number;
   external_id: string;
   text: string;
+  order_index: number;
   answer_type: 'single' | 'multiple' | 'text';
   source_type?: 'FOUND_IN_TEXT' | 'LOGICALLY_DERIVED' | 'IMAGINED';
   answers: ChecklistAnswer[];
@@ -34,6 +35,7 @@ export interface ChecklistQuestionGroup {
   id: number;
   external_id: string;
   title: string;
+  order_index: number;
   questions: ChecklistQuestion[];
   created_at: string;
   updated_at: string;
@@ -43,6 +45,7 @@ export interface ChecklistSubsection {
   id: number;
   external_id: string;
   title: string;
+  order_index: number;
   question_groups: ChecklistQuestionGroup[];
   created_at: string;
   updated_at: string;
@@ -52,6 +55,7 @@ export interface ChecklistSection {
   id: number;
   external_id: string;
   title: string;
+  order_index: number;
   subsections: ChecklistSubsection[];
   created_at: string;
   updated_at: string;
