@@ -166,6 +166,7 @@ async def manage_multiple_responses(
     # Определяем изменения
     to_add = [aid for aid in selected_answer_ids if aid not in current_answer_ids]
     to_remove = [aid for aid in current_answer_ids if aid not in selected_answer_ids]
+    to_update = [aid for aid in selected_answer_ids if aid in current_answer_ids]
     
     # Добавляем новые ответы
     for answer_id in to_add:
@@ -174,6 +175,16 @@ async def manage_multiple_responses(
             comment=comment,
             source_type=source_type,
             answer_text=None  # Убираем обработку кастомного текста
+        )
+        checklist_service.update_response(db, character_id, question_id, response_data)
+    
+    # Обновляем существующие ответы (комментарий и source_type)
+    for answer_id in to_update:
+        response_data = ChecklistResponseUpdate(
+            answer_id=answer_id,
+            comment=comment,
+            source_type=source_type,
+            answer_text=None
         )
         checklist_service.update_response(db, character_id, question_id, response_data)
     
@@ -186,7 +197,7 @@ async def manage_multiple_responses(
         )
         result = checklist_service.update_response(db, character_id, question_id, response_data)
     
-    return {"message": "Ответы успешно обновлены", "added": len(to_add), "removed": len(to_remove)}
+    return {"message": "Ответы успешно обновлены", "added": len(to_add), "updated": len(to_update), "removed": len(to_remove)}
 
 
 
