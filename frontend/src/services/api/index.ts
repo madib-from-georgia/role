@@ -137,6 +137,8 @@ export const charactersApi = {
     api.post(`/api/texts/${textId}/characters`, data),
   delete: (characterId: string) =>
     api.delete(`/api/characters/${characterId}`),
+  updateOrder: (charactersData: Array<{id: number, sort_order: number}>) =>
+    api.put('/api/characters/bulk-update-order', { characters: charactersData }),
 }
 
 // Создаем debounced версии для частых запросов

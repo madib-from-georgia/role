@@ -26,6 +26,7 @@ class Character(BaseModel):
     importance_score = Column(Float, nullable=True)  # Оценка важности персонажа (0-1)
     speech_attribution = Column(JSON, nullable=True)  # Атрибуция речи от NLP
     gender = Column(Enum(GenderEnum), nullable=True, default=GenderEnum.UNKNOWN)  # Пол персонажа
+    sort_order = Column(Integer, nullable=True, default=0)  # Порядок сортировки для drag-and-drop
     
     # Relationships
     text = relationship("Text", back_populates="characters")

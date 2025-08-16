@@ -22,6 +22,7 @@ class CharacterBase(BaseModel):
     importance_score: Optional[float] = Field(None, ge=0.0, le=1.0)
     speech_attribution: Optional[Dict[str, Any]] = None
     gender: Optional[Gender] = Field(None, description="Пол персонажа")
+    sort_order: Optional[int] = Field(None, description="Порядок сортировки")
 
 
 class CharacterCreate(CharacterBase):
@@ -36,6 +37,7 @@ class CharacterUpdate(BaseModel):
     importance_score: Optional[float] = Field(None, ge=0.0, le=1.0)
     speech_attribution: Optional[Dict[str, Any]] = None
     gender: Optional[Gender] = Field(None, description="Пол персонажа")
+    sort_order: Optional[int] = Field(None, description="Порядок сортировки")
 
 
 class CharacterInDBBase(CharacterBase):
@@ -56,3 +58,14 @@ class Character(CharacterInDBBase):
 class CharacterWithResponses(Character):
     """Схема персонажа с ответами чеклистов."""
     checklist_responses: List["ChecklistResponse"] = []
+
+
+class CharacterOrderUpdate(BaseModel):
+    """Схема для обновления порядка персонажа."""
+    id: int
+    sort_order: int
+
+
+class CharactersBulkOrderUpdate(BaseModel):
+    """Схема для массового обновления порядка персонажей."""
+    characters: List[CharacterOrderUpdate]

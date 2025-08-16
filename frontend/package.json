@@ -15,6 +15,9 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@gravity-ui/components": "^4.9.2",
     "@gravity-ui/navigation": "^3.6.3",
     "@gravity-ui/uikit": "^7.19.0",

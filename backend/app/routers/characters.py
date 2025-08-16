@@ -9,10 +9,61 @@ from typing import List
 from app.dependencies.auth import get_db, get_current_active_user
 from app.database.crud import character as character_crud, text as text_crud
 from app.database.models.user import User
-from app.schemas.character import Character, CharacterUpdate
+from app.schemas.character import Character, CharacterUpdate, CharactersBulkOrderUpdate
 from app.schemas.checklist import ChecklistResponseCreate, ChecklistResponseUpdate
 
 router = APIRouter()
+
+
+@router.put("/bulk-update-order")
+async def update_characters_order(
+    order_data: CharactersBulkOrderUpdate,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Массовое обновление порядка персонажей для drag-and-drop.
+    
+    Требует авторизации. Пользователь может обновлять порядок персонажей только из своих проектов.
+    """
+    try:
+        # Проверяем права доступа для каждого персонажа
+        for char_update in order_data.characters:
+            character = character_crud.get(db, id=char_update.id)
+            
+            if not character:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Персонаж с ID {char_update.id} не найден"
+                )
+            
+            # Проверяем права доступа через текст
+            text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
+            
+            if not text:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Нет прав доступа к персонажу с ID {char_update.id}"
+                )
+        
+        # Обновляем порядок для всех персонажей
+        for char_update in order_data.characters:
+            character = character_crud.get(db, id=char_update.id)
+            character_crud.update(
+                db,
+                db_obj=character,
+                obj_in={"sort_order": char_update.sort_order}
+            )
+        
+        return {"message": "Порядок персонажей успешно обновлен"}
+        
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при обновлении порядка персонажей: {str(e)}"
+        )
 
 
 @router.get("/{character_id}", response_model=Character)

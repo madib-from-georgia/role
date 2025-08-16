@@ -3,6 +3,25 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { Button, Progress, Text, TextInput, Select } from "@gravity-ui/uikit";
 import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import {
   projectsApi,
   textsApi,
   charactersApi,
@@ -36,6 +55,7 @@ interface Character {
   id: number;
   name: string;
   gender?: "male" | "female" | "unknown";
+  sort_order?: number;
   aliases?: string[];
   importance_score?: number;
   speech_attribution?: Record<string, unknown>;
@@ -67,8 +87,8 @@ const fetchCharacters = async (textId: string): Promise<Character[]> => {
   return await charactersApi.getByText(textId) as Character[];
 };
 
-// Компонент для отображения персонажа с прогрессом
-const CharacterItem: React.FC<{
+// Sortable компонент для @dnd-kit
+const SortableCharacterItem: React.FC<{
   character: Character;
   onCharacterClick: (character: Character) => void;
   onEditCharacter: (character: Character) => void;
@@ -81,30 +101,133 @@ const CharacterItem: React.FC<{
   onSaveEdit: () => void;
   onCancelEdit: () => void;
   isUpdating: boolean;
-}> = ({
-  character,
-  onCharacterClick,
-  onEditCharacter,
-  onDeleteCharacter,
-  isEditing,
-  editName,
-  editGender,
-  onEditNameChange,
-  onEditGenderChange,
-  onSaveEdit,
-  onCancelEdit,
-  isUpdating
-}) => {
+}> = (props) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: props.character.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.8 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={`character-item ${isDragging ? 'dragging' : ''}`}>
+      <div className="character-main" onClick={() => !props.isEditing && props.onCharacterClick(props.character)}>
+        <div className="drag-handle" {...attributes} {...listeners} title="Перетащите для изменения порядка">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+          </svg>
+        </div>
+        <div className="character-progress">
+          <CharacterProgress characterId={props.character.id} />
+        </div>
+        <div className="character-name">
+          {props.isEditing ? (
+            <div className="character-edit-form">
+              <TextInput
+                type="text"
+                value={props.editName}
+                onChange={(e) => props.onEditNameChange(e.target.value)}
+                placeholder="Имя персонажа"
+              />
+              <Select
+                size="m"
+                width="max"
+                placeholder="Пол персонажа"
+                value={[props.editGender]}
+                onUpdate={(values) => props.onEditGenderChange(values[0] || 'unknown')}
+              >
+                <Select.Option value="unknown">Не указан</Select.Option>
+                <Select.Option value="male">Мужской</Select.Option>
+                <Select.Option value="female">Женский</Select.Option>
+              </Select>
+            </div>
+          ) : (
+            <>
+              <Text variant="body-3">{props.character.name}</Text>
+              {props.character.aliases && props.character.aliases.length > 0 && (
+                <div className="character-aliases">
+                  Алиасы: {props.character.aliases.join(", ")}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="character-actions">
+        {props.isEditing ? (
+          <>
+            <Button
+              onClick={props.onSaveEdit}
+              disabled={props.isUpdating || !props.editName.trim()}
+              view="action"
+              size="s"
+            >
+              {props.isUpdating ? "Сохранение..." : "Сохранить"}
+            </Button>
+            <Button
+              onClick={props.onCancelEdit}
+              view="outlined"
+              size="s"
+            >
+              Отменить
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                props.onEditCharacter(props.character);
+              }}
+              view="outlined"
+              size="s"
+              title="Редактировать персонажа"
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                props.onDeleteCharacter(props.character);
+              }}
+              view="outlined"
+              size="s"
+              title="Удалить персонаж"
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </Button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Компонент для отображения прогресса персонажа
+const CharacterProgress: React.FC<{ characterId: number }> = ({ characterId }) => {
   const {
     data: progress,
     isLoading,
     error,
   } = useQuery<Array<{ completion_percentage?: number }>>(
-    ["character-progress", character.id],
-    () => checklistApi.getCharacterProgress(character.id) as Promise<Array<{ completion_percentage?: number }>>,
+    ["character-progress", characterId],
+    () => checklistApi.getCharacterProgress(characterId) as Promise<Array<{ completion_percentage?: number }>>,
     {
       staleTime: 2 * 60 * 1000, // 2 минуты
-      enabled: !!character.id,
+      enabled: !!characterId,
     }
   );
 
@@ -119,108 +242,21 @@ const CharacterItem: React.FC<{
         )
       : 0;
 
-  return (
-    <div className="character-item">
-      <div className="character-main" onClick={() => !isEditing && onCharacterClick(character)}>
-        <div className="character-progress">
-          {isLoading ? (
-            <div className="character-progress-loading"></div>
-          ) : error ? (
-            <div className="character-progress-error">Ошибка</div>
-          ) : (
-            <div className="character-progress-track">
-              <Progress
-                value={overallProgress}
-                theme="success"
-                text={`${overallProgress}%`}
-              />
-            </div>
-          )}
-        </div>
-        <div className="character-name">
-          {isEditing ? (
-            <div className="character-edit-form">
-              <TextInput
-                type="text"
-                value={editName}
-                onChange={(e) => onEditNameChange(e.target.value)}
-                placeholder="Имя персонажа"
-              />
-              <Select
-                size="m"
-                width="max"
-                placeholder="Пол персонажа"
-                value={[editGender]}
-                onUpdate={(values) => onEditGenderChange(values[0] || 'unknown')}
-              >
-                <Select.Option value="unknown">Не указан</Select.Option>
-                <Select.Option value="male">Мужской</Select.Option>
-                <Select.Option value="female">Женский</Select.Option>
-              </Select>
-            </div>
-          ) : (
-            <>
-              <Text variant="body-3">{character.name}</Text>
-              {character.aliases && character.aliases.length > 0 && (
-                <div className="character-aliases">
-                  Алиасы: {character.aliases.join(", ")}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+  if (isLoading) {
+    return <div className="character-progress-loading"></div>;
+  }
 
-      <div className="character-actions">
-        {isEditing ? (
-          <>
-            <Button
-              onClick={onSaveEdit}
-              disabled={isUpdating || !editName.trim()}
-              view="action"
-              size="s"
-            >
-              {isUpdating ? "Сохранение..." : "Сохранить"}
-            </Button>
-            <Button
-              onClick={onCancelEdit}
-              view="outlined"
-              size="s"
-            >
-              Отменить
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEditCharacter(character);
-              }}
-              view="outlined"
-              size="s"
-              title="Редактировать персонажа"
-            >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </Button>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteCharacter(character);
-              }}
-              view="outlined"
-              size="s"
-              title="Удалить персонаж"
-            >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </Button>
-          </>
-        )}
-      </div>
+  if (error) {
+    return <div className="character-progress-error">Ошибка</div>;
+  }
+
+  return (
+    <div className="character-progress-track">
+      <Progress
+        value={overallProgress}
+        theme="success"
+        text={`${overallProgress}%`}
+      />
     </div>
   );
 };
@@ -239,6 +275,8 @@ const TextSection: React.FC<{
   onSaveEdit: () => void;
   onCancelEdit: () => void;
   isUpdating: boolean;
+  onDragEnd: (event: DragEndEvent) => void;
+  sensors: ReturnType<typeof useSensors>;
 }> = ({
   text,
   onCharacterClick,
@@ -251,7 +289,9 @@ const TextSection: React.FC<{
   onEditGenderChange,
   onSaveEdit,
   onCancelEdit,
-  isUpdating
+  isUpdating,
+  onDragEnd,
+  sensors
 }) => {
   const {
     data: characters,
@@ -333,25 +373,36 @@ const TextSection: React.FC<{
           )}
 
           {characters && characters.length > 0 && (
-            <div className="characters-grid">
-              {characters.map((character) => (
-                <CharacterItem
-                  key={character.id}
-                  character={character}
-                  onCharacterClick={onCharacterClick}
-                  onEditCharacter={onEditCharacter}
-                  onDeleteCharacter={onDeleteCharacter}
-                  isEditing={editingCharacter?.id === character.id}
-                  editName={editCharacterName}
-                  editGender={editCharacterGender}
-                  onEditNameChange={onEditNameChange}
-                  onEditGenderChange={onEditGenderChange}
-                  onSaveEdit={onSaveEdit}
-                  onCancelEdit={onCancelEdit}
-                  isUpdating={isUpdating}
-                />
-              ))}
-            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={onDragEnd}
+            >
+              <SortableContext
+                items={characters.map(c => c.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="characters-grid">
+                  {characters.map((character) => (
+                    <SortableCharacterItem
+                      key={character.id}
+                      character={character}
+                      onCharacterClick={onCharacterClick}
+                      onEditCharacter={onEditCharacter}
+                      onDeleteCharacter={onDeleteCharacter}
+                      isEditing={editingCharacter?.id === character.id}
+                      editName={editCharacterName}
+                      editGender={editCharacterGender}
+                      onEditNameChange={onEditNameChange}
+                      onEditGenderChange={onEditGenderChange}
+                      onSaveEdit={onSaveEdit}
+                      onCancelEdit={onCancelEdit}
+                      isUpdating={isUpdating}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           )}
 
           {characters && characters.length === 0 && (
@@ -385,6 +436,14 @@ const ProjectDetail: React.FC = () => {
   const [editCharacterGender, setEditCharacterGender] = useState<"male" | "female" | "unknown">("unknown");
 
   const queryClient = useQueryClient();
+
+  // Настройка сенсоров для @dnd-kit
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const deleteMutation = useMutation(deleteProject, {
     onSuccess: () => {
@@ -475,6 +534,23 @@ const ProjectDetail: React.FC = () => {
       onError: (error) => {
         console.error("Ошибка обновления персонажа:", error);
         alert("Не удалось обновить персонажа. Попробуйте еще раз.");
+      },
+    }
+  );
+
+  const updateCharactersOrderMutation = useMutation(
+    (charactersData: Array<{id: number, sort_order: number}>) =>
+      charactersApi.updateOrder(charactersData),
+    {
+      onSuccess: () => {
+        // Обновляем кэш персонажей для всех текстов
+        texts?.forEach((text) => {
+          queryClient.invalidateQueries(["text-characters", text.id]);
+        });
+      },
+      onError: (error) => {
+        console.error("Ошибка обновления порядка персонажей:", error);
+        alert("Не удалось обновить порядок персонажей. Попробуйте еще раз.");
       },
     }
   );
@@ -578,6 +654,52 @@ const ProjectDetail: React.FC = () => {
     if (window.confirm(`Вы уверены, что хотите удалить персонажа "${character.name}"? Это действие нельзя отменить и все данные анализа персонажа будут удалены.`)) {
       deleteCharacterMutation.mutate(character.id.toString());
     }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    // Находим текст, содержащий перетаскиваемый персонаж
+    let targetTextId: number | null = null;
+    let characters: Character[] | null = null;
+
+    for (const text of texts || []) {
+      const charactersQueryKey = ["text-characters", text.id];
+      const textCharacters = queryClient.getQueryData<Character[]>(charactersQueryKey);
+      if (textCharacters?.some(char => char.id === active.id)) {
+        targetTextId = text.id;
+        characters = textCharacters;
+        break;
+      }
+    }
+
+    if (!targetTextId || !characters) return;
+
+    const oldIndex = characters.findIndex(char => char.id === active.id);
+    const newIndex = characters.findIndex(char => char.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // Создаем новый массив с обновленным порядком
+    const reorderedCharacters = arrayMove(characters, oldIndex, newIndex);
+
+    // Обновляем sort_order для всех персонажей
+    const updatedCharacters = reorderedCharacters.map((char, index) => ({
+      id: char.id,
+      sort_order: index
+    }));
+
+    // Оптимистично обновляем кэш
+    const charactersQueryKey = ["text-characters", targetTextId];
+    queryClient.setQueryData(charactersQueryKey, reorderedCharacters.map((char, index) => ({
+      ...char,
+      sort_order: index
+    })));
+
+    // Отправляем обновления на сервер
+    updateCharactersOrderMutation.mutate(updatedCharacters);
   };
 
   if (isLoading) {
@@ -822,6 +944,8 @@ const ProjectDetail: React.FC = () => {
                   onSaveEdit={handleUpdateCharacter}
                   onCancelEdit={handleCancelEditCharacter}
                   isUpdating={updateCharacterMutation.isLoading}
+                  onDragEnd={handleDragEnd}
+                  sensors={sensors}
                 />
               ))}
             </div>

@@ -129,7 +129,8 @@ async def get_text_characters(
             detail="Текст не найден или нет прав доступа"
         )
     
-    # Получаем персонажей через связанные объекты
+    # Получаем персонажей через связанные объекты, отсортированных по sort_order
+    sorted_characters = sorted(text.characters, key=lambda x: x.sort_order or 0)
     return [
         {
             "id": character.id,
@@ -138,9 +139,10 @@ async def get_text_characters(
             "importance_score": character.importance_score,
             "speech_attribution": character.speech_attribution,
             "gender": character.gender.value if character.gender else None,
+            "sort_order": character.sort_order,
             "created_at": character.created_at.isoformat() if character.created_at else None
         }
-        for character in text.characters
+        for character in sorted_characters
     ]
 
 
@@ -199,6 +201,7 @@ async def create_character(
             "importance_score": character.importance_score,
             "speech_attribution": character.speech_attribution,
             "gender": character.gender.value if character.gender else None,
+            "sort_order": character.sort_order,
             "created_at": character.created_at.isoformat() if character.created_at else None
         }
         
