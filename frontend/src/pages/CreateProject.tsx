@@ -120,25 +120,39 @@ const CreateProject: React.FC = () => {
                 <div className="step-number">1</div>
                 <div className="step-content">
                   <h4>Создайте проект</h4>
-                  <p>Назовите так, чтобы сразу понимать, о чем проект</p>
+                  <p>Опишите, для чего этот проект: подготовка учебного отрывка, спектакля...</p>
                 </div>
               </li>
               <li className="step">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h4>Создайте персонажей вручную</h4>
-                  <p>Позже добавится система загрузки пьес и автоматического поиска персонажей и их реплик</p>
+                  <h4>Загрузите текст</h4>
+                  <p>Добавьте файл произведения в формате TXT, FB2, EPUB</p>
                 </div>
               </li>
               <li className="step">
                 <div className="step-number">3</div>
                 <div className="step-content">
-                  <h4>Выберите персонажа</h4>
-                  <p>Заполните опросники для детального анализа</p>
+                  <h4>Подождите предобработку</h4>
+                  <p>Система найдет персонажей и их реплики</p>
                 </div>
               </li>
               <li className="step">
                 <div className="step-number">4</div>
+                <div className="step-content">
+                  <h4>Создайте персонаж вручную</h4>
+                  <p>Если атоматическое распознавание сработало плохо</p>
+                </div>
+              </li>
+              <li className="step">
+                <div className="step-number">5</div>
+                <div className="step-content">
+                  <h4>Перейдите в карточку персонажа</h4>
+                  <p>Заполните опросники для детального анализа</p>
+                </div>
+              </li>
+              <li className="step">
+                <div className="step-number">6</div>
                 <div className="step-content">
                   <h4>Получите результаты</h4>
                   <p>Экспортируйте подробный анализ персонажа</p>
