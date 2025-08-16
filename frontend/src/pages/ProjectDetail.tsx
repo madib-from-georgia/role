@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { Button, Progress, Text } from "@gravity-ui/uikit";
+import { Button, Progress, Text, TextInput, Select } from "@gravity-ui/uikit";
 import {
   projectsApi,
   textsApi,
@@ -70,7 +70,30 @@ const fetchCharacters = async (textId: string): Promise<Character[]> => {
 const CharacterItem: React.FC<{
   character: Character;
   onCharacterClick: (character: Character) => void;
-}> = ({ character, onCharacterClick }) => {
+  onEditCharacter: (character: Character) => void;
+  onDeleteCharacter: (character: Character) => void;
+  isEditing: boolean;
+  editName: string;
+  editGender: string;
+  onEditNameChange: (name: string) => void;
+  onEditGenderChange: (gender: string) => void;
+  onSaveEdit: () => void;
+  onCancelEdit: () => void;
+  isUpdating: boolean;
+}> = ({
+  character,
+  onCharacterClick,
+  onEditCharacter,
+  onDeleteCharacter,
+  isEditing,
+  editName,
+  editGender,
+  onEditNameChange,
+  onEditGenderChange,
+  onSaveEdit,
+  onCancelEdit,
+  isUpdating
+}) => {
   const {
     data: progress,
     isLoading,
@@ -96,29 +119,105 @@ const CharacterItem: React.FC<{
       : 0;
 
   return (
-    <div className="character-item" onClick={() => onCharacterClick(character)}>
-      <div className="character-name">
-        <Text variant="body-3">{character.name}</Text>
-        {character.aliases && character.aliases.length > 0 && (
-          <div className="character-aliases">
-            Алиасы: {character.aliases.join(", ")}
-          </div>
-        )}
+    <div className="character-item">
+      <div className="character-main" onClick={() => !isEditing && onCharacterClick(character)}>
+        <div className="character-progress">
+          {isLoading ? (
+            <div className="character-progress-loading"></div>
+          ) : error ? (
+            <div className="character-progress-error">Ошибка</div>
+          ) : (
+            <div className="character-progress-track">
+              <Progress
+                value={overallProgress}
+                theme="success"
+                text={`${overallProgress}%`}
+              />
+            </div>
+          )}
+        </div>
+        <div className="character-name">
+          {isEditing ? (
+            <div className="character-edit-form">
+              <TextInput
+                type="text"
+                value={editName}
+                onChange={(e) => onEditNameChange(e.target.value)}
+                placeholder="Имя персонажа"
+              />
+              <Select
+                size="m"
+                width="max"
+                placeholder="Пол персонажа"
+                value={[editGender]}
+                onUpdate={(values) => onEditGenderChange(values[0] || 'unknown')}
+              >
+                <Select.Option value="unknown">Не указан</Select.Option>
+                <Select.Option value="male">Мужской</Select.Option>
+                <Select.Option value="female">Женский</Select.Option>
+              </Select>
+            </div>
+          ) : (
+            <>
+              <Text variant="body-3">{character.name}</Text>
+              {character.aliases && character.aliases.length > 0 && (
+                <div className="character-aliases">
+                  Алиасы: {character.aliases.join(", ")}
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="character-progress">
-        {isLoading ? (
-          <div className="character-progress-loading"></div>
-        ) : error ? (
-          <div className="character-progress-error">Ошибка</div>
+      <div className="character-actions">
+        {isEditing ? (
+          <>
+            <Button
+              onClick={onSaveEdit}
+              disabled={isUpdating || !editName.trim()}
+              view="action"
+              size="s"
+            >
+              {isUpdating ? "Сохранение..." : "Сохранить"}
+            </Button>
+            <Button
+              onClick={onCancelEdit}
+              view="outlined"
+              size="s"
+            >
+              Отменить
+            </Button>
+          </>
         ) : (
-          <div className="character-progress-track">
-            <Progress
-              value={overallProgress}
-              theme="success"
-              text={`${overallProgress}%`}
-            />
-          </div>
+          <>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditCharacter(character);
+              }}
+              view="outlined"
+              size="s"
+              title="Редактировать персонажа"
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteCharacter(character);
+              }}
+              view="outlined"
+              size="s"
+              title="Удалить персонаж"
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </Button>
+          </>
         )}
       </div>
     </div>
@@ -129,7 +228,30 @@ const CharacterItem: React.FC<{
 const TextSection: React.FC<{
   text: ProjectText;
   onCharacterClick: (character: Character) => void;
-}> = ({ text, onCharacterClick }) => {
+  onEditCharacter: (character: Character) => void;
+  onDeleteCharacter: (character: Character) => void;
+  editingCharacter: Character | null;
+  editCharacterName: string;
+  editCharacterGender: string;
+  onEditNameChange: (name: string) => void;
+  onEditGenderChange: (gender: string) => void;
+  onSaveEdit: () => void;
+  onCancelEdit: () => void;
+  isUpdating: boolean;
+}> = ({
+  text,
+  onCharacterClick,
+  onEditCharacter,
+  onDeleteCharacter,
+  editingCharacter,
+  editCharacterName,
+  editCharacterGender,
+  onEditNameChange,
+  onEditGenderChange,
+  onSaveEdit,
+  onCancelEdit,
+  isUpdating
+}) => {
   const {
     data: characters,
     isLoading: charactersLoading,
@@ -216,6 +338,16 @@ const TextSection: React.FC<{
                   key={character.id}
                   character={character}
                   onCharacterClick={onCharacterClick}
+                  onEditCharacter={onEditCharacter}
+                  onDeleteCharacter={onDeleteCharacter}
+                  isEditing={editingCharacter?.id === character.id}
+                  editName={editCharacterName}
+                  editGender={editCharacterGender}
+                  onEditNameChange={onEditNameChange}
+                  onEditGenderChange={onEditGenderChange}
+                  onSaveEdit={onSaveEdit}
+                  onCancelEdit={onCancelEdit}
+                  isUpdating={isUpdating}
                 />
               ))}
             </div>
@@ -244,6 +376,12 @@ const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showAddCharacterForm, setShowAddCharacterForm] = useState<boolean>(false);
+  const [newCharacterName, setNewCharacterName] = useState<string>("");
+  const [newCharacterGender, setNewCharacterGender] = useState<"male" | "female" | "unknown">("unknown");
+  const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
+  const [editCharacterName, setEditCharacterName] = useState<string>("");
+  const [editCharacterGender, setEditCharacterGender] = useState<"male" | "female" | "unknown">("unknown");
 
   const queryClient = useQueryClient();
 
@@ -282,6 +420,64 @@ const ProjectDetail: React.FC = () => {
     },
   });
 
+  const createCharacterMutation = useMutation(
+    ({ textId, characterData }: { textId: string; characterData: { name: string; gender?: "male" | "female" } }) =>
+      charactersApi.create(textId, characterData),
+    {
+      onSuccess: () => {
+        // Обновляем кэш персонажей для всех текстов
+        texts?.forEach((text) => {
+          queryClient.invalidateQueries(["text-characters", text.id]);
+        });
+        // Сбрасываем форму
+        setNewCharacterName("");
+        setNewCharacterGender("unknown");
+        setShowAddCharacterForm(false);
+      },
+      onError: (error) => {
+        console.error("Ошибка создания персонажа:", error);
+        alert("Не удалось создать персонажа. Попробуйте еще раз.");
+      },
+    }
+  );
+
+  const deleteCharacterMutation = useMutation(
+    (characterId: string) => charactersApi.delete(characterId),
+    {
+      onSuccess: () => {
+        // Обновляем кэш персонажей для всех текстов
+        texts?.forEach((text) => {
+          queryClient.invalidateQueries(["text-characters", text.id]);
+        });
+      },
+      onError: (error) => {
+        console.error("Ошибка удаления персонажа:", error);
+        alert("Не удалось удалить персонажа. Попробуйте еще раз.");
+      },
+    }
+  );
+
+  const updateCharacterMutation = useMutation(
+    ({ characterId, characterData }: { characterId: string; characterData: { name: string; gender?: "male" | "female" } }) =>
+      charactersApi.update(characterId, characterData),
+    {
+      onSuccess: () => {
+        // Обновляем кэш персонажей для всех текстов
+        texts?.forEach((text) => {
+          queryClient.invalidateQueries(["text-characters", text.id]);
+        });
+        // Сбрасываем форму редактирования
+        setEditingCharacter(null);
+        setEditCharacterName("");
+        setEditCharacterGender("unknown");
+      },
+      onError: (error) => {
+        console.error("Ошибка обновления персонажа:", error);
+        alert("Не удалось обновить персонажа. Попробуйте еще раз.");
+      },
+    }
+  );
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (
@@ -315,6 +511,72 @@ const ProjectDetail: React.FC = () => {
       )
     ) {
       deleteMutation.mutate(id!);
+    }
+  };
+
+  const handleAddCharacter = () => {
+    if (!newCharacterName.trim()) {
+      alert("Пожалуйста, введите имя персонажа");
+      return;
+    }
+
+    // Находим первый обработанный текст для добавления персонажа
+    const processedText = texts?.find((text) => text.processed_at);
+    if (!processedText) {
+      alert("Для добавления персонажа необходимо загрузить и обработать хотя бы один текст");
+      return;
+    }
+
+    const characterData = {
+      name: newCharacterName.trim(),
+      gender: newCharacterGender !== "unknown" ? newCharacterGender : undefined,
+    };
+
+    createCharacterMutation.mutate({
+      textId: processedText.id.toString(),
+      characterData,
+    });
+  };
+
+  const handleCancelAddCharacter = () => {
+    setNewCharacterName("");
+    setNewCharacterGender("unknown");
+    setShowAddCharacterForm(false);
+  };
+
+  const handleEditCharacter = (character: Character) => {
+    setEditingCharacter(character);
+    setEditCharacterName(character.name);
+    // Используем any для обхода типизации, так как gender может быть в данных
+    setEditCharacterGender((character as any).gender || "unknown");
+  };
+
+  const handleUpdateCharacter = () => {
+    if (!editingCharacter || !editCharacterName.trim()) {
+      alert("Пожалуйста, введите имя персонажа");
+      return;
+    }
+
+    const characterData = {
+      name: editCharacterName.trim(),
+      gender: editCharacterGender !== "unknown" ? editCharacterGender : undefined,
+    };
+
+    updateCharacterMutation.mutate({
+      characterId: editingCharacter.id.toString(),
+      characterData,
+    });
+  };
+
+  const handleCancelEditCharacter = () => {
+    setEditingCharacter(null);
+    setEditCharacterName("");
+    setEditCharacterGender("unknown");
+  };
+
+  const handleDeleteCharacter = (character: Character) => {
+    if (window.confirm(`Вы уверены, что хотите удалить персонажа "${character.name}"? Это действие нельзя отменить и все данные анализа персонажа будут удалены.`)) {
+      deleteCharacterMutation.mutate(character.id.toString());
     }
   };
 
@@ -478,13 +740,88 @@ const ProjectDetail: React.FC = () => {
             <div className="card">
               <div className="card-header">
                 <h2 className="card-title">Найденные персонажи</h2>
+                {texts.some((text) => text.processed_at) && (
+                  <Button
+                    onClick={() => setShowAddCharacterForm(!showAddCharacterForm)}
+                    view="outlined"
+                    size="m"
+                  >
+                    {showAddCharacterForm ? "Отменить" : "Добавить персонажа"}
+                  </Button>
+                )}
               </div>
+
+              {/* Форма добавления персонажа */}
+              {showAddCharacterForm && (
+                <div className="add-character-form">
+                  <div className="form-group">
+                    <label htmlFor="character-name">Имя персонажа:</label>
+                    <TextInput
+                      id="character-name"
+                      value={newCharacterName}
+                      onChange={(e) => setNewCharacterName(e.target.value)}
+                      placeholder="Введите имя персонажа"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="character-gender">Пол персонажа:</label>
+                    <Select
+                      id="character-gender"
+                      size="m"
+                      width="max"
+                      placeholder="Пол персонажа"
+                      value={[newCharacterGender]}
+                      onUpdate={(values) => setNewCharacterGender((values[0] || 'unknown')  as "male" | "female" | "unknown")}
+                    >
+                      <Select.Option value="unknown">Не указан</Select.Option>
+                      <Select.Option value="male">Мужской</Select.Option>
+                      <Select.Option value="female">Женский</Select.Option>
+                    </Select>
+                  </div>
+
+                  <div className="form-actions">
+                    <Button
+                      onClick={handleAddCharacter}
+                      disabled={createCharacterMutation.isLoading || !newCharacterName.trim()}
+                      view="action"
+                      size="m"
+                    >
+                      {createCharacterMutation.isLoading ? "Создание..." : "Создать персонажа"}
+                    </Button>
+                    <Button
+                      onClick={handleCancelAddCharacter}
+                      view="outlined"
+                      size="m"
+                    >
+                      Отменить
+                    </Button>
+                  </div>
+
+                  {createCharacterMutation.isError && (
+                    <div className="error-message">
+                      <strong>Ошибка создания персонажа</strong>
+                      <p>Не удалось создать персонажа. Попробуйте еще раз.</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {texts.map((text) => (
                 <TextSection
                   key={text.id}
                   text={text}
                   onCharacterClick={handleCharacterClick}
+                  onEditCharacter={handleEditCharacter}
+                  onDeleteCharacter={handleDeleteCharacter}
+                  editingCharacter={editingCharacter}
+                  editCharacterName={editCharacterName}
+                  editCharacterGender={editCharacterGender}
+                  onEditNameChange={setEditCharacterName}
+                  onEditGenderChange={(gender) => setEditCharacterGender(gender as "male" | "female" | "unknown")}
+                  onSaveEdit={handleUpdateCharacter}
+                  onCancelEdit={handleCancelEditCharacter}
+                  isUpdating={updateCharacterMutation.isLoading}
                 />
               ))}
             </div>

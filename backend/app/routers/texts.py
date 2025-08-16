@@ -144,6 +144,73 @@ async def get_text_characters(
     ]
 
 
+@router.post("/{text_id}/characters", response_model=dict)
+async def create_character(
+    text_id: int,
+    character_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Создание нового персонажа для текста.
+    
+    Требует авторизации. Пользователь может создавать персонажей только для текстов своих проектов.
+    """
+    from app.database.crud import character as character_crud
+    from app.schemas.character import CharacterCreate
+    
+    # Сначала проверяем права доступа к тексту
+    text = text_crud.get_user_text(db, text_id=text_id, user_id=current_user.id)
+    
+    if not text:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Текст не найден или нет прав доступа"
+        )
+    
+    try:
+        # Создаем схему для создания персонажа
+        character_create = CharacterCreate(
+            text_id=text_id,
+            name=character_data.get("name", ""),
+            gender=character_data.get("gender"),
+            aliases=character_data.get("aliases"),
+            importance_score=character_data.get("importance_score", 0.5)
+        )
+        
+        # Проверяем, что персонаж с таким именем не существует в этом тексте
+        existing_character = character_crud.get_by_name_and_text(
+            db, name=character_create.name, text_id=text_id
+        )
+        
+        if existing_character:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Персонаж с именем '{character_create.name}' уже существует в этом тексте"
+            )
+        
+        # Создаем персонажа
+        character = character_crud.create(db, obj_in=character_create)
+        
+        return {
+            "id": character.id,
+            "name": character.name,
+            "aliases": character.aliases,
+            "importance_score": character.importance_score,
+            "speech_attribution": character.speech_attribution,
+            "gender": character.gender.value if character.gender else None,
+            "created_at": character.created_at.isoformat() if character.created_at else None
+        }
+        
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при создании персонажа: {str(e)}"
+        )
+
+
 @router.post("/{text_id}/process")
 async def mark_text_as_processed(
     text_id: int,

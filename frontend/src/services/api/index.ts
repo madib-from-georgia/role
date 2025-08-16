@@ -133,6 +133,10 @@ export const charactersApi = {
     api.get(`/api/characters/${characterId}`),
   update: (characterId: string, data: CharacterData) =>
     api.put(`/api/characters/${characterId}`, data),
+  create: (textId: string, data: CharacterData) =>
+    api.post(`/api/texts/${textId}/characters`, data),
+  delete: (characterId: string) =>
+    api.delete(`/api/characters/${characterId}`),
 }
 
 // Создаем debounced версии для частых запросов

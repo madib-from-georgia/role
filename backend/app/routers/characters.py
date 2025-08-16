@@ -101,6 +101,50 @@ async def update_character(
         )
 
 
+@router.delete("/{character_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_character(
+    character_id: int,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Удаление персонажа.
+    
+    Требует авторизации. Пользователь может удалять персонажей только из своих проектов.
+    
+    ВНИМАНИЕ: Это действие необратимо. Все ответы чек-листов этого персонажа также будут удалены.
+    """
+    try:
+        # Получаем персонажа
+        character = character_crud.get(db, id=character_id)
+        
+        if not character:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Персонаж не найден"
+            )
+        
+        # Проверяем права доступа через текст
+        text = text_crud.get_user_text(db, text_id=character.text_id, user_id=current_user.id)
+        
+        if not text:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Персонаж не найден или нет прав доступа"
+            )
+        
+        # Удаляем персонажа
+        character_crud.remove(db, id=character_id)
+        
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ошибка при удалении персонажа: {str(e)}"
+        )
+
+
 @router.get("/{character_id}/checklists")
 async def get_character_checklists(
     character_id: int,
