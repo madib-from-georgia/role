@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button, TextInput } from "@gravity-ui/uikit";
 import { useAuth } from '../contexts/AuthContext'
 import { authApi } from '../services/api/auth'
 
@@ -19,7 +20,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
     new: false,
     confirm: false
   })
-  
+
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -46,33 +47,33 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
       setError('Введите текущий пароль')
       return false
     }
-    
+
     if (!formData.newPassword) {
       setError('Введите новый пароль')
       return false
     }
-    
+
     if (formData.newPassword.length < 8) {
       setError('Новый пароль должен содержать минимум 8 символов')
       return false
     }
-    
+
     if (formData.newPassword !== formData.confirmPassword) {
       setError('Пароли не совпадают')
       return false
     }
-    
+
     if (formData.currentPassword === formData.newPassword) {
       setError('Новый пароль должен отличаться от текущего')
       return false
     }
-    
+
     return true
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -94,15 +95,15 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
 
       // Успех - показываем сообщение и выходим из системы
       alert('Пароль успешно изменен! Вы будете перенаправлены на страницу входа.')
-      
+
       if (onSuccess) {
         onSuccess()
       }
-      
+
       // Выходим из системы без вызова API logout, так как токены уже отозваны
       // Просто очищаем локальное состояние
       clearAuth()
-      
+
     } catch (err: unknown) {
       console.error('Change password error:', err)
       setError(err instanceof Error ? err.message : 'Ошибка смены пароля')
@@ -125,8 +126,6 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
 
   return (
     <div className="change-password-form">
-      <h3>Смена пароля</h3>
-      
       {error && (
         <div className="alert alert-error">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,21 +139,19 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
         <div className="form-group">
           <label>Текущий пароль</label>
           <div className="password-input-group">
-            <input
+            <TextInput
               type={showPasswords.current ? 'text' : 'password'}
               name="currentPassword"
               value={formData.currentPassword}
               onChange={handleChange}
               disabled={isLoading}
-              required
-              minLength={8}
               placeholder="Введите текущий пароль"
             />
-            <button
+            <Button
               type="button"
-              className="password-toggle"
               onClick={() => togglePasswordVisibility('current')}
               disabled={isLoading}
+              view="flat"
             >
               {showPasswords.current ? (
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,28 +163,26 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="form-group">
           <label>Новый пароль</label>
           <div className="password-input-group">
-            <input
+            <TextInput
               type={showPasswords.new ? 'text' : 'password'}
               name="newPassword"
               value={formData.newPassword}
               onChange={handleChange}
               disabled={isLoading}
-              required
-              minLength={8}
               placeholder="Введите новый пароль (минимум 8 символов)"
             />
-            <button
+            <Button
               type="button"
-              className="password-toggle"
               onClick={() => togglePasswordVisibility('new')}
               disabled={isLoading}
+              view="flat"
             >
               {showPasswords.new ? (
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,28 +194,26 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="form-group">
           <label>Подтвердите новый пароль</label>
           <div className="password-input-group">
-            <input
+            <TextInput
               type={showPasswords.confirm ? 'text' : 'password'}
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               disabled={isLoading}
-              required
-              minLength={8}
               placeholder="Повторите новый пароль"
             />
-            <button
+            <Button
               type="button"
-              className="password-toggle"
               onClick={() => togglePasswordVisibility('confirm')}
               disabled={isLoading}
+              view="flat"
             >
               {showPasswords.confirm ? (
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,26 +225,24 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="form-actions">
-          <button 
-            type="submit" 
-            className="btn btn-primary"
+          <Button
+            type="submit"
             disabled={isLoading}
           >
             {isLoading ? 'Изменение...' : 'Изменить пароль'}
-          </button>
-          <button 
-            type="button" 
-            className="btn btn-secondary"
+          </Button>
+          <Button
+            type="button"
             onClick={handleCancel}
             disabled={isLoading}
           >
             Отмена
-          </button>
+          </Button>
         </div>
       </form>
 

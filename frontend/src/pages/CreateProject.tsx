@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from 'react-query'
+import { Button, TextArea } from "@gravity-ui/uikit";
 import { projectsApi } from '../services/api'
 
 interface CreateProjectData {
@@ -54,58 +55,41 @@ const CreateProject: React.FC = () => {
       <div className="create-project-content">
         <div className="form-section">
           <div className="card">
-            <div className="card-header">
-              <h2 className="card-title">Основная информация</h2>
-            </div>
-
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="title" className="form-label">
                   Название проекта *
                 </label>
-                <input
-                  type="text"
+                <TextArea
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="form-input"
                   placeholder="Например: Анализ персонажей романа 'Война и мир'"
-                  required
                 />
-                <div className="form-help">
-                  Выберите понятное название для идентификации проекта
-                </div>
               </div>
 
               <div className="form-group">
                 <label htmlFor="description" className="form-label">
                   Описание проекта
                 </label>
-                <textarea
+                <TextArea
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="form-textarea"
                   rows={4}
                   placeholder="Опишите цели анализа, особенности произведения..."
                 />
-                <div className="form-help">
-                  Детальное описание поможет организовать работу
-                </div>
               </div>
 
               <div className="form-actions">
-                <button
-                  type="button"
+                <Button
                   onClick={() => navigate('/')}
-                  className="btn btn-secondary"
                 >
                   Отмена
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
                   disabled={!title.trim() || mutation.isLoading}
-                  className="btn btn-primary"
                 >
                   {mutation.isLoading ? (
                     <>
@@ -115,7 +99,7 @@ const CreateProject: React.FC = () => {
                   ) : (
                     'Создать проект'
                   )}
-                </button>
+                </Button>
               </div>
 
               {mutation.isError && (
@@ -135,15 +119,15 @@ const CreateProject: React.FC = () => {
               <li className="step">
                 <div className="step-number">1</div>
                 <div className="step-content">
-                  <h4>Загрузите текст</h4>
-                  <p>Добавьте файл произведения в формате TXT</p>
+                  <h4>Создайте проект</h4>
+                  <p>Назовите так, чтобы сразу понимать, о чем проект</p>
                 </div>
               </li>
               <li className="step">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h4>Подождите предобработку</h4>
-                  <p>Система найдет персонажей и их реплики</p>
+                  <h4>Создайте персонажей вручную</h4>
+                  <p>Позже добавится система загрузки пьес и автоматического поиска персонажей и их реплик</p>
                 </div>
               </li>
               <li className="step">
@@ -159,24 +143,6 @@ const CreateProject: React.FC = () => {
                   <h4>Получите результаты</h4>
                   <p>Экспортируйте подробный анализ персонажа</p>
                 </div>
-              </li>
-            </ul>
-          </div>
-
-          <div className="info-card">
-            <h3>Модули анализа</h3>
-            <ul className="features-list">
-              <li>
-                <strong>Физический портрет</strong>
-                <span>Внешность, возраст, особенности облика</span>
-              </li>
-              <li>
-                <strong>Эмоциональный профиль</strong>
-                <span>Характер, темперамент, реакции</span>
-              </li>
-              <li>
-                <strong>Речевые особенности</strong>
-                <span>Манера речи, словарь, стиль</span>
               </li>
             </ul>
           </div>
