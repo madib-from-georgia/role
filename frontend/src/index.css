@@ -735,7 +735,7 @@ a:hover {
 .mobile-user-section {
   border-top: 1px solid #e5e5e5;
   padding-top: 20px;
-  margin-top: auto;
+  margin-top: 100px;
 }
 
 .mobile-user-info {
@@ -1847,6 +1847,7 @@ a:hover {
 
 .user-menu-container {
   position: relative;
+  z-index: var(--z-popover, 1060);
 }
 
 .user-menu-trigger {
@@ -1854,6 +1855,7 @@ a:hover {
   align-items: center;
   gap: 8px;
   margin-top: 2px;
+  cursor: pointer;
 }
 
 .user-avatar {
@@ -1901,7 +1903,7 @@ a:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   min-width: 160px;
   overflow: hidden;
-  z-index: 1000;
+  z-index: var(--z-popover, 1060);
 }
 
 .user-menu-item {

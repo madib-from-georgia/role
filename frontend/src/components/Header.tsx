@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Button, User, ArrowToggle } from "@gravity-ui/uikit";
+import { Button, User, DropdownMenu } from "@gravity-ui/uikit";
 import { useAuth } from "../contexts/AuthContext";
 import AuthModal from "./auth/AuthModal";
 import AuthGuard from "./auth/AuthGuard";
@@ -9,13 +9,11 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleLogout = useCallback(async () => {
     try {
       await logout();
-      setShowUserMenu(false);
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -113,100 +111,33 @@ const Header: React.FC = () => {
 
                 {/* User Menu */}
                 <div className="user-menu-container">
-                  <Button
-                    onClick={() => setShowUserMenu(!showUserMenu)}
-                    view="flat"
-                    size="l"
-                  >
-                    <div className="user-menu-trigger">
-                      <User
-                        avatar={{
-                          text: `${user?.full_name || user?.username}`,
-                          theme: "brand",
-                        }}
-                        name={user?.full_name || user?.username}
-                        size="m"
-                      />
-                      <ArrowToggle
-                        direction={showUserMenu ? "top" : "bottom"}
-                      />
-                    </div>
-                  </Button>
+                  <DropdownMenu
+                    renderSwitcher={(props) => (
+                      <div {...props} className="user-menu-trigger">
+                        <User
+                          avatar={{
+                            text: `${user?.full_name || user?.username}`,
+                            theme: "brand",
+                          }}
+                          name={user?.full_name || user?.username}
+                          size="m"
+                        />
+                      </div>
+                    )}
+                    popupProps={{placement: 'bottom-end'}}
+                    items={[
+                      {
+                          action: () => console.log('Rename'),
+                          text: 'Профиль',
+                          href: "/profile"
+                      },
+                      {
+                          action: handleLogout,
+                          text: 'Выйти',
+                          theme: 'danger',
+                      },
+                  ]} />
 
-                  {/* <button className="user-menu-trigger">
-                    <div className="user-avatar">
-                      {user?.full_name
-                        ? user.full_name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase()
-                        : user?.username.slice(0, 2).toUpperCase()}
-                    </div>
-                    <span className="user-name">
-                      {user?.full_name || user?.username}
-                    </span>
-                    <svg
-                      className={`user-menu-arrow ${
-                        showUserMenu ? "open" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button> */}
-
-                  {showUserMenu && (
-                    <div className="user-menu-dropdown">
-                      <Link
-                        to="/profile"
-                        className="user-menu-item"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                        Профиль
-                      </Link>
-
-                      <div className="user-menu-divider"></div>
-
-                      <button
-                        className="user-menu-item logout"
-                        onClick={handleLogout}
-                      >
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                          />
-                        </svg>
-                        Выйти
-                      </button>
-                    </div>
-                  )}
                 </div>
               </AuthGuard>
             </nav>
@@ -234,7 +165,7 @@ const Header: React.FC = () => {
                 </svg>
               </Button>
             </div>
-            
+
             <nav className="mobile-menu-nav">
               <AuthGuard
                 fallback={
@@ -276,20 +207,16 @@ const Header: React.FC = () => {
                 {/* User Menu in Mobile */}
                 <div className="mobile-user-section">
                   <div className="mobile-user-info">
-                    <div className="mobile-user-avatar">
-                      {user?.full_name
-                        ? user.full_name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase()
-                        : user?.username.slice(0, 2).toUpperCase()}
-                    </div>
-                    <span className="mobile-user-name">
-                      {user?.full_name || user?.username}
-                    </span>
+                    <User
+                      avatar={{
+                        text: `${user?.full_name || user?.username}`,
+                        theme: "brand",
+                      }}
+                      name={user?.full_name || user?.username}
+                      size="m"
+                    />
                   </div>
-                  
+
                   <Link to="/profile" onClick={handleCloseMobileMenu}>
                     <Button
                       view="flat"
