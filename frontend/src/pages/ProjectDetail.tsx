@@ -35,6 +35,7 @@ interface ProjectText {
 interface Character {
   id: number;
   name: string;
+  gender?: "male" | "female" | "unknown";
   aliases?: string[];
   importance_score?: number;
   speech_attribution?: Record<string, unknown>;
@@ -547,8 +548,7 @@ const ProjectDetail: React.FC = () => {
   const handleEditCharacter = (character: Character) => {
     setEditingCharacter(character);
     setEditCharacterName(character.name);
-    // Используем any для обхода типизации, так как gender может быть в данных
-    setEditCharacterGender((character as any).gender || "unknown");
+    setEditCharacterGender(character.gender || "unknown");
   };
 
   const handleUpdateCharacter = () => {
