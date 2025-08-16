@@ -1080,13 +1080,6 @@ a:hover {
   border-bottom: none;
 }
 
-.character-progress {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 12px;
-}
-
 .character-progress-loading {
   width: 16px;
   height: 16px;

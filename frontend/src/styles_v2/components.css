@@ -159,7 +159,11 @@
 
 .recommended-step--completed {
   border-color: var(--color-success);
-  background: linear-gradient(135deg, var(--color-success-light), var(--color-background));
+  background: linear-gradient(
+    135deg,
+    var(--color-success-light),
+    var(--color-background)
+  );
 }
 
 .recommended-step__header {
@@ -719,11 +723,10 @@
 
 /* Character Item Actions */
 .character-main {
-  flex: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: var(--spacing-1);
 }
 
 .character-edit-form {
@@ -771,6 +774,14 @@
   stroke-width: 2;
 }
 
+.character-progress {
+  margin-left: 8px;
+}
+
+.character-name {
+  margin-left: 12px;
+}
+
 @media (max-width: 768px) {
   .character-item {
     flex-direction: column;
@@ -778,10 +789,28 @@
     gap: var(--spacing-2);
   }
 
+  .character-item:nth-child(even) {
+    background: #f6f6f6;
+  }
+
   .character-main {
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-3);
+  }
+
+  .character-main,
+  .character-name {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .character-name {
+    text-align: center;
+  }
+
+  .character-progress {
+    margin-left: 0;
   }
 
   .character-edit-form {
@@ -792,8 +821,21 @@
   .character-actions {
     justify-content: center;
   }
-}
 
+  .drag-handle {
+    order: 1;
+  }
+  .character-progress {
+    order: 3;
+    width: 100%;
+  }
+  .character-name {
+    order: 2;
+  }
+  .character-actions {
+    margin-top: var(--spacing-4);
+  }
+}
 
 /* Drag and Drop стили */
 .drag-handle {
@@ -820,7 +862,7 @@
 .character-item.dragging {
   opacity: 0.8;
   transform: rotate(2deg);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
@@ -833,15 +875,5 @@
 .character-main {
   display: flex;
   align-items: center;
-  width: 100%;
 }
 
-.character-progress {
-  flex: 1;
-  margin-left: 8px;
-}
-
-.character-name {
-  flex: 2;
-  margin-left: 12px;
-}
