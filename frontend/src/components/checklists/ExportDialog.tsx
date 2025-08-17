@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import { exportApi } from '../../services/api';
-import { downloadFile, formatFileSize } from '../../utils/downloadFile';
+import { downloadFile, formatFileSize, isMobileDevice, isIOSSafari } from '../../utils/downloadFile';
 import { ApiError } from '../../types/common';
 
 interface ExportDialogProps {
@@ -27,16 +27,30 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
   // Мутация для экспорта
   const exportMutation = useMutation(exportApi.exportCharacter, {
-    onSuccess: (response) => {
-      // Используем утилиту для скачивания
-      downloadFile(response.data, response.fileName);
-      
-      // Показываем успешное сообщение
-      const fileSize = formatFileSize(response.data.size);
-      alert(`Файл "${response.fileName}" (${fileSize}) успешно скачан!`);
-      
-      // Закрываем диалог
-      onClose();
+    onSuccess: async (response) => {
+      try {
+        // Используем утилиту для скачивания
+        await downloadFile(response.data, response.fileName);
+        
+        // Показываем успешное сообщение с учетом типа устройства
+        const fileSize = formatFileSize(response.data.size);
+        
+        if (isMobileDevice()) {
+          if (isIOSSafari()) {
+            alert(`Файл "${response.fileName}" (${fileSize}) готов к скачиванию. На iOS Safari нажмите и удерживайте ссылку, затем выберите "Скачать связанный файл" или "Сохранить в Файлы".`);
+          } else {
+            alert(`Файл "${response.fileName}" (${fileSize}) готов к скачиванию. Если файл открылся в браузере, используйте меню браузера для сохранения файла.`);
+          }
+        } else {
+          alert(`Файл "${response.fileName}" (${fileSize}) успешно скачан!`);
+        }
+        
+        // Закрываем диалог
+        onClose();
+      } catch (error) {
+        console.error('Ошибка при скачивании файла:', error);
+        alert('Произошла ошибка при скачивании файла. Попробуйте еще раз.');
+      }
     },
     onError: (error: ApiError) => {
       console.error('Ошибка экспорта:', error);
