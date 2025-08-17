@@ -75,6 +75,10 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen && !exportMutation.isLoading) {
+        // Убираем фокус с активного элемента перед закрытием
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
         onClose();
       }
     };
@@ -100,6 +104,10 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   const handleOverlayClick = (e: React.MouseEvent) => {
     // Закрываем диалог только если кликнули по overlay, а не по самому диалогу
     if (e.target === e.currentTarget && !exportMutation.isLoading) {
+      // Убираем фокус с активного элемента перед закрытием
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       onClose();
     }
   };
