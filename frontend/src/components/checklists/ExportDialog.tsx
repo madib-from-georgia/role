@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
+import { Button, Radio, Checkbox } from "@gravity-ui/uikit";
 import { exportApi } from '../../services/api';
 import { downloadFile, formatFileSize, isMobileDevice, isIOSSafari } from '../../utils/downloadFile';
 import { ApiError } from '../../types/common';
@@ -31,20 +32,21 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       try {
         // Используем утилиту для скачивания
         await downloadFile(response.data, response.fileName);
-        
+
         // Показываем успешное сообщение с учетом типа устройства
         const fileSize = formatFileSize(response.data.size);
-        
+
         if (isMobileDevice()) {
           if (isIOSSafari()) {
-            alert(`Файл "${response.fileName}" (${fileSize}) готов к скачиванию. На iOS Safari нажмите и удерживайте ссылку, затем выберите "Скачать связанный файл" или "Сохранить в Файлы".`);
+            // Для iOS Safari не показываем alert, так как появится модальное окно с инструкциями
+            console.log(`Файл "${response.fileName}" (${fileSize}) готов к скачиванию в iOS Safari`);
           } else {
             alert(`Файл "${response.fileName}" (${fileSize}) готов к скачиванию. Если файл открылся в браузере, используйте меню браузера для сохранения файла.`);
           }
         } else {
           alert(`Файл "${response.fileName}" (${fileSize}) успешно скачан!`);
         }
-        
+
         // Закрываем диалог
         onClose();
       } catch (error) {
@@ -54,7 +56,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     },
     onError: (error: ApiError) => {
       console.error('Ошибка экспорта:', error);
-      
+
       // Более детальное сообщение об ошибке
       let errorMessage = 'Ошибка при экспорте файла.';
       if (error.response?.status === 403) {
@@ -64,7 +66,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       } else if (error.response?.status && error.response.status >= 500) {
         errorMessage = 'Внутренняя ошибка сервера. Попробуйте позже.';
       }
-      
+
       alert(errorMessage + ' Попробуйте еще раз.');
     }
   });
@@ -85,13 +87,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       <div className="export-dialog">
         <div className="export-dialog__header">
           <h2>Экспорт анализа персонажа</h2>
-          <button 
-            className="export-dialog__close"
+          <Button
             onClick={onClose}
             disabled={exportMutation.isLoading}
           >
             ×
-          </button>
+          </Button>
         </div>
 
         <div className="export-dialog__content">
@@ -108,8 +109,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <label className="export-label">Формат файла:</label>
               <div className="export-radio-group">
                 <label className="export-radio">
-                  <input
-                    type="radio"
+                  <Radio
                     value="pdf"
                     checked={format === 'pdf'}
                     onChange={(e) => setFormat(e.target.value as 'pdf')}
@@ -121,8 +121,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   </span>
                 </label>
                 <label className="export-radio">
-                  <input
-                    type="radio"
+                  <Radio
                     value="docx"
                     checked={format === 'docx'}
                     onChange={(e) => setFormat(e.target.value as 'docx')}
@@ -141,8 +140,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <label className="export-label">Детализация:</label>
               <div className="export-radio-group">
                 <label className="export-radio">
-                  <input
-                    type="radio"
+                  <Radio
                     value="detailed"
                     checked={exportType === 'detailed'}
                     onChange={(e) => setExportType(e.target.value as 'detailed')}
@@ -154,8 +152,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   </span>
                 </label>
                 <label className="export-radio">
-                  <input
-                    type="radio"
+                  <Radio
                     value="summary"
                     checked={exportType === 'summary'}
                     onChange={(e) => setExportType(e.target.value as 'summary')}
@@ -167,8 +164,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   </span>
                 </label>
                 <label className="export-radio">
-                  <input
-                    type="radio"
+                  <Radio
                     value="compact"
                     checked={exportType === 'compact'}
                     onChange={(e) => setExportType(e.target.value as 'compact')}
@@ -185,8 +181,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             {/* Дополнительные опции */}
             <div className="export-option-group">
               <label className="export-checkbox">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={includeEmptyResponses}
                   onChange={(e) => setIncludeEmptyResponses(e.target.checked)}
                   disabled={exportMutation.isLoading}
@@ -200,17 +195,18 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         </div>
 
         <div className="export-dialog__footer">
-          <button
-            className="btn btn-secondary"
+          <Button
             onClick={onClose}
             disabled={exportMutation.isLoading}
+            size="l"
           >
             Отмена
-          </button>
-          <button
-            className="btn btn-primary"
+          </Button>
+          <Button
             onClick={handleExport}
             disabled={exportMutation.isLoading}
+            view="action"
+            size="l"
           >
             {exportMutation.isLoading ? (
               <>
@@ -222,7 +218,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                 📄 Экспортировать {format.toUpperCase()}
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

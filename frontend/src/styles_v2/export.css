@@ -103,7 +103,7 @@
 .export-radio-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
 }
 
 .export-radio {
@@ -111,30 +111,19 @@
   align-items: flex-start;
   gap: 12px;
   cursor: pointer;
-  padding: 16px;
-  border: 2px solid #e2e8f0;
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   transition: all 0.2s;
+}
+
+.export-radio .g-radio {
+    margin-top: 4px;
 }
 
 .export-radio:hover {
   border-color: #cbd5e0;
   background: #f7fafc;
-}
-
-.export-radio input[type="radio"] {
-  margin-top: 2px;
-  accent-color: #3182ce;
-}
-
-.export-radio input[type="radio"]:checked + .export-radio-label {
-  color: #3182ce;
-}
-
-.export-radio input[type="radio"]:checked {
-  + .export-radio-label strong {
-    color: #3182ce;
-  }
 }
 
 .export-radio:has(input:checked) {
@@ -166,14 +155,6 @@
   padding: 12px;
   border-radius: 6px;
   transition: background-color 0.2s;
-}
-
-.export-checkbox:hover {
-  background: #f7fafc;
-}
-
-.export-checkbox input[type="checkbox"] {
-  accent-color: #3182ce;
 }
 
 .export-checkbox-label {
@@ -221,32 +202,28 @@
   .export-dialog-overlay {
     padding: 12px;
   }
-  
+
   .export-dialog {
     max-height: 95vh;
   }
-  
+
   .export-dialog__header,
   .export-dialog__content,
   .export-dialog__footer {
     padding-left: 16px;
     padding-right: 16px;
   }
-  
-  .export-radio-group {
-    gap: 8px;
-  }
-  
+
   .export-radio {
     padding: 12px;
   }
-  
+
   .header-actions {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
   }
-  
+
   .btn-export {
     justify-content: center;
   }

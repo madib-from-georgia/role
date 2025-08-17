@@ -91,106 +91,131 @@ const shareFile = async (blob: Blob, fileName: string): Promise<boolean> => {
   return false;
 };
 
+
 /**
- * Создает модальное окно с инструкциями для iOS Safari
+ * Конвертирует blob в data URL
  */
-const createDownloadModal = (url: string, fileName: string): void => {
-  // Создаем модальное окно
-  const modal = document.createElement('div');
-  modal.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-  `;
+const blobToDataURL = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
 
-  const content = document.createElement('div');
-  content.style.cssText = `
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  `;
-
-  const title = document.createElement('h3');
-  title.textContent = 'Скачивание файла';
-  title.style.cssText = `
-    margin: 0 0 16px 0;
-    color: #333;
-    font-size: 18px;
-  `;
-
-  const instruction = document.createElement('p');
-  instruction.innerHTML = `
-    Для скачивания файла <strong>${fileName}</strong>:<br><br>
-    1. Нажмите на ссылку ниже<br>
-    2. Нажмите и удерживайте файл<br>
-    3. Выберите "Скачать связанный файл" или "Сохранить в Файлы"
-  `;
-  instruction.style.cssText = `
-    margin: 0 0 20px 0;
-    color: #666;
-    line-height: 1.5;
-    font-size: 14px;
-  `;
-
-  const downloadLink = document.createElement('a');
-  downloadLink.href = url;
-  downloadLink.download = fileName;
-  downloadLink.textContent = `📄 ${fileName}`;
-  downloadLink.style.cssText = `
-    display: inline-block;
-    background: #007bff;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    margin-bottom: 16px;
-  `;
-
-  const closeButton = document.createElement('button');
-  closeButton.textContent = 'Закрыть';
-  closeButton.style.cssText = `
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-  `;
-
-  closeButton.onclick = () => {
-    modal.remove();
-    window.URL.revokeObjectURL(url);
-  };
-
-  content.appendChild(title);
-  content.appendChild(instruction);
-  content.appendChild(downloadLink);
-  content.appendChild(closeButton);
-  modal.appendChild(content);
-  document.body.appendChild(modal);
-
-  // Автоматически закрываем через 30 секунд
-  setTimeout(() => {
-    if (document.body.contains(modal)) {
-      modal.remove();
-      window.URL.revokeObjectURL(url);
-    }
-  }, 30000);
+/**
+ * Создает временную ссылку для скачивания в iOS Safari
+ */
+const createIOSDownloadLink = async (blob: Blob, fileName: string): Promise<void> => {
+  try {
+    // Конвертируем blob в data URL
+    const dataURL = await blobToDataURL(blob);
+    
+    // Создаем ссылку с data URL
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = fileName;
+    
+    // Добавляем атрибуты для лучшей совместимости
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+    
+    // Стилизуем ссылку
+    link.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      background: #007bff;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+    
+    link.textContent = `📄 Скачать ${fileName}`;
+    
+    // Создаем overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    `;
+    
+    // Добавляем инструкцию
+    const instruction = document.createElement('div');
+    instruction.innerHTML = `
+      <div style="
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        text-align: center;
+        max-width: 300px;
+        color: #333;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      ">
+        <h3 style="margin: 0 0 15px 0; font-size: 18px;">Скачивание файла</h3>
+        <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.4;">
+          Нажмите на кнопку ниже, затем в открывшемся окне используйте кнопку "Поделиться" и выберите "Сохранить в Файлы"
+        </p>
+      </div>
+    `;
+    
+    // Кнопка закрытия
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '✕ Закрыть';
+    closeButton.style.cssText = `
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+    
+    closeButton.onclick = () => {
+      overlay.remove();
+    };
+    
+    overlay.appendChild(instruction);
+    overlay.appendChild(link);
+    overlay.appendChild(closeButton);
+    document.body.appendChild(overlay);
+    
+    // Автоматически закрываем через 30 секунд
+    setTimeout(() => {
+      if (document.body.contains(overlay)) {
+        overlay.remove();
+      }
+    }, 30000);
+    
+  } catch (error) {
+    console.error('Ошибка создания data URL:', error);
+    // Fallback к стандартному методу
+    const url = window.URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setTimeout(() => window.URL.revokeObjectURL(url), 2000);
+  }
 };
 
 /**
@@ -203,28 +228,14 @@ const downloadFileMobile = async (blob: Blob, fileName: string) => {
     return;
   }
 
-  const url = window.URL.createObjectURL(blob);
-  
-  // Для iOS Safari используем специальный подход
+  // Для iOS Safari используем специальный подход с data URL
   if (isIOSSafari()) {
-    // Пробуем открыть в новом окне
-    const newWindow = window.open(url, '_blank');
-    
-    // Если окно не открылось (блокировщик попапов), показываем модальное окно
-    if (!newWindow) {
-      createDownloadModal(url, fileName);
-      return;
-    }
-    
-    // Очищаем URL через некоторое время
-    setTimeout(() => {
-      window.URL.revokeObjectURL(url);
-    }, 2000);
-    
+    await createIOSDownloadLink(blob, fileName);
     return;
   }
   
   // Для других мобильных браузеров пробуем стандартный подход
+  const url = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
   link.download = fileName;
