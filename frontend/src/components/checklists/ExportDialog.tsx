@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Button, Radio, Checkbox } from "@gravity-ui/uikit";
 import { exportApi } from '../../services/api';
@@ -71,6 +71,23 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     }
   });
 
+  // Обработка клавиши ESC для закрытия диалога
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen && !exportMutation.isLoading) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose, exportMutation.isLoading]);
+
   const handleExport = () => {
     exportMutation.mutate({
       character_id: characterId,
@@ -80,10 +97,17 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     });
   };
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    // Закрываем диалог только если кликнули по overlay, а не по самому диалогу
+    if (e.target === e.currentTarget && !exportMutation.isLoading) {
+      onClose();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="export-dialog-overlay">
+    <div className="export-dialog-overlay" onClick={handleOverlayClick}>
       <div className="export-dialog">
         <div className="export-dialog__header">
           <h2>Экспорт анализа персонажа</h2>
