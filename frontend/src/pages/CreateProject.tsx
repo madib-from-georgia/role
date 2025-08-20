@@ -64,7 +64,7 @@ const CreateProject: React.FC = () => {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Например: Анализ персонажей романа 'Война и мир'"
+                  placeholder="Например: Роль романа 'Война и мир'"
                 />
               </div>
 

@@ -20,7 +20,7 @@ class TestSettings:
         """Проверяет значения по умолчанию."""
         test_settings = Settings()
         
-        assert test_settings.app_name == "Анализ Персонажей"
+        assert test_settings.app_name == "Роль"
         assert test_settings.debug is False
         assert test_settings.version == "1.0.0"
         assert test_settings.jwt_algorithm == "HS256"

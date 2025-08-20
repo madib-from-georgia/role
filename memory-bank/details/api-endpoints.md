@@ -173,7 +173,7 @@ Authorization: Bearer <access_token>
         {
             "id": 1,
             "title": "Анализ Гамлета",
-            "description": "Детальный анализ персонажей трагедии Шекспира",
+            "description": "Детальный Роль трагедии Шекспира",
             "created_at": "2025-08-15T10:00:00Z",
             "updated_at": "2025-08-15T12:00:00Z",
             "text_count": 1,
@@ -194,7 +194,7 @@ Authorization: Bearer <access_token>
 ```json
 {
     "title": "Анализ Чайки",
-    "description": "Анализ персонажей пьесы А.П. Чехова"
+    "description": "Роль пьесы А.П. Чехова"
 }
 ```
 
@@ -203,7 +203,7 @@ Authorization: Bearer <access_token>
 {
     "id": 2,
     "title": "Анализ Чайки",
-    "description": "Анализ персонажей пьесы А.П. Чехова",
+    "description": "Роль пьесы А.П. Чехова",
     "created_at": "2025-08-15T13:00:00Z",
     "updated_at": "2025-08-15T13:00:00Z"
 }
@@ -217,7 +217,7 @@ Authorization: Bearer <access_token>
 {
     "id": 1,
     "title": "Анализ Гамлета",
-    "description": "Детальный анализ персонажей трагедии Шекспира",
+    "description": "Детальный Роль трагедии Шекспира",
     "created_at": "2025-08-15T10:00:00Z",
     "updated_at": "2025-08-15T12:00:00Z",
     "texts": [

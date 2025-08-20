@@ -47,7 +47,7 @@
 #### Основные компоненты:
 - `Header` - заголовок с навигацией
 - `ChangePasswordForm` - форма смены пароля
-- `CharacterAnalysis` - анализ персонажей
+- `CharacterAnalysis` - Роль
 
 ### 2.2 Integration тесты страниц
 

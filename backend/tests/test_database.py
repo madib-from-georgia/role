@@ -368,7 +368,7 @@ class TestAdvancedOperations:
         # 2. Создаем проект
         project_data = ProjectCreate(
             title="Анализ Анны Карениной",
-            description="Детальный анализ персонажей романа"
+            description="Детальный Роль романа"
         )
         created_project = project.create_with_owner(
             db, obj_in=project_data, owner_id=created_user.id

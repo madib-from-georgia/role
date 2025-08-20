@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
 
 # Создание FastAPI приложения
 app = FastAPI(
-    title="Анализ Персонажей API",
+    title="Роль API",
     description="API для детального анализа персонажей художественных произведений",
     version="1.0.0",
     docs_url="/docs",
@@ -87,7 +87,7 @@ app.include_router(security.router)
 @app.get("/")
 async def root():
     """Корневой endpoint."""
-    return {"message": "Анализ Персонажей API v1.0.0"}
+    return {"message": "Роль API v1.0.0"}
 
 
 @app.get("/health")

@@ -17,7 +17,7 @@ class TestHealthEndpoints:
         response = client.get("/")
         assert response.status_code == 200
         assert "message" in response.json()
-        assert "Анализ Персонажей API" in response.json()["message"]
+        assert "Роль API" in response.json()["message"]
     
     def test_health_endpoint(self):
         """Проверяет health check endpoint."""
@@ -199,7 +199,7 @@ class TestAPIDocumentation:
         response = client.get("/openapi.json")
         data = response.json()
         
-        assert data["info"]["title"] == "Анализ Персонажей API"
+        assert data["info"]["title"] == "Роль API"
         assert data["info"]["version"] == "1.0.0"
         assert "description" in data["info"]
 

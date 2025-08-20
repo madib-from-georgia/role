@@ -1,4 +1,4 @@
-# Makefile для backend приложения "Анализ Персонажей"
+# Makefile для backend приложения "Роль"
 
 # Переменные
 PYTHON = python3

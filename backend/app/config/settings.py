@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     """Настройки приложения с валидацией."""
     
     # Основные настройки
-    app_name: str = "Анализ Персонажей"
+    app_name: str = "Роль"
     debug: bool = False
     version: str = "1.0.0"
     
@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_use_tls: bool = True
     email_from: str = ""
-    email_from_name: str = "Анализ Персонажей"
+    email_from_name: str = "Роль"
     
     model_config = {
         "env_file": ".env",

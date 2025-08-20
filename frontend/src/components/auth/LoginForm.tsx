@@ -177,27 +177,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
       </form>
 
       <div className="auth-form-footer">
-        <p>
-          <Button
-            type="button"
-            onClick={onForgotPassword}
-            className="auth-link-btn"
-            disabled={isLoading}
-          >
-            Забыли пароль?
-          </Button>
-        </p>
-        <p>
-          Нет аккаунта?{' '}
-          <Button
-            type="button"
-            onClick={onSwitchToRegister}
-            className="auth-link-btn"
-            disabled={isLoading}
-          >
-            Зарегистрироваться
-          </Button>
-        </p>
+        Нет аккаунта?{' '}
+        <Button
+          type="button"
+          onClick={onSwitchToRegister}
+          className="auth-link-btn"
+          disabled={isLoading}
+        >
+          Зарегистрироваться
+        </Button>
+      </div>
+
+      <div className="auth-form-footer">
+        <Button
+          type="button"
+          onClick={onForgotPassword}
+          className="auth-link-btn"
+          disabled={isLoading}
+        >
+          Забыли пароль?
+        </Button>
       </div>
     </div>
   )
