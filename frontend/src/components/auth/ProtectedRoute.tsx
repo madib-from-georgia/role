@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
+import { Button } from "@gravity-ui/uikit";
 import { useAuth } from '../../contexts/AuthContext'
 import AuthModal from './AuthModal'
 
@@ -7,9 +8,9 @@ interface ProtectedRouteProps {
   redirectPath?: string
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  redirectPath 
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  redirectPath
 }) => {
   const { isAuthenticated, isLoading } = useAuth()
   const [showAuthModal, setShowAuthModal] = useState(false)
@@ -17,7 +18,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   const handleCloseAuthModal = useCallback(() => {
     setShowAuthModal(false)
-    // При закрытии модального окна без авторизации, 
+    // При закрытии модального окна без авторизации,
     // перенаправляем на главную страницу
     if (redirectPath) {
       window.location.href = redirectPath
@@ -69,17 +70,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               </svg>
             </div>
             <h2>Требуется авторизация</h2>
-            <p>Для доступа к этой странице необходимо войти в систему</p>
-            <button 
-              className="auth-required-btn"
+            <p>Доступ разрешен авторизованным пользователям</p>
+            <Button
+              size="l"
+              view="action"
               onClick={() => setShowAuthModal(true)}
             >
-              Войти в систему
-            </button>
+              Войти
+            </Button>
           </div>
         </div>
 
-        <AuthModal 
+        <AuthModal
           isOpen={showAuthModal && !isAuthenticated}
           onClose={handleCloseAuthModal}
         />

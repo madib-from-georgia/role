@@ -1947,22 +1947,6 @@ a:hover {
   margin-bottom: 24px;
 }
 
-.auth-required-btn {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 12px 24px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.auth-required-btn:hover {
-  background: #2563eb;
-}
-
 .auth-guard-loading {
   display: inline-flex;
   align-items: center;

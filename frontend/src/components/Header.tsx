@@ -171,9 +171,8 @@ const Header: React.FC = () => {
                 fallback={
                   <div className="mobile-nav-guest">
                     <Button
-                      view="normal"
+                      view="action"
                       size="l"
-                      className="mobile-nav-link auth-trigger"
                       onClick={() => {
                         handleCloseMobileMenu();
                         handleOpenAuthModal();
