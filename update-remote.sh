@@ -160,10 +160,10 @@ log "🔄 Начинаем обновление на сервере"
 log "📦 Проверка и обновление системных пакетов..."
 sudo apt update
 
-# Установка системных пакетов для WeasyPrint (если не установлены)
-log "📄 Проверка системных пакетов для WeasyPrint..."
-WEASY_PACKAGES="python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0"
-for package in $WEASY_PACKAGES; do
+# Установка системных пакетов для WeasyPrint и sqlite3 (если не установлены)
+log "📄 Проверка системных пакетов для WeasyPrint и sqlite3..."
+SYSTEM_PACKAGES="python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 sqlite3"
+for package in $SYSTEM_PACKAGES; do
     if ! dpkg -l | grep -q "^ii  $package "; then
         log "📦 Установка пакета: $package"
         sudo apt install -y $package

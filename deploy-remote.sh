@@ -176,7 +176,7 @@ sudo apt install -y nodejs
 
 # Установка дополнительных пакетов
 log "🔧 Установка дополнительных пакетов..."
-sudo apt install -y git nginx certbot python3-certbot-nginx curl build-essential htop
+sudo apt install -y git nginx certbot python3-certbot-nginx curl build-essential htop sqlite3
 
 # Установка системных пакетов для WeasyPrint
 log "📄 Установка системных пакетов для WeasyPrint..."
