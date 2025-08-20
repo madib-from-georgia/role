@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { debounce } from '../../utils/debounce'
+import { config } from '../../config'
 
 // API Types
 interface ProjectData {
@@ -27,12 +28,15 @@ const apiClient: AxiosInstance = axios.create({
 
 // Добавляем interceptor для автоматического добавления токена авторизации
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+  (requestConfig) => {
+    // Только если авторизация включена - добавляем токен
+    if (config.authEnabled) {
+      const token = localStorage.getItem('access_token')
+      if (token) {
+        requestConfig.headers.Authorization = `Bearer ${token}`
+      }
     }
-    return config
+    return requestConfig
   },
   (error) => {
     return Promise.reject(error)
@@ -43,6 +47,11 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Если авторизация отключена, не обрабатываем 401 ошибки
+    if (!config.authEnabled) {
+      return Promise.reject(error)
+    }
+
     const originalRequest = error.config
 
     // Если получили 401 и это не retry попытка
@@ -233,6 +242,12 @@ export const checklistVersionsApi = {
     api.get(`/api/checklist-versions/${checklistId}/entity-matches/${fromVersion}/${toVersion}`),
   previewMigration: (checklistId: number, fromVersion: number, toVersion: number) =>
     api.get(`/api/checklist-versions/${checklistId}/preview-migration/${fromVersion}/${toVersion}`)
+}
+
+// API для работы с профилем пользователя
+export const profileApi = {
+  updateProfile: (data: { username?: string; full_name?: string; email?: string }) =>
+    api.put('/api/auth/me', data),
 }
 
 export const exportApi = {

@@ -1,4 +1,5 @@
 import { User, LoginRequest, RegisterRequest, TokenResponse, AuthResponse } from '../../types/auth'
+import { profileApi } from './index'
 
 const API_BASE_URL = `${window.location.origin}/api`
 
@@ -84,14 +85,10 @@ class AuthApi {
     })
   }
 
-  async updateProfile(accessToken: string, data: Partial<User>): Promise<User> {
-    return this.request<User>('/auth/me', {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+  async updateProfile(_accessToken: string, data: Partial<User>): Promise<User> {
+    // Используем profileApi для консистентности с основным API
+    // accessToken уже включен в axios interceptor
+    return await profileApi.updateProfile(data) as User
   }
 
   async changePassword(

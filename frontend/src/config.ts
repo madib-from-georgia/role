@@ -1,7 +1,7 @@
 // Конфигурация приложения
 export const config = {
   // Авторизация
-  authEnabled: false, // Флаг для включения/отключения авторизации
+  authEnabled: true, // Флаг для включения/отключения авторизации
   
   // API
   apiBaseUrl: window.location.origin,

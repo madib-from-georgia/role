@@ -1,0 +1,102 @@
+/* Стили для модального окна скачивания файлов */
+.download-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.download-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: downloadModalFadeIn 0.3s ease-out;
+}
+
+.download-modal__content {
+  position: relative;
+  padding: 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.download-modal__instruction h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.download-modal__instruction p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.download-modal__close {
+  position: absolute !important;
+  top: 16px;
+  right: 16px;
+}
+
+/* Анимация появления модального окна */
+@keyframes downloadModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+  .download-modal-overlay {
+    padding: 15px;
+  }
+
+  .download-modal__content {
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .download-modal__instruction h3 {
+    font-size: 16px;
+  }
+
+  .download-modal__instruction p {
+    font-size: 13px;
+  }
+}
+
+/* Темная тема (если используется) */
+@media (prefers-color-scheme: dark) {
+  .download-modal {
+    background: #2d2d2d;
+    color: white;
+  }
+
+  .download-modal__instruction h3 {
+    color: #ffffff;
+  }
+
+  .download-modal__instruction p {
+    color: #cccccc;
+  }
+}

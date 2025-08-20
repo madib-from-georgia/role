@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { Button, TextInput, Select, Text, Card } from "@gravity-ui/uikit";
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { projectsApi } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
+import AuthModal from '../components/auth/AuthModal'
+import { config } from '../config'
 
 interface Project {
   id: string
@@ -24,9 +27,21 @@ const deleteProject = async (id: string): Promise<void> => {
 const ProjectList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterValue, setFilterValue] = useState('Все')
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
   const queryClient = useQueryClient()
-  const { data: projects, isLoading, error } = useQuery<Project[]>('projects', fetchProjects)
+  
+  // Делаем запрос только если пользователь авторизован или авторизация отключена
+  const shouldFetchProjects = !config.authEnabled || isAuthenticated
+  
+  const { data: projects, isLoading, error } = useQuery<Project[]>(
+    'projects', 
+    fetchProjects,
+    {
+      enabled: shouldFetchProjects && !authLoading
+    }
+  )
 
   const deleteMutation = useMutation(deleteProject, {
     onSuccess: () => {
@@ -93,13 +108,48 @@ const ProjectList: React.FC = () => {
     return filtered
   }, [projects, searchQuery, filterValue])
 
-  if (isLoading) {
+  // Показываем загрузку если загружается авторизация или проекты
+  if (authLoading || isLoading) {
     return (
       <div className="container">
         <div className="loading">
           <div className="spinner"></div>
         </div>
       </div>
+    )
+  }
+
+  // Если авторизация включена и пользователь не авторизован
+  if (config.authEnabled && !isAuthenticated) {
+    return (
+      <>
+        <div className="container">
+          <div className="empty-state">
+            <div className="empty-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="empty-title">Добро пожаловать в Роль!</h3>
+            <p className="empty-description">
+              Система анализа персонажей для актеров и режиссеров. 
+              Войдите в систему чтобы начать работу с проектами.
+            </p>
+            <Button 
+              view='action' 
+              size='l'
+              onClick={() => setShowAuthModal(true)}
+            >
+              Войти в систему
+            </Button>
+          </div>
+        </div>
+        
+        <AuthModal 
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+        />
+      </>
     )
   }
 

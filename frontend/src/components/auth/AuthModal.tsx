@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react'
+import { Button } from "@gravity-ui/uikit";
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 
@@ -8,10 +9,10 @@ interface AuthModalProps {
   initialMode?: 'login' | 'register'
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  initialMode = 'login' 
+const AuthModal: React.FC<AuthModalProps> = ({
+  isOpen,
+  onClose,
+  initialMode = 'login'
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode)
 
@@ -28,24 +29,22 @@ const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div className="auth-modal-overlay" onClick={onClose} data-testid="auth-modal-overlay">
       <div className="auth-modal" onClick={(e) => e.stopPropagation()} data-testid="auth-modal-content">
-        <button 
+        <Button
           className="auth-modal-close"
           onClick={onClose}
-          type="button"
-          aria-label="Close modal"
         >
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </button>
+        </Button>
 
         {mode === 'login' ? (
-          <LoginForm 
+          <LoginForm
             onSuccess={handleSuccess}
             onSwitchToRegister={handleSwitchMode}
           />
         ) : (
-          <RegisterForm 
+          <RegisterForm
             onSuccess={handleSuccess}
             onSwitchToLogin={handleSwitchMode}
           />

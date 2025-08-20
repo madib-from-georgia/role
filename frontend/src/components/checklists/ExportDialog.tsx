@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
-import { Button, Radio, Checkbox } from "@gravity-ui/uikit";
+import { Button, Radio, Checkbox, Icon } from "@gravity-ui/uikit";
+import { Xmark } from "@gravity-ui/icons";
 import { exportApi } from '../../services/api';
 import { downloadFile, formatFileSize, isMobileDevice, isIOSSafari } from '../../utils/downloadFile';
 import { ApiError } from '../../types/common';
@@ -43,8 +44,6 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           } else {
             alert(`Файл "${response.fileName}" (${fileSize}) готов к скачиванию. Если файл открылся в браузере, используйте меню браузера для сохранения файла.`);
           }
-        } else {
-          alert(`Файл "${response.fileName}" (${fileSize}) успешно скачан!`);
         }
 
         // Закрываем диалог
@@ -123,7 +122,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             onClick={onClose}
             disabled={exportMutation.isLoading}
           >
-            ×
+            <Icon data={Xmark} />
           </Button>
         </div>
 

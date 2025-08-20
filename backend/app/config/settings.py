@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     version: str = "1.0.0"
     
     # Авторизация
-    auth_enabled: bool = False  # Флаг для включения/отключения авторизации
+    auth_enabled: bool = True  # Флаг для включения/отключения авторизации
     
     # База данных
     database_url: str = "sqlite:///./database.db"

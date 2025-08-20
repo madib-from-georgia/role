@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button, TextInput } from "@gravity-ui/uikit";
 import { useAuth } from '../../contexts/AuthContext'
 import { RegisterRequest } from '../../types/auth'
 import { isValidEmail, validatePassword } from '../../utils/errorHandling'
@@ -86,7 +87,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    
+
     if (name === 'confirmPassword') {
       setConfirmPassword(value)
     } else {
@@ -103,17 +104,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
         [name]: undefined
       }))
     }
-    
+
     // Очищаем общую ошибку если пользователь начал изменять данные
     if (error) {
       setError(null)
     }
   }
 
-  const isFormValid = 
-    formData.email && 
-    formData.username && 
-    formData.password && 
+  const isFormValid =
+    formData.email &&
+    formData.username &&
+    formData.password &&
     confirmPassword &&
     formData.password === confirmPassword &&
     formData.password.length >= 8 &&
@@ -138,13 +139,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
 
         <div className="form-group">
           <label htmlFor="email">Email *</label>
-          <input
+          <TextInput
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
             disabled={isLoading}
             placeholder="example@email.com"
             className={fieldErrors.email ? 'error' : ''}
@@ -156,16 +156,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
 
         <div className="form-group">
           <label htmlFor="username">Имя пользователя *</label>
-          <input
+          <TextInput
             type="text"
             id="username"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            required
             disabled={isLoading}
             placeholder="Минимум 3 символа"
-            minLength={3}
             className={fieldErrors.username ? 'error' : ''}
           />
           {fieldErrors.username && (
@@ -175,7 +173,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
 
         <div className="form-group">
           <label htmlFor="full_name">Полное имя</label>
-          <input
+          <TextInput
             type="text"
             id="full_name"
             name="full_name"
@@ -188,16 +186,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
 
         <div className="form-group">
           <label htmlFor="password">Пароль *</label>
-          <input
+          <TextInput
             type="password"
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            required
             disabled={isLoading}
             placeholder="Минимум 8 символов"
-            minLength={8}
             className={fieldErrors.password ? 'error' : ''}
           />
           {fieldErrors.password && (
@@ -207,16 +203,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
 
         <div className="form-group">
           <label htmlFor="confirmPassword">Подтвердите пароль *</label>
-          <input
+          <TextInput
             type="password"
             id="confirmPassword"
             name="confirmPassword"
             value={confirmPassword}
             onChange={handleChange}
-            required
             disabled={isLoading}
             placeholder="Повторите пароль"
-            minLength={8}
             className={fieldErrors.confirmPassword ? 'error' : ''}
           />
           {fieldErrors.confirmPassword && (
@@ -224,8 +218,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
           )}
         </div>
 
-        <button 
-          type="submit" 
+        <Button
+          type="submit"
           className="auth-submit-btn"
           disabled={isLoading || !isFormValid}
         >
@@ -240,20 +234,20 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
           ) : (
             'Зарегистрироваться'
           )}
-        </button>
+        </Button>
       </form>
 
       <div className="auth-form-footer">
         <p>
           Уже есть аккаунт?{' '}
-          <button 
-            type="button" 
+          <Button
+            type="button"
             onClick={onSwitchToLogin}
             className="auth-link-btn"
             disabled={isLoading}
           >
             Войти
-          </button>
+          </Button>
         </p>
       </div>
     </div>

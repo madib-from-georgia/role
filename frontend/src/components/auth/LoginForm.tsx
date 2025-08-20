@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button, TextInput } from "@gravity-ui/uikit";
 import { useAuth } from '../../contexts/AuthContext'
 import { isValidEmail } from '../../utils/errorHandling'
 
@@ -26,17 +27,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
 
     // Валидация перед отправкой
     const newFieldErrors: {email?: string, password?: string} = {}
-    
+
     if (!formData.email) {
       newFieldErrors.email = 'Email обязателен для заполнения'
     } else if (!isValidEmail(formData.email)) {
       newFieldErrors.email = 'Неверный формат email адреса'
     }
-    
+
     if (!formData.password) {
       newFieldErrors.password = 'Пароль обязателен для заполнения'
     }
-    
+
     if (Object.keys(newFieldErrors).length > 0) {
       setFieldErrors(newFieldErrors)
       return
@@ -49,7 +50,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка входа в систему'
       setError(errorMessage)
-      
+
       // Показываем предложение регистрации если пользователь не найден
       if (errorMessage.includes('не найден') || errorMessage.includes('Проверьте email или зарегистрируйтесь')) {
         setShowRegistrationSuggestion(true)
@@ -61,12 +62,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
-    
+
     // Очищаем ошибки при изменении поля
     if (fieldErrors[name as keyof typeof fieldErrors]) {
       setFieldErrors(prev => ({
@@ -74,7 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
         [name]: undefined
       }))
     }
-    
+
     // Очищаем общую ошибку если пользователь начал изменять данные
     if (error) {
       setError(null)
@@ -107,8 +108,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
             <div>
               <p><strong>Нет аккаунта?</strong></p>
               <p>Похоже, пользователь с таким email не зарегистрирован.</p>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={onSwitchToRegister}
                 className="auth-suggestion-btn"
                 disabled={isLoading}
@@ -121,13 +122,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
 
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input
+          <TextInput
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
             disabled={isLoading}
             placeholder="example@email.com"
             autoComplete="new-email"
@@ -140,16 +140,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
 
         <div className="form-group">
           <label htmlFor="password">Пароль</label>
-          <input
+          <TextInput
             type="password"
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            required
             disabled={isLoading}
             placeholder="Введите пароль"
-            minLength={8}
             autoComplete="new-password"
             className={fieldErrors.password ? 'error' : ''}
           />
@@ -158,8 +156,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           )}
         </div>
 
-        <button 
-          type="submit" 
+        <Button
+          type="submit"
           className="auth-submit-btn"
           disabled={isLoading || !formData.email || !formData.password}
         >
@@ -174,20 +172,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           ) : (
             'Войти'
           )}
-        </button>
+        </Button>
       </form>
 
       <div className="auth-form-footer">
         <p>
           Нет аккаунта?{' '}
-          <button 
-            type="button" 
+          <Button
+            type="button"
             onClick={onSwitchToRegister}
             className="auth-link-btn"
             disabled={isLoading}
           >
             Зарегистрироваться
-          </button>
+          </Button>
         </p>
       </div>
     </div>

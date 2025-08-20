@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { AuthProvider } from './contexts/AuthContext'
+import { DownloadProvider } from './contexts/DownloadContext'
 import Header from './components/Header'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import ProjectList from './pages/ProjectList'
@@ -32,73 +33,75 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router>
-          <div className="app">
-            <Header />
-            
-            <main className="main-content">
-              <Routes>
-                <Route path="/" element={<ProjectList />} />
-                <Route 
-                  path="/create-project" 
-                  element={
-                    <ProtectedRoute>
-                      <CreateProject />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/projects/new" 
-                  element={
-                    <ProtectedRoute>
-                      <CreateProject />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/projects/:id" 
-                  element={
-                    <ProtectedRoute>
-                      <ProjectDetail />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route 
-                  path="/characters/:characterId/checklists" 
-                  element={
-                    <ProtectedRoute>
-                      <CharacterChecklists />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route
-                  path="/characters/:characterId/checklists/:checklistSlug"
-                  element={
-                    <ProtectedRoute>
-                      <CharacterChecklistDetail />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/characters/:characterId/checklists/:checklistSlug/:questionExternalId"
-                  element={
-                    <ProtectedRoute>
-                      <CharacterChecklistDetail />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </main>
-          </div>
-        </Router>
+        <DownloadProvider>
+          <Router>
+            <div className="app">
+              <Header />
+              
+              <main className="main-content">
+                <Routes>
+                  <Route path="/" element={<ProjectList />} />
+                  <Route
+                    path="/create-project"
+                    element={
+                      <ProtectedRoute>
+                        <CreateProject />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/projects/new"
+                    element={
+                      <ProtectedRoute>
+                        <CreateProject />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/projects/:id"
+                    element={
+                      <ProtectedRoute>
+                        <ProjectDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/characters/:characterId/checklists"
+                    element={
+                      <ProtectedRoute>
+                        <CharacterChecklists />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/characters/:characterId/checklists/:checklistSlug"
+                    element={
+                      <ProtectedRoute>
+                        <CharacterChecklistDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/characters/:characterId/checklists/:checklistSlug/:questionExternalId"
+                    element={
+                      <ProtectedRoute>
+                        <CharacterChecklistDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </main>
+            </div>
+          </Router>
+        </DownloadProvider>
       </AuthProvider>
     </QueryClientProvider>
   )
