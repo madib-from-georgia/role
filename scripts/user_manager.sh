@@ -69,9 +69,10 @@ show_menu() {
     echo "3. Удалить пользователя"
     echo "4. Изменить статус пользователя (активировать/деактивировать)"
     echo "5. Показать проекты пользователя"
-    echo "6. Выход"
+    echo "6. Сбросить пароль пользователя"
+    echo "7. Выход"
     echo
-    echo -n "Введите номер действия [1-6]: "
+    echo -n "Введите номер действия [1-7]: "
 }
 
 # Функция для показа всех пользователей
@@ -116,6 +117,9 @@ show_all_users() {
     echo -e "${GREEN}Всего пользователей: $total_users${NC}"
     echo -e "${GREEN}Активных: $active_users${NC}"
     echo -e "${RED}Неактивных: $inactive_users${NC}"
+    echo
+    echo -e "${YELLOW}Примечание: Пароли хранятся в зашифрованном виде и не отображаются в списке.${NC}"
+    echo -e "${YELLOW}Для сброса пароля пользователя используйте пункт меню 6.${NC}"
     echo
 }
 
@@ -523,6 +527,164 @@ show_user_projects() {
     echo
 }
 
+# Функция для сброса пароля пользователя
+reset_user_password() {
+    echo -e "${GREEN}=== СБРОС ПАРОЛЯ ПОЛЬЗОВАТЕЛЯ ===${NC}"
+    echo
+    
+    # Запрашиваем идентификатор пользователя
+    while true; do
+        echo -n "Введите ID или email пользователя: "
+        read user_identifier
+        
+        if [[ -z "$user_identifier" ]]; then
+            echo -e "${RED}Ошибка: Идентификатор не может быть пустым${NC}"
+            continue
+        fi
+        
+        # Ищем пользователя
+        local user_info
+        if [[ "$user_identifier" =~ ^[0-9]+$ ]]; then
+            user_info=$(sqlite3 -separator $'\t' "$DB_PATH" "SELECT id, email, username, full_name, is_active FROM users WHERE id = $user_identifier;")
+        else
+            user_info=$(sqlite3 -separator $'\t' "$DB_PATH" "SELECT id, email, username, full_name, is_active FROM users WHERE email = '$user_identifier';")
+        fi
+        
+        if [[ -z "$user_info" ]]; then
+            echo -e "${RED}Ошибка: Пользователь не найден${NC}"
+            continue
+        fi
+        
+        IFS=$'\t' read -r user_id user_email user_username user_full_name is_active <<< "$user_info"
+        break
+    done
+    
+    # Показываем информацию о пользователе
+    echo -e "${BLUE}Информация о пользователе:${NC}"
+    echo "ID: $user_id"
+    echo "Email: $user_email"
+    echo "Username: $user_username"
+    echo "Полное имя: $user_full_name"
+    
+    if [[ "$is_active" == "1" ]]; then
+        echo -e "Статус: ${GREEN}Активен${NC}"
+    else
+        echo -e "Статус: ${RED}Неактивен${NC}"
+    fi
+    echo
+    
+    # Запрашиваем новый пароль
+    while true; do
+        echo -n "Введите новый пароль для пользователя: "
+        read -s new_password
+        echo
+        
+        if [[ -z "$new_password" ]]; then
+            echo -e "${RED}Ошибка: Пароль не может быть пустым${NC}"
+            continue
+        fi
+        
+        if [[ ${#new_password} -lt 6 ]]; then
+            echo -e "${RED}Ошибка: Пароль должен содержать минимум 6 символов${NC}"
+            continue
+        fi
+        
+        echo -n "Подтвердите новый пароль: "
+        read -s password_confirm
+        echo
+        
+        if [[ "$new_password" != "$password_confirm" ]]; then
+            echo -e "${RED}Ошибка: Пароли не совпадают${NC}"
+            continue
+        fi
+        
+        break
+    done
+    
+    # Запрашиваем подтверждение
+    while true; do
+        echo -e "${YELLOW}Вы действительно хотите сбросить пароль для пользователя '$user_username'? [y/n]: ${NC}"
+        read confirm
+        case $confirm in
+            [Yy]* ) break;;
+            [Nn]* ) echo -e "${YELLOW}Отмена сброса пароля${NC}"; return 0;;
+            * ) echo -e "${YELLOW}Пожалуйста, введите y или n${NC}";;
+        esac
+    done
+    
+    # Генерируем хеш нового пароля
+    echo -e "${YELLOW}Обновление пароля для пользователя '$user_username'...${NC}"
+    
+    # Создаем временный Python скрипт для хеширования пароля
+    local temp_script=$(mktemp)
+    cat > "$temp_script" << EOF
+import bcrypt
+import sys
+import sqlite3
+from datetime import datetime
+
+new_password = sys.argv[1]
+user_id = int(sys.argv[2])
+
+# Хешируем новый пароль
+password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt(rounds=12)).decode('utf-8')
+
+# Подключаемся к базе данных
+conn = sqlite3.connect('$DB_PATH')
+cursor = conn.cursor()
+
+try:
+    # Обновляем пароль пользователя
+    cursor.execute("""
+        UPDATE users
+        SET password_hash = ?, updated_at = ?
+        WHERE id = ?
+    """, (password_hash, datetime.utcnow(), user_id))
+    
+    # Отзываем все токены пользователя для безопасности
+    cursor.execute("UPDATE user_tokens SET is_revoked = 1 WHERE user_id = ?", (user_id,))
+    
+    conn.commit()
+    print("SUCCESS")
+    
+except Exception as e:
+    print(f"ERROR:{str(e)}")
+    
+finally:
+    conn.close()
+EOF
+    
+    # Проверяем наличие Python и bcrypt
+    if ! python3 -c "import bcrypt" 2>/dev/null; then
+        echo -e "${RED}Ошибка: Модуль bcrypt не установлен${NC}"
+        echo -e "${YELLOW}Установите bcrypt: pip install bcrypt${NC}"
+        rm "$temp_script"
+        return 1
+    fi
+    
+    # Выполняем скрипт
+    local result=$(python3 "$temp_script" "$new_password" "$user_id")
+    rm "$temp_script"
+    
+    if [[ "$result" == "SUCCESS" ]]; then
+        echo -e "${GREEN}Пароль для пользователя '$user_username' успешно обновлен${NC}"
+        echo -e "${GREEN}Все активные сессии пользователя завершены для безопасности${NC}"
+        echo
+        echo -e "${BLUE}Новые данные для входа:${NC}"
+        echo "Email: $user_email"
+        echo "Username: $user_username"
+        echo -e "Новый пароль: ${YELLOW}$new_password${NC}"
+        echo
+        echo -e "${YELLOW}Сохраните эти данные в безопасном месте!${NC}"
+    else
+        local error_msg=${result#ERROR:}
+        echo -e "${RED}Ошибка при обновлении пароля: $error_msg${NC}"
+        return 1
+    fi
+    
+    echo
+}
+
 # Функция для паузы
 pause() {
     echo
@@ -567,11 +729,15 @@ main() {
                 pause
                 ;;
             6)
+                reset_user_password
+                pause
+                ;;
+            7)
                 echo -e "${GREEN}Выход из программы${NC}"
                 exit 0
                 ;;
             *)
-                echo -e "${RED}Неверный выбор. Пожалуйста, введите число от 1 до 6${NC}"
+                echo -e "${RED}Неверный выбор. Пожалуйста, введите число от 1 до 7${NC}"
                 pause
                 ;;
         esac
