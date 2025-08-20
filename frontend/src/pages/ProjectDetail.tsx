@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { Button, Progress, Text, TextInput, Select } from "@gravity-ui/uikit";
 import {
@@ -730,9 +730,9 @@ const ProjectDetail: React.FC = () => {
           <p className="empty-description">
             Проект с указанным ID не существует
           </p>
-          <Link to="/" className="btn btn-primary">
+          <Button href="/">
             Вернуться к проектам
-          </Link>
+          </Button>
         </div>
       </div>
     );
