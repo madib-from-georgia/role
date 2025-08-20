@@ -8,13 +8,15 @@ from sqlalchemy.orm import Session
 from app.dependencies.auth import get_db, get_current_active_user
 from app.services.auth import auth_service
 from app.schemas.auth import (
-    LoginRequest, 
-    RegisterRequest, 
-    RefreshTokenRequest, 
+    LoginRequest,
+    RegisterRequest,
+    RefreshTokenRequest,
     AuthResponse,
     UserProfileResponse,
     ChangePasswordRequest,
-    UpdateProfileRequest
+    UpdateProfileRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest
 )
 from app.schemas.token import TokenResponse
 from app.schemas.user import UserCreate, User
@@ -283,3 +285,112 @@ async def verify_token(
         message=f"Токен валиден для пользователя {current_user.username}",
         success=True
     )
+
+
+@router.post("/forgot-password", response_model=AuthResponse)
+async def forgot_password(
+    request: ForgotPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Запрос на сброс пароля.
+    
+    - **email**: Email пользователя
+    
+    Отправляет email с ссылкой для сброса пароля.
+    """
+    try:
+        # Ищем пользователя по email
+        user = auth_service.get_user_by_email(db, email=request.email)
+        
+        if not user:
+            # Не раскрываем информацию о том, существует ли пользователь
+            return AuthResponse(
+                message="Если пользователь с таким email существует, на него будет отправлено письмо с инструкциями по сбросу пароля.",
+                success=True
+            )
+        
+        if not user.is_active:
+            return AuthResponse(
+                message="Если пользователь с таким email существует, на него будет отправлено письмо с инструкциями по сбросу пароля.",
+                success=True
+            )
+        
+        # Создаем токен для сброса пароля
+        reset_token = auth_service.create_password_reset_token(db, user)
+        
+        # Отправляем email
+        from app.services.email import email_service
+        email_sent = email_service.send_password_reset_email(
+            to_email=user.email,
+            reset_token=reset_token,
+            user_name=user.full_name or user.username
+        )
+        
+        if not email_sent:
+            # Логируем ошибку, но не показываем пользователю
+            print(f"Failed to send password reset email to {user.email}")
+        
+        return AuthResponse(
+            message="Если пользователь с таким email существует, на него будет отправлено письмо с инструкциями по сбросу пароля.",
+            success=True
+        )
+        
+    except Exception as e:
+        print(f"Forgot password error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Ошибка при обработке запроса на сброс пароля"
+        )
+
+
+@router.post("/reset-password", response_model=AuthResponse)
+async def reset_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Сброс пароля по токену.
+    
+    - **token**: Токен для сброса пароля из email
+    - **new_password**: Новый пароль (минимум 8 символов)
+    
+    Устанавливает новый пароль и отзывает все токены пользователя.
+    """
+    try:
+        # Сбрасываем пароль
+        success = auth_service.reset_password_with_token(
+            db,
+            token=request.token,
+            new_password=request.new_password
+        )
+        
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Неверный или истекший токен сброса пароля"
+            )
+        
+        # Получаем пользователя для отправки уведомления
+        user = auth_service.verify_password_reset_token(db, request.token)
+        if user:
+            # Отправляем уведомление об успешной смене пароля
+            from app.services.email import email_service
+            email_service.send_password_changed_notification(
+                to_email=user.email,
+                user_name=user.full_name or user.username
+            )
+        
+        return AuthResponse(
+            message="Пароль успешно изменен. Войдите в систему с новым паролем.",
+            success=True
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Reset password error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Ошибка при сбросе пароля"
+        )

@@ -201,6 +201,68 @@ class AuthService:
     def cleanup_expired_tokens(self, db: Session) -> int:
         """Очистка истекших токенов."""
         return token_crud.cleanup_expired_tokens(db)
+    
+    def create_password_reset_token(self, db: Session, user: User) -> str:
+        """Создание токена для сброса пароля."""
+        from app.services.email import email_service
+        
+        # Отзываем все старые токены сброса пароля для пользователя
+        token_crud.revoke_user_tokens_by_type(db, user_id=user.id, token_type="password_reset")
+        
+        # Генерируем новый токен
+        reset_token = email_service.generate_reset_token()
+        token_hash = self.get_token_hash(reset_token)
+        
+        # Токен действителен 1 час
+        expires_at = datetime.utcnow() + timedelta(hours=1)
+        
+        # Сохраняем токен в БД
+        token_data = {
+            "user_id": user.id,
+            "token_hash": token_hash,
+            "token_type": "password_reset",
+            "expires_at": expires_at
+        }
+        token_crud.create(db, obj_in=token_data)
+        
+        return reset_token
+    
+    def verify_password_reset_token(self, db: Session, token: str) -> Optional[User]:
+        """Проверка токена сброса пароля и получение пользователя."""
+        token_hash = self.get_token_hash(token)
+        
+        # Проверяем, что токен существует и не истек
+        db_token = token_crud.get_valid_token_by_hash(db, token_hash=token_hash, token_type="password_reset")
+        if not db_token:
+            return None
+        
+        # Получаем пользователя
+        user = user_crud.get(db, id=db_token.user_id)
+        if not user or not user_crud.is_active(user):
+            return None
+        
+        return user
+    
+    def reset_password_with_token(self, db: Session, token: str, new_password: str) -> bool:
+        """Сброс пароля по токену."""
+        # Проверяем токен и получаем пользователя
+        user = self.verify_password_reset_token(db, token)
+        if not user:
+            return False
+        
+        # Обновляем пароль
+        from app.schemas.user import UserUpdate
+        user_update = UserUpdate(password=new_password)
+        user_crud.update(db, db_obj=user, obj_in=user_update)
+        
+        # Отзываем токен сброса пароля
+        token_hash = self.get_token_hash(token)
+        token_crud.revoke_token_by_hash(db, token_hash=token_hash)
+        
+        # Отзываем все JWT токены пользователя для безопасности
+        token_crud.revoke_all_user_tokens(db, user_id=user.id)
+        
+        return True
 
 
 # Глобальный экземпляр сервиса

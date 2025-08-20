@@ -49,6 +49,15 @@ class Settings(BaseSettings):
     nlp_model_path: str = "./models"
     nlp_timeout_seconds: int = 300
     
+    # Email настройки
+    smtp_server: str = "smtp.gmail.com"
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_use_tls: bool = True
+    email_from: str = ""
+    email_from_name: str = "Анализ Персонажей"
+    
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",

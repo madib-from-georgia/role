@@ -136,5 +136,38 @@ class CRUDToken(CRUDBase[UserToken, TokenCreate, TokenUpdate]):
             .first()
         )
 
+    def revoke_user_tokens_by_type(
+        self, db: Session, *, user_id: int, token_type: str
+    ) -> int:
+        """Отзыв всех токенов пользователя определенного типа."""
+        return self.revoke_all_user_tokens(db, user_id=user_id, token_type=token_type)
+
+    def get_valid_token_by_hash(
+        self, db: Session, *, token_hash: str, token_type: str = None
+    ) -> Optional[UserToken]:
+        """Получение валидного токена по хешу и типу."""
+        query = (
+            db.query(UserToken)
+            .filter(UserToken.token_hash == token_hash)
+            .filter(UserToken.is_revoked == False)
+            .filter(UserToken.expires_at > datetime.utcnow())
+        )
+        
+        if token_type:
+            query = query.filter(UserToken.token_type == token_type)
+        
+        return query.first()
+
+    def revoke_token_by_hash(self, db: Session, *, token_hash: str) -> bool:
+        """Отзыв токена по хешу."""
+        token = self.get_by_token_hash(db, token_hash=token_hash)
+        if not token:
+            return False
+        
+        token.is_revoked = True
+        db.add(token)
+        db.commit()
+        return True
+
 
 token = CRUDToken(UserToken)

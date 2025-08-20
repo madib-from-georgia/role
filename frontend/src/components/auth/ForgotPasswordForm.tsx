@@ -1,42 +1,33 @@
 import React, { useState } from 'react'
 import { Button, TextInput } from "@gravity-ui/uikit";
-import { useAuth } from '../../contexts/AuthContext'
 import { isValidEmail } from '../../utils/errorHandling'
 
-interface LoginFormProps {
+interface ForgotPasswordFormProps {
   onSuccess?: () => void
-  onSwitchToRegister?: () => void
-  onForgotPassword?: () => void
+  onBackToLogin?: () => void
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, onForgotPassword }) => {
-  const { login } = useAuth()
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSuccess, onBackToLogin }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: ''
   })
   const [error, setError] = useState<string | null>(null)
-  const [fieldErrors, setFieldErrors] = useState<{email?: string, password?: string}>({})
-  const [showRegistrationSuggestion, setShowRegistrationSuggestion] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<{email?: string}>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setFieldErrors({})
-    setShowRegistrationSuggestion(false)
 
     // Валидация перед отправкой
-    const newFieldErrors: {email?: string, password?: string} = {}
+    const newFieldErrors: {email?: string} = {}
 
     if (!formData.email) {
       newFieldErrors.email = 'Email обязателен для заполнения'
     } else if (!isValidEmail(formData.email)) {
       newFieldErrors.email = 'Неверный формат email адреса'
-    }
-
-    if (!formData.password) {
-      newFieldErrors.password = 'Пароль обязателен для заполнения'
     }
 
     if (Object.keys(newFieldErrors).length > 0) {
@@ -46,16 +37,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
 
     try {
       setIsLoading(true)
-      await login(formData.email, formData.password)
+      
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Ошибка при отправке запроса')
+      }
+
+      setIsSuccess(true)
       onSuccess?.()
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка входа в систему'
+      const errorMessage = err instanceof Error ? err.message : 'Ошибка при отправке запроса'
       setError(errorMessage)
-
-      // Показываем предложение регистрации если пользователь не найден
-      if (errorMessage.includes('не найден') || errorMessage.includes('Проверьте email или зарегистрируйтесь')) {
-        setShowRegistrationSuggestion(true)
-      }
     } finally {
       setIsLoading(false)
     }
@@ -80,15 +81,50 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
     // Очищаем общую ошибку если пользователь начал изменять данные
     if (error) {
       setError(null)
-      setShowRegistrationSuggestion(false)
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="auth-form">
+        <div className="auth-form-header">
+          <h2>Письмо отправлено</h2>
+          <p>Проверьте вашу электронную почту</p>
+        </div>
+
+        <div className="auth-form-content">
+          <div className="auth-success">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p><strong>Инструкции отправлены</strong></p>
+              <p>Если пользователь с email <strong>{formData.email}</strong> существует, на него будет отправлено письмо с инструкциями по сбросу пароля.</p>
+              <p>Проверьте папку "Спам", если письмо не пришло в течение нескольких минут.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="auth-form-footer">
+          <p>
+            <Button
+              type="button"
+              onClick={onBackToLogin}
+              className="auth-link-btn"
+            >
+              ← Вернуться к входу
+            </Button>
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="auth-form">
       <div className="auth-form-header">
-        <h2>Авторизация</h2>
-        <p>Войдите в свой аккаунт для доступа к проектам</p>
+        <h2>Забыли пароль?</h2>
+        <p>Введите ваш email для получения инструкций по сбросу пароля</p>
       </div>
 
       <form onSubmit={handleSubmit} className="auth-form-content" autoComplete="off">
@@ -98,26 +134,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {error}
-          </div>
-        )}
-
-        {showRegistrationSuggestion && (
-          <div className="auth-suggestion">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div>
-              <p><strong>Нет аккаунта?</strong></p>
-              <p>Похоже, пользователь с таким email не зарегистрирован.</p>
-              <button
-                type="button"
-                onClick={onSwitchToRegister}
-                className="auth-suggestion-btn"
-                disabled={isLoading}
-              >
-                Зарегистрироваться сейчас
-              </button>
-            </div>
           </div>
         )}
 
@@ -131,7 +147,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
             onChange={handleChange}
             disabled={isLoading}
             placeholder="example@email.com"
-            autoComplete="new-email"
+            autoComplete="email"
             className={fieldErrors.email ? 'error' : ''}
           />
           {fieldErrors.email && (
@@ -139,28 +155,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
           )}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Пароль</label>
-          <TextInput
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            disabled={isLoading}
-            placeholder="Введите пароль"
-            autoComplete="new-password"
-            className={fieldErrors.password ? 'error' : ''}
-          />
-          {fieldErrors.password && (
-            <div className="field-error">{fieldErrors.password}</div>
-          )}
-        </div>
-
         <Button
           type="submit"
           className="auth-submit-btn"
-          disabled={isLoading || !formData.email || !formData.password}
+          disabled={isLoading || !formData.email}
         >
           {isLoading ? (
             <>
@@ -168,34 +166,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Входим...
+              Отправляем...
             </>
           ) : (
-            'Войти'
+            'Отправить инструкции'
           )}
         </Button>
       </form>
 
       <div className="auth-form-footer">
         <p>
+          Вспомнили пароль?{' '}
           <Button
             type="button"
-            onClick={onForgotPassword}
+            onClick={onBackToLogin}
             className="auth-link-btn"
             disabled={isLoading}
           >
-            Забыли пароль?
-          </Button>
-        </p>
-        <p>
-          Нет аккаунта?{' '}
-          <Button
-            type="button"
-            onClick={onSwitchToRegister}
-            className="auth-link-btn"
-            disabled={isLoading}
-          >
-            Зарегистрироваться
+            Войти
           </Button>
         </p>
       </div>
@@ -203,4 +191,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
   )
 }
 
-export default LoginForm
+export default ForgotPasswordForm

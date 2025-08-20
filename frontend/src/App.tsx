@@ -12,6 +12,7 @@ import ProjectDetail from './pages/ProjectDetail'
 import Profile from './pages/Profile'
 import CharacterChecklists from './pages/CharacterChecklistsV2'
 import CharacterChecklistDetail from './pages/CharacterChecklistDetailV2'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 // Импорт новых стилей v2
 import './styles_v2/index.css'
@@ -41,6 +42,7 @@ function App() {
               <main className="main-content">
                 <Routes>
                   <Route path="/" element={<ProjectList />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route
                     path="/create-project"
                     element={

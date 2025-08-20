@@ -59,3 +59,14 @@ class UpdateProfileRequest(BaseModel):
     username: Optional[str] = Field(None, min_length=3, max_length=100)
     full_name: Optional[str] = Field(None, max_length=255)
     email: Optional[EmailStr] = None
+
+
+class ForgotPasswordRequest(BaseModel):
+    """Схема для запроса сброса пароля."""
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    """Схема для сброса пароля по токену."""
+    token: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=8, max_length=100)

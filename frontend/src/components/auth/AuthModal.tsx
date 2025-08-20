@@ -2,11 +2,12 @@ import React, { useState, useCallback } from 'react'
 import { Button } from "@gravity-ui/uikit";
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
+import ForgotPasswordForm from './ForgotPasswordForm'
 
 interface AuthModalProps {
   isOpen: boolean
   onClose: () => void
-  initialMode?: 'login' | 'register'
+  initialMode?: 'login' | 'register' | 'forgot-password'
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({
@@ -14,7 +15,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   initialMode = 'login'
 }) => {
-  const [mode, setMode] = useState<'login' | 'register'>(initialMode)
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>(initialMode)
 
   const handleSuccess = useCallback(() => {
     onClose()
@@ -22,6 +23,14 @@ const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleSwitchMode = useCallback(() => {
     setMode(prev => prev === 'login' ? 'register' : 'login')
+  }, [])
+
+  const handleForgotPassword = useCallback(() => {
+    setMode('forgot-password')
+  }, [])
+
+  const handleBackToLogin = useCallback(() => {
+    setMode('login')
   }, [])
 
   if (!isOpen) return null
@@ -42,11 +51,17 @@ const AuthModal: React.FC<AuthModalProps> = ({
           <LoginForm
             onSuccess={handleSuccess}
             onSwitchToRegister={handleSwitchMode}
+            onForgotPassword={handleForgotPassword}
           />
-        ) : (
+        ) : mode === 'register' ? (
           <RegisterForm
             onSuccess={handleSuccess}
             onSwitchToLogin={handleSwitchMode}
+          />
+        ) : (
+          <ForgotPasswordForm
+            onSuccess={handleSuccess}
+            onBackToLogin={handleBackToLogin}
           />
         )}
       </div>

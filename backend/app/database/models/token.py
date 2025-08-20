@@ -14,7 +14,7 @@ class UserToken(BaseModel):
     
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     token_hash = Column(String(255), nullable=False, index=True)
-    token_type = Column(String(20), default="access", nullable=False)  # access, refresh
+    token_type = Column(String(20), default="access", nullable=False)  # access, refresh, password_reset
     expires_at = Column(DateTime, nullable=False)
     is_revoked = Column(Boolean, default=False, nullable=False)
     
