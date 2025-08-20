@@ -109,14 +109,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister, on
             <div>
               <p><strong>Нет аккаунта?</strong></p>
               <p>Похоже, пользователь с таким email не зарегистрирован.</p>
-              <button
+              <Button
                 type="button"
                 onClick={onSwitchToRegister}
-                className="auth-suggestion-btn"
+                view="outlined"
+                size="s"
                 disabled={isLoading}
               >
                 Зарегистрироваться сейчас
-              </button>
+              </Button>
             </div>
           </div>
         )}

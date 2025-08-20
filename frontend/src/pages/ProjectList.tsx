@@ -166,9 +166,9 @@ const ProjectList: React.FC = () => {
           <p className="empty-description">
             Не удалось загрузить список проектов. Проверьте подключение к серверу.
           </p>
-          <button onClick={() => window.location.reload()} className="btn btn-primary">
+          <Button onClick={() => window.location.reload()} view="action" size="m">
             Попробовать снова
-          </button>
+          </Button>
         </div>
       </div>
     )

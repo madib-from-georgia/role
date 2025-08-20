@@ -92,9 +92,9 @@ export const ChecklistsOverview: React.FC<ChecklistsOverviewProps> = () => {
       <div className="checklists-overview__error">
         <div className="error-content">
           <h1>Неверный ID персонажа</h1>
-          <button onClick={() => navigate('/')} className="btn btn-primary">
+          <Button onClick={() => navigate('/')} view="action" size="m">
             Вернуться на главную
-          </button>
+          </Button>
         </div>
       </div>
     );

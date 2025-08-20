@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-query'
+import { Button } from "@gravity-ui/uikit"
 import axios from 'axios'
 import { FullCharacterAnalysis, CharacterAnalysisResult } from '../../../shared/types'
 
@@ -200,11 +201,11 @@ const CharacterAnalysis: React.FC<CharacterAnalysisProps> = ({
       <div className="modal-header">
         <h3>Анализ персонажа: {characterName}</h3>
         {onClose && (
-          <button onClick={onClose} className="close-btn">
+          <Button onClick={onClose} view="flat" size="s" className="close-btn">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </button>
+          </Button>
         )}
       </div>
 
@@ -218,10 +219,12 @@ const CharacterAnalysis: React.FC<CharacterAnalysisProps> = ({
             </div>
             <h4>Готов к анализу</h4>
             <p>Запустите полный анализ персонажа всеми доступными модулями</p>
-            <button
+            <Button
               onClick={handleStartAnalysis}
               disabled={analysisMutation.isLoading}
-              className="btn btn-primary start-btn"
+              view="action"
+              size="l"
+              className="start-btn"
             >
               {analysisMutation.isLoading ? (
                 <>
@@ -231,7 +234,7 @@ const CharacterAnalysis: React.FC<CharacterAnalysisProps> = ({
               ) : (
                 'Начать анализ'
               )}
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="analysis-results">
@@ -274,13 +277,14 @@ const CharacterAnalysis: React.FC<CharacterAnalysisProps> = ({
 
             {/* Кнопка повторного анализа */}
             <div className="analysis-actions">
-              <button
+              <Button
                 onClick={handleStartAnalysis}
                 disabled={analysisMutation.isLoading}
-                className="btn btn-secondary"
+                view="outlined"
+                size="m"
               >
                 {analysisMutation.isLoading ? 'Анализ в процессе...' : 'Повторить анализ'}
-              </button>
+              </Button>
             </div>
           </div>
         )}

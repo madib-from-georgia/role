@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { Button } from "@gravity-ui/uikit"
 
 import { AuthProvider, useAuth } from '../contexts/AuthContext'
 import LoginForm from '../components/auth/LoginForm'
@@ -65,12 +66,12 @@ const AuthTestComponent: React.FC = () => {
       <div data-testid="is-authenticated">{auth.isAuthenticated.toString()}</div>
       <div data-testid="is-loading">{auth.isLoading.toString()}</div>
       <div data-testid="user-email">{auth.user?.email || 'none'}</div>
-      <button data-testid="login-btn" onClick={() => auth.login('test@test.com', 'password')}>
+      <Button data-testid="login-btn" onClick={() => auth.login('test@test.com', 'password')}>
         Login
-      </button>
-      <button data-testid="logout-btn" onClick={() => auth.logout()}>
+      </Button>
+      <Button data-testid="logout-btn" onClick={() => auth.logout()}>
         Logout
-      </button>
+      </Button>
     </div>
   )
 }

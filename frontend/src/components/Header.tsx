@@ -80,12 +80,13 @@ const Header: React.FC = () => {
               <AuthGuard
                 fallback={
                   <div className="nav-guest">
-                    <button
-                      className="nav-link auth-trigger"
+                    <Button
+                      view="outlined"
+                      size="m"
                       onClick={handleOpenAuthModal}
                     >
                       Войти
-                    </button>
+                    </Button>
                   </div>
                 }
               >

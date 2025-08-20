@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { Button } from "@gravity-ui/uikit";
 
 import { QuestionFlow } from '../components/checklists/QuestionFlow';
 import { charactersApi } from '../services/api';
@@ -31,12 +32,13 @@ const CharacterChecklistDetailV2: React.FC = () => {
           <p className="error-message">
             Неверный ID персонажа или slug чеклиста
           </p>
-          <button
+          <Button
             onClick={() => navigate('/')}
-            className="btn btn-primary"
+            view="action"
+            size="m"
           >
             Вернуться на главную
-          </button>
+          </Button>
         </div>
       </div>
     );

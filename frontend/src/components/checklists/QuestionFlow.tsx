@@ -366,18 +366,20 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
               {error instanceof Error ? error.message : "Неизвестная ошибка"}
             </p>
             <div className="error-actions">
-              <button
-                className="btn btn-primary"
+              <Button
+                view="action"
+                size="m"
                 onClick={() => window.location.reload()}
               >
                 🔄 Попробовать снова
-              </button>
-              <button
-                className="btn btn-secondary"
+              </Button>
+              <Button
+                view="outlined"
+                size="m"
                 onClick={() => window.history.back()}
               >
                 ← Вернуться назад
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -394,12 +396,13 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             <h2>Чеклист пуст</h2>
             <p>В этом чеклисте пока нет вопросов для заполнения</p>
             <div className="empty-actions">
-              <button
-                className="btn btn-primary"
+              <Button
+                view="action"
+                size="m"
                 onClick={() => window.history.back()}
               >
                 ← Вернуться к списку чеклистов
-              </button>
+              </Button>
             </div>
           </div>
         </div>
