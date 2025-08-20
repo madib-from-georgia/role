@@ -86,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
   return (
     <div className="auth-form">
       <div className="auth-form-header">
-        <h2>Вход в систему</h2>
+        <h2>Авторизация</h2>
         <p>Войдите в свой аккаунт для доступа к проектам</p>
       </div>
 

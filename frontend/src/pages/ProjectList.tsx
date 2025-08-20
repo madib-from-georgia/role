@@ -31,12 +31,12 @@ const ProjectList: React.FC = () => {
 
   const { isAuthenticated, isLoading: authLoading } = useAuth()
   const queryClient = useQueryClient()
-  
+
   // Делаем запрос только если пользователь авторизован или авторизация отключена
   const shouldFetchProjects = !config.authEnabled || isAuthenticated
-  
+
   const { data: projects, isLoading, error } = useQuery<Project[]>(
-    'projects', 
+    'projects',
     fetchProjects,
     {
       enabled: shouldFetchProjects && !authLoading
@@ -79,7 +79,7 @@ const ProjectList: React.FC = () => {
     if (filterValue !== 'Все') {
       const now = new Date()
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-      
+
       switch (filterValue) {
         case 'Недавние':
           filtered = filtered.filter(project =>
@@ -130,22 +130,22 @@ const ProjectList: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h3 className="empty-title">Добро пожаловать в Роль!</h3>
+            <h3 className="empty-title">Добро пожаловать в Роль</h3>
             <p className="empty-description">
-              Система анализа персонажей для актеров и режиссеров. 
-              Войдите в систему чтобы начать работу с проектами.
+              Система анализа персонажей для актеров и режиссеров.
+              Авторизуйтесь чтобы начать работу.
             </p>
-            <Button 
-              view='action' 
+            <Button
+              view='action'
               size='l'
               onClick={() => setShowAuthModal(true)}
             >
-              Войти в систему
+              Войти
             </Button>
           </div>
         </div>
-        
-        <AuthModal 
+
+        <AuthModal
           isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
         />
@@ -197,7 +197,7 @@ const ProjectList: React.FC = () => {
           </div>
           <h3 className="empty-title">Добро пожаловать в Роль!</h3>
           <p className="empty-description">
-            Здесь будут отображаться ваши проекты анализа персонажей. 
+            Здесь будут отображаться ваши проекты анализа персонажей.
             Создайте первый проект, чтобы начать исследование литературных героев.
           </p>
           <Link to="/projects/new">
@@ -274,13 +274,13 @@ const ProjectList: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {project.description && (
                         <p className="project-description">
                           {project.description}
                         </p>
                       )}
-                      
+
                       <div className="project-footer">
                         <div className="project-status">
                           <div className="status-dot"></div>
