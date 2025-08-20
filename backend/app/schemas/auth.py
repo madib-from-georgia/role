@@ -17,7 +17,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=100)
     password: str = Field(..., min_length=8, max_length=100)
-    full_name: str = Field(None, max_length=255)
+    full_name: Optional[str] = Field(None, max_length=255)
 
 
 class RefreshTokenRequest(BaseModel):
@@ -41,7 +41,7 @@ class UserProfileResponse(BaseModel):
     id: int
     email: str
     username: str
-    full_name: str = None
+    full_name: Optional[str] = None
     is_active: bool
     created_at: str
     
