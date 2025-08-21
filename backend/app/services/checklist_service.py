@@ -30,31 +30,31 @@ from app.schemas.checklist import (
 class ChecklistService:
     """
     Сервис для управления чеклистами
-    
+
     Объединяет парсинг чеклистов из Markdown файлов,
     сохранение в базу данных и работу с ответами пользователей
     """
-    
+
     def __init__(self):
         self.parser = ChecklistJsonParserNew()
-    
+
     def import_checklist_from_file(self, db: Session, file_path: str, force_update: bool = False) -> Checklist:
         """
         Импорт чеклиста из JSON файла в базу данных
-        
+
         Args:
             db: Сессия базы данных
             file_path: Путь к JSON файлу чеклиста
             force_update: Принудительно обновить существующий чеклист
-            
+
         Returns:
             Созданный или обновленный чеклист
         """
         logger.info(f"Импорт чеклиста из файла: {file_path}")
-        
+
         # Парсим файл
         structure = self.parser.parse_file(file_path)
-        
+
         # Проверяем, не существует ли уже чеклист с таким external_id
         existing = checklist_crud.get_by_external_id(db, structure.external_id)
         if existing:
@@ -64,12 +64,12 @@ class ChecklistService:
             else:
                 logger.warning(f"Чеклист с external_id '{structure.external_id}' уже существует")
                 raise ValueError(f"Чеклист с external_id '{structure.external_id}' уже существует")
-        
+
         # Создаем чеклист
         checklist_data = ChecklistCreate(
             external_id=structure.external_id,
             title=structure.title,
-            description=structure.description or f"Импортирован из файла {Path(file_path).name}",
+            description=structure.description,
             slug=structure.slug,
             icon=structure.icon,
             order_index=0,
@@ -78,18 +78,18 @@ class ChecklistService:
             file_hash=structure.file_hash,
             version=structure.version
         )
-        
+
         checklist_obj = checklist_crud.create(db, obj_in=checklist_data)
-        
+
         # Создаем структуру
         self._create_checklist_structure(db, checklist_obj.id, structure)
-        
+
         logger.success(f"Чеклист '{structure.title}' успешно импортирован")
         return checklist_obj
-    
+
     def _create_checklist_structure(self, db: Session, checklist_id: int, structure):
         """Создает структуру чеклиста в базе данных"""
-        
+
         for section_data in structure.sections:
             # Создаем секцию
             section_obj = ChecklistSection(
@@ -102,7 +102,7 @@ class ChecklistService:
             )
             db.add(section_obj)
             db.flush()  # Получаем ID
-            
+
             for subsection_data in section_data.subsections:
                 # Создаем подсекцию
                 subsection_obj = ChecklistSubsection(
@@ -114,7 +114,7 @@ class ChecklistService:
                 )
                 db.add(subsection_obj)
                 db.flush()
-                
+
                 for group_data in subsection_data.question_groups:
                     # Создаем группу вопросов
                     group_obj = ChecklistQuestionGroup(
@@ -125,7 +125,7 @@ class ChecklistService:
                     )
                     db.add(group_obj)
                     db.flush()
-                    
+
                     for question_data in group_data.questions:
                         # Создаем вопрос
                         question_obj = ChecklistQuestion(
@@ -138,7 +138,7 @@ class ChecklistService:
                         )
                         db.add(question_obj)
                         db.flush()
-                        
+
                         # Создаем ответы для вопроса
                         for answer_data in question_data.answers:
                             answer_obj = ChecklistAnswer(
@@ -153,36 +153,36 @@ class ChecklistService:
                                 order_index=answer_data.order_index
                             )
                             db.add(answer_obj)
-        
+
         db.commit()
-    
+
     def _update_existing_checklist(self, db: Session, existing_checklist: Checklist, structure) -> Checklist:
         """Обновляет существующий чеклист, сохраняя пользовательские ответы"""
         logger.info(f"Обновление чеклиста '{existing_checklist.title}'")
-        
+
         # Обновляем основные поля чеклиста
         existing_checklist.title = structure.title
         existing_checklist.description = structure.description or existing_checklist.description
         existing_checklist.file_hash = structure.file_hash
         existing_checklist.version = structure.version
         existing_checklist.goal = structure.goal
-        
+
         # Обновляем структуру по external_id
         self._update_checklist_structure(db, existing_checklist.id, structure)
-        
+
         logger.success(f"Чеклист '{structure.title}' успешно обновлен")
         return existing_checklist
-    
+
     def _update_checklist_structure(self, db: Session, checklist_id: int, structure):
         """Обновляет структуру чеклиста по external_id, сохраняя существующие записи"""
-        
+
         for section_data in structure.sections:
             # Ищем существующую секцию по external_id
             section_obj = db.query(ChecklistSection).filter(
                 ChecklistSection.checklist_id == checklist_id,
                 ChecklistSection.external_id == section_data.external_id
             ).first()
-            
+
             if section_obj:
                 # Обновляем существующую секцию
                 section_obj.title = section_data.title
@@ -200,16 +200,16 @@ class ChecklistService:
                     order_index=section_data.order_index
                 )
                 db.add(section_obj)
-            
+
             db.flush()  # Получаем ID
-            
+
             for subsection_data in section_data.subsections:
                 # Ищем существующую подсекцию по external_id
                 subsection_obj = db.query(ChecklistSubsection).filter(
                     ChecklistSubsection.section_id == section_obj.id,
                     ChecklistSubsection.external_id == subsection_data.external_id
                 ).first()
-                
+
                 if subsection_obj:
                     # Обновляем существующую подсекцию
                     subsection_obj.title = subsection_data.title
@@ -225,16 +225,16 @@ class ChecklistService:
                         order_index=subsection_data.order_index
                     )
                     db.add(subsection_obj)
-                
+
                 db.flush()
-                
+
                 for group_data in subsection_data.question_groups:
                     # Ищем существующую группу вопросов по external_id
                     group_obj = db.query(ChecklistQuestionGroup).filter(
                         ChecklistQuestionGroup.subsection_id == subsection_obj.id,
                         ChecklistQuestionGroup.external_id == group_data.external_id
                     ).first()
-                    
+
                     if group_obj:
                         # Обновляем существующую группу
                         group_obj.title = group_data.title
@@ -248,16 +248,16 @@ class ChecklistService:
                             order_index=group_data.order_index
                         )
                         db.add(group_obj)
-                    
+
                     db.flush()
-                    
+
                     for question_data in group_data.questions:
                         # Ищем существующий вопрос по external_id
                         question_obj = db.query(ChecklistQuestion).filter(
                             ChecklistQuestion.question_group_id == group_obj.id,
                             ChecklistQuestion.external_id == question_data.external_id
                         ).first()
-                        
+
                         if question_obj:
                             # Обновляем существующий вопрос
                             question_obj.text = question_data.text
@@ -275,9 +275,9 @@ class ChecklistService:
                                 source_type=question_data.source_type
                             )
                             db.add(question_obj)
-                        
+
                         db.flush()
-                        
+
                         # Обновляем ответы для вопроса
                         for answer_data in question_data.answers:
                             # Ищем существующий ответ по external_id
@@ -285,7 +285,7 @@ class ChecklistService:
                                 ChecklistAnswer.question_id == question_obj.id,
                                 ChecklistAnswer.external_id == answer_data.external_id
                             ).first()
-                            
+
                             if answer_obj:
                                 # Обновляем существующий ответ
                                 answer_obj.value_male = answer_data.value_male
@@ -309,23 +309,23 @@ class ChecklistService:
                                     order_index=answer_data.order_index
                                 )
                                 db.add(answer_obj)
-        
+
         db.commit()
-    
+
     def get_checklist_with_responses(
-        self, 
-        db: Session, 
-        checklist_slug: str, 
+        self,
+        db: Session,
+        checklist_slug: str,
         character_id: int
     ) -> Optional[ChecklistWithResponses]:
         """
         Получение чеклиста с ответами конкретного персонажа
-        
+
         Args:
             db: Сессия базы данных
             checklist_slug: Slug чеклиста
             character_id: ID персонажа
-            
+
         Returns:
             Чеклист с ответами или None
         """
@@ -333,12 +333,12 @@ class ChecklistService:
         checklist_obj = checklist_crud.get_by_slug_with_structure(db, checklist_slug)
         if not checklist_obj:
             return None
-        
+
         # Получаем все ответы персонажа для этого чеклиста
         responses = checklist_response.get_by_character_and_checklist(
             db, character_id, checklist_obj.id
         )
-        
+
         # Создаем словарь ответов по question_id для быстрого поиска
         # Для множественного выбора может быть несколько ответов на один вопрос
         responses_dict = {}
@@ -346,18 +346,18 @@ class ChecklistService:
             if r.question_id not in responses_dict:
                 responses_dict[r.question_id] = []
             responses_dict[r.question_id].append(r)
-        
+
         # Обогащаем структуру ответами
         enriched_checklist = self._enrich_checklist_with_responses(
             checklist_obj, responses_dict
         )
-        
+
         # Добавляем статистику заполнения
         stats = checklist_response.get_completion_stats(db, character_id, checklist_obj.id)
         enriched_checklist.completion_stats = stats
-        
+
         return enriched_checklist
-    
+
     def _enrich_checklist_with_responses(
         self,
         checklist_obj: Checklist,
@@ -369,28 +369,28 @@ class ChecklistService:
             ChecklistSubsectionWithResponses, ChecklistQuestionGroupWithResponses,
             ChecklistQuestionWithResponse
         )
-        
+
         # Создаем обогащенные секции
         enriched_sections = []
         for section in checklist_obj.sections:
             enriched_subsections = []
-            
+
             for subsection in section.subsections:
                 enriched_question_groups = []
-                
+
                 for question_group in subsection.question_groups:
                     enriched_questions = []
-                    
+
                     for question in question_group.questions:
                         # Получаем ответы для этого вопроса (может быть несколько)
                         question_responses = responses_dict.get(question.id, [])
-                        
+
                         # Для обратной совместимости берем первый ответ как current_response
                         current_response = question_responses[0] if question_responses else None
-                        
+
                         # Для множественного выбора возвращаем все ответы
                         current_responses = question_responses if question.answer_type == 'multiple' else []
-                        
+
                         # Создаем обогащенный вопрос
                         enriched_question = ChecklistQuestionWithResponse(
                             id=question.id,
@@ -407,7 +407,7 @@ class ChecklistService:
                             response_history=[]  # TODO: Добавить историю ответов
                         )
                         enriched_questions.append(enriched_question)
-                    
+
                     # Создаем обогащенную группу вопросов
                     enriched_group = ChecklistQuestionGroupWithResponses(
                         id=question_group.id,
@@ -418,7 +418,7 @@ class ChecklistService:
                         questions=enriched_questions
                     )
                     enriched_question_groups.append(enriched_group)
-                
+
                 # Создаем обогащенную подсекцию
                 enriched_subsection = ChecklistSubsectionWithResponses(
                     id=subsection.id,
@@ -430,7 +430,7 @@ class ChecklistService:
                     question_groups=enriched_question_groups
                 )
                 enriched_subsections.append(enriched_subsection)
-            
+
             # Создаем обогащенную секцию
             enriched_section = ChecklistSectionWithResponses(
                 id=section.id,
@@ -443,7 +443,7 @@ class ChecklistService:
                 subsections=enriched_subsections
             )
             enriched_sections.append(enriched_section)
-        
+
         # Создаем обогащенный чеклист
         enriched_checklist = ChecklistWithResponses(
             id=checklist_obj.id,
@@ -461,9 +461,9 @@ class ChecklistService:
             updated_at=checklist_obj.updated_at,
             sections=enriched_sections
         )
-        
+
         return enriched_checklist
-    
+
     def get_current_responses_for_question(
         self,
         db: Session,
@@ -472,12 +472,12 @@ class ChecklistService:
     ) -> List[Any]:
         """
         Получение текущих ответов персонажа на вопрос
-        
+
         Args:
             db: Сессия базы данных
             character_id: ID персонажа
             question_id: ID вопроса
-            
+
         Returns:
             Список текущих ответов
         """
@@ -492,13 +492,13 @@ class ChecklistService:
     ) -> Optional[Any]:
         """
         Обновление ответа на вопрос
-        
+
         Args:
             db: Сессия базы данных
             character_id: ID персонажа
             question_id: ID вопроса
             response_data: Данные ответа
-            
+
         Returns:
             Обновленный ответ
         """
@@ -506,66 +506,66 @@ class ChecklistService:
             db, character_id, question_id, response_data,
             change_reason=response_data.change_reason
         )
-    
+
     def delete_response(
-        self, 
-        db: Session, 
-        response_id: int, 
+        self,
+        db: Session,
+        response_id: int,
         delete_reason: str = "Удаление пользователем"
     ) -> bool:
         """
         Удаление ответа с сохранением в истории
-        
+
         Args:
             db: Сессия базы данных
             response_id: ID ответа
             delete_reason: Причина удаления
-            
+
         Returns:
             True если удаление успешно
         """
         return checklist_response.delete_response(db, response_id, delete_reason)
-    
+
     def restore_response_version(
-        self, 
-        db: Session, 
-        response_id: int, 
+        self,
+        db: Session,
+        response_id: int,
         history_id: int,
         restore_reason: str = "Восстановление пользователем"
     ) -> Optional[Any]:
         """
         Восстановление предыдущей версии ответа
-        
+
         Args:
             db: Сессия базы данных
             response_id: ID ответа
             history_id: ID версии для восстановления
             restore_reason: Причина восстановления
-            
+
         Returns:
             Восстановленный ответ
         """
         return checklist_response.restore_from_history(
             db, response_id, history_id, restore_reason
         )
-    
+
     def get_character_progress(self, db: Session, character_id: int) -> List[ChecklistStats]:
         """
         Получение прогресса заполнения всех чеклистов для персонажа
-        
+
         Args:
             db: Сессия базы данных
             character_id: ID персонажа
-            
+
         Returns:
             Список статистик по чеклистам
         """
         checklists = checklist_crud.get_active_checklists(db)
         progress = []
-        
+
         for checklist_obj in checklists:
             stats = checklist_response.get_completion_stats(db, character_id, checklist_obj.id)
-            
+
             checklist_stats = ChecklistStats(
                 checklist_id=checklist_obj.id,
                 total_questions=stats["total_questions"],
@@ -575,23 +575,23 @@ class ChecklistService:
                 last_updated=stats["last_updated"]
             )
             progress.append(checklist_stats)
-        
+
         return progress
-    
+
     def search_questions(
-        self, 
-        db: Session, 
-        query: str, 
+        self,
+        db: Session,
+        query: str,
         checklist_slug: Optional[str] = None
     ) -> List[ChecklistQuestion]:
         """
         Поиск вопросов по тексту
-        
+
         Args:
             db: Сессия базы данных
             query: Поисковый запрос
             checklist_slug: Ограничить поиск конкретным чеклистом
-            
+
         Returns:
             Список найденных вопросов
         """
@@ -600,29 +600,29 @@ class ChecklistService:
             checklist_obj = checklist_crud.get_by_slug(db, checklist_slug)
             if checklist_obj:
                 checklist_id = checklist_obj.id
-        
+
         return checklist_question.search_questions(db, query, checklist_id)
-    
+
     def get_available_checklists(self, db: Session, character_id: Optional[int] = None) -> List[Checklist]:
         """
         Получение списка доступных чеклистов
-        
+
         Args:
             db: Сессия базы данных
             character_id: ID персонажа для получения статистики (опционально)
-            
+
         Returns:
             Список чеклистов с опциональной статистикой заполнения
         """
         checklists = checklist_crud.get_multi(db)
-        
+
         # Если указан character_id, добавляем статистику для каждого чеклиста
         if character_id:
             enriched_checklists = []
             for checklist_obj in checklists:
                 # Получаем статистику заполнения
                 stats = checklist_response.get_completion_stats(db, character_id, checklist_obj.id)
-                
+
                 # Создаем обогащенный чеклист
                 from app.schemas.checklist import Checklist
                 enriched_checklist = Checklist(
@@ -643,44 +643,44 @@ class ChecklistService:
                     completion_stats=stats
                 )
                 enriched_checklists.append(enriched_checklist)
-            
+
             return enriched_checklists
-        
+
         return checklists
-    
+
     def get_checklist_structure(self, db: Session, checklist_slug: str) -> Optional[ChecklistWithResponses]:
         """
         Получение структуры чеклиста без привязки к персонажу
-        
+
         Args:
             db: Сессия базы данных
             checklist_slug: Slug чеклиста
-            
+
         Returns:
             Структура чеклиста с пустыми ответами
         """
         checklist_obj = checklist_crud.get_by_slug_with_structure(db, checklist_slug)
-        
+
         if not checklist_obj:
             return None
-        
+
         # Создаем структуру с пустыми ответами
         return self._enrich_checklist_with_responses(checklist_obj, {})
-    
+
     def validate_checklist_file(self, file_path: str) -> Dict[str, Any]:
         """
         Валидация файла чеклиста без импорта в БД
-        
+
         Args:
             file_path: Путь к файлу
-            
+
         Returns:
             Результат валидации с краткой информацией
         """
         try:
             structure = self.parser.parse_file(file_path)
             summary = self.parser.get_structure_summary(structure)
-            
+
             return {
                 "valid": True,
                 "summary": summary,

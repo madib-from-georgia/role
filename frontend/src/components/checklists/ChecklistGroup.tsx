@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Label } from "@gravity-ui/uikit";
+import { Label, Button } from "@gravity-ui/uikit";
 import { ChecklistItem, ChecklistProgress } from "../../types/common";
 
 interface ChecklistGroupProps {
@@ -128,11 +128,13 @@ export const ChecklistGroup: React.FC<ChecklistGroupProps> = ({
 
                 <div className="checklist-item__content">
                   <h4 className="checklist-item__title">{checklist.title}</h4>
+{/*
                   {checklist.description && (
                     <p className="checklist-item__description">
                       {checklist.description}
                     </p>
                   )}
+*/}
 
                   {checklistProgress && (
                     <div className="checklist-item__progress">
@@ -165,7 +167,7 @@ export const ChecklistGroup: React.FC<ChecklistGroupProps> = ({
                   {completionPercentage === 100 ? (
                     <span className="status-icon completed">✓</span>
                   ) : null}
-                  <span className="status-text">Открыть →</span>
+                  <Button>Редактировать →</Button>
                 </div>
               </div>
             );
