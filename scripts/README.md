@@ -156,38 +156,43 @@ npm run checklist-split-json-to-files huge_checklist.json checklist_modules
 npm run checklist-join-files-to-json checklist_modules restored_checklist.json
 ```
 
-#### Структура выходных файлов
-
-После разделения создается следующая структура:
-
-```
-output_directory/
-├── index.json                          # Индексный файл с метаданными
-├── rebuild_json.py                     # Скрипт восстановления
-└── portrait_id/                        # Папка портрета
-    ├── portrait.json                   # Основные данные портрета
-    └── section_id/                     # Папка секции
-        ├── section.json                # Основные данные секции
-        └── subsection_id/              # Папка подсекции
-            ├── subsection.json         # Основные данные подсекции
-            └── question_group_id/      # Папка группы вопросов
-                ├── group.json          # Основные данные группы
-                └── question_id/        # Папка вопроса
-                    ├── question.json   # Основные данные вопроса
-                    ├── answer1_id.json # Файл ответа 1
-                    ├── answer2_id.json # Файл ответа 2
-                    └── ...             # Другие ответы
-```
-
 #### Формат файлов
+
+После разделения создается следующая структура файлов:
+
+```
+output_folder/
+├── index.json                    # Индексный файл с метаданными
+└── portrait_id/                  # Папка портрета
+    └── portrait.json            # Основные данные портрета
+    └── section_id/              # Папка секции
+        └── section.json         # Данные секции
+        └── subsection_id/       # Папка подсекции
+            └── subsection.json  # Данные подсекции
+            └── group_id/        # Папка группы вопросов
+                └── group.json   # Данные группы вопросов
+                └── question_id/ # Папка вопроса
+                    └── question.json  # Вопрос + все его ответы
+```
+
+**Особенности:**
+- Каждый `question.json` содержит полный вопрос со всеми ответами внутри
+- Ответы не выносятся в отдельные файлы для упрощения работы
+- Все служебные поля (id, type, title) сохраняются для корректного восстановления
+- Структура иерархическая, но логически простая
 
 ##### Файлы с данными
 Каждый файл содержит:
 - `id` - идентификатор элемента
 - `title` - название элемента (только если есть в исходных данных)
-- `type` - тип элемента (portrait, section, subsection, question_group, question, answer)
-- `children` - массив ссылок на дочерние файлы (если есть)
-- Специфичные поля для каждого типа
+- `type` - тип элемента (portrait, section, subsection, question_group, question)
+- Специфичные поля для каждого типа:
+  - **question**: `answers`, `answerType`, `source`, `hint`, `exercise`
+  - **answer**: `value`, `exportedValue`, `hint`, `exercise`
+  - **group**: `questions` (ссылки на папки вопросов)
+  - **subsection**: `questionGroups` (ссылки на папки групп)
+  - **section**: `subsections` (ссылки на папки подсекций)
+  - **portrait**: `sections` (ссылки на папки секций)
 
 ##### Индексный файл
 ```json
@@ -195,6 +200,6 @@ output_directory/
   "root": "portrait_id/portrait.json",
   "created_at": "timestamp",
   "source_file": "input.json",
-  "structure": "portrait -> section -> subsection -> question_group -> question -> answer"
+  "structure": "portrait -> section -> subsection -> question_group -> question (с ответами)"
 }
 ```

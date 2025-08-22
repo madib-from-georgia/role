@@ -46,6 +46,7 @@ def create_reference_file(file_path: Path, data: Dict[str, Any], children_refs: 
     if data.get('title') is not None:
         reference_data['title'] = data['title']
     
+    # Добавляем children только если они есть
     if children_refs:
         reference_data['children'] = children_refs
     
@@ -62,27 +63,11 @@ def create_reference_file(file_path: Path, data: Dict[str, Any], children_refs: 
         reference_data['answerType'] = data['answerType']
     if 'source' in data:
         reference_data['source'] = data['source']
+    if 'answers' in data:
+        reference_data['answers'] = data['answers']
     
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(reference_data, f, ensure_ascii=False, indent=2)
-
-
-def process_answers(answers: List[Dict], question_dir: Path) -> List[str]:
-    """Обрабатывает ответы и создает файлы для каждого ответа."""
-    answer_refs = []
-    
-    for answer in answers:
-        answer_id = answer.get('id', 'unknown')
-        answer_filename = f"{answer_id}.json"
-        answer_path = question_dir / answer_filename
-        
-        # Добавляем тип для идентификации
-        answer_data = {**answer, 'type': 'answer'}
-        
-        create_reference_file(answer_path, answer_data)
-        answer_refs.append(answer_filename)
-    
-    return answer_refs
 
 
 def process_questions(questions: List[Dict], group_dir: Path) -> List[str]:
@@ -94,19 +79,12 @@ def process_questions(questions: List[Dict], group_dir: Path) -> List[str]:
         question_dir = group_dir / sanitize_filename(question_id)
         question_dir.mkdir(exist_ok=True)
         
-        # Обрабатываем ответы
-        answer_refs = []
-        if 'answers' in question:
-            answer_refs = process_answers(question['answers'], question_dir)
-        
-        # Создаем файл вопроса
+        # Создаем файл вопроса с ответами внутри
         question_file = question_dir / "question.json"
         question_data = {**question, 'type': 'question'}
-        # Удаляем answers из основного файла, так как они теперь в отдельных файлах
-        if 'answers' in question_data:
-            del question_data['answers']
+        # Оставляем answers в файле вопроса (не удаляем)
         
-        create_reference_file(question_file, question_data, answer_refs)
+        create_reference_file(question_file, question_data)
         question_refs.append(f"{sanitize_filename(question_id)}/question.json")
     
     return question_refs

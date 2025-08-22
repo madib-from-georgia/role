@@ -15,25 +15,6 @@ def load_json_file(file_path: Path) -> dict:
         return json.load(f)
 
 
-def rebuild_answers(question_dir: Path, answer_refs: list) -> list:
-    """Восстанавливает ответы из файлов."""
-    answers = []
-    for answer_ref in answer_refs:
-        answer_path = question_dir / answer_ref
-        if answer_path.exists():
-            answer_data = load_json_file(answer_path)
-            # Удаляем служебные поля
-            if 'type' in answer_data:
-                del answer_data['type']
-            # Удаляем title если он None (не был в исходных данных)
-            if answer_data.get('title') is None:
-                answer_data.pop('title', None)
-            # Сохраняем поле exercise даже если оно пустое
-            # (не удаляем его)
-            answers.append(answer_data)
-    return answers
-
-
 def rebuild_questions(group_dir: Path, question_refs: list) -> list:
     """Восстанавливает вопросы из файлов."""
     questions = []
@@ -42,12 +23,7 @@ def rebuild_questions(group_dir: Path, question_refs: list) -> list:
         if question_path.exists():
             question_data = load_json_file(question_path)
             
-            # Восстанавливаем ответы
-            if 'children' in question_data:
-                question_dir = question_path.parent
-                answers = rebuild_answers(question_dir, question_data['children'])
-                question_data['answers'] = answers
-                del question_data['children']
+            # Ответы уже находятся в файле вопроса, ничего не восстанавливаем
             
             # Удаляем служебные поля
             if 'type' in question_data:
