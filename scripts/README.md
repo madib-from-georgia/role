@@ -105,7 +105,7 @@ npm run dev
 
 ## 📁 Разделение чеклистов на дерево файлов
 
-### Скрипт `split-checklist`
+### Скрипт `checklist-split-json-to-files`
 
 Удобный скрипт для разделения большого JSON файла с иерархической структурой чеклиста на множество маленьких файлов, сохраняя отношения в виде дерева на файловой системе.
 
@@ -121,26 +121,39 @@ Portrait -> Section -> Subsection -> QuestionGroup -> Question -> Answer
 ##### 1. Разделение JSON файла
 ```bash
 # Разделяем JSON файл на дерево файлов
-npm run split-checklist input.json output_folder
+npm run checklist-split-json-to-files input.json output_folder
 ```
 
 ##### 2. Восстановление JSON файла
 ```bash
 # Восстанавливаем исходный JSON из дерева файлов
-cd output_folder
-python rebuild_json.py . restored_file.json
+npm run checklist-join-files-to-json output_folder restored_file.json
 ```
 
 ##### 3. Проверка результата
 ```bash
 # Сравниваем исходный и восстановленный файлы
-diff input.json output_folder/restored_file.json
+diff input.json restored_file.json
 ```
 
 #### Использование
 
+##### Основная команда
 ```bash
-npm run split-checklist input.json output_directory
+npm run checklist-split-json-to-files input.json output_directory
+```
+
+##### Восстановление JSON
+```bash
+npm run checklist-join-files-to-json output_directory restored_file.json
+```
+
+##### Примеры для разных случаев
+
+###### Для больших чек-листов
+```bash
+npm run checklist-split-json-to-files huge_checklist.json checklist_modules
+npm run checklist-join-files-to-json checklist_modules restored_checklist.json
 ```
 
 #### Структура выходных файлов

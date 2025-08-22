@@ -570,6 +570,9 @@ npm run list-checklists        # Показать список всех чекл
 npm run import-checklists      # Импорт чеклистов из Markdown файлов
 npm run clear-checklists       # Показать список чеклистов (без аргументов)
 npm run clear-checklists-force # Удалить все чеклисты без подтверждения
+npm run checklist-convert-md-to-json # Конвертация MD в JSON
+npm run checklist-split-json-to-files # Разделение JSON на дерево файлов
+npm run checklist-join-files-to-json # Восстановление JSON из дерева файлов
 ```
 
 ### Утилиты

@@ -24,8 +24,9 @@
     "list-checklists": "cd backend && . ../.venv/bin/activate && python scripts/clear_checklists.py --list",
     "logs": "cd backend && . ../.venv/bin/activate && python scripts/view_nlp_logs.py",
     "reset_db": "cd backend && . ../.venv/bin/activate && python scripts/reset_database.py",
-    "convert-portrait": "ts-node scripts/convert-portrait.ts \"$@\"",
-    "split-checklist": "python scripts/split-checklist.py \"$@\""
+    "checklist-convert-md-to-json": "ts-node scripts/checklist-convert-md-to-json.ts \"$@\"",
+    "checklist-split-json-to-files": "python scripts/checklist-split-json-to-files.py \"$@\"",
+    "checklist-join-files-to-json": "python scripts/checklist-join-files-to-json.py \"$@\""
   },
   "keywords": [
     "character-analysis",

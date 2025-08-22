@@ -139,24 +139,17 @@
     - Варианты: 
     - Подсказка: Хинт к вопросу 2
 ```
-1. Запускаем скрипт `npm run convert-portrait docs/modules/<name>/<name>.md docs/modules/<name>/<name>.json`
+1. Запускаем скрипт `npm run checklist-convert-md-to-json docs/modules/<name>/<name>.md docs/modules/<name>/<name>.json`
    — создается json в [специальном формате](./CHECKLIST_TYPES_AND_EXAMPLE.md)
-2. Запускаем скрипт `npm run split-checklist docs/modules/<name>/<name>.json docs/modules/<name>/splitted`
+2. Запускаем скрипт `npm run checklist-split-json-to-files docs/modules/<name>/<name>.json docs/modules/<name>/splitted`
    — создается директория `splitted`, в котором json файл разбит на маленькие фрагменты
-   — создается rebuild-скрипт, который умеет эти разобранные файлы склеить назад в один общий
-   — необходимо для того, чтобы LLM могла работать с данными небольшими порциями
 3. Задаем LLM серию промптов
    — Добавить к каждому вопросу варианты ответов
    — Добавить к каждому вопросу тип ответа (один или много)
    — Добавить к каждому ответу подсказку, как этот ответ влияет на актера
    — Добавить к каждому ответу упражнения, как додиться такого поведения
-4. Запускаем rebuild-скрипт, созданный на шаге №2
-   — Собираем из мнодества файлов, отредактирвоанных моделью, один общий JSON
-    ```bash
-    # Восстанавливаем исходный JSON из дерева файлов
-    cd splitted
-    python rebuild_json.py . restored_file.json
-    ```
+4. Запускаем команду восстановления - `npm run checklist-join-files-to-json docs/modules/<name>/splitted docs/modules/<name>/restored.json`
+   — Собираем из множества файлов, отредактированных моделью, один общий JSON
 5. Редактируем checklists_to_import.txt
    — Раскомментировать строку с именем пересобранного json
 6. Запускаем импорт чеклиста в базу данных - `npm run import-checklists`

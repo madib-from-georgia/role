@@ -485,15 +485,15 @@ function showHelp(): void {
 🎭 Конвертер чеклистов физического портрета в JSON
 
 Использование:
-  npx ts-node scripts/convert-portrait.ts <входной_файл> <выходной_файл>
+  npx ts-node scripts/checklist-convert-md-to-json.ts <входной_файл> <выходной_файл>
 
 Аргументы:
   входной_файл    Путь к MD файлу чеклиста
   выходной_файл   Путь для сохранения JSON файла
 
 Примеры:
-  npx ts-node scripts/convert-portrait.ts input.md output.json
-  npx ts-node scripts/convert-portrait.ts checklist.md result.json
+  npx ts-node scripts/checklist-convert-md-to-json.ts input.md output.json
+  npx ts-node scripts/checklist-convert-md-to-json.ts checklist.md result.json
 
 Описание:
   Конвертирует MD файл чеклиста физического портрета в структурированный JSON
