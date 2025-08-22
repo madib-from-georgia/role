@@ -139,31 +139,9 @@ diff input.json output_folder/restored_file.json
 
 #### Использование
 
-##### Основная команда
 ```bash
 npm run split-checklist input.json output_directory
 ```
-
-##### С созданием скрипта восстановления
-```bash
-npm run split-checklist input.json output_directory
-```
-
-##### Примеры для разных случаев
-
-###### Для больших чек-листов
-```bash
-npm run split-checklist huge_checklist.json checklist_modules
-```
-
-###### Для разработки
-- Редактируйте отдельные файлы в дереве
-- Используйте Git для отслеживания изменений
-- Собирайте финальный JSON для продакшена
-
-###### Для тестирования
-- Создавайте тестовые наборы из отдельных модулей
-- Легко добавляйте/удаляйте части для тестов
 
 #### Структура выходных файлов
 
@@ -186,34 +164,6 @@ output_directory/
                     ├── answer1_id.json # Файл ответа 1
                     ├── answer2_id.json # Файл ответа 2
                     └── ...             # Другие ответы
-```
-
-##### Пример реальной структуры
-```
-test_output/
-├── index.json
-├── rebuild_json.py
-└── physical-portrait/
-    ├── portrait.json
-    ├── appearance/                     # Секция "Внешность"
-    │   ├── section.json
-    │   └── physique/                   # Подсекция "Телосложение"
-    │       ├── subsection.json
-    │       ├── height-proportions/     # Группа "Рост и пропорции"
-    │       │   ├── group.json
-    │       │   ├── height/             # Вопрос "Какой у меня рост?"
-    │       │   │   ├── question.json
-    │       │   │   ├── short.json      # Ответ "низкий"
-    │       │   │   ├── average.json    # Ответ "средний"
-    │       │   │   └── tall.json       # Ответ "высокий"
-    │       │   └── build/              # Вопрос "Телосложение"
-    │       │       ├── question.json
-    │       │       ├── slim.json
-    │       │       └── athletic.json
-    │       └── facial-features/        # Группа "Черты лица"
-    │           └── ...
-    └── behavior/                       # Секция "Поведение"
-        └── ...
 ```
 
 #### Формат файлов
