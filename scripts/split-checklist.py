@@ -280,6 +280,8 @@ def rebuild_answers(question_dir: Path, answer_refs: list) -> list:
             # Удаляем title если он None (не был в исходных данных)
             if answer_data.get('title') is None:
                 answer_data.pop('title', None)
+            # Сохраняем поле exercise даже если оно пустое
+            # (не удаляем его)
             answers.append(answer_data)
     return answers
 
@@ -312,7 +314,7 @@ def rebuild_questions(group_dir: Path, question_refs: list) -> list:
 
 def rebuild_question_groups(subsection_dir: Path, group_refs: list) -> list:
     """Восстанавливает группы вопросов из файлов."""
-    question_groups = []
+    groups = []
     for group_ref in group_refs:
         group_path = subsection_dir / group_ref
         if group_path.exists():
@@ -332,8 +334,8 @@ def rebuild_question_groups(subsection_dir: Path, group_refs: list) -> list:
             if group_data.get('title') is None:
                 group_data.pop('title', None)
             
-            question_groups.append(group_data)
-    return question_groups
+            groups.append(group_data)
+    return groups
 
 
 def rebuild_subsections(section_dir: Path, subsection_refs: list) -> list:
@@ -347,8 +349,8 @@ def rebuild_subsections(section_dir: Path, subsection_refs: list) -> list:
             # Восстанавливаем группы вопросов
             if 'children' in subsection_data:
                 subsection_dir = subsection_path.parent
-                question_groups = rebuild_question_groups(subsection_dir, subsection_data['children'])
-                subsection_data['questionGroups'] = question_groups
+                groups = rebuild_question_groups(subsection_dir, subsection_data['children'])
+                subsection_data['questionGroups'] = groups
                 del subsection_data['children']
             
             # Удаляем служебные поля
@@ -459,12 +461,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Разделение JSON файла на дерево файлов")
     parser.add_argument("input_file", help="Входной JSON файл")
     parser.add_argument("output_dir", help="Выходная директория")
-    parser.add_argument("--create-rebuild-script", action="store_true", 
-                       help="Создать скрипт для восстановления JSON")
     
     args = parser.parse_args()
     
     split_json_tree(args.input_file, args.output_dir)
     
-    if args.create_rebuild_script:
-        create_rebuild_script(args.output_dir)
+    # Всегда создаем скрипт восстановления
+    print("Создаю скрипт восстановления...")
+    create_rebuild_script(args.output_dir)
