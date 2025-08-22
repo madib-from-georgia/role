@@ -29,6 +29,10 @@ export interface ChecklistQuestion {
   sectionTitle?: string;
   subsectionTitle?: string;
   groupTitle?: string;
+  // Поля для поиска группы
+  sectionId?: number;
+  subsectionId?: number;
+  groupId?: number;
 }
 
 export interface ChecklistQuestionGroup {

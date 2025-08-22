@@ -16,10 +16,12 @@ import {
   ChecklistAnswer,
   Gender,
   SourceType,
+  ChecklistQuestionGroup,
 } from "../../types/checklist";
 
 interface QuestionCardProps {
   question: ChecklistQuestion;
+  questionGroup: ChecklistQuestionGroup;
   characterGender: Gender;
   characterId: number;
   onAnswerUpdate: (
@@ -52,6 +54,7 @@ interface QuestionCardProps {
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
+  questionGroup,
   characterGender,
   characterId,
   onAnswerUpdate,
@@ -84,12 +87,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   // Вычисляем состояние выбранных ответов из пропсов с useMemo
   const selectedAnswerId = useMemo(() => {
-    return question?.answer_type === "single" ? (response?.answer_id || null) : null;
+    return question?.answer_type === "single"
+      ? response?.answer_id || null
+      : null;
   }, [question?.answer_type, response?.answer_id]);
 
   const selectedAnswerIds = useMemo(() => {
     return question?.answer_type === "multiple"
-      ? (responses.map(r => r.answer_id).filter(Boolean) as number[])
+      ? (responses.map((r) => r.answer_id).filter(Boolean) as number[])
       : [];
   }, [question?.answer_type, responses]);
 
@@ -101,7 +106,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       comment: primaryResponse?.comment || "",
       sourceType: primaryResponse?.source_type || "FOUND_IN_TEXT",
     });
-  }, [question?.id, question, primaryResponse?.comment, primaryResponse?.source_type]);
+  }, [
+    question?.id,
+    question,
+    primaryResponse?.comment,
+    primaryResponse?.source_type,
+  ]);
 
   // Получение отображаемого значения ответа в зависимости от пола
   const getAnswerDisplayValue = useCallback(
@@ -152,7 +162,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         formState.sourceType
       );
     },
-    [question, characterId, selectedAnswerIds, formState.comment, formState.sourceType, onMultipleAnswersUpdate]
+    [
+      question,
+      characterId,
+      selectedAnswerIds,
+      formState.comment,
+      formState.sourceType,
+      onMultipleAnswersUpdate,
+    ]
   );
 
   const handleCommentChange = useCallback((text: string) => {
@@ -277,8 +294,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     );
   }
 
-  console.log("formState = ", formState);
-
   return (
     <div className="question-card">
       {/* Sidebar */}
@@ -306,8 +321,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           <Breadcrumbs>
             <Breadcrumbs.Item>{question.sectionTitle}</Breadcrumbs.Item>
             <Breadcrumbs.Item>{question.subsectionTitle}</Breadcrumbs.Item>
-            {question.groupTitle && (
-              <Breadcrumbs.Item>{question.groupTitle}</Breadcrumbs.Item>
+            {!questionGroup.external_id.includes("service-group-") && (
+              <Breadcrumbs.Item>{questionGroup.title}</Breadcrumbs.Item>
             )}
           </Breadcrumbs>
         </div>
@@ -371,7 +386,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             onBlur={handleSave}
             disabled={
               (question.answer_type === "single" && !selectedAnswerId) ||
-              (question.answer_type === "multiple" && selectedAnswerIds.length === 0)
+              (question.answer_type === "multiple" &&
+                selectedAnswerIds.length === 0)
             }
             placeholder="Цитаты, обоснование, свои мысли..."
           />

@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from '../../utils/test-utils'
 import { QuestionCard } from '../../../components/checklists/QuestionCard'
-import { createMockQuestion, createMockAnswer } from '../../utils/mock-data'
+import { createMockQuestion, createMockAnswer, createMockQuestionGroup } from '../../utils/mock-data'
 
 describe('QuestionCard', () => {
   const mockOnAnswerUpdate = vi.fn()
@@ -15,6 +15,7 @@ describe('QuestionCard', () => {
 
   // Helper function to create default props
   const createDefaultProps = (overrides = {}) => ({
+    questionGroup: createMockQuestionGroup(),
     characterGender: "male" as const,
     characterId: 1,
     onAnswerUpdate: mockOnAnswerUpdate,

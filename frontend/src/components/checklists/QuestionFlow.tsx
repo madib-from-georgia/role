@@ -11,7 +11,7 @@ import { ChecklistSwitcher } from "./ChecklistSwitcher";
 import { ExportDialog } from "./ExportDialog";
 
 // Import types
-import { Checklist, ChecklistQuestion, Gender, ChecklistAnswer } from "../../types/checklist";
+import { Checklist, ChecklistQuestion, ChecklistQuestionGroup, Gender, ChecklistAnswer } from "../../types/checklist";
 
 interface QuestionFlowProps {
   checklistSlug: string;
@@ -111,6 +111,10 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
               sectionTitle: section.title,
               subsectionTitle: subsection.title,
               groupTitle: group.title,
+              // Добавляем информацию для поиска группы
+              sectionId: section.id,
+              subsectionId: subsection.id,
+              groupId: group.id,
             });
           });
         });
@@ -118,6 +122,22 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
     });
 
     return questions;
+  }, [localData]);
+
+  // Функция для получения questionGroup по вопросу
+  const getQuestionGroup = useCallback((question: ChecklistQuestion): ChecklistQuestionGroup | null => {
+    if (!localData || !question.sectionId || !question.subsectionId || !question.groupId) {
+      return null;
+    }
+
+    const foundSection = localData.sections.find(section => section.id === question.sectionId);
+    if (!foundSection) return null;
+
+    const foundSubsection = foundSection.subsections.find(subsection => subsection.id === question.subsectionId);
+    if (!foundSubsection) return null;
+
+    const foundGroup = foundSubsection.question_groups.find(questionGroup => questionGroup.id === question.groupId);
+    return foundGroup || null;
   }, [localData]);
 
   // Функция для поиска первого неотвеченного вопроса
@@ -453,25 +473,28 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
             totalQuestions={allQuestions.length}
             checklist={localData}
           />
-          <QuestionCard
-            question={currentQuestion}
-            characterGender={(character?.gender as Gender) || 'male'}
-            characterId={characterId}
-            onAnswerUpdate={handleAnswerUpdate}
-            onMultipleAnswersUpdate={handleMultipleAnswersUpdate}
-            onAnswerDelete={handleAnswerDelete}
-            isLoading={updateAnswerMutation.isLoading}
-            allQuestions={allQuestions}
-            currentQuestionIndex={currentQuestionIndex}
-            onQuestionSelect={handleJumpToQuestion}
-            completionPercentage={
-              localData?.completion_stats?.completion_percentage || 0
-            }
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-            canGoBack={currentQuestionIndex > 0}
-            canGoForward={currentQuestionIndex < allQuestions.length - 1}
-          />
+          {currentQuestion && (
+            <QuestionCard
+              question={currentQuestion}
+              questionGroup={getQuestionGroup(currentQuestion)!}
+              characterGender={(character?.gender as Gender) || 'male'}
+              characterId={characterId}
+              onAnswerUpdate={handleAnswerUpdate}
+              onMultipleAnswersUpdate={handleMultipleAnswersUpdate}
+              onAnswerDelete={handleAnswerDelete}
+              isLoading={updateAnswerMutation.isLoading}
+              allQuestions={allQuestions}
+              currentQuestionIndex={currentQuestionIndex}
+              onQuestionSelect={handleJumpToQuestion}
+              completionPercentage={
+                localData?.completion_stats?.completion_percentage || 0
+              }
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              canGoBack={currentQuestionIndex > 0}
+              canGoForward={currentQuestionIndex < allQuestions.length - 1}
+            />
+          )}
         </div>
       </div>
 

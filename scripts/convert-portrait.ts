@@ -12,6 +12,7 @@ interface Answer {
     value: AnswerValue;
     exportedValue: AnswerValue;
     hint: string;
+    exercise: string;
 }
 
 interface Question {
@@ -144,7 +145,8 @@ class ConvertPortrait {
                     male: maleExported,
                     female: femaleExported
                 },
-                hint: hint
+                hint: hint,
+                exercise: '' // Пустое поле для упражнений
             };
         });
     }
@@ -318,6 +320,7 @@ class ConvertPortrait {
 
         const questionGroups: QuestionGroup[] = [];
         let startIndex = this.currentIndex + 1;
+        let hasQuestionGroups = false;
 
         // Ищем группы вопросов (заголовки 5 уровня)
         for (let i = startIndex; i < this.lines.length; i++) {
@@ -329,10 +332,48 @@ class ConvertPortrait {
             }
 
             if (line.startsWith('##### ') && !line.includes('Примеры') && !line.includes('Почему это важно')) {
+                hasQuestionGroups = true;
                 this.currentIndex = i;
                 const group = this.parseQuestionGroup(line);
                 questionGroups.push(group);
             }
+        }
+
+        // Если групп вопросов не найдено, создаем служебную группу
+        if (!hasQuestionGroups) {
+            // Сбрасываем currentIndex к началу подсекции для поиска вопросов
+            this.currentIndex = startIndex - 1;
+            
+            const serviceGroup: QuestionGroup = {
+                id: `service-group-${subsectionId}`,
+                title: `Вопросы раздела "${subsectionTitle}"`,
+                questions: []
+            };
+
+            // Ищем вопросы в подсекции
+            for (let i = startIndex; i < this.lines.length; i++) {
+                const line = this.lines[i].trim();
+
+                if (line.startsWith('####') && !line.startsWith('#####')) {
+                    // Новая подсекция
+                    break;
+                }
+
+                if (line.startsWith('#####')) {
+                    // Началась группа вопросов (хотя мы уже знаем, что их нет)
+                    break;
+                }
+
+                if (line.startsWith('- ') && line.includes('?')) {
+                    this.currentIndex = i;
+                    const question = this.parseQuestion(line);
+                    if (question) {
+                        serviceGroup.questions.push(question);
+                    }
+                }
+            }
+
+            questionGroups.push(serviceGroup);
         }
 
         return {

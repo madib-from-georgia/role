@@ -4,9 +4,9 @@
 
 # Активные чеклисты (будут импортированы)
 docs/modules/01-physical-portrait/ACTOR_PHYSICAL_CHECKLIST.json
+docs/modules/02-emotional-profile/ACTOR_EMOTIONAL_CHECKLIST.json
 
 # Отключенные чеклисты (закомментированы)
-# docs/modules/02-emotional-profile/ACTOR_EMOTIONAL_CHECKLIST.json
 # docs/modules/03-speech-characteristics/ACTOR_SPEECH_CHECKLIST.json
 # docs/modules/04-internal-conflicts/ACTOR_INTERNAL_CONFLICTS_CHECKLIST.json
 # docs/modules/05-motivation-goals/ACTOR_MOTIVATION_GOALS_CHECKLIST.json

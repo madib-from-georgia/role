@@ -71,6 +71,18 @@ export const createMockQuestion = (overrides: MockOverrides = {}) => ({
   ...overrides
 })
 
+// Mock checklist question group
+export const createMockQuestionGroup = (overrides: MockOverrides = {}) => ({
+  id: faker.number.int({ min: 1, max: 1000 }),
+  external_id: faker.string.uuid(),
+  title: faker.lorem.words(3),
+  order_index: faker.number.int({ min: 0, max: 10 }),
+  questions: [],
+  created_at: faker.date.past().toISOString(),
+  updated_at: faker.date.recent().toISOString(),
+  ...overrides
+})
+
 // Mock checklist answer
 export const createMockAnswer = (overrides: MockOverrides = {}) => ({
   id: faker.number.int({ min: 1, max: 1000 }),
