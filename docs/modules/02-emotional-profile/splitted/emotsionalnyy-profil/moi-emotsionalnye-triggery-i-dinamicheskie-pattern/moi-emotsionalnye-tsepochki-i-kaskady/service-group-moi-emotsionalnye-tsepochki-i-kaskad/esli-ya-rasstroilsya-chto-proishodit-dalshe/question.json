@@ -1,0 +1,74 @@
+{
+  "id": "esli-ya-rasstroilsya-chto-proishodit-dalshe",
+  "type": "question",
+  "title": "Если я расстроился, что происходит дальше?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "zamykayus-v-sebe",
+      "value": {
+        "male": "замыкаюсь в себе",
+        "female": "замыкаюсь в себе"
+      },
+      "exportedValue": {
+        "male": "У меня замыкаюсь в себе",
+        "female": "У меня замыкаюсь в себе"
+      },
+      "hint": "Стратегии совладания с болью",
+      "exercise": ""
+    },
+    {
+      "id": "ischu-utesheniya",
+      "value": {
+        "male": "ищу утешения",
+        "female": "ищу утешения"
+      },
+      "exportedValue": {
+        "male": "У меня ищу утешения",
+        "female": "У меня ищу утешения"
+      },
+      "hint": "Стратегии совладания с болью",
+      "exercise": ""
+    },
+    {
+      "id": "stanovlyus-agressivnym",
+      "value": {
+        "male": "становлюсь агрессивным",
+        "female": "становлюсь агрессивным"
+      },
+      "exportedValue": {
+        "male": "У меня становлюсь агрессивным",
+        "female": "У меня становлюсь агрессивным"
+      },
+      "hint": "Стратегии совладания с болью",
+      "exercise": ""
+    },
+    {
+      "id": "pogruzhayus-v-rabotu",
+      "value": {
+        "male": "погружаюсь в работу",
+        "female": "погружаюсь в работу"
+      },
+      "exportedValue": {
+        "male": "У меня погружаюсь в работу",
+        "female": "У меня погружаюсь в работу"
+      },
+      "hint": "Стратегии совладания с болью",
+      "exercise": ""
+    },
+    {
+      "id": "plachu",
+      "value": {
+        "male": "плачу",
+        "female": "плачу"
+      },
+      "exportedValue": {
+        "male": "У меня плачу",
+        "female": "У меня плачу"
+      },
+      "hint": "Стратегии совладания с болью",
+      "exercise": ""
+    }
+  ]
+}

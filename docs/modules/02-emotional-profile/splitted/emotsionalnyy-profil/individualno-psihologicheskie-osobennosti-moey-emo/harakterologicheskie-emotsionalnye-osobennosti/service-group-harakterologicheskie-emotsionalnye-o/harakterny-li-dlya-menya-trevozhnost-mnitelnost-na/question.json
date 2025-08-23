@@ -1,0 +1,61 @@
+{
+  "id": "harakterny-li-dlya-menya-trevozhnost-mnitelnost-na",
+  "type": "question",
+  "title": "Характерны ли для меня тревожность, мнительность, навязчивые страхи?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "vysokaya-trevozhnost",
+      "value": {
+        "male": "высокая тревожность",
+        "female": "высокая тревожность"
+      },
+      "exportedValue": {
+        "male": "У меня высокая тревожность",
+        "female": "У меня высокая тревожность"
+      },
+      "hint": "Тревожно-мнительный радикал личности",
+      "exercise": ""
+    },
+    {
+      "id": "umerennaya-mnitelnost",
+      "value": {
+        "male": "умеренная мнительность",
+        "female": "умеренная мнительность"
+      },
+      "exportedValue": {
+        "male": "У меня умеренная мнительность",
+        "female": "У меня умеренная мнительность"
+      },
+      "hint": "Тревожно-мнительный радикал личности",
+      "exercise": ""
+    },
+    {
+      "id": "otsutstvie-trevozhnosti",
+      "value": {
+        "male": "отсутствие тревожности",
+        "female": "отсутствие тревожности"
+      },
+      "exportedValue": {
+        "male": "У меня отсутствие тревожности",
+        "female": "У меня отсутствие тревожности"
+      },
+      "hint": "Тревожно-мнительный радикал личности",
+      "exercise": ""
+    },
+    {
+      "id": "situativnye-strahi",
+      "value": {
+        "male": "ситуативные страхи",
+        "female": "ситуативные страхи"
+      },
+      "exportedValue": {
+        "male": "У меня ситуативные страхи",
+        "female": "У меня ситуативные страхи"
+      },
+      "hint": "Тревожно-мнительный радикал личности",
+      "exercise": ""
+    }
+  ]
+}

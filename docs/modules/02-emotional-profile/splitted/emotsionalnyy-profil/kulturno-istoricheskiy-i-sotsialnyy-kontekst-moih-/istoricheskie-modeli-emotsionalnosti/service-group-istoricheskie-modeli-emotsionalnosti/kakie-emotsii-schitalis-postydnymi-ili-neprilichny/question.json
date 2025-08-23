@@ -1,0 +1,74 @@
+{
+  "id": "kakie-emotsii-schitalis-postydnymi-ili-neprilichny",
+  "type": "question",
+  "title": "Какие эмоции считались постыдными или неприличными в мое время?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "gnev",
+      "value": {
+        "male": "гнев",
+        "female": "гнев"
+      },
+      "exportedValue": {
+        "male": "У меня гнев",
+        "female": "У меня гнев"
+      },
+      "hint": "Исторические табу на определенные чувства",
+      "exercise": ""
+    },
+    {
+      "id": "strast",
+      "value": {
+        "male": "страсть",
+        "female": "страсть"
+      },
+      "exportedValue": {
+        "male": "У меня страсть",
+        "female": "У меня страсть"
+      },
+      "hint": "Исторические табу на определенные чувства",
+      "exercise": ""
+    },
+    {
+      "id": "slabost",
+      "value": {
+        "male": "слабость",
+        "female": "слабость"
+      },
+      "exportedValue": {
+        "male": "У меня слабость",
+        "female": "У меня слабость"
+      },
+      "hint": "Исторические табу на определенные чувства",
+      "exercise": ""
+    },
+    {
+      "id": "zavist",
+      "value": {
+        "male": "зависть",
+        "female": "зависть"
+      },
+      "exportedValue": {
+        "male": "У меня зависть",
+        "female": "У меня зависть"
+      },
+      "hint": "Исторические табу на определенные чувства",
+      "exercise": ""
+    },
+    {
+      "id": "vse-emotsii-prinimalis",
+      "value": {
+        "male": "все эмоции принимались",
+        "female": "все эмоции принимались"
+      },
+      "exportedValue": {
+        "male": "У меня все эмоции принимались",
+        "female": "У меня все эмоции принимались"
+      },
+      "hint": "Исторические табу на определенные чувства",
+      "exercise": ""
+    }
+  ]
+}

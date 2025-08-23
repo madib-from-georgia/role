@@ -1,0 +1,11 @@
+{
+  "id": "kak-ya-vyrazhayu-i-peredayu-svoi-emotsii",
+  "type": "section",
+  "title": "3. Как я выражаю и передаю свои эмоции",
+  "children": [
+    "kak-ya-govoryu-o-chuvstvah/subsection.json",
+    "kak-moe-telo-vyrazhaet-emotsii/subsection.json",
+    "kak-moe-telo-otklikaetsya-na-emotsii/subsection.json",
+    "kak-ya-vyrazhayu-chuvstva-cherez-simvoly-i-tvorche/subsection.json"
+  ]
+}

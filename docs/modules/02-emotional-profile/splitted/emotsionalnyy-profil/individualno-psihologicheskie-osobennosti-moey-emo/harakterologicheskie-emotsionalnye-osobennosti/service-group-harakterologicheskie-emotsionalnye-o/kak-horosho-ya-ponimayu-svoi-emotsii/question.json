@@ -1,0 +1,61 @@
+{
+  "id": "kak-horosho-ya-ponimayu-svoi-emotsii",
+  "type": "question",
+  "title": "Как хорошо я понимаю свои эмоции?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "vysokoe-samosoznanie",
+      "value": {
+        "male": "высокое самосознание",
+        "female": "высокое самосознание"
+      },
+      "exportedValue": {
+        "male": "У меня высокое самосознание",
+        "female": "У меня высокое самосознание"
+      },
+      "hint": "Уровень эмоционального самосознания",
+      "exercise": ""
+    },
+    {
+      "id": "srednee-ponimanie",
+      "value": {
+        "male": "среднее понимание",
+        "female": "среднее понимание"
+      },
+      "exportedValue": {
+        "male": "У меня среднее понимание",
+        "female": "У меня среднее понимание"
+      },
+      "hint": "Уровень эмоционального самосознания",
+      "exercise": ""
+    },
+    {
+      "id": "ploho-osoznayu-emotsii",
+      "value": {
+        "male": "плохо осознаю эмоции",
+        "female": "плохо осознаю эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня плохо осознаю эмоции",
+        "female": "У меня плохо осознаю эмоции"
+      },
+      "hint": "Уровень эмоционального самосознания",
+      "exercise": ""
+    },
+    {
+      "id": "izbiratelnoe-ponimanie",
+      "value": {
+        "male": "избирательное понимание",
+        "female": "избирательное понимание"
+      },
+      "exportedValue": {
+        "male": "У меня избирательное понимание",
+        "female": "У меня избирательное понимание"
+      },
+      "hint": "Уровень эмоционального самосознания",
+      "exercise": ""
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "kak-obschestvo-reagiruet-na-moe-emotsionalnoe-pove",
+  "type": "question",
+  "title": "Как общество реагирует на мое эмоциональное поведение?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "odobryaet",
+      "value": {
+        "male": "одобряет",
+        "female": "одобряет"
+      },
+      "exportedValue": {
+        "male": "У меня одобряет",
+        "female": "У меня одобряет"
+      },
+      "hint": "Социальная оценка эмоционального поведения",
+      "exercise": ""
+    },
+    {
+      "id": "osuzhdaet",
+      "value": {
+        "male": "осуждает",
+        "female": "осуждает"
+      },
+      "exportedValue": {
+        "male": "У меня осуждает",
+        "female": "У меня осуждает"
+      },
+      "hint": "Социальная оценка эмоционального поведения",
+      "exercise": ""
+    },
+    {
+      "id": "udivlyaetsya",
+      "value": {
+        "male": "удивляется",
+        "female": "удивляется"
+      },
+      "exportedValue": {
+        "male": "У меня удивляется",
+        "female": "У меня удивляется"
+      },
+      "hint": "Социальная оценка эмоционального поведения",
+      "exercise": ""
+    },
+    {
+      "id": "ravnodushno",
+      "value": {
+        "male": "равнодушно",
+        "female": "равнодушно"
+      },
+      "exportedValue": {
+        "male": "У меня равнодушно",
+        "female": "У меня равнодушно"
+      },
+      "hint": "Социальная оценка эмоционального поведения",
+      "exercise": ""
+    }
+  ]
+}

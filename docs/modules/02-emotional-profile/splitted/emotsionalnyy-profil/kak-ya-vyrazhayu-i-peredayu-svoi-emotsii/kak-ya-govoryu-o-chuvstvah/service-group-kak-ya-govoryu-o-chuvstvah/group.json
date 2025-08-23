@@ -1,0 +1,15 @@
+{
+  "id": "service-group-kak-ya-govoryu-o-chuvstvah",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.1 Как я говорю о чувствах\"",
+  "children": [
+    "kak-ya-govoryu-o-svoih-chuvstvah/question.json",
+    "bogat-li-moy-emotsionalnyy-slovar/question.json",
+    "kak-menyaetsya-moy-golos-v-raznyh-emotsionalnyh-so/question.json",
+    "kak-menyaetsya-moya-rech-pod-vliyaniem-emotsiy/question.json",
+    "ispolzuyu-li-ya-metafory-i-obrazy-dlya-opisaniya-c/question.json",
+    "mogu-li-govorit-kogda-ohvachen-silnymi-emotsiyami/question.json",
+    "sootvetstvuyut-li-moi-slova-istinnym-chuvstvam/question.json",
+    "est-li-u-menya-privychnye-slovechki-kotorye-vydayu/question.json"
+  ]
+}

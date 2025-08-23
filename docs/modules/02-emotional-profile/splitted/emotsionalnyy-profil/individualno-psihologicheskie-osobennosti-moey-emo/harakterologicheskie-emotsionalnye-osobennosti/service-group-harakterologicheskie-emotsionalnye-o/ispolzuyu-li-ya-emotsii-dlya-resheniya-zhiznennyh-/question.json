@@ -1,0 +1,61 @@
+{
+  "id": "ispolzuyu-li-ya-emotsii-dlya-resheniya-zhiznennyh-",
+  "type": "question",
+  "title": "Использую ли я эмоции для решения жизненных задач?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "emotsii-kak-instrument",
+      "value": {
+        "male": "эмоции как инструмент",
+        "female": "эмоции как инструмент"
+      },
+      "exportedValue": {
+        "male": "У меня эмоции как инструмент",
+        "female": "У меня эмоции как инструмент"
+      },
+      "hint": "Эмоции как инструмент vs помеха",
+      "exercise": ""
+    },
+    {
+      "id": "emotsii-kak-pomeha",
+      "value": {
+        "male": "эмоции как помеха",
+        "female": "эмоции как помеха"
+      },
+      "exportedValue": {
+        "male": "У меня эмоции как помеха",
+        "female": "У меня эмоции как помеха"
+      },
+      "hint": "Эмоции как инструмент vs помеха",
+      "exercise": ""
+    },
+    {
+      "id": "ne-svyazyvayu-emotsii-s-tselyami",
+      "value": {
+        "male": "не связываю эмоции с целями",
+        "female": "не связываю эмоции с целями"
+      },
+      "exportedValue": {
+        "male": "У меня не связываю эмоции с целями",
+        "female": "У меня не связываю эмоции с целями"
+      },
+      "hint": "Эмоции как инструмент vs помеха",
+      "exercise": ""
+    },
+    {
+      "id": "intuitivnoe-ispolzovanie",
+      "value": {
+        "male": "интуитивное использование",
+        "female": "интуитивное использование"
+      },
+      "exportedValue": {
+        "male": "У меня интуитивное использование",
+        "female": "У меня интуитивное использование"
+      },
+      "hint": "Эмоции как инструмент vs помеха",
+      "exercise": ""
+    }
+  ]
+}

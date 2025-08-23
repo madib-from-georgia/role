@@ -1,0 +1,61 @@
+{
+  "id": "kak-ya-otnoshus-k-grehovnym-emotsiyam-s-tochki-zre",
+  "type": "question",
+  "title": "Как я отношусь к \"греховным\" эмоциям с точки зрения веры?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "strogo-podavlyayu",
+      "value": {
+        "male": "строго подавляю",
+        "female": "строго подавляю"
+      },
+      "exportedValue": {
+        "male": "У меня строго подавляю",
+        "female": "У меня строго подавляю"
+      },
+      "hint": "Религиозная оценка \"греховных\" эмоций",
+      "exercise": ""
+    },
+    {
+      "id": "boryus-s-nimi",
+      "value": {
+        "male": "борюсь с ними",
+        "female": "борюсь с ними"
+      },
+      "exportedValue": {
+        "male": "У меня борюсь с ними",
+        "female": "У меня борюсь с ними"
+      },
+      "hint": "Религиозная оценка \"греховных\" эмоций",
+      "exercise": ""
+    },
+    {
+      "id": "prinimayu-kak-chast-prirody",
+      "value": {
+        "male": "принимаю как часть природы",
+        "female": "принимаю как часть природы"
+      },
+      "exportedValue": {
+        "male": "У меня принимаю как часть природы",
+        "female": "У меня принимаю как часть природы"
+      },
+      "hint": "Религиозная оценка \"греховных\" эмоций",
+      "exercise": ""
+    },
+    {
+      "id": "ne-schitayu-grehovnymi",
+      "value": {
+        "male": "не считаю греховными",
+        "female": "не считаю греховными"
+      },
+      "exportedValue": {
+        "male": "У меня не считаю греховными",
+        "female": "У меня не считаю греховными"
+      },
+      "hint": "Религиозная оценка \"греховных\" эмоций",
+      "exercise": ""
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "service-group-religioznye-i-filosofskie-vliyaniya-na-moyu-emotsi",
+  "type": "question_group",
+  "title": "Вопросы раздела \"7.3 Религиозные и философские влияния на мою эмоциональность\"",
+  "children": [
+    "kak-moi-religioznye-ubezhdeniya-vliyayut-na-emotsi/question.json",
+    "est-li-u-menya-duhovnye-perezhivaniya/question.json",
+    "kak-ya-otnoshus-k-grehovnym-emotsiyam-s-tochki-zre/question.json",
+    "vliyayut-li-moi-filosofskie-ubezhdeniya-na-emotsio/question.json",
+    "est-li-u-menya-konflikt-mezhdu-religioznymi-predpi/question.json",
+    "sohranilis-li-u-menya-narodnye-predstavleniya-ob-e/question.json",
+    "kak-u-menya-sochetayutsya-ofitsialnaya-religioznos/question.json",
+    "est-li-u-menya-sobstvennaya-filosofiya-chuvstv/question.json"
+  ]
+}

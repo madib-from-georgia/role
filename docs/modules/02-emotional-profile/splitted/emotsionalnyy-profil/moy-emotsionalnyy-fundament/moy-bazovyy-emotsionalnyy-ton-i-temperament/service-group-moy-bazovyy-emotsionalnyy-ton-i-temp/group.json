@@ -1,0 +1,15 @@
+{
+  "id": "service-group-moy-bazovyy-emotsionalnyy-ton-i-temperament",
+  "type": "question_group",
+  "title": "Вопросы раздела \"1.1 Мой базовый эмоциональный тон и темперамент\"",
+  "children": [
+    "v-kakom-ya-nastroenii-kogda-nichego-osobennogo-ne-/question.json",
+    "k-kakomu-tipu-temperamenta-ya-blizhe-vsego/question.json",
+    "kakova-moya-emotsionalnaya-vynoslivost/question.json",
+    "chto-daet-mne-emotsionalnuyu-energiyu-a-chto-istos/question.json",
+    "tyagoteyu-li-ya-k-pozitivnym-emotsiyam-negativnym-/question.json",
+    "vysokaya-ili-nizkaya-u-menya-bazovaya-emotsionalna/question.json",
+    "podskazka-predstav-emotsionalnuyu-yarkost-kak-svet/question.json",
+    "napravlyayu-li-ya-svoi-emotsii-bolshe-na-vneshniy-/question.json"
+  ]
+}

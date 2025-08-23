@@ -1,0 +1,61 @@
+{
+  "id": "est-li-u-menya-skrytye-emotsionalnye-vozmozhnosti",
+  "type": "question",
+  "title": "Есть ли у меня скрытые эмоциональные возможности?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "bolshoy-nerealizovannyy-potentsial",
+      "value": {
+        "male": "большой нереализованный потенциал",
+        "female": "большой нереализованный потенциал"
+      },
+      "exportedValue": {
+        "male": "У меня большой нереализованный потенциал",
+        "female": "У меня большой нереализованный потенциал"
+      },
+      "hint": "Дремлющий потенциал для развития",
+      "exercise": ""
+    },
+    {
+      "id": "otdelnye-nerazvitye-sposobnosti",
+      "value": {
+        "male": "отдельные неразвитые способности",
+        "female": "отдельные неразвитые способности"
+      },
+      "exportedValue": {
+        "male": "У меня отдельные неразвитые способности",
+        "female": "У меня отдельные неразвитые способности"
+      },
+      "hint": "Дремлющий потенциал для развития",
+      "exercise": ""
+    },
+    {
+      "id": "potentsial-ischerpan",
+      "value": {
+        "male": "потенциал исчерпан",
+        "female": "потенциал исчерпан"
+      },
+      "exportedValue": {
+        "male": "У меня потенциал исчерпан",
+        "female": "У меня потенциал исчерпан"
+      },
+      "hint": "Дремлющий потенциал для развития",
+      "exercise": ""
+    },
+    {
+      "id": "ne-zadumyvayus-o-potentsiale",
+      "value": {
+        "male": "не задумываюсь о потенциале",
+        "female": "не задумываюсь о потенциале"
+      },
+      "exportedValue": {
+        "male": "У меня не задумываюсь о потенциале",
+        "female": "У меня не задумываюсь о потенциале"
+      },
+      "hint": "Дремлющий потенциал для развития",
+      "exercise": ""
+    }
+  ]
+}

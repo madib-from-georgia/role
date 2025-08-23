@@ -1,0 +1,16 @@
+{
+  "id": "service-group-moya-emotsionalnaya-arka-i-traektoriya-razvitiya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"6.1 Моя эмоциональная арка и траектория развития\"",
+  "children": [
+    "v-kakom-emotsionalnom-sostoyanii-ya-nahozhus-v-nac/question.json",
+    "chto-v-proshlom-privelo-menya-k-etomu-ishodnomu-so/question.json",
+    "kakie-emotsionalnye-vozmozhnosti-est-u-menya-v-nac/question.json",
+    "kakie-sobytiya-kardinalno-menyayut-moe-emotsionaln/question.json",
+    "v-kakom-emotsionalnom-sostoyanii-ya-okazyvayus-v-k/question.json",
+    "logichno-li-moe-emotsionalnoe-razvitie/question.json",
+    "kakie-emotsionalnye-sposobnosti-ya-priobretayu-ili/question.json",
+    "est-li-u-menya-bezvozvratnye-emotsionalnye-izmenen/question.json",
+    "mozhno-li-schitat-moe-razvitie-pozitivnym-negativn/question.json"
+  ]
+}

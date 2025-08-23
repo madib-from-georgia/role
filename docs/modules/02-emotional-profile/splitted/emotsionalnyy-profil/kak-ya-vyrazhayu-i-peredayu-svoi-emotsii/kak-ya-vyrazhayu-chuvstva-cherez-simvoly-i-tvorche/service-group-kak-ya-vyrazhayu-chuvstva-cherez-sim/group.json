@@ -1,0 +1,14 @@
+{
+  "id": "service-group-kak-ya-vyrazhayu-chuvstva-cherez-simvoly-i-tvorche",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.4 Как я выражаю чувства через символы и творчество\"",
+  "children": [
+    "zanimayus-li-ya-tvorchestvom-chtoby-vyrazit-svoi-c/question.json",
+    "est-li-u-menya-ritualy-svyazannye-s-perezhivaniem-/question.json",
+    "kak-ya-vybirayu-odezhdu-v-zavisimosti-ot-nastroeni/question.json",
+    "kakie-podarki-ya-daryu-i-chto-oni-oznachayut-emots/question.json",
+    "kak-ya-organizuyu-svoe-prostranstvo-dlya-podderzha/question.json",
+    "est-li-u-menya-osobye-predmety-svyazannye-s-vazhny/question.json",
+    "kak-ya-vedu-sebya-kogda-ne-mogu-pryamo-vyrazit-chu/question.json"
+  ]
+}

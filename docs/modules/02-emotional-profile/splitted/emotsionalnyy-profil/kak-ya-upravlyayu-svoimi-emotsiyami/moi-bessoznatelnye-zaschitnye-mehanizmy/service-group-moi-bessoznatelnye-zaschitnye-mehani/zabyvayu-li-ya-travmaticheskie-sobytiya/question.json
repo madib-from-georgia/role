@@ -1,0 +1,61 @@
+{
+  "id": "zabyvayu-li-ya-travmaticheskie-sobytiya",
+  "type": "question",
+  "title": "\"Забываю\" ли я травматические события?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "vytesnyayu-iz-pamyati",
+      "value": {
+        "male": "вытесняю из памяти",
+        "female": "вытесняю из памяти"
+      },
+      "exportedValue": {
+        "male": "У меня вытесняю из памяти",
+        "female": "У меня вытесняю из памяти"
+      },
+      "hint": "Амнезия как защитный механизм",
+      "exercise": ""
+    },
+    {
+      "id": "pomnyu-vse",
+      "value": {
+        "male": "помню все",
+        "female": "помню все"
+      },
+      "exportedValue": {
+        "male": "У меня помню все",
+        "female": "У меня помню все"
+      },
+      "hint": "Амнезия как защитный механизм",
+      "exercise": ""
+    },
+    {
+      "id": "selektivnaya-pamyat",
+      "value": {
+        "male": "селективная память",
+        "female": "селективная память"
+      },
+      "exportedValue": {
+        "male": "У меня селективная память",
+        "female": "У меня селективная память"
+      },
+      "hint": "Амнезия как защитный механизм",
+      "exercise": ""
+    },
+    {
+      "id": "navyazchivye-vospominaniya",
+      "value": {
+        "male": "навязчивые воспоминания",
+        "female": "навязчивые воспоминания"
+      },
+      "exportedValue": {
+        "male": "У меня навязчивые воспоминания",
+        "female": "У меня навязчивые воспоминания"
+      },
+      "hint": "Амнезия как защитный механизм",
+      "exercise": ""
+    }
+  ]
+}

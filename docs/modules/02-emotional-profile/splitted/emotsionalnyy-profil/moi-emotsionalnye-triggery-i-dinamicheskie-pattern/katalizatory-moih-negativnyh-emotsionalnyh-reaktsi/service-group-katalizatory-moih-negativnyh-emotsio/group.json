@@ -1,0 +1,16 @@
+{
+  "id": "service-group-katalizatory-moih-negativnyh-emotsionalnyh-reaktsi",
+  "type": "question_group",
+  "title": "Вопросы раздела \"2.2 Катализаторы моих негативных эмоциональных реакций\"",
+  "children": [
+    "kakie-temy-razgovora-mgnovenno-vyvodyat-menya-iz-s/question.json",
+    "kakie-slova-ili-frazy-deystvuyut-na-menya-kak-udar/question.json",
+    "v-kakih-situatsiyah-ya-chuvstvuyu-sebya-sovershenn/question.json",
+    "chto-mozhet-dovesti-menya-do-yarosti/question.json",
+    "kakie-strahi-paralizuyut-menya-emotsionalno/question.json",
+    "chto-zastavlyaet-menya-chuvstvovat-styd-ili-vinu/question.json",
+    "kakie-obstoyatelstva-pogruzhayut-menya-v-tosku-ili/question.json",
+    "est-li-boleznennye-vospominaniya-kotorye-do-sih-po/question.json",
+    "kakie-tipy-lyudey-ili-povedeniya-osobenno-razdrazh/question.json"
+  ]
+}

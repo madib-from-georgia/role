@@ -1,0 +1,74 @@
+{
+  "id": "kak-menyaetsya-nastroenie-lyudey-v-moem-prisutstvi",
+  "type": "question",
+  "title": "Как меняется настроение людей в моем присутствии?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "stanovyatsya-veselee",
+      "value": {
+        "male": "становятся веселее",
+        "female": "становятся веселее"
+      },
+      "exportedValue": {
+        "male": "У меня становятся веселее",
+        "female": "У меня становятся веселее"
+      },
+      "hint": "Бессознательное эмоциональное воздействие на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "spokoynee",
+      "value": {
+        "male": "спокойнее",
+        "female": "спокойнее"
+      },
+      "exportedValue": {
+        "male": "У меня спокойнее",
+        "female": "У меня спокойнее"
+      },
+      "hint": "Бессознательное эмоциональное воздействие на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "napryazhennee",
+      "value": {
+        "male": "напряженнее",
+        "female": "напряженнее"
+      },
+      "exportedValue": {
+        "male": "У меня напряженнее",
+        "female": "У меня напряженнее"
+      },
+      "hint": "Бессознательное эмоциональное воздействие на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "grustnee",
+      "value": {
+        "male": "грустнее",
+        "female": "грустнее"
+      },
+      "exportedValue": {
+        "male": "У меня грустнее",
+        "female": "У меня грустнее"
+      },
+      "hint": "Бессознательное эмоциональное воздействие на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "ne-menyaetsya",
+      "value": {
+        "male": "не меняется",
+        "female": "не меняется"
+      },
+      "exportedValue": {
+        "male": "У меня не меняется",
+        "female": "У меня не меняется"
+      },
+      "hint": "Бессознательное эмоциональное воздействие на окружающих",
+      "exercise": ""
+    }
+  ]
+}

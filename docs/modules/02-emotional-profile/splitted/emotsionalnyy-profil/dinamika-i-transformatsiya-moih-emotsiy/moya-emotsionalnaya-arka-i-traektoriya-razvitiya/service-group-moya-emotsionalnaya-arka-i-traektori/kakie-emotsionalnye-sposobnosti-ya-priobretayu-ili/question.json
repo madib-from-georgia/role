@@ -1,0 +1,61 @@
+{
+  "id": "kakie-emotsionalnye-sposobnosti-ya-priobretayu-ili",
+  "type": "question",
+  "title": "Какие эмоциональные способности я приобретаю или теряю?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "rasshiryayu-spektr-emotsiy",
+      "value": {
+        "male": "расширяю спектр эмоций",
+        "female": "расширяю спектр эмоцая"
+      },
+      "exportedValue": {
+        "male": "У меня расширяю спектр эмоций",
+        "female": "У меня расширяю спектр эмоцая"
+      },
+      "hint": "Расширение или сужение эмоционального репертуара",
+      "exercise": ""
+    },
+    {
+      "id": "teryayu-sposobnosti",
+      "value": {
+        "male": "теряю способности",
+        "female": "теряю способности"
+      },
+      "exportedValue": {
+        "male": "У меня теряю способности",
+        "female": "У меня теряю способности"
+      },
+      "hint": "Расширение или сужение эмоционального репертуара",
+      "exercise": ""
+    },
+    {
+      "id": "pereraspredelyayu-emotsii",
+      "value": {
+        "male": "перераспределяю эмоции",
+        "female": "перераспределяю эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня перераспределяю эмоции",
+        "female": "У меня перераспределяю эмоции"
+      },
+      "hint": "Расширение или сужение эмоционального репертуара",
+      "exercise": ""
+    },
+    {
+      "id": "ostayus-neizmennym",
+      "value": {
+        "male": "остаюсь неизменным",
+        "female": "остаюсь неизменным"
+      },
+      "exportedValue": {
+        "male": "У меня остаюсь неизменным",
+        "female": "У меня остаюсь неизменным"
+      },
+      "hint": "Расширение или сужение эмоционального репертуара",
+      "exercise": ""
+    }
+  ]
+}

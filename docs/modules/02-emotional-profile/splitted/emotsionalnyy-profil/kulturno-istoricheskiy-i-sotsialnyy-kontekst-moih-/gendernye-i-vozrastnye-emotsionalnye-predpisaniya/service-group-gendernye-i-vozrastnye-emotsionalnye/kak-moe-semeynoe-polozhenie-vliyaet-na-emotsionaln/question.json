@@ -1,0 +1,61 @@
+{
+  "id": "kak-moe-semeynoe-polozhenie-vliyaet-na-emotsionaln",
+  "type": "question",
+  "title": "Как мое семейное положение влияет на эмоциональные роли?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "polnostyu-opredelyaet-povedenie",
+      "value": {
+        "male": "полностью определяет поведение",
+        "female": "полностью определяет поведение"
+      },
+      "exportedValue": {
+        "male": "У меня полностью определяет поведение",
+        "female": "У меня полностью определяет поведение"
+      },
+      "hint": "Отец семейства, незамужняя дочь, вдова",
+      "exercise": ""
+    },
+    {
+      "id": "chastichno-vliyaet",
+      "value": {
+        "male": "частично влияет",
+        "female": "частично влияет"
+      },
+      "exportedValue": {
+        "male": "У меня частично влияет",
+        "female": "У меня частично влияет"
+      },
+      "hint": "Отец семейства, незамужняя дочь, вдова",
+      "exercise": ""
+    },
+    {
+      "id": "minimalnoe-vliyanie",
+      "value": {
+        "male": "минимальное влияние",
+        "female": "минимальное влияние"
+      },
+      "exportedValue": {
+        "male": "У меня минимальное влияние",
+        "female": "У меня минимальное влияние"
+      },
+      "hint": "Отец семейства, незамужняя дочь, вдова",
+      "exercise": ""
+    },
+    {
+      "id": "otvergayu-semeynye-roli",
+      "value": {
+        "male": "отвергаю семейные роли",
+        "female": "отвергаю семейные роли"
+      },
+      "exportedValue": {
+        "male": "У меня отвергаю семейные роли",
+        "female": "У меня отвергаю семейные роли"
+      },
+      "hint": "Отец семейства, незамужняя дочь, вдова",
+      "exercise": ""
+    }
+  ]
+}

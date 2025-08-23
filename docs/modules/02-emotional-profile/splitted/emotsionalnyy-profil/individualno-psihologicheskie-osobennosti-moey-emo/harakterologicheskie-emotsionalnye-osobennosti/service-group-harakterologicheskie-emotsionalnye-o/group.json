@@ -1,0 +1,16 @@
+{
+  "id": "service-group-harakterologicheskie-emotsionalnye-osobennosti",
+  "type": "question_group",
+  "title": "Вопросы раздела \"8.2 Характерологические эмоциональные особенности\"",
+  "children": [
+    "sklonen-li-ya-k-teatralnosti-demonstrativnosti-v-e/question.json",
+    "harakterny-li-dlya-menya-trevozhnost-mnitelnost-na/question.json",
+    "est-li-u-menya-sklonnost-k-emotsionalnoy-holodnost/question.json",
+    "byvayut-li-u-menya-periody-emotsionalnogo-podema-i/question.json",
+    "introvert-ya-ili-ekstravert-v-emotsionalnom-plane/question.json",
+    "kak-horosho-ya-ponimayu-svoi-emotsii/question.json",
+    "umeyu-li-ya-upravlyat-emotsionalnymi-sostoyaniyami/question.json",
+    "chuvstvitelen-li-ya-k-emotsiyam-drugih-lyudey/question.json",
+    "ispolzuyu-li-ya-emotsii-dlya-resheniya-zhiznennyh-/question.json"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "service-group-spetsifika-moih-emotsionalnyh-otnosheniy",
+  "type": "question_group",
+  "title": "Вопросы раздела \"5.3 Специфика моих эмоциональных отношений\"",
+  "children": [
+    "kak-razvivalis-moi-emotsionalnye-otnosheniya-s-kaz/question.json",
+    "kakie-chuvstva-ya-ispytyvayu-k-kazhdomu-znachimomu/question.json",
+    "est-li-lyudi-k-kotorym-ya-ispytyvayu-ambivalentnye/question.json",
+    "kto-mozhet-povliyat-na-moe-emotsionalnoe-sostoyani/question.json",
+    "s-kem-ya-chuvstvuyu-sebya-emotsionalno-bezopasno/question.json",
+    "est-li-otnosheniya-gde-ya-igrayu-rol-emotsionalnog/question.json",
+    "kakie-otnosheniya-dayut-mne-energiyu-a-kakie-istos/question.json",
+    "izmenilis-li-moi-emotsionalnye-otnosheniya-s-teche/question.json"
+  ]
+}

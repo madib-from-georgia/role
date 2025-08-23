@@ -1,0 +1,8 @@
+{
+  "id": "moy-bazovyy-emotsionalnyy-ton-i-temperament",
+  "type": "subsection",
+  "title": "1.1 Мой базовый эмоциональный тон и темперамент",
+  "children": [
+    "service-group-moy-bazovyy-emotsionalnyy-ton-i-temp/group.json"
+  ]
+}

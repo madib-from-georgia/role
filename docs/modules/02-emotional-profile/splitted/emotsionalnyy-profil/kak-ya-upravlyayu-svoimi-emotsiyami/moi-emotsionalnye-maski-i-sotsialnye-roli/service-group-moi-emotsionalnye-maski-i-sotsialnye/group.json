@@ -1,0 +1,15 @@
+{
+  "id": "service-group-moi-emotsionalnye-maski-i-sotsialnye-roli",
+  "type": "question_group",
+  "title": "Вопросы раздела \"4.3 Мои эмоциональные маски и социальные роли\"",
+  "children": [
+    "odinakovo-li-ya-vedu-sebya-doma-i-na-rabote-v-emot/question.json",
+    "est-li-emotsii-kotorye-ya-schitayu-nepodhodyaschim/question.json",
+    "kakuyu-emotsionalnuyu-rol-ya-igrayu-v-seme/question.json",
+    "trebuet-li-moya-professiya-opredelennogo-emotsiona/question.json",
+    "s-kem-ya-mogu-byt-emotsionalno-iskrennim/question.json",
+    "kakie-chuvstva-ya-pryachu-ot-okruzhayuschih-i-poch/question.json",
+    "byvayut-li-momenty-kogda-moya-emotsionalnaya-maska/question.json",
+    "ustayu-li-ya-ot-neobhodimosti-kontrolirovat-emotsi/question.json"
+  ]
+}

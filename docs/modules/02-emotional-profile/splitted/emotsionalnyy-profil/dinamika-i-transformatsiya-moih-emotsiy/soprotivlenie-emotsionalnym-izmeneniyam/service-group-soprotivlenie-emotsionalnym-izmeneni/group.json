@@ -1,0 +1,15 @@
+{
+  "id": "service-group-soprotivlenie-emotsionalnym-izmeneniyam",
+  "type": "question_group",
+  "title": "Вопросы раздела \"6.3 Сопротивление эмоциональным изменениям\"",
+  "children": [
+    "chego-ya-boyus-v-novyh-emotsionalnyh-sostoyaniyah/question.json",
+    "kakie-privychnye-sostoyaniya-ya-ne-hochu-pokidat/question.json",
+    "kakie-vnutrennie-golosa-uderzhivayut-menya-ot-izme/question.json",
+    "est-li-lyudi-kotorye-ne-hotyat-moih-izmeneniy/question.json",
+    "kakie-sotsialnye-ozhidaniya-meshayut-mne-izmenitsy/question.json",
+    "est-li-travmy-blokiruyuschie-moy-emotsionalnyy-ros/question.json",
+    "ustal-li-ya-ot-popytok-izmenitsya/question.json",
+    "chto-pomogaet-mne-preodolet-soprotivlenie-izmeneni/question.json"
+  ]
+}

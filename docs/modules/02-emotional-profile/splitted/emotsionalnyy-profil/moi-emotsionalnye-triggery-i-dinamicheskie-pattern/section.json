@@ -1,0 +1,11 @@
+{
+  "id": "moi-emotsionalnye-triggery-i-dinamicheskie-pattern",
+  "type": "section",
+  "title": "2. Мои эмоциональные триггеры и динамические паттерны",
+  "children": [
+    "aktivatory-moih-pozitivnyh-emotsionalnyh-sostoyani/subsection.json",
+    "katalizatory-moih-negativnyh-emotsionalnyh-reaktsi/subsection.json",
+    "moi-emotsionalnye-tsepochki-i-kaskady/subsection.json",
+    "moi-emotsionalnye-ritmy-i-tsikly/subsection.json"
+  ]
+}

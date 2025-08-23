@@ -1,0 +1,61 @@
+{
+  "id": "vedu-li-ya-dnevnik-pishu-pisma-progovarivayu-svoi-",
+  "type": "question",
+  "title": "Веду ли я дневник, пишу письма, \"проговариваю\" свои чувства?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "regulyarno-vedu-zapisi",
+      "value": {
+        "male": "регулярно веду записи",
+        "female": "регулярно веду записи"
+      },
+      "exportedValue": {
+        "male": "У меня регулярно веду записи",
+        "female": "У меня регулярно веду записи"
+      },
+      "hint": "Письменные практики эмоциональной регуляции",
+      "exercise": ""
+    },
+    {
+      "id": "inogda-pishu",
+      "value": {
+        "male": "иногда пишу",
+        "female": "иногда пишу"
+      },
+      "exportedValue": {
+        "male": "У меня иногда пишу",
+        "female": "У меня иногда пишу"
+      },
+      "hint": "Письменные практики эмоциональной регуляции",
+      "exercise": ""
+    },
+    {
+      "id": "progovarivayu-s-lyudmi",
+      "value": {
+        "male": "проговариваю с людьми",
+        "female": "проговариваю с людьми"
+      },
+      "exportedValue": {
+        "male": "У меня проговариваю с людьми",
+        "female": "У меня проговариваю с людьми"
+      },
+      "hint": "Письменные практики эмоциональной регуляции",
+      "exercise": ""
+    },
+    {
+      "id": "derzhu-vse-v-sebe",
+      "value": {
+        "male": "держу все в себе",
+        "female": "держу все в себе"
+      },
+      "exportedValue": {
+        "male": "У меня держу все в себе",
+        "female": "У меня держу все в себе"
+      },
+      "hint": "Письменные практики эмоциональной регуляции",
+      "exercise": ""
+    }
+  ]
+}

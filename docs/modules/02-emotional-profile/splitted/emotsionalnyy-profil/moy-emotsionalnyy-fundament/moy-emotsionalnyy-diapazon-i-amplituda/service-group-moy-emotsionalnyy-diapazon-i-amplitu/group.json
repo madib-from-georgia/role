@@ -1,0 +1,14 @@
+{
+  "id": "service-group-moy-emotsionalnyy-diapazon-i-amplituda",
+  "type": "question_group",
+  "title": "Вопросы раздела \"1.2 Мой эмоциональный диапазон и амплитуда\"",
+  "children": [
+    "naskolko-bogat-moy-emotsionalnyy-mir/question.json",
+    "sposoben-li-ya-na-ochen-silnye-perezhivaniya/question.json",
+    "mogu-li-ya-bystro-perehodit-ot-odnoy-kraynosti-k-d/question.json",
+    "est-li-u-menya-redkie-neobychnye-emotsii/question.json",
+    "kakie-emotsii-ya-tochno-ne-sposoben-ispytyvat/question.json",
+    "naskolko-gluboko-ya-perezhivayu-emotsii/question.json",
+    "mogu-li-ya-odnovremenno-ispytyvat-protivopolozhnye/question.json"
+  ]
+}

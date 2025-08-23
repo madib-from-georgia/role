@@ -1,0 +1,61 @@
+{
+  "id": "mogu-li-ya-otlozhit-emotsionalnuyu-reaktsiyu",
+  "type": "question",
+  "title": "Могу ли я отложить эмоциональную реакцию?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "horosho-kontroliruyu-vremya-reaktsiy",
+      "value": {
+        "male": "хорошо контролирую время реакций",
+        "female": "хорошо контролирую время реакцая"
+      },
+      "exportedValue": {
+        "male": "У меня хорошо контролирую время реакций",
+        "female": "У меня хорошо контролирую время реакцая"
+      },
+      "hint": "Способность к эмоциональной отсрочке",
+      "exercise": ""
+    },
+    {
+      "id": "s-trudom-otkladyvayu",
+      "value": {
+        "male": "с трудом откладываю",
+        "female": "с трудом откладываю"
+      },
+      "exportedValue": {
+        "male": "У меня с трудом откладываю",
+        "female": "У меня с трудом откладываю"
+      },
+      "hint": "Способность к эмоциональной отсрочке",
+      "exercise": ""
+    },
+    {
+      "id": "reagiruyu-srazu",
+      "value": {
+        "male": "реагирую сразу",
+        "female": "реагирую сразу"
+      },
+      "exportedValue": {
+        "male": "У меня реагирую сразу",
+        "female": "У меня реагирую сразу"
+      },
+      "hint": "Способность к эмоциональной отсрочке",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyayu-nasovsem",
+      "value": {
+        "male": "подавляю насовсем",
+        "female": "подавляю насовсем"
+      },
+      "exportedValue": {
+        "male": "У меня подавляю насовсем",
+        "female": "У меня подавляю насовсем"
+      },
+      "hint": "Способность к эмоциональной отсрочке",
+      "exercise": ""
+    }
+  ]
+}

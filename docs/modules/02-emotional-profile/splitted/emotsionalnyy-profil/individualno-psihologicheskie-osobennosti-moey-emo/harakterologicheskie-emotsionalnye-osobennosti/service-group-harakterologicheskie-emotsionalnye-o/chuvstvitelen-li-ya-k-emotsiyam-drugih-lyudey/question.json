@@ -1,0 +1,61 @@
+{
+  "id": "chuvstvitelen-li-ya-k-emotsiyam-drugih-lyudey",
+  "type": "question",
+  "title": "Чувствителен ли я к эмоциям других людей?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "vysokaya-empatiya",
+      "value": {
+        "male": "высокая эмпатия",
+        "female": "высокая эмпатия"
+      },
+      "exportedValue": {
+        "male": "У меня высокая эмпатия",
+        "female": "У меня высокая эмпатия"
+      },
+      "hint": "Развитость эмпатических способностей",
+      "exercise": ""
+    },
+    {
+      "id": "srednyaya-chuvstvitelnost",
+      "value": {
+        "male": "средняя чувствительность",
+        "female": "средняя чувствительность"
+      },
+      "exportedValue": {
+        "male": "У меня средняя чувствительность",
+        "female": "У меня средняя чувствительность"
+      },
+      "hint": "Развитость эмпатических способностей",
+      "exercise": ""
+    },
+    {
+      "id": "nizkaya-empatiya",
+      "value": {
+        "male": "низкая эмпатия",
+        "female": "низкая эмпатия"
+      },
+      "exportedValue": {
+        "male": "У меня низкая эмпатия",
+        "female": "У меня низкая эмпатия"
+      },
+      "hint": "Развитость эмпатических способностей",
+      "exercise": ""
+    },
+    {
+      "id": "izbiratelnaya-chuvstvitelnost",
+      "value": {
+        "male": "избирательная чувствительность",
+        "female": "избирательная чувствительность"
+      },
+      "exportedValue": {
+        "male": "У меня избирательная чувствительность",
+        "female": "У меня избирательная чувствительность"
+      },
+      "hint": "Развитость эмпатических способностей",
+      "exercise": ""
+    }
+  ]
+}

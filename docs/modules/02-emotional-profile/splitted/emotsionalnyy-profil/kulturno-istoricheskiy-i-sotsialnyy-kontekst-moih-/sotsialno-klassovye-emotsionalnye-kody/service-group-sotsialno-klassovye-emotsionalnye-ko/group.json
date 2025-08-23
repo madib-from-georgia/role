@@ -1,0 +1,15 @@
+{
+  "id": "service-group-sotsialno-klassovye-emotsionalnye-kody",
+  "type": "question_group",
+  "title": "Вопросы раздела \"7.2 Социально-классовые эмоциональные коды\"",
+  "children": [
+    "kak-ya-dolzhen-emotsionalno-vesti-sebya-kak-predst/question.json",
+    "kakie-emotsii-schitalis-blagorodnymi-dlya-moego-kl/question.json",
+    "kakie-sposoby-vyrazheniya-emotsiy-byli-prinyaty-v-/question.json",
+    "otlichalis-li-normy-dlya-publiki-i-dlya-doma-v-moe/question.json",
+    "kakie-emotsionalnye-privilegii-daet-mne-sotsialnoe/question.json",
+    "kak-moya-professiya-vliyaet-na-emotsionalnoe-poved/question.json",
+    "mogu-li-ya-pozvolit-sebe-emotsionalnuyu-iskrennost/question.json",
+    "kak-moe-finansovoe-polozhenie-vliyaet-na-emotsiona/question.json"
+  ]
+}

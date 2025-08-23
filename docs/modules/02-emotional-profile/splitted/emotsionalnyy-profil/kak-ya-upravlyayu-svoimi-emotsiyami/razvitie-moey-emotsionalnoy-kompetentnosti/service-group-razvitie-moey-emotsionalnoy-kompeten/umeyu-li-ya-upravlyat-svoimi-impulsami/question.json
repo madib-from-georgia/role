@@ -1,0 +1,61 @@
+{
+  "id": "umeyu-li-ya-upravlyat-svoimi-impulsami",
+  "type": "question",
+  "title": "Умею ли я управлять своими импульсами?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "horoshiy-samokontrol",
+      "value": {
+        "male": "хороший самоконтроль",
+        "female": "хороший самоконтроль"
+      },
+      "exportedValue": {
+        "male": "У меня хороший самоконтроль",
+        "female": "У меня хороший самоконтроль"
+      },
+      "hint": "Степень эмоционального самоконтроля",
+      "exercise": ""
+    },
+    {
+      "id": "chastichno-upravlyayu",
+      "value": {
+        "male": "частично управляю",
+        "female": "частично управляю"
+      },
+      "exportedValue": {
+        "male": "У меня частично управляю",
+        "female": "У меня частично управляю"
+      },
+      "hint": "Степень эмоционального самоконтроля",
+      "exercise": ""
+    },
+    {
+      "id": "impulsy-upravlyayut-mnoy",
+      "value": {
+        "male": "импульсы управляют мной",
+        "female": "импульсы управляют мная"
+      },
+      "exportedValue": {
+        "male": "У меня импульсы управляют мной",
+        "female": "У меня импульсы управляют мная"
+      },
+      "hint": "Степень эмоционального самоконтроля",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyayu-vse-impulsy",
+      "value": {
+        "male": "подавляю все импульсы",
+        "female": "подавляю все импульсы"
+      },
+      "exportedValue": {
+        "male": "У меня подавляю все импульсы",
+        "female": "У меня подавляю все импульсы"
+      },
+      "hint": "Степень эмоционального самоконтроля",
+      "exercise": ""
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "izbegayut-li-nekotorye-lyudi-menya",
+  "type": "question",
+  "title": "Избегают ли некоторые люди меня?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "mnogie-izbegayut",
+      "value": {
+        "male": "многие избегают",
+        "female": "многие избегают"
+      },
+      "exportedValue": {
+        "male": "У меня многие избегают",
+        "female": "У меня многие избегают"
+      },
+      "hint": "Токсическое влияние на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "nekotorye",
+      "value": {
+        "male": "некоторые",
+        "female": "некоторые"
+      },
+      "exportedValue": {
+        "male": "У меня некоторые",
+        "female": "У меня некоторые"
+      },
+      "hint": "Токсическое влияние на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "redko",
+      "value": {
+        "male": "редко",
+        "female": "редко"
+      },
+      "exportedValue": {
+        "male": "У меня редко",
+        "female": "У меня редко"
+      },
+      "hint": "Токсическое влияние на окружающих",
+      "exercise": ""
+    },
+    {
+      "id": "vse-tyanutsya-ko-mne",
+      "value": {
+        "male": "все тянутся ко мне",
+        "female": "все тянутся ко мне"
+      },
+      "exportedValue": {
+        "male": "У меня все тянутся ко мне",
+        "female": "У меня все тянутся ко мне"
+      },
+      "hint": "Токсическое влияние на окружающих",
+      "exercise": ""
+    }
+  ]
+}

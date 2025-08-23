@@ -1,0 +1,61 @@
+{
+  "id": "ispolzuyu-li-ya-yumor-chtoby-ne-stalkivatsya-s-bol",
+  "type": "question",
+  "title": "Использую ли я юмор, чтобы не сталкиваться с болезненными чувствами?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "postoyanno-shuchu-v-tyazhelyh-situatsiyah",
+      "value": {
+        "male": "постоянно шучу в тяжелых ситуациях",
+        "female": "постоянно шучу в тяжелых ситуациях"
+      },
+      "exportedValue": {
+        "male": "У меня постоянно шучу в тяжелых ситуациях",
+        "female": "У меня постоянно шучу в тяжелых ситуациях"
+      },
+      "hint": "Смех как защита от страдания",
+      "exercise": ""
+    },
+    {
+      "id": "inogda",
+      "value": {
+        "male": "иногда",
+        "female": "иногда"
+      },
+      "exportedValue": {
+        "male": "У меня иногда",
+        "female": "У меня иногда"
+      },
+      "hint": "Смех как защита от страдания",
+      "exercise": ""
+    },
+    {
+      "id": "redko-ispolzuyu-yumor",
+      "value": {
+        "male": "редко использую юмор",
+        "female": "редко использую юмор"
+      },
+      "exportedValue": {
+        "male": "У меня редко использую юмор",
+        "female": "У меня редко использую юмор"
+      },
+      "hint": "Смех как защита от страдания",
+      "exercise": ""
+    },
+    {
+      "id": "yumor-ne-svyazan-s-zaschitoy",
+      "value": {
+        "male": "юмор не связан с защитой",
+        "female": "юмор не связан с защитая"
+      },
+      "exportedValue": {
+        "male": "У меня юмор не связан с защитой",
+        "female": "У меня юмор не связан с защитая"
+      },
+      "hint": "Смех как защита от страдания",
+      "exercise": ""
+    }
+  ]
+}

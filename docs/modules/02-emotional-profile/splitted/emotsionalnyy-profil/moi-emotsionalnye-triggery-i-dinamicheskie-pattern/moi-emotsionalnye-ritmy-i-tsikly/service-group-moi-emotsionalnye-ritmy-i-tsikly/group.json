@@ -1,0 +1,15 @@
+{
+  "id": "service-group-moi-emotsionalnye-ritmy-i-tsikly",
+  "type": "question_group",
+  "title": "Вопросы раздела \"2.4 Мои эмоциональные ритмы и циклы\"",
+  "children": [
+    "v-kakoe-vremya-dnya-ya-obychno-v-luchshemhudshem-n/question.json",
+    "kak-menyaetsya-moe-emotsionalnoe-sostoyanie-v-tech/question.json",
+    "vliyayut-li-vremena-goda-na-moe-nastroenie/question.json",
+    "est-li-daty-v-kalendare-kotorye-vsegda-vyzyvayut-u/question.json",
+    "nuzhno-li-mne-periodicheski-ostavatsya-v-odinoches/question.json",
+    "kak-chasto-mne-nuzhno-emotsionalno-razryazhatsya/question.json",
+    "est-li-u-menya-periody-emotsionalnogo-podema-i-spa/question.json",
+    "vozvraschayus-li-ya-k-odnim-i-tem-zhe-emotsionalny/question.json"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "kak-moya-professiya-vliyaet-na-emotsionalnoe-poved",
+  "type": "question",
+  "title": "Как моя профессия влияет на эмоциональное поведение?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "polnostyu-opredelyaet",
+      "value": {
+        "male": "полностью определяет",
+        "female": "полностью определяет"
+      },
+      "exportedValue": {
+        "male": "У меня полностью определяет",
+        "female": "У меня полностью определяет"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    },
+    {
+      "id": "chastichno-vliyaet",
+      "value": {
+        "male": "частично влияет",
+        "female": "частично влияет"
+      },
+      "exportedValue": {
+        "male": "У меня частично влияет",
+        "female": "У меня частично влияет"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    },
+    {
+      "id": "ne-vliyaet",
+      "value": {
+        "male": "не влияет",
+        "female": "не влияет"
+      },
+      "exportedValue": {
+        "male": "У меня не влияет",
+        "female": "У меня не влияет"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    },
+    {
+      "id": "sozdaet-konflikty",
+      "value": {
+        "male": "создает конфликты",
+        "female": "создает конфликты"
+      },
+      "exportedValue": {
+        "male": "У меня создает конфликты",
+        "female": "У меня создает конфликты"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    }
+  ]
+}

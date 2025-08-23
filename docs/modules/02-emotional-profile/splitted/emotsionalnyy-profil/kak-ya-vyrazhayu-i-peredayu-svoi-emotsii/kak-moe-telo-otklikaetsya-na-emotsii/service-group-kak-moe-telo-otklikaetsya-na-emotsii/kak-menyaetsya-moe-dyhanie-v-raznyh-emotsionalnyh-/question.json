@@ -1,0 +1,61 @@
+{
+  "id": "kak-menyaetsya-moe-dyhanie-v-raznyh-emotsionalnyh-",
+  "type": "question",
+  "title": "Как меняется мое дыхание в разных эмоциональных состояниях?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "zaderzhivayu-ot-ispuga",
+      "value": {
+        "male": "задерживаю от испуга",
+        "female": "задерживаю от испуга"
+      },
+      "exportedValue": {
+        "male": "У меня задерживаю от испуга",
+        "female": "У меня задерживаю от испуга"
+      },
+      "hint": "Респираторные изменения как маркеры эмоций",
+      "exercise": ""
+    },
+    {
+      "id": "tyazhelo-dyshu-ot-gneva",
+      "value": {
+        "male": "тяжело дышу от гнева",
+        "female": "тяжело дышу от гнева"
+      },
+      "exportedValue": {
+        "male": "У меня тяжело дышу от гнева",
+        "female": "У меня тяжело дышу от гнева"
+      },
+      "hint": "Респираторные изменения как маркеры эмоций",
+      "exercise": ""
+    },
+    {
+      "id": "vzdyhayu-ot-pechali",
+      "value": {
+        "male": "вздыхаю от печали",
+        "female": "вздыхаю от печали"
+      },
+      "exportedValue": {
+        "male": "У меня вздыхаю от печали",
+        "female": "У меня вздыхаю от печали"
+      },
+      "hint": "Респираторные изменения как маркеры эмоций",
+      "exercise": ""
+    },
+    {
+      "id": "dyhanie-stabilno",
+      "value": {
+        "male": "дыхание стабильно",
+        "female": "дыхание стабильно"
+      },
+      "exportedValue": {
+        "male": "У меня дыхание стабильно",
+        "female": "У меня дыхание стабильно"
+      },
+      "hint": "Респираторные изменения как маркеры эмоций",
+      "exercise": ""
+    }
+  ]
+}

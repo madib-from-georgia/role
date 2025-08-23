@@ -1,0 +1,15 @@
+{
+  "id": "emotsionalnyy-profil",
+  "type": "portrait",
+  "title": "Эмоциональный профиль",
+  "children": [
+    "moy-emotsionalnyy-fundament/section.json",
+    "moi-emotsionalnye-triggery-i-dinamicheskie-pattern/section.json",
+    "kak-ya-vyrazhayu-i-peredayu-svoi-emotsii/section.json",
+    "kak-ya-upravlyayu-svoimi-emotsiyami/section.json",
+    "moi-emotsionalnye-otnosheniya-s-lyudmi/section.json",
+    "dinamika-i-transformatsiya-moih-emotsiy/section.json",
+    "kulturno-istoricheskiy-i-sotsialnyy-kontekst-moih-/section.json",
+    "individualno-psihologicheskie-osobennosti-moey-emo/section.json"
+  ]
+}

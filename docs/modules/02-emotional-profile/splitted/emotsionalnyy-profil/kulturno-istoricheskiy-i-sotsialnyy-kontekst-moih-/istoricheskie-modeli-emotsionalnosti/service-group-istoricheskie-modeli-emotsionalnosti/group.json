@@ -1,0 +1,16 @@
+{
+  "id": "service-group-istoricheskie-modeli-emotsionalnosti",
+  "type": "question_group",
+  "title": "Вопросы раздела \"7.1 Исторические модели эмоциональности\"",
+  "children": [
+    "kakie-emotsionalnye-kachestva-schitalis-dostoynymi/question.json",
+    "kakie-emotsii-schitalis-postydnymi-ili-neprilichny/question.json",
+    "kak-dolzhen-byl-emotsionalno-vesti-sebya-chelovek-/question.json",
+    "kakie-trebovaniya-predyavlyalis-k-lyudyam-moego-vo/question.json",
+    "kak-religiya-vliyala-na-moyu-emotsionalnuyu-zhizn/question.json",
+    "kakuyu-rol-igralo-obrazovanie-v-formirovanii-moih-/question.json",
+    "kak-istoricheskie-sobytiya-vliyali-na-emotsionalno/question.json",
+    "kakie-techeniya-formirovali-emotsionalnye-idealy-m/question.json",
+    "otlichaetsya-li-emotsionalnaya-kultura-moey-epohi-/question.json"
+  ]
+}

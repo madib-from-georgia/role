@@ -1,0 +1,16 @@
+{
+  "id": "service-group-moi-bessoznatelnye-zaschitnye-mehanizmy",
+  "type": "question_group",
+  "title": "Вопросы раздела \"4.2 Мои бессознательные защитные механизмы\"",
+  "children": [
+    "sklonen-li-ya-delat-vid-chto-boleznennyh-sobytiy-n/question.json",
+    "privyk-li-ya-vse-obyasnyat-logicheski-izbegaya-emo/question.json",
+    "obvinyayu-li-ya-drugih-v-tom-chto-chuvstvuyu-sam/question.json",
+    "prevraschayu-li-ya-svoyu-bol-v-tvorchestvo-rabotu-/question.json",
+    "ispolzuyu-li-ya-yumor-chtoby-ne-stalkivatsya-s-bol/question.json",
+    "zabyvayu-li-ya-travmaticheskie-sobytiya/question.json",
+    "vedu-li-ya-sebya-protivopolozhno-tomu-chto-chuvstv/question.json",
+    "v-stresse-stanovlyus-li-ya-bolee-detskim-bespomosc/question.json",
+    "perenoshu-li-ya-gnev-s-odnogo-cheloveka-na-drugogo/question.json"
+  ]
+}

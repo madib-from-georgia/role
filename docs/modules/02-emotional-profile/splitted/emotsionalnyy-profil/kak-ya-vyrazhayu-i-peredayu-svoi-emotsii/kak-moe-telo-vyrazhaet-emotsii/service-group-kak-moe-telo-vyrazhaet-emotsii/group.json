@@ -1,0 +1,15 @@
+{
+  "id": "service-group-kak-moe-telo-vyrazhaet-emotsii",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.2 Как мое тело выражает эмоции\"",
+  "children": [
+    "kak-vyglyadit-moe-litso-v-raznyh-emotsionalnyh-sos/question.json",
+    "kontroliruyu-li-ya-vyrazhenie-litsa-ili-emotsii-na/question.json",
+    "est-li-u-menya-harakternoe-vyrazhenie-litsa-firmen/question.json",
+    "kak-ya-zhestikuliruyu-v-spokoynom-i-emotsionalnom-/question.json",
+    "est-li-u-menya-privychka-trogat-sebya-kogda-volnuy/question.json",
+    "kak-menyaetsya-moya-osanka-v-zavisimosti-ot-nastro/question.json",
+    "kak-ya-dvigayus-kogda-ispytyvayu-raznye-emotsii/question.json",
+    "na-kakom-rasstoyanii-ya-predpochitayu-obschatsya/question.json"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "kak-ya-vedu-sebya-kogda-ne-mogu-pryamo-vyrazit-chu",
+  "type": "question",
+  "title": "Как я веду себя, когда не могу прямо выразить чувства?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "nahozhu-obhodnye-puti",
+      "value": {
+        "male": "нахожу обходные пути",
+        "female": "нахожу обходные пути"
+      },
+      "exportedValue": {
+        "male": "У меня нахожу обходные пути",
+        "female": "У меня нахожу обходные пути"
+      },
+      "hint": "Стратегии непрямого эмоционального выражения",
+      "exercise": ""
+    },
+    {
+      "id": "simvolicheskie-sposoby",
+      "value": {
+        "male": "символические способы",
+        "female": "символические способы"
+      },
+      "exportedValue": {
+        "male": "У меня символические способы",
+        "female": "У меня символические способы"
+      },
+      "hint": "Стратегии непрямого эмоционального выражения",
+      "exercise": ""
+    },
+    {
+      "id": "kosvennye-deystviya",
+      "value": {
+        "male": "косвенные действия",
+        "female": "косвенные действия"
+      },
+      "exportedValue": {
+        "male": "У меня косвенные действия",
+        "female": "У меня косвенные действия"
+      },
+      "hint": "Стратегии непрямого эмоционального выражения",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyayu-emotsii",
+      "value": {
+        "male": "подавляю эмоции",
+        "female": "подавляю эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня подавляю эмоции",
+        "female": "У меня подавляю эмоции"
+      },
+      "hint": "Стратегии непрямого эмоционального выражения",
+      "exercise": ""
+    }
+  ]
+}

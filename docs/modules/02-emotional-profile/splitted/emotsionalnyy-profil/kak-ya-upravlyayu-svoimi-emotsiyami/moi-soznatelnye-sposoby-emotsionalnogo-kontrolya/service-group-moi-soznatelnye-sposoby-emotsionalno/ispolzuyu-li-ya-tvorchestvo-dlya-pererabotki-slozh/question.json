@@ -1,0 +1,61 @@
+{
+  "id": "ispolzuyu-li-ya-tvorchestvo-dlya-pererabotki-slozh",
+  "type": "question",
+  "title": "Использую ли я творчество для переработки сложных эмоций?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "aktivno-ispolzuyu-iskusstvo",
+      "value": {
+        "male": "активно использую искусство",
+        "female": "активно использую искусство"
+      },
+      "exportedValue": {
+        "male": "У меня активно использую искусство",
+        "female": "У меня активно использую искусство"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    },
+    {
+      "id": "inogda-tvoryu",
+      "value": {
+        "male": "иногда творю",
+        "female": "иногда творю"
+      },
+      "exportedValue": {
+        "male": "У меня иногда творю",
+        "female": "У меня иногда творю"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    },
+    {
+      "id": "ne-svyazyvayu-tvorchestvo-s-emotsiyami",
+      "value": {
+        "male": "не связываю творчество с эмоциями",
+        "female": "не связываю творчество с эмоциями"
+      },
+      "exportedValue": {
+        "male": "У меня не связываю творчество с эмоциями",
+        "female": "У меня не связываю творчество с эмоциями"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    },
+    {
+      "id": "ne-tvoryu",
+      "value": {
+        "male": "не творю",
+        "female": "не творю"
+      },
+      "exportedValue": {
+        "male": "У меня не творю",
+        "female": "У меня не творю"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "est-li-u-menya-resursy-dlya-emotsionalnogo-istsele",
+  "type": "question",
+  "title": "Есть ли у меня ресурсы для эмоционального исцеления?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "silnye-vnutrennie-resursy",
+      "value": {
+        "male": "сильные внутренние ресурсы",
+        "female": "сильные внутренние ресурсы"
+      },
+      "exportedValue": {
+        "male": "У меня сильные внутренние ресурсы",
+        "female": "У меня сильные внутренние ресурсы"
+      },
+      "hint": "Внутренние и внешние факторы восстановления",
+      "exercise": ""
+    },
+    {
+      "id": "vneshnyaya-podderzhka",
+      "value": {
+        "male": "внешняя поддержка",
+        "female": "внешняя поддержка"
+      },
+      "exportedValue": {
+        "male": "У меня внешняя поддержка",
+        "female": "У меня внешняя поддержка"
+      },
+      "hint": "Внутренние и внешние факторы восстановления",
+      "exercise": ""
+    },
+    {
+      "id": "ogranichennye-resursy",
+      "value": {
+        "male": "ограниченные ресурсы",
+        "female": "ограниченные ресурсы"
+      },
+      "exportedValue": {
+        "male": "У меня ограниченные ресурсы",
+        "female": "У меня ограниченные ресурсы"
+      },
+      "hint": "Внутренние и внешние факторы восстановления",
+      "exercise": ""
+    },
+    {
+      "id": "otsutstvie-resursov",
+      "value": {
+        "male": "отсутствие ресурсов",
+        "female": "отсутствие ресурсов"
+      },
+      "exportedValue": {
+        "male": "У меня отсутствие ресурсов",
+        "female": "У меня отсутствие ресурсов"
+      },
+      "hint": "Внутренние и внешние факторы восстановления",
+      "exercise": ""
+    }
+  ]
+}

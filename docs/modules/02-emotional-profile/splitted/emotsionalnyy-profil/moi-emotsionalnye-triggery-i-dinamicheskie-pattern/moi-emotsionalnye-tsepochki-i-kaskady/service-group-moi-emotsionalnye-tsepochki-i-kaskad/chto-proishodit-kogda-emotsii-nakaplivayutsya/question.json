@@ -1,0 +1,74 @@
+{
+  "id": "chto-proishodit-kogda-emotsii-nakaplivayutsya",
+  "type": "question",
+  "title": "Что происходит, когда эмоции накапливаются?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "vzryvayus",
+      "value": {
+        "male": "взрываюсь",
+        "female": "взрываюсь"
+      },
+      "exportedValue": {
+        "male": "У меня взрываюсь",
+        "female": "У меня взрываюсь"
+      },
+      "hint": "Способы эмоциональной разрядки при переполнении",
+      "exercise": ""
+    },
+    {
+      "id": "medlenno-sduvayus",
+      "value": {
+        "male": "медленно сдуваюсь",
+        "female": "медленно сдуваюсь"
+      },
+      "exportedValue": {
+        "male": "У меня медленно сдуваюсь",
+        "female": "У меня медленно сдуваюсь"
+      },
+      "hint": "Способы эмоциональной разрядки при переполнении",
+      "exercise": ""
+    },
+    {
+      "id": "nahozhu-konstruktivnyy-vyhod",
+      "value": {
+        "male": "нахожу конструктивный выход",
+        "female": "нахожу конструктивный выход"
+      },
+      "exportedValue": {
+        "male": "У меня нахожу конструктивный выход",
+        "female": "У меня нахожу конструктивный выход"
+      },
+      "hint": "Способы эмоциональной разрядки при переполнении",
+      "exercise": ""
+    },
+    {
+      "id": "uhozhu-v-sebya",
+      "value": {
+        "male": "ухожу в себя",
+        "female": "ухожу в себя"
+      },
+      "exportedValue": {
+        "male": "У меня ухожу в себя",
+        "female": "У меня ухожу в себя"
+      },
+      "hint": "Способы эмоциональной разрядки при переполнении",
+      "exercise": ""
+    },
+    {
+      "id": "zabolevayu",
+      "value": {
+        "male": "заболеваю",
+        "female": "заболеваю"
+      },
+      "exportedValue": {
+        "male": "У меня заболеваю",
+        "female": "У меня заболеваю"
+      },
+      "hint": "Способы эмоциональной разрядки при переполнении",
+      "exercise": ""
+    }
+  ]
+}

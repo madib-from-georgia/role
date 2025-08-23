@@ -1,0 +1,61 @@
+{
+  "id": "est-li-u-menya-privychka-zamenyat-odni-emotsii-dru",
+  "type": "question",
+  "title": "Есть ли у меня привычка заменять одни эмоции другими?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "smeyus-vmesto-placha",
+      "value": {
+        "male": "смеюсь вместо плача",
+        "female": "смеюсь вместо плача"
+      },
+      "exportedValue": {
+        "male": "У меня смеюсь вместо плача",
+        "female": "У меня смеюсь вместо плача"
+      },
+      "hint": "Эмоциональные подмены как защитный механизм",
+      "exercise": ""
+    },
+    {
+      "id": "zlyus-vmesto-straha",
+      "value": {
+        "male": "злюсь вместо страха",
+        "female": "злюсь вместо страха"
+      },
+      "exportedValue": {
+        "male": "У меня злюсь вместо страха",
+        "female": "У меня злюсь вместо страха"
+      },
+      "hint": "Эмоциональные подмены как защитный механизм",
+      "exercise": ""
+    },
+    {
+      "id": "ne-zamenyayu",
+      "value": {
+        "male": "не заменяю",
+        "female": "не заменяю"
+      },
+      "exportedValue": {
+        "male": "У меня не заменяю",
+        "female": "У меня не заменяю"
+      },
+      "hint": "Эмоциональные подмены как защитный механизм",
+      "exercise": ""
+    },
+    {
+      "id": "zamenyayu-neosoznanno",
+      "value": {
+        "male": "заменяю неосознанно",
+        "female": "заменяю неосознанно"
+      },
+      "exportedValue": {
+        "male": "У меня заменяю неосознанно",
+        "female": "У меня заменяю неосознанно"
+      },
+      "hint": "Эмоциональные подмены как защитный механизм",
+      "exercise": ""
+    }
+  ]
+}

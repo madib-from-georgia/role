@@ -1,0 +1,61 @@
+{
+  "id": "prevraschayu-li-ya-svoyu-bol-v-tvorchestvo-rabotu-",
+  "type": "question",
+  "title": "Превращаю ли я свою боль в творчество, работу, помощь другим?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "aktivno-sublimiruyu",
+      "value": {
+        "male": "активно сублимирую",
+        "female": "активно сублимирую"
+      },
+      "exportedValue": {
+        "male": "У меня активно сублимирую",
+        "female": "У меня активно сублимирую"
+      },
+      "hint": "Творческая и альтруистическая переработка страданий",
+      "exercise": ""
+    },
+    {
+      "id": "inogda",
+      "value": {
+        "male": "иногда",
+        "female": "иногда"
+      },
+      "exportedValue": {
+        "male": "У меня иногда",
+        "female": "У меня иногда"
+      },
+      "hint": "Творческая и альтруистическая переработка страданий",
+      "exercise": ""
+    },
+    {
+      "id": "ne-umeyu-sublimirovat",
+      "value": {
+        "male": "не умею сублимировать",
+        "female": "не умею сублимировать"
+      },
+      "exportedValue": {
+        "male": "У меня не умею сублимировать",
+        "female": "У меня не умею сублимировать"
+      },
+      "hint": "Творческая и альтруистическая переработка страданий",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyayu-emotsii",
+      "value": {
+        "male": "подавляю эмоции",
+        "female": "подавляю эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня подавляю эмоции",
+        "female": "У меня подавляю эмоции"
+      },
+      "hint": "Творческая и альтруистическая переработка страданий",
+      "exercise": ""
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "moi-emotsionalnye-otnosheniya-s-lyudmi",
+  "type": "section",
+  "title": "5. Мои эмоциональные отношения с людьми",
+  "children": [
+    "moi-empaticheskie-sposobnosti-i-emotsionalnaya-vos/subsection.json",
+    "moe-emotsionalnoe-vliyanie-i-vozdeystvie-na-drugih/subsection.json",
+    "spetsifika-moih-emotsionalnyh-otnosheniy/subsection.json",
+    "konfliktnye-emotsionalnye-dinamiki/subsection.json"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "obraschayus-li-ya-k-drugim-lyudyam-za-emotsionalno",
+  "type": "question",
+  "title": "Обращаюсь ли я к другим людям за эмоциональной поддержкой?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "legko-proshu-pomoschi",
+      "value": {
+        "male": "легко прошу помощи",
+        "female": "легко прошу помощи"
+      },
+      "exportedValue": {
+        "male": "У меня легко прошу помощи",
+        "female": "У меня легко прошу помощи"
+      },
+      "hint": "Способность искать и принимать помощь",
+      "exercise": ""
+    },
+    {
+      "id": "s-trudom-obraschayus",
+      "value": {
+        "male": "с трудом обращаюсь",
+        "female": "с трудом обращаюсь"
+      },
+      "exportedValue": {
+        "male": "У меня с трудом обращаюсь",
+        "female": "У меня с трудом обращаюсь"
+      },
+      "hint": "Способность искать и принимать помощь",
+      "exercise": ""
+    },
+    {
+      "id": "predpochitayu-spravlyatsya-sam",
+      "value": {
+        "male": "предпочитаю справляться сам",
+        "female": "предпочитаю справляться сам"
+      },
+      "exportedValue": {
+        "male": "У меня предпочитаю справляться сам",
+        "female": "У меня предпочитаю справляться сам"
+      },
+      "hint": "Способность искать и принимать помощь",
+      "exercise": ""
+    },
+    {
+      "id": "ne-umeyu-prosit-podderzhku",
+      "value": {
+        "male": "не умею просить поддержку",
+        "female": "не умею просить поддержку"
+      },
+      "exportedValue": {
+        "male": "У меня не умею просить поддержку",
+        "female": "У меня не умею просить поддержку"
+      },
+      "hint": "Способность искать и принимать помощь",
+      "exercise": ""
+    }
+  ]
+}

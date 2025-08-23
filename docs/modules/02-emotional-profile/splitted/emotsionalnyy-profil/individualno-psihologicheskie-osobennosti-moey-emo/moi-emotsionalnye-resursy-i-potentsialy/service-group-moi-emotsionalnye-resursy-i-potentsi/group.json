@@ -1,0 +1,15 @@
+{
+  "id": "service-group-moi-emotsionalnye-resursy-i-potentsialy",
+  "type": "question_group",
+  "title": "Вопросы раздела \"8.4 Мои эмоциональные ресурсы и потенциалы\"",
+  "children": [
+    "kakie-osobye-emotsionalnye-sposobnosti-est-u-menya/question.json",
+    "kakie-emotsionalnye-navyki-ya-razvil-v-techenie-zh/question.json",
+    "est-li-u-menya-skrytye-emotsionalnye-vozmozhnosti/question.json",
+    "chto-mozhet-razbudit-moi-nerazvitye-sposobnosti/question.json",
+    "kakie-emotsii-ili-sostoyaniya-sovershenno-nedostup/question.json",
+    "naskolko-veliki-moi-emotsionalnye-rezervy-dlya-pre/question.json",
+    "mogu-li-ya-emotsionalno-rasti-i-razvivatsya/question.json",
+    "chto-ogranichivaet-moe-emotsionalnoe-razvitie/question.json"
+  ]
+}

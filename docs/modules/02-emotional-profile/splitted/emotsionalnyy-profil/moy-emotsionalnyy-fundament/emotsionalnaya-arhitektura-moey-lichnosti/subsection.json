@@ -1,0 +1,8 @@
+{
+  "id": "emotsionalnaya-arhitektura-moey-lichnosti",
+  "type": "subsection",
+  "title": "1.4 Эмоциональная архитектура моей личности",
+  "children": [
+    "service-group-emotsionalnaya-arhitektura-moey-lich/group.json"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "est-li-u-menya-fizicheskie-sposoby-spravlyatsya-s-",
+  "type": "question",
+  "title": "Есть ли у меня физические способы справляться с эмоциями?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "idu-na-progulku",
+      "value": {
+        "male": "иду на прогулку",
+        "female": "иду на прогулку"
+      },
+      "exportedValue": {
+        "male": "У меня иду на прогулку",
+        "female": "У меня иду на прогулку"
+      },
+      "hint": "Телесные практики для эмоциональной регуляции",
+      "exercise": ""
+    },
+    {
+      "id": "zanimayus-sportom",
+      "value": {
+        "male": "занимаюсь спортом",
+        "female": "занимаюсь спортом"
+      },
+      "exportedValue": {
+        "male": "У меня занимаюсь спортом",
+        "female": "У меня занимаюсь спортом"
+      },
+      "hint": "Телесные практики для эмоциональной регуляции",
+      "exercise": ""
+    },
+    {
+      "id": "prinimayu-vannu",
+      "value": {
+        "male": "принимаю ванну",
+        "female": "принимаю ванну"
+      },
+      "exportedValue": {
+        "male": "У меня принимаю ванну",
+        "female": "У меня принимаю ванну"
+      },
+      "hint": "Телесные практики для эмоциональной регуляции",
+      "exercise": ""
+    },
+    {
+      "id": "delayu-chto-to-rukami",
+      "value": {
+        "male": "делаю что-то руками",
+        "female": "делаю что-то руками"
+      },
+      "exportedValue": {
+        "male": "У меня делаю что-то руками",
+        "female": "У меня делаю что-то руками"
+      },
+      "hint": "Телесные практики для эмоциональной регуляции",
+      "exercise": ""
+    }
+  ]
+}

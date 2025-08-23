@@ -1,0 +1,11 @@
+{
+  "id": "moy-emotsionalnyy-fundament",
+  "type": "section",
+  "title": "1. Мой эмоциональный фундамент",
+  "children": [
+    "moy-bazovyy-emotsionalnyy-ton-i-temperament/subsection.json",
+    "moy-emotsionalnyy-diapazon-i-amplituda/subsection.json",
+    "moya-emotsionalnaya-reaktivnost-i-chuvstvitelnost/subsection.json",
+    "emotsionalnaya-arhitektura-moey-lichnosti/subsection.json"
+  ]
+}

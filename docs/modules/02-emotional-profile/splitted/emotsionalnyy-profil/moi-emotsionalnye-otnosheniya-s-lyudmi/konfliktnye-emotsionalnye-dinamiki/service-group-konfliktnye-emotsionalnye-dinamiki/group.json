@@ -1,0 +1,15 @@
+{
+  "id": "service-group-konfliktnye-emotsionalnye-dinamiki",
+  "type": "question_group",
+  "title": "Вопросы раздела \"5.4 Конфликтные эмоциональные динамики\"",
+  "children": [
+    "kak-obychno-nachinayutsya-moi-emotsionalnye-konfli/question.json",
+    "kak-ya-vedu-sebya-v-emotsionalnom-konflikte/question.json",
+    "kakie-slova-ili-deystviya-garantirovanno-privodyat/question.json",
+    "ispolzuyu-li-ya-emotsii-kak-oruzhie-v-konfliktah/question.json",
+    "kak-ya-miryus-posle-ssor/question.json",
+    "est-li-u-menya-konflikty-kotorye-povtoryayutsya-sn/question.json",
+    "chemu-menya-uchat-emotsionalnye-konflikty-ili-nich/question.json",
+    "mogu-li-ya-prostit-sereznuyu-emotsionalnuyu-travmu/question.json"
+  ]
+}

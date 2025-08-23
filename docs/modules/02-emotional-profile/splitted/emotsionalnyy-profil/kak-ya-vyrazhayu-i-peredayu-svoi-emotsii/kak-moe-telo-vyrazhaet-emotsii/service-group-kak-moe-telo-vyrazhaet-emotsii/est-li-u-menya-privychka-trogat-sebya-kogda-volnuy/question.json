@@ -1,0 +1,74 @@
+{
+  "id": "est-li-u-menya-privychka-trogat-sebya-kogda-volnuy",
+  "type": "question",
+  "title": "Есть ли у меня привычка трогать себя, когда волнуюсь?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "terebyu-volosy",
+      "value": {
+        "male": "теребю волосы",
+        "female": "теребю волосы"
+      },
+      "exportedValue": {
+        "male": "У меня теребю волосы",
+        "female": "У меня теребю волосы"
+      },
+      "hint": "Самоадаптивные жесты как проявление тревожности",
+      "exercise": ""
+    },
+    {
+      "id": "trogayu-litso",
+      "value": {
+        "male": "трогаю лицо",
+        "female": "трогаю лицо"
+      },
+      "exportedValue": {
+        "male": "У меня трогаю лицо",
+        "female": "У меня трогаю лицо"
+      },
+      "hint": "Самоадаптивные жесты как проявление тревожности",
+      "exercise": ""
+    },
+    {
+      "id": "popravlyayu-odezhdu",
+      "value": {
+        "male": "поправляю одежду",
+        "female": "поправляю одежду"
+      },
+      "exportedValue": {
+        "male": "У меня поправляю одежду",
+        "female": "У меня поправляю одежду"
+      },
+      "hint": "Самоадаптивные жесты как проявление тревожности",
+      "exercise": ""
+    },
+    {
+      "id": "ne-kasayus-sebya",
+      "value": {
+        "male": "не касаюсь себя",
+        "female": "не касаюсь себя"
+      },
+      "exportedValue": {
+        "male": "У меня не касаюсь себя",
+        "female": "У меня не касаюсь себя"
+      },
+      "hint": "Самоадаптивные жесты как проявление тревожности",
+      "exercise": ""
+    },
+    {
+      "id": "szhimayu-ruki",
+      "value": {
+        "male": "сжимаю руки",
+        "female": "сжимаю руки"
+      },
+      "exportedValue": {
+        "male": "У меня сжимаю руки",
+        "female": "У меня сжимаю руки"
+      },
+      "hint": "Самоадаптивные жесты как проявление тревожности",
+      "exercise": ""
+    }
+  ]
+}

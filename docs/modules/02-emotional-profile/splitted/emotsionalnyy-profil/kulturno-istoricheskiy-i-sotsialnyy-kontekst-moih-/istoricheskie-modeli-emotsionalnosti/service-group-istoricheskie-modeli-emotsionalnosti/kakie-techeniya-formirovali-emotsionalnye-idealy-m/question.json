@@ -1,0 +1,61 @@
+{
+  "id": "kakie-techeniya-formirovali-emotsionalnye-idealy-m",
+  "type": "question",
+  "title": "Какие течения формировали эмоциональные идеалы моего времени?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "literaturnye-dvizheniya",
+      "value": {
+        "male": "литературные движения",
+        "female": "литературные движения"
+      },
+      "exportedValue": {
+        "male": "У меня литературные движения",
+        "female": "У меня литературные движения"
+      },
+      "hint": "Интеллектуальные влияния на эмоциональную культуру",
+      "exercise": ""
+    },
+    {
+      "id": "filosofskie-shkoly",
+      "value": {
+        "male": "философские школы",
+        "female": "философские школы"
+      },
+      "exportedValue": {
+        "male": "У меня философские школы",
+        "female": "У меня философские школы"
+      },
+      "hint": "Интеллектуальные влияния на эмоциональную культуру",
+      "exercise": ""
+    },
+    {
+      "id": "religioznye-techeniya",
+      "value": {
+        "male": "религиозные течения",
+        "female": "религиозные течения"
+      },
+      "exportedValue": {
+        "male": "У меня религиозные течения",
+        "female": "У меня религиозные течения"
+      },
+      "hint": "Интеллектуальные влияния на эмоциональную культуру",
+      "exercise": ""
+    },
+    {
+      "id": "nauchnye-otkrytiya",
+      "value": {
+        "male": "научные открытия",
+        "female": "научные открытия"
+      },
+      "exportedValue": {
+        "male": "У меня научные открытия",
+        "female": "У меня научные открытия"
+      },
+      "hint": "Интеллектуальные влияния на эмоциональную культуру",
+      "exercise": ""
+    }
+  ]
+}

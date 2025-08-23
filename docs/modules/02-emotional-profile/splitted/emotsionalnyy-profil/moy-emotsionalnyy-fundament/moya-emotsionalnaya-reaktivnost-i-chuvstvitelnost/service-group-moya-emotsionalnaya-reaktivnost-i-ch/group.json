@@ -1,0 +1,14 @@
+{
+  "id": "service-group-moya-emotsionalnaya-reaktivnost-i-chuvstvitelnost",
+  "type": "question_group",
+  "title": "Вопросы раздела \"1.3 Моя эмоциональная реактивность и чувствительность\"",
+  "children": [
+    "kak-bystro-ya-emotsionalno-reagiruyu-na-proishodya/question.json",
+    "nuzhen-li-mne-silnyy-stimul-dlya-emotsionalnoy-rea/question.json",
+    "dolgo-li-ya-ostayus-v-odnom-emotsionalnom-sostoyan/question.json",
+    "reagiruyu-li-ya-impulsivno-ili-obdumanno/question.json",
+    "k-kakim-vozdeystviyam-ya-osobenno-chuvstvitelen/question.json",
+    "menyaetsya-li-moya-emotsionalnaya-chuvstvitelnost/question.json",
+    "est-li-u-menya-emotsionalnye-mertvye-zony/question.json"
+  ]
+}

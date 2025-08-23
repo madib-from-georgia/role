@@ -1,0 +1,74 @@
+{
+  "id": "kakie-dostizheniya-prinosyat-mne-naibolshee-udovle",
+  "type": "question",
+  "title": "Какие достижения приносят мне наибольшее удовлетворение?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "lichnye",
+      "value": {
+        "male": "личные",
+        "female": "личные"
+      },
+      "exportedValue": {
+        "male": "У меня личные",
+        "female": "У меня личные"
+      },
+      "hint": "Что дает ощущение самореализации и гордости за себя",
+      "exercise": ""
+    },
+    {
+      "id": "professionalnye",
+      "value": {
+        "male": "профессиональные",
+        "female": "профессиональные"
+      },
+      "exportedValue": {
+        "male": "У меня профессиональные",
+        "female": "У меня профессиональные"
+      },
+      "hint": "Что дает ощущение самореализации и гордости за себя",
+      "exercise": ""
+    },
+    {
+      "id": "tvorcheskie",
+      "value": {
+        "male": "творческие",
+        "female": "творческие"
+      },
+      "exportedValue": {
+        "male": "У меня творческие",
+        "female": "У меня творческие"
+      },
+      "hint": "Что дает ощущение самореализации и гордости за себя",
+      "exercise": ""
+    },
+    {
+      "id": "altruisticheskie",
+      "value": {
+        "male": "альтруистические",
+        "female": "альтруистические"
+      },
+      "exportedValue": {
+        "male": "У меня альтруистические",
+        "female": "У меня альтруистические"
+      },
+      "hint": "Что дает ощущение самореализации и гордости за себя",
+      "exercise": ""
+    },
+    {
+      "id": "intellektualnye",
+      "value": {
+        "male": "интеллектуальные",
+        "female": "интеллектуальные"
+      },
+      "exportedValue": {
+        "male": "У меня интеллектуальные",
+        "female": "У меня интеллектуальные"
+      },
+      "hint": "Что дает ощущение самореализации и гордости за себя",
+      "exercise": ""
+    }
+  ]
+}

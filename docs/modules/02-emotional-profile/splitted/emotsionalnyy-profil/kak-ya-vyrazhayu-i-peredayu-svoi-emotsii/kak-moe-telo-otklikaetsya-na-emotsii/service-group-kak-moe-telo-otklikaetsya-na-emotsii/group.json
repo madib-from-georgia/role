@@ -1,0 +1,14 @@
+{
+  "id": "service-group-kak-moe-telo-otklikaetsya-na-emotsii",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.3 Как мое тело откликается на эмоции\"",
+  "children": [
+    "kak-moe-telo-reagiruet-na-silnye-emotsii/question.json",
+    "kak-menyaetsya-moe-dyhanie-v-raznyh-emotsionalnyh-/question.json",
+    "est-li-u-menya-fizicheskie-slabye-mesta-kotorye-re/question.json",
+    "vliyayut-li-silnye-perezhivaniya-na-moy-appetit-so/question.json",
+    "chuvstvuyu-li-ya-emotsii-gde-to-v-tele-konkretno/question.json",
+    "kak-dolgo-moe-telo-pomnit-silnoe-emotsionalnoe-pot/question.json",
+    "est-li-u-menya-psihosomaticheskie-zabolevaniya-svy/question.json"
+  ]
+}

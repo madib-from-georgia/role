@@ -1,0 +1,15 @@
+{
+  "id": "service-group-integratsiya-i-stabilizatsiya-novyh-emotsionalnyh-",
+  "type": "question_group",
+  "title": "Вопросы раздела \"6.4 Интеграция и стабилизация новых эмоциональных качеств\"",
+  "children": [
+    "kak-ya-privykayu-k-novym-emotsionalnym-sostoyaniya/question.json",
+    "byvayut-li-u-menya-otkaty-k-prezhnim-sostoyaniyam/question.json",
+    "kak-novye-sposobnosti-sochetayutsya-u-menya-so-sta/question.json",
+    "chto-ya-priobretayu-blagodarya-emotsionalnym-izmen/question.json",
+    "chto-ya-teryayu-v-rezultate-transformatsii/question.json",
+    "kak-okruzhayuschie-reagiruyut-na-moi-izmeneniya/question.json",
+    "sozhaleyu-li-ya-o-svoih-izmeneniyah-ili-rad-im/question.json",
+    "est-li-u-menya-oschuschenie-zavershennosti-ili-eto/question.json"
+  ]
+}

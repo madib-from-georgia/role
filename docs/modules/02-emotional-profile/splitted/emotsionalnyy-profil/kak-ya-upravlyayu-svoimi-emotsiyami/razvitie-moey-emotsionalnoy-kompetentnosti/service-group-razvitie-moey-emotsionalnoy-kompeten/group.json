@@ -1,0 +1,16 @@
+{
+  "id": "service-group-razvitie-moey-emotsionalnoy-kompetentnosti",
+  "type": "question_group",
+  "title": "Вопросы раздела \"4.4 Развитие моей эмоциональной компетентности\"",
+  "children": [
+    "ponimayu-li-ya-chto-so-mnoy-proishodit-emotsionaln/question.json",
+    "umeyu-li-ya-upravlyat-svoimi-impulsami/question.json",
+    "mogu-li-ya-prisposablivatsya-k-izmeneniyam/question.json",
+    "sposoben-li-ya-motivirovat-sebya-nahodit-vnutrenni/question.json",
+    "chuvstvuyu-li-ya-emotsionalnoe-sostoyanie-drugih-l/question.json",
+    "umeyu-li-ya-stroit-otnosheniya-razreshat-konflikty/question.json",
+    "mogu-li-ya-vliyat-na-emotsionalnoe-sostoyanie-drug/question.json",
+    "uchus-li-ya-na-svoih-emotsionalnyh-oshibkah/question.json",
+    "rastu-li-ya-emotsionalno-ili-ostayus-na-tom-zhe-ur/question.json"
+  ]
+}

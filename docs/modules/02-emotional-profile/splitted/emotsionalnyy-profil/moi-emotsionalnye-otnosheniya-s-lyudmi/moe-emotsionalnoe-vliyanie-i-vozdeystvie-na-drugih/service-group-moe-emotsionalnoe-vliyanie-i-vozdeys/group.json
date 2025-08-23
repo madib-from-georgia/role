@@ -1,0 +1,16 @@
+{
+  "id": "service-group-moe-emotsionalnoe-vliyanie-i-vozdeystvie-na-drugih",
+  "type": "question_group",
+  "title": "Вопросы раздела \"5.2 Мое эмоциональное влияние и воздействие на других\"",
+  "children": [
+    "kak-menyaetsya-nastroenie-lyudey-v-moem-prisutstvi/question.json",
+    "mogu-li-ya-vdohnovit-drugih-podnyat-nastroenie-odn/question.json",
+    "est-li-u-menya-sposobnost-uspokaivat-uteshat-lyude/question.json",
+    "mogu-li-ya-demoralizovat-rasstroit-drugih/question.json",
+    "pytayus-li-ya-upravlyat-chuzhimi-emotsiyami-dlya-d/question.json",
+    "ko-mne-li-lyudi-prihodyat-za-emotsionalnoy-podderz/question.json",
+    "izbegayut-li-nekotorye-lyudi-menya/question.json",
+    "chuvstvuyu-li-ya-otvetstvennost-za-emotsionalnoe-s/question.json",
+    "mogu-li-ya-zazhech-tolpu-ili-ee-uspokoit/question.json"
+  ]
+}

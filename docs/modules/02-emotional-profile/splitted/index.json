@@ -1,0 +1,6 @@
+{
+  "root": "emotsionalnyy-profil/portrait.json",
+  "created_at": "1755982396.7174802",
+  "source_file": "docs/modules/02-emotional-profile/ACTOR_EMOTIONAL_CHECKLIST.json",
+  "structure": "portrait -> section -> subsection -> question_group -> question -> answer"
+}

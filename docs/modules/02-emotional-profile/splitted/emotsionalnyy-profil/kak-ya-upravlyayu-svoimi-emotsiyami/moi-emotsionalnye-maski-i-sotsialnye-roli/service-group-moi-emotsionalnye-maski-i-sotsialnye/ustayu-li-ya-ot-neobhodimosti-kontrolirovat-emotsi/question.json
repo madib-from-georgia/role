@@ -1,0 +1,61 @@
+{
+  "id": "ustayu-li-ya-ot-neobhodimosti-kontrolirovat-emotsi",
+  "type": "question",
+  "title": "Устаю ли я от необходимости контролировать эмоции на людях?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "ochen-istoschaet",
+      "value": {
+        "male": "очень истощает",
+        "female": "очень истощает"
+      },
+      "exportedValue": {
+        "male": "У меня очень истощает",
+        "female": "У меня очень истощает"
+      },
+      "hint": "Цена эмоционального самоконтроля",
+      "exercise": ""
+    },
+    {
+      "id": "umerenno-utomlyaet",
+      "value": {
+        "male": "умеренно утомляет",
+        "female": "умеренно утомляет"
+      },
+      "exportedValue": {
+        "male": "У меня умеренно утомляет",
+        "female": "У меня умеренно утомляет"
+      },
+      "hint": "Цена эмоционального самоконтроля",
+      "exercise": ""
+    },
+    {
+      "id": "ne-napryagaet",
+      "value": {
+        "male": "не напрягает",
+        "female": "не напрягает"
+      },
+      "exportedValue": {
+        "male": "У меня не напрягает",
+        "female": "У меня не напрягает"
+      },
+      "hint": "Цена эмоционального самоконтроля",
+      "exercise": ""
+    },
+    {
+      "id": "poluchayu-energiyu-ot-kontrolya",
+      "value": {
+        "male": "получаю энергию от контроля",
+        "female": "получаю энергию от контроля"
+      },
+      "exportedValue": {
+        "male": "У меня получаю энергию от контроля",
+        "female": "У меня получаю энергию от контроля"
+      },
+      "hint": "Цена эмоционального самоконтроля",
+      "exercise": ""
+    }
+  ]
+}

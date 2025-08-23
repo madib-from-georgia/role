@@ -1,0 +1,74 @@
+{
+  "id": "kak-ya-vedu-sebya-v-emotsionalnom-konflikte",
+  "type": "question",
+  "title": "Как я веду себя в эмоциональном конфликте?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "napadayu",
+      "value": {
+        "male": "нападаю",
+        "female": "нападаю"
+      },
+      "exportedValue": {
+        "male": "У меня нападаю",
+        "female": "У меня нападаю"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "zaschischayus",
+      "value": {
+        "male": "защищаюсь",
+        "female": "защищаюсь"
+      },
+      "exportedValue": {
+        "male": "У меня защищаюсь",
+        "female": "У меня защищаюсь"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "uhozhu",
+      "value": {
+        "male": "ухожу",
+        "female": "ухожу"
+      },
+      "exportedValue": {
+        "male": "У меня ухожу",
+        "female": "У меня ухожу"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "pytayus-primirit",
+      "value": {
+        "male": "пытаюсь примирить",
+        "female": "пытаюсь примирить"
+      },
+      "exportedValue": {
+        "male": "У меня пытаюсь примирить",
+        "female": "У меня пытаюсь примирить"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "eskaliruyu-konflikt",
+      "value": {
+        "male": "эскалирую конфликт",
+        "female": "эскалирую конфликт"
+      },
+      "exportedValue": {
+        "male": "У меня эскалирую конфликт",
+        "female": "У меня эскалирую конфликт"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    }
+  ]
+}

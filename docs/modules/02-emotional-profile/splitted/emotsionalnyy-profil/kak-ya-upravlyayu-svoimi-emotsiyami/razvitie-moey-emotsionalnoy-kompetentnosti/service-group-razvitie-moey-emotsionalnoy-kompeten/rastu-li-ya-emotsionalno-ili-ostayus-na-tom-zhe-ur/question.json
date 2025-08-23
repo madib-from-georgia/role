@@ -1,0 +1,61 @@
+{
+  "id": "rastu-li-ya-emotsionalno-ili-ostayus-na-tom-zhe-ur",
+  "type": "question",
+  "title": "Расту ли я эмоционально или остаюсь на том же уровне?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "postoyanno-razvivayus",
+      "value": {
+        "male": "постоянно развиваюсь",
+        "female": "постоянно развиваюсь"
+      },
+      "exportedValue": {
+        "male": "У меня постоянно развиваюсь",
+        "female": "У меня постоянно развиваюсь"
+      },
+      "hint": "Динамика эмоционального созревания и личностного роста",
+      "exercise": ""
+    },
+    {
+      "id": "medlenno-rastu",
+      "value": {
+        "male": "медленно расту",
+        "female": "медленно расту"
+      },
+      "exportedValue": {
+        "male": "У меня медленно расту",
+        "female": "У меня медленно расту"
+      },
+      "hint": "Динамика эмоционального созревания и личностного роста",
+      "exercise": ""
+    },
+    {
+      "id": "stagnatsiya",
+      "value": {
+        "male": "стагнация",
+        "female": "стагнация"
+      },
+      "exportedValue": {
+        "male": "У меня стагнация",
+        "female": "У меня стагнация"
+      },
+      "hint": "Динамика эмоционального созревания и личностного роста",
+      "exercise": ""
+    },
+    {
+      "id": "regressiruyu",
+      "value": {
+        "male": "регрессирую",
+        "female": "регрессирую"
+      },
+      "exportedValue": {
+        "male": "У меня регрессирую",
+        "female": "У меня регрессирую"
+      },
+      "hint": "Динамика эмоционального созревания и личностного роста",
+      "exercise": ""
+    }
+  ]
+}

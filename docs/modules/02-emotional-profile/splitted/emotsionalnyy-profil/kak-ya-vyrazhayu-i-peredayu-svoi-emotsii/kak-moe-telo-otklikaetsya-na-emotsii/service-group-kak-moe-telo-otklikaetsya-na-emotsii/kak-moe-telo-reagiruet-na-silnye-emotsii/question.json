@@ -1,0 +1,74 @@
+{
+  "id": "kak-moe-telo-reagiruet-na-silnye-emotsii",
+  "type": "question",
+  "title": "Как мое тело реагирует на сильные эмоции?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "krasneyu",
+      "value": {
+        "male": "краснею",
+        "female": "краснею"
+      },
+      "exportedValue": {
+        "male": "У меня краснею",
+        "female": "У меня краснею"
+      },
+      "hint": "Автономные телесные реакции на эмоциональное возбуждение",
+      "exercise": ""
+    },
+    {
+      "id": "bledneyu",
+      "value": {
+        "male": "бледнею",
+        "female": "бледнею"
+      },
+      "exportedValue": {
+        "male": "У меня бледнею",
+        "female": "У меня бледнею"
+      },
+      "hint": "Автономные телесные реакции на эмоциональное возбуждение",
+      "exercise": ""
+    },
+    {
+      "id": "poteyu",
+      "value": {
+        "male": "потею",
+        "female": "потею"
+      },
+      "exportedValue": {
+        "male": "У меня потею",
+        "female": "У меня потею"
+      },
+      "hint": "Автономные телесные реакции на эмоциональное возбуждение",
+      "exercise": ""
+    },
+    {
+      "id": "drozhu",
+      "value": {
+        "male": "дрожу",
+        "female": "дрожу"
+      },
+      "exportedValue": {
+        "male": "У меня дрожу",
+        "female": "У меня дрожу"
+      },
+      "hint": "Автономные телесные реакции на эмоциональное возбуждение",
+      "exercise": ""
+    },
+    {
+      "id": "uchaschaetsya-serdtsebienie",
+      "value": {
+        "male": "учащается сердцебиение",
+        "female": "учащается сердцебиение"
+      },
+      "exportedValue": {
+        "male": "У меня учащается сердцебиение",
+        "female": "У меня учащается сердцебиение"
+      },
+      "hint": "Автономные телесные реакции на эмоциональное возбуждение",
+      "exercise": ""
+    }
+  ]
+}

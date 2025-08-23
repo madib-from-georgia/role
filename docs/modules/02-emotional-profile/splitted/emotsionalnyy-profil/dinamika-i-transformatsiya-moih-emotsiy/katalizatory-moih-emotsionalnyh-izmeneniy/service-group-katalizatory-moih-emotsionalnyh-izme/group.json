@@ -1,0 +1,15 @@
+{
+  "id": "service-group-katalizatory-moih-emotsionalnyh-izmeneniy",
+  "type": "question_group",
+  "title": "Вопросы раздела \"6.2 Катализаторы моих эмоциональных изменений\"",
+  "children": [
+    "kakie-poteri-ili-utraty-menyayut-moy-emotsionalnyy/question.json",
+    "kakie-novye-lyudi-vliyayut-na-moyu-emotsionalnost/question.json",
+    "kakie-uspehi-ili-dostizheniya-transformiruyut-moe-/question.json",
+    "vliyayut-li-krizisnye-situatsii-na-moy-vzglyad-na-/question.json",
+    "est-li-vnutrennie-protsessy-menyayuschie-moyu-emot/question.json",
+    "kak-vliyayut-izmeneniya-v-moem-sotsialnom-polozhen/question.json",
+    "est-li-sluchaynye-sobytiya-stavshie-povorotnymi-dl/question.json",
+    "vliyayut-li-bolezni-fizicheskie-izmeneniya-na-moi-/question.json"
+  ]
+}

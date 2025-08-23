@@ -1,0 +1,16 @@
+{
+  "id": "service-group-moi-emotsionalnye-tsepochki-i-kaskady",
+  "type": "question_group",
+  "title": "Вопросы раздела \"2.3 Мои эмоциональные цепочки и каскады\"",
+  "children": [
+    "kakaya-emotsiya-obychno-sleduet-za-gnevom-u-menya/question.json",
+    "esli-ya-rasstroilsya-chto-proishodit-dalshe/question.json",
+    "kak-ya-reagiruyu-na-svoi-sobstvennye-emotsii/question.json",
+    "est-li-u-menya-privychka-zamenyat-odni-emotsii-dru/question.json",
+    "chto-proishodit-kogda-emotsii-nakaplivayutsya/question.json",
+    "kakie-emotsii-ya-ispytyvayu-po-krugu/question.json",
+    "mozhet-li-odna-silnaya-emotsiya-zapustit-u-menya-t/question.json",
+    "kak-dolgo-ya-vosstanavlivayus-posle-silnyh-emotsio/question.json",
+    "zastrevayu-li-ya-v-kakih-to-emotsiyah-ne-mogu-iz-n/question.json"
+  ]
+}

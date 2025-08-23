@@ -1,0 +1,16 @@
+{
+  "id": "service-group-moi-soznatelnye-sposoby-emotsionalnogo-kontrolya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"4.1 Мои сознательные способы эмоционального контроля\"",
+  "children": [
+    "kak-ya-uspokaivayu-sebya-kogda-vzvolnovan/question.json",
+    "umeyu-li-ya-pereklyuchat-vnimanie-dlya-izmeneniya-/question.json",
+    "k-kakim-myslyam-ya-obraschayus-chtoby-podnyat-nast/question.json",
+    "est-li-u-menya-fizicheskie-sposoby-spravlyatsya-s-/question.json",
+    "obraschayus-li-ya-k-drugim-lyudyam-za-emotsionalno/question.json",
+    "ispolzuyu-li-ya-tvorchestvo-dlya-pererabotki-slozh/question.json",
+    "mogu-li-ya-otlozhit-emotsionalnuyu-reaktsiyu/question.json",
+    "vedu-li-ya-dnevnik-pishu-pisma-progovarivayu-svoi-/question.json",
+    "naskolko-effektivny-moi-sposoby-emotsionalnogo-sam/question.json"
+  ]
+}
