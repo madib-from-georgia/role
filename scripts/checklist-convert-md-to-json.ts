@@ -1,6 +1,17 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * Конвертер чеклистов из Markdown в JSON
+ * 
+ * Ожидает на вход MD с заголовками такого вида:
+ * - секции находятся в заголовке ##
+ * - подсекции находятся в заголовке ###
+ * - группа вопросов находится в заголовке ####
+ * 
+ * Раздел "## Цель" исключается из секций
+ */
+
 // TypeScript интерфейсы согласно спецификации
 interface AnswerValue {
     male: string;
@@ -53,6 +64,51 @@ class ConvertPortrait {
 
     constructor(private content: string) {
         this.lines = content.split('\n');
+    }
+
+    /**
+     * Получает правильный уровень заголовка для секций
+     */
+    private getSectionHeader(): string {
+        return '## ';
+    }
+
+    /**
+     * Получает правильный уровень заголовка для подсекций
+     */
+    private getSubsectionHeader(): string {
+        return '### ';
+    }
+
+    /**
+     * Получает правильный уровень заголовка для групп вопросов
+     */
+    private getQuestionGroupHeader(): string {
+        return '#### ';
+    }
+
+    /**
+     * Проверяет, является ли строка заголовком секции
+     */
+    private isSectionHeader(line: string): boolean {
+        const trimmed = line.trim();
+        return trimmed.startsWith('## ') && !trimmed.startsWith('###') && !trimmed.includes('Цель');
+    }
+
+    /**
+     * Проверяет, является ли строка заголовком подсекции
+     */
+    private isSubsectionHeader(line: string): boolean {
+        const trimmed = line.trim();
+        return trimmed.startsWith('### ') && !trimmed.startsWith('####');
+    }
+
+    /**
+     * Проверяет, является ли строка заголовком группы вопросов
+     */
+    private isQuestionGroupHeader(line: string): boolean {
+        const trimmed = line.trim();
+        return trimmed.startsWith('#### ') && !trimmed.startsWith('#####');
     }
 
     /**
@@ -260,11 +316,20 @@ class ConvertPortrait {
             }
         }
 
-        const options = this.extractAnswerOptions(optionsLine);
-        const answers = this.createAnswers(options, hintLine);
+        let answers: Answer[] = [];
+        let answerType = 'multiple';
 
-        // Определяем тип ответа
-        const answerType = optionsLine.includes('один ответ') ? 'single' : 'multiple';
+        // Если найдены варианты ответов, создаем их
+        if (optionsLine) {
+            const options = this.extractAnswerOptions(optionsLine);
+            answers = this.createAnswers(options, hintLine);
+            answerType = optionsLine.includes('один ответ') ? 'single' : 'multiple';
+        } else {
+            // Если вариантов нет, создаем пустой массив ответов
+            // Это позволяет работать с файлами, где есть только вопросы и подсказки
+            answers = [];
+            answerType = 'multiple'; // По умолчанию множественный выбор
+        }
 
         return {
             id: questionId,
@@ -322,16 +387,16 @@ class ConvertPortrait {
         let startIndex = this.currentIndex + 1;
         let hasQuestionGroups = false;
 
-        // Ищем группы вопросов (заголовки 5 уровня)
+        // Ищем группы вопросов
         for (let i = startIndex; i < this.lines.length; i++) {
             const line = this.lines[i].trim();
 
-            if (line.startsWith('####') && !line.startsWith('#####')) {
+            if (this.isSubsectionHeader(line)) {
                 // Новая подсекция
                 break;
             }
 
-            if (line.startsWith('##### ') && !line.includes('Примеры') && !line.includes('Почему это важно')) {
+            if (this.isQuestionGroupHeader(line) && !line.includes('Примеры') && !line.includes('Почему это важно')) {
                 hasQuestionGroups = true;
                 this.currentIndex = i;
                 const group = this.parseQuestionGroup(line);
@@ -354,12 +419,12 @@ class ConvertPortrait {
             for (let i = startIndex; i < this.lines.length; i++) {
                 const line = this.lines[i].trim();
 
-                if (line.startsWith('####') && !line.startsWith('#####')) {
+                if (this.isSubsectionHeader(line)) {
                     // Новая подсекция
                     break;
                 }
 
-                if (line.startsWith('#####')) {
+                if (this.isQuestionGroupHeader(line)) {
                     // Началась группа вопросов (хотя мы уже знаем, что их нет)
                     break;
                 }
@@ -393,16 +458,16 @@ class ConvertPortrait {
         const subsections: Subsection[] = [];
         let startIndex = this.currentIndex + 1;
 
-        // Ищем подсекции (заголовки 4 уровня)
+        // Ищем подсекции
         for (let i = startIndex; i < this.lines.length; i++) {
             const line = this.lines[i].trim();
 
-            if (line.startsWith('###') && !line.startsWith('####')) {
+            if (this.isSectionHeader(line)) {
                 // Новая секция
                 break;
             }
 
-            if (line.startsWith('#### ')) {
+            if (this.isSubsectionHeader(line)) {
                 this.currentIndex = i;
                 const subsection = this.parseSubsection(line);
                 subsections.push(subsection);
@@ -426,7 +491,7 @@ class ConvertPortrait {
             sections: []
         };
 
-                // Ищем заголовок первого уровня для начала
+        // Ищем заголовок первого уровня для начала
         for (let i = 0; i < this.lines.length; i++) {
             const line = this.lines[i].trim();
 
@@ -438,11 +503,11 @@ class ConvertPortrait {
             }
         }
 
-        // Ищем секции (заголовки 3 уровня)
+        // Ищем секции
         for (let i = 0; i < this.lines.length; i++) {
             const line = this.lines[i].trim();
 
-            if (line.startsWith('### ') && !line.startsWith('####')) {
+            if (this.isSectionHeader(line)) {
                 this.currentIndex = i;
                 const section = this.parseSection(line);
                 portrait.sections.push(section);
@@ -482,7 +547,7 @@ function convertPortrait(inputPath: string, outputPath: string): void {
 // Функция для вывода справки
 function showHelp(): void {
     console.log(`
-🎭 Конвертер чеклистов физического портрета в JSON
+🎭 Конвертер чеклистов в JSON
 
 Использование:
   npx ts-node scripts/checklist-convert-md-to-json.ts <входной_файл> <выходной_файл>
@@ -496,8 +561,16 @@ function showHelp(): void {
   npx ts-node scripts/checklist-convert-md-to-json.ts checklist.md result.json
 
 Описание:
-  Конвертирует MD файл чеклиста физического портрета в структурированный JSON
-  с автоматической генерацией человеко-читаемых ID и транслитерацией кириллицы.
+  Конвертирует MD файл чеклиста в структурированный JSON.
+  
+  Структура заголовков:
+  - Секции: ## (например: ## 1. Лексические характеристики)
+  - Подсекции: ### (например: ### 1.1 Словарный запас)
+  - Группы вопросов: #### (например: #### Объем словарного запаса)
+  
+  Раздел "## Цель" автоматически исключается из секций.
+  
+  Автоматически генерирует человеко-читаемые ID и транслитерирует кириллицу.
 `);
 }
 

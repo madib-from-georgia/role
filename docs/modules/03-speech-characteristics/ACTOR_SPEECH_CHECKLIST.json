@@ -1,0 +1,1443 @@
+{
+  "id": "rechevye-harakteristiki",
+  "title": "Речевые характеристики",
+  "sections": [
+    {
+      "id": "leksicheskie-harakteristiki",
+      "title": "1. Лексические характеристики",
+      "subsections": [
+        {
+          "id": "slovarnyy-zapas-i-bogatstvo-rechi",
+          "title": "1.1 Словарный запас и богатство речи",
+          "questionGroups": [
+            {
+              "id": "obem-slovarnogo-zapasa-bogatyysredniyogranichennyy",
+              "title": "Объем словарного запаса (богатый/средний/ограниченный)",
+              "questions": [
+                {
+                  "id": "naskolko-bogat-slovarnyy-zapas-personazha-ispolzue",
+                  "title": "Насколько богат словарный запас персонажа - использует ли он разнообразную лексику или ограничивается базовым набором слов?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-v-rechi-povtory-odnih-i-teh-zhe-slov-ili-pe",
+                  "title": "Есть ли в речи повторы одних и тех же слов или персонаж находит синонимы и варианты?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakoy-slozhnosti-slova-preimuschestvenno-ispolzuet",
+                  "title": "Какой сложности слова преимущественно использует - простые бытовые, изысканные литературные или специальные термины?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "razlichaetsya-li-aktivnyy-slovar-chto-govorit-ot-p",
+                  "title": "Различается ли активный словарь (что говорит) от пассивного (что понимает)?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-menyaetsya-slovarnyy-zapas-personazha-v-hode-p",
+                  "title": "Как меняется словарный запас персонажа в ходе произведения - обогащается, упрощается?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "stilisticheskie-registry",
+          "title": "1.2 Стилистические регистры",
+          "questionGroups": [
+            {
+              "id": "vysokiy-stil-torzhestvennaya-knizhnaya-leksika",
+              "title": "Высокий стиль (торжественная, книжная лексика)",
+              "questions": [
+                {
+                  "id": "ispolzuet-li-personazh-torzhestvennuyu-knizhnuyu-l",
+                  "title": "Использует ли персонаж торжественную, книжную лексику и в каких ситуациях?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-chasto-pribegaet-k-razgovornomu-stilyu-v-obyde",
+                  "title": "Как часто прибегает к разговорному стилю в обыденных, неформальных ситуациях?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "dopuskaet-li-v-rechi-prostorechie-snizhennuyu-leks",
+                  "title": "Допускает ли в речи просторечие, сниженную лексику, жаргонизмы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-gibko-pereklyuchatsya-mezhdu-raznymi-stil",
+                  "title": "Умеет ли гибко переключаться между разными стилистическими регистрами?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakoy-stilisticheskiy-registr-preobladaet-v-rechi-",
+                  "title": "Какой стилистический регистр преобладает в речи персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "spetsialnaya-leksika",
+          "title": "1.3 Специальная лексика",
+          "questionGroups": [
+            {
+              "id": "professionalnaya-terminologiya",
+              "title": "Профессиональная терминология",
+              "questions": [
+                {
+                  "id": "kakuyu-professionalnuyu-terminologiyu-ispolzuet-pe",
+                  "title": "Какую профессиональную терминологию использует персонаж и насколько свободно ею владеет?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-v-rechi-dialektnye-slova-i-regionalnye-osob",
+                  "title": "Есть ли в речи диалектные слова и региональные особенности, и что они выдают о происхождении?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-personazh-arhaizmy-i-ustarevshie-rech",
+                  "title": "Использует ли персонаж архаизмы и устаревшие речевые формы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-zaimstvovaniya-iz-drugih-yazykov-vstrechayut",
+                  "title": "Какие заимствования из других языков встречаются в речи и что это говорит о культурном кругозоре?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vladeet-li-personazh-zhargonom-opredelennoy-sotsia",
+                  "title": "Владеет ли персонаж жаргоном определенной социальной группы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "emotsionalno-ekspressivnaya-leksika",
+          "title": "1.4 Эмоционально-экспрессивная лексика",
+          "questionGroups": [
+            {
+              "id": "sposoby-vyrazheniya-polozhitelnyh-emotsiy",
+              "title": "Способы выражения положительных эмоций",
+              "questions": [
+                {
+                  "id": "kakie-slova-i-vyrazheniya-ispolzuet-dlya-peredachi",
+                  "title": "Какие слова и выражения использует для передачи радости, восторга, нежности?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-vyrazhaet-negativnye-emotsii-gnev-razdrazhenie",
+                  "title": "Как выражает негативные эмоции - гнев, раздражение, печаль?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-rugatelstva-ispolzuet-ili-kak-ih-zamenyaet",
+                  "title": "Какие ругательства использует или как их заменяет?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-laskatelnye-slova-i-nezhnye-obrascheniya-upo",
+                  "title": "Какие ласкательные слова и нежные обращения употребляет?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-vosklitsaniya-i-mezhdometiya-harakterny-dlya",
+                  "title": "Какие восклицания и междометия характерны для речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sintaksicheskie-osobennosti",
+      "title": "2. Синтаксические особенности",
+      "subsections": [
+        {
+          "id": "struktura-predlozheniy",
+          "title": "2.1 Структура предложений",
+          "questionGroups": [
+            {
+              "id": "dlina-predlozheniy-korotkiedlinnyesmeshannye",
+              "title": "Длина предложений (короткие/длинные/смешанные)",
+              "questions": [
+                {
+                  "id": "predpochitaet-li-personazh-korotkie-rublenye-frazy",
+                  "title": "Предпочитает ли персонаж короткие, рубленые фразы или длинные, развернутые периоды?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-preimuschestvenno-prostye-konstruktsi",
+                  "title": "Использует ли преимущественно простые конструкции или сложные предложения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-tipy-slozhnyh-predlozheniy-preobladayut-sloz",
+                  "title": "Какие типы сложных предложений преобладают - сложносочиненные или сложноподчиненные?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-harakternye-ritmicheskie-osobennosti-v-post",
+                  "title": "Есть ли характерные ритмические особенности в построении фраз?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "grammaticheskie-osobennosti",
+          "title": "2.2 Грамматические особенности",
+          "questionGroups": [
+            {
+              "id": "soblyudenienarushenie-grammaticheskih-norm",
+              "title": "Соблюдение/нарушение грамматических норм",
+              "questions": [
+                {
+                  "id": "soblyudaet-li-personazh-grammaticheskie-normy-ili-",
+                  "title": "Соблюдает ли персонаж грамматические нормы или допускает характерные ошибки?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-tipichnye-grammaticheskie-oshibki-dopuskaet-",
+                  "title": "Какие типичные грамматические ошибки допускает и что они выдают?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-arhaicheskie-formy-slovoizmeneniya",
+                  "title": "Использует ли архаические формы словоизменения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "proyavlyayutsya-li-dialektnye-grammaticheskie-osob",
+                  "title": "Проявляются ли диалектные грамматические особенности?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "chasto-li-ispolzuet-nepolnye-i-ellipticheskie-kons",
+                  "title": "Часто ли использует неполные и эллиптические конструкции?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "poryadok-slov-i-inversii",
+          "title": "2.3 Порядок слов и инверсии",
+          "questionGroups": [
+            {
+              "id": "pryamoy-vs-obratnyy-poryadok-slov",
+              "title": "Прямой vs обратный порядок слов",
+              "questions": [
+                {
+                  "id": "priderzhivaetsya-li-obychnogo-poryadka-slov-ili-ch",
+                  "title": "Придерживается ли обычного порядка слов или часто использует инверсии?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "v-kakih-situatsiyah-pribegaet-k-ekspressivnym-pere",
+                  "title": "В каких ситуациях прибегает к экспрессивным перестановкам слов?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-harakternye-sintaksicheskie-figury-an",
+                  "title": "Использует ли характерные синтаксические фигуры - анафоры, параллелизмы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-stroit-emfaticheskie-konstruktsii-dlya-usileni",
+                  "title": "Как строит эмфатические конструкции для усиления?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nezakonchennost-i-ellipsis",
+          "title": "2.4 Незаконченность и эллипсис",
+          "questionGroups": [
+            {
+              "id": "chastota-nezakonchennyh-predlozheniy",
+              "title": "Частота незаконченных предложений",
+              "questions": [
+                {
+                  "id": "kak-chasto-personazh-ostavlyaet-predlozheniya-neza",
+                  "title": "Как часто персонаж оставляет предложения незаконченными?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-prichiny-vyzyvayut-obryvy-rechi-volnenie-sty",
+                  "title": "Какие причины вызывают обрывы речи - волнение, стыд, внешние помехи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-znachimye-pauzy-i-krasnorechivye-umol",
+                  "title": "Использует ли значимые паузы и красноречивые умолчания?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "harakterny-li-ellipticheskie-konstruktsii-v-dialog",
+                  "title": "Характерны ли эллиптические конструкции в диалогах?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prosodicheskie-harakteristiki",
+      "title": "3. Просодические характеристики",
+      "subsections": [
+        {
+          "id": "temp-i-ritm-rechi",
+          "title": "3.1 Темп и ритм речи",
+          "questionGroups": [
+            {
+              "id": "obschiy-temp-rechi-bystryymedlennyyperemenchivyy",
+              "title": "Общий темп речи (быстрый/медленный/переменчивый)",
+              "questions": [
+                {
+                  "id": "v-kakom-tempe-obychno-govorit-personazh-bystro-med",
+                  "title": "В каком темпе обычно говорит персонаж - быстро, медленно, или темп меняется?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kogda-i-pochemu-proishodyat-uskoreniya-i-zamedleni",
+                  "title": "Когда и почему происходят ускорения и замедления речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-ritmicheskie-osobennosti-v-postroenii-fraz",
+                  "title": "Есть ли ритмические особенности в построении фраз?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-temp-rechi-svyazan-s-soderzhaniem-uskoryaetsya",
+                  "title": "Как темп речи связан с содержанием - ускоряется при волнении, замедляется при важных вещах?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakuyu-rol-igrayut-pauzy-v-rechi-personazha",
+                  "title": "Какую роль играют паузы в речи персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "intonatsionnye-modeli",
+          "title": "3.2 Интонационные модели",
+          "questionGroups": [
+            {
+              "id": "harakternye-melodii-rechi",
+              "title": "Характерные мелодии речи",
+              "questions": [
+                {
+                  "id": "kakie-intonatsionnye-melodii-preobladayut-v-rechi-",
+                  "title": "Какие интонационные мелодии преобладают в речи персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-stroit-voprositelnye-intonatsii-s-podemom-osob",
+                  "title": "Как строит вопросительные интонации - с подъемом, особой окраской?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-vosklitsatelnye-intonatsionnye-patterny-hara",
+                  "title": "Какие восклицательные интонационные паттерны характерны?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-zvuchat-utverditelnye-vyskazyvaniya-uverenno-s",
+                  "title": "Как звучат утвердительные высказывания - уверенно, сомневаясь?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "naskolko-emotsionalno-okrasheny-intonatsii",
+                  "title": "Насколько эмоционально окрашены интонации?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gromkost-i-tembr",
+          "title": "3.3 Громкость и тембр",
+          "questionGroups": [
+            {
+              "id": "obychnaya-gromkost-rechi-tihayagromkayasrednyaya",
+              "title": "Обычная громкость речи (тихая/громкая/средняя)",
+              "questions": [
+                {
+                  "id": "kakova-obychnaya-gromkost-rechi-personazha",
+                  "title": "Какова обычная громкость речи персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-menyaetsya-gromkost-v-raznyh-situatsiyah-s-raz",
+                  "title": "Как меняется громкость в разных ситуациях - с разными людьми, при эмоциях?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-tembralnye-harakteristiki-golosa-teplyy-holo",
+                  "title": "Какие тембральные характеристики голоса - теплый, холодный, звонкий?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-harakterizuetsya-kachestvo-zvuchaniya-chistoe-",
+                  "title": "Как характеризуется качество звучания - чистое, хриплое, звонкое?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-emotsii-vliyayut-na-golosovye-harakteristiki",
+                  "title": "Как эмоции влияют на голосовые характеристики?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "artikulyatsionnye-osobennosti",
+          "title": "3.4 Артикуляционные особенности",
+          "questionGroups": [
+            {
+              "id": "chetkost-proiznosheniya-otchetlivayanechetkaya-dik",
+              "title": "Четкость произношения (отчетливая/нечеткая дикция)",
+              "questions": [
+                {
+                  "id": "naskolko-chetko-i-otchetlivo-proiznosit-zvuki-i-sl",
+                  "title": "Насколько четко и отчетливо произносит звуки и слова?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-osobennosti-v-proiznoshenii-otdelnyh-zvukov",
+                  "title": "Есть ли особенности в произношении отдельных звуков?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "proyavlyayutsya-li-dialektnye-foneticheskie-osoben",
+                  "title": "Проявляются ли диалектные фонетические особенности?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-defekty-rechi-ili-harakternye-osobennosti-a",
+                  "title": "Есть ли дефекты речи или характерные особенности артикуляции?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-emotsii-vliyayut-na-proiznoshenie",
+                  "title": "Как эмоции влияют на произношение?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pragmaticheskie-aspekty-rechi",
+      "title": "4. Прагматические аспекты речи",
+      "subsections": [
+        {
+          "id": "rechevye-strategii-i-tseli",
+          "title": "4.1 Речевые стратегии и цели",
+          "questionGroups": [
+            {
+              "id": "osnovnye-kommunikativnye-tseli-informirovatubezhda",
+              "title": "Основные коммуникативные цели (информировать/убеждать/воздействовать)",
+              "questions": [
+                {
+                  "id": "kakie-osnovnye-tseli-presleduet-personazh-v-obsche",
+                  "title": "Какие основные цели преследует персонаж в общении - информировать, убеждать, развлекать?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakimi-sposobami-dostigaet-svoih-tseley-cherez-rec",
+                  "title": "Какими способами достигает своих целей через речь?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "predpochitaet-pryamye-vyskazyvaniya-ili-kosvennye-",
+                  "title": "Предпочитает прямые высказывания или косвенные стратегии?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "naskolko-effektivno-rechevoe-vozdeystvie-personazh",
+                  "title": "Насколько эффективно речевое воздействие персонажа на других?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-adaptirovat-strategii-k-konkretnoy-situat",
+                  "title": "Умеет ли адаптировать стратегии к конкретной ситуации?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "kommunikativnye-roli",
+          "title": "4.2 Коммуникативные роли",
+          "questionGroups": [
+            {
+              "id": "liderstvo-v-dialoge-initsiatorvedomyy",
+              "title": "Лидерство в диалоге (инициатор/ведомый)",
+              "questions": [
+                {
+                  "id": "sklonen-li-brat-initsiativu-v-razgovore-ili-predpo",
+                  "title": "Склонен ли брать инициативу в разговоре или предпочитает следовать за собеседником?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "stremitsya-li-dominirovat-v-rechevom-vzaimodeystvi",
+                  "title": "Стремится ли доминировать в речевом взаимодействии?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-vystraivat-partnerskoe-vzaimodeystvie-v-d",
+                  "title": "Умеет ли выстраивать партнерское взаимодействие в диалоге?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "proyavlyayutsya-li-manipulyativnye-tendentsii-v-re",
+                  "title": "Проявляются ли манипулятивные тенденции в речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-menyayutsya-kommunikativnye-roli-v-zavisimosti",
+                  "title": "Как меняются коммуникативные роли в зависимости от собеседника?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sposoby-vozdeystviya",
+          "title": "4.3 Способы воздействия",
+          "questionGroups": [
+            {
+              "id": "ubezhdenie-cherez-logiku-i-argumenty",
+              "title": "Убеждение через логику и аргументы",
+              "questions": [
+                {
+                  "id": "ispolzuet-li-logicheskie-argumenty-dlya-ubezhdeniy",
+                  "title": "Использует ли логические аргументы для убеждения собеседников?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "pribegaet-li-k-emotsionalnomu-vozdeystviyu-na-chuv",
+                  "title": "Прибегает ли к эмоциональному воздействию на чувства?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "primenyaet-li-prinuzhdenie-i-psihologicheskoe-davl",
+                  "title": "Применяет ли принуждение и психологическое давление?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-lest-i-obolschenie-dlya-dostizheniya-",
+                  "title": "Использует ли лесть и обольщение для достижения целей?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "sklonen-li-k-skrytoy-manipulyatsii-i-zavualirovann",
+                  "title": "Склонен ли к скрытой манипуляции и завуалированному влиянию?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "adaptivnost-i-gibkost-rechi",
+          "title": "4.4 Адаптивность и гибкость речи",
+          "questionGroups": [
+            {
+              "id": "izmenenie-rechi-s-raznymi-sobesednikami",
+              "title": "Изменение речи с разными собеседниками",
+              "questions": [
+                {
+                  "id": "kak-menyaetsya-manera-rechi-s-lyudmi-raznogo-sotsi",
+                  "title": "Как меняется манера речи с людьми разного социального статуса?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-pereklyuchatsya-mezhdu-ofitsialnymi-i-nef",
+                  "title": "Умеет ли переключаться между официальными и неформальными ситуациями?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "uchityvaet-li-vozrast-i-status-sobesednika-pri-vyb",
+                  "title": "Учитывает ли возраст и статус собеседника при выборе речевых средств?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "sposoben-li-k-emotsionalnoy-podstroyke-pod-nastroe",
+                  "title": "Способен ли к эмоциональной подстройке под настроение ситуации?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "proyavlyaet-li-kulturnuyu-chuvstvitelnost-v-rechi-",
+                  "title": "Проявляет ли культурную чувствительность в речи с людьми других культур?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sotsiolingvisticheskie-markery",
+      "title": "5. Социолингвистические маркеры",
+      "subsections": [
+        {
+          "id": "klassovye-i-statusnye-osobennosti",
+          "title": "5.1 Классовые и статусные особенности",
+          "questionGroups": [
+            {
+              "id": "rechevye-priznaki-sotsialnogo-proishozhdeniya",
+              "title": "Речевые признаки социального происхождения",
+              "questions": [
+                {
+                  "id": "kakie-osobennosti-rechi-vydayut-sotsialnoe-proisho",
+                  "title": "Какие особенности речи выдают социальное происхождение персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-uroven-obrazovaniya-otrazhaetsya-v-rechevyh-pr",
+                  "title": "Как уровень образования отражается в речевых привычках?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vliyaet-li-vospitanie-na-vybor-rechevyh-sredstv-i-",
+                  "title": "Влияет ли воспитание на выбор речевых средств и манеру говорить?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "sootvetstvuet-li-rech-tekuschemu-sotsialnomu-statu",
+                  "title": "Соответствует ли речь текущему социальному статусу?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "pytaetsya-li-skryt-ili-naoborot-podcherknut-svoe-p",
+                  "title": "Пытается ли скрыть или, наоборот, подчеркнуть свое происхождение через речь?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "professionalnye-rechevye-osobennosti",
+          "title": "5.2 Профессиональные речевые особенности",
+          "questionGroups": [
+            {
+              "id": "professionalnaya-terminologiya-i-zhargon",
+              "title": "Профессиональная терминология и жаргон",
+              "questions": [
+                {
+                  "id": "kakuyu-professionalnuyu-leksiku-i-zhargon-ispolzue",
+                  "title": "Какую профессиональную лексику и жаргон использует в речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-rod-deyatelnosti-povliyal-na-obschuyu-maneru-r",
+                  "title": "Как род деятельности повлиял на общую манеру речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-spetsificheskie-rechevye-oboroty-harakterny",
+                  "title": "Есть ли специфические речевые обороты, характерные для профессии?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "otrazhaetsya-li-professionalnoe-myshlenie-v-strukt",
+                  "title": "Отражается ли профессиональное мышление в структуре речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-pereklyuchatsya-mezhdu-professionalnoy-i-",
+                  "title": "Умеет ли переключаться между профессиональной и обычной речью?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "regionalnye-i-dialektnye-cherty",
+          "title": "5.3 Региональные и диалектные черты",
+          "questionGroups": [
+            {
+              "id": "dialektnye-slova-i-vyrazheniya",
+              "title": "Диалектные слова и выражения",
+              "questions": [
+                {
+                  "id": "kakie-dialektnye-slova-i-mestnye-vyrazheniya-ispol",
+                  "title": "Какие диалектные слова и местные выражения использует?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-osobennosti-proiznosheniya-harakternye-dlya",
+                  "title": "Есть ли особенности произношения, характерные для определенного региона?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "ispolzuet-li-mestnye-rechevye-oboroty-i-idiomy",
+                  "title": "Использует ли местные речевые обороты и идиомы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-geografiya-mesta-rozhdeniya-ili-prozhivaniya-v",
+                  "title": "Как география места рождения или проживания влияет на лексику?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "naskolko-vyrazheny-dialektnye-cherty-silno-slabo-s",
+                  "title": "Насколько выражены диалектные черты - сильно, слабо, ситуативно?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "kulturnye-i-religioznye-vliyaniya",
+          "title": "5.4 Культурные и религиозные влияния",
+          "questionGroups": [
+            {
+              "id": "religioznaya-leksika-v-rechi",
+              "title": "Религиозная лексика в речи",
+              "questions": [
+                {
+                  "id": "ispolzuet-li-religioznuyu-leksiku-tserkovnoslavyan",
+                  "title": "Использует ли религиозную лексику, церковнославянизмы, библейские выражения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "delaet-li-kulturnye-allyuzii-tsitiruet-li-literatu",
+                  "title": "Делает ли культурные аллюзии, цитирует ли литературные произведения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-traditsii-vliyayut-na-rechevye-oboroty-i-formu",
+                  "title": "Как традиции влияют на речевые обороты и формулы вежливости?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "proyavlyayutsya-li-natsionalnye-osobennosti-rechev",
+                  "title": "Проявляются ли национальные особенности речевого поведения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vladeet-li-neskolkimi-yazykami-i-kak-pereklyuchaet",
+                  "title": "Владеет ли несколькими языками и как переключается между культурными кодами?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "emotsionalno-rechevye-svyazi",
+      "title": "6. Эмоционально-речевые связи",
+      "subsections": [
+        {
+          "id": "vliyanie-emotsiy-na-rechevye-harakteristiki",
+          "title": "6.1 Влияние эмоций на речевые характеристики",
+          "questionGroups": [
+            {
+              "id": "izmenenie-tempa-rechi-pod-vliyaniem-emotsiy",
+              "title": "Изменение темпа речи под влиянием эмоций",
+              "questions": [
+                {
+                  "id": "kak-menyaetsya-temp-rechi-pri-raznyh-emotsionalnyh",
+                  "title": "Как меняется темп речи при разных эмоциональных состояниях?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vliyayut-li-chuvstva-na-gromkost-golosa-i-tembraln",
+                  "title": "Влияют ли чувства на громкость голоса и тембральную окраску?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-emotsii-menyayut-vybor-leksiki-i-rechevyh-sred",
+                  "title": "Как эмоции меняют выбор лексики и речевых средств?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "izmenyayutsya-li-sintaksicheskie-konstruktsii-pri-",
+                  "title": "Изменяются ли синтаксические конструкции при сильных переживаниях?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-volnenie-vliyaet-na-artikulyatsiyu-i-chetkost-",
+                  "title": "Как волнение влияет на артикуляцию и четкость произношения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rechevye-sposoby-vyrazheniya-emotsiy",
+          "title": "6.2 Речевые способы выражения эмоций",
+          "questionGroups": [
+            {
+              "id": "pryamoe-nazyvanie-emotsiy",
+              "title": "Прямое называние эмоций",
+              "questions": [
+                {
+                  "id": "sklonen-li-pryamo-nazyvat-svoi-emotsii-ili-predpoc",
+                  "title": "Склонен ли прямо называть свои эмоции или предпочитает их скрывать?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-kosvenno-vyrazhat-chuvstva-cherez-intonat",
+                  "title": "Умеет ли косвенно выражать чувства через интонацию и подтекст?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakuyu-emotsionalnuyu-leksiku-i-mezhdometiya-ispol",
+                  "title": "Какую эмоциональную лексику и междометия использует?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-ispolzuet-sintaksicheskie-sredstva-dlya-pereda",
+                  "title": "Как использует синтаксические средства для передачи эмоций?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vazhny-li-neverbalnye-aspekty-pri-emotsionalnoy-re",
+                  "title": "Важны ли невербальные аспекты при эмоциональной речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "emotsionalnaya-sderzhannost-i-kontrol",
+          "title": "6.3 Эмоциональная сдержанность и контроль",
+          "questionGroups": [
+            {
+              "id": "sposobnost-kontrolirovat-emotsii-v-rechi",
+              "title": "Способность контролировать эмоции в речи",
+              "questions": [
+                {
+                  "id": "umeet-li-kontrolirovat-proyavlenie-emotsiy-v-rechi",
+                  "title": "Умеет ли контролировать проявление эмоций в речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "v-kakih-situatsiyah-trebuetsya-osobaya-rechevaya-s",
+                  "title": "В каких ситуациях требуется особая речевая сдержанность?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-proyavlyayutsya-podavlyaemye-emotsii-v-rechi-c",
+                  "title": "Как проявляются подавляемые эмоции в речи - через оговорки, интонации?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "byvayut-li-sryvy-emotsionalnogo-kontrolya-v-rechi",
+                  "title": "Бывают ли срывы эмоционального контроля в речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-razlichiya-mezhdu-vnutrennim-sostoyaniem-i-",
+                  "title": "Есть ли различия между внутренним состоянием и речевым выражением?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kontekstualnaya-adaptatsiya-rechi",
+      "title": "7. Контекстуальная адаптация речи",
+      "subsections": [
+        {
+          "id": "rech-v-raznyh-sotsialnyh-situatsiyah",
+          "title": "7.1 Речь в разных социальных ситуациях",
+          "questionGroups": [
+            {
+              "id": "ofitsialnye-vs-neformalnye-situatsii",
+              "title": "Официальные vs неформальные ситуации",
+              "questions": [
+                {
+                  "id": "kak-menyaetsya-rech-v-ofitsialnyh-i-neformalnyh-si",
+                  "title": "Как меняется речь в официальных и неформальных ситуациях?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "razlichaetsya-li-publichnaya-i-privatnaya-manera-r",
+                  "title": "Различается ли публичная и приватная манера речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "umeet-li-adaptirovat-rech-k-osobennostyam-auditori",
+                  "title": "Умеет ли адаптировать речь к особенностям аудитории?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "znaet-li-ritualnye-i-etiketnye-rechevye-formuly",
+                  "title": "Знает ли ритуальные и этикетные речевые формулы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-opredelyaet-stepen-formalnosti-neobhodimoy-v-k",
+                  "title": "Как определяет степень формальности, необходимой в конкретном контексте?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rech-s-raznymi-sobesednikami",
+          "title": "7.2 Речь с разными собеседниками",
+          "questionGroups": [
+            {
+              "id": "izmeneniya-v-zavisimosti-ot-statusa-sobesednika",
+              "title": "Изменения в зависимости от статуса собеседника",
+              "questions": [
+                {
+                  "id": "kak-menyaetsya-manera-rechi-s-lyudmi-raznogo-sotsi",
+                  "title": "Как меняется манера речи с людьми разного социального статуса?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "uchityvaet-li-vozrast-sobesednika-pri-vybore-reche",
+                  "title": "Учитывает ли возраст собеседника при выборе речевых средств?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "est-li-razlichiya-v-rechi-s-muzhchinami-i-zhenschi",
+                  "title": "Есть ли различия в речи с мужчинами и женщинами?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-menyaetsya-rech-s-blizkimi-lyudmi-po-sravneniy",
+                  "title": "Как меняется речь с близкими людьми по сравнению с незнакомцами?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakuyu-maneru-obscheniya-vybiraet-s-neznakomtsami",
+                  "title": "Какую манеру общения выбирает с незнакомцами?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rech-v-emotsionalnyh-situatsiyah",
+          "title": "7.3 Речь в эмоциональных ситуациях",
+          "questionGroups": [
+            {
+              "id": "izmeneniya-rechi-v-stressovyh-situatsiyah",
+              "title": "Изменения речи в стрессовых ситуациях",
+              "questions": [
+                {
+                  "id": "kak-menyaetsya-rech-v-momenty-silnogo-stressa-i-na",
+                  "title": "Как меняется речь в моменты сильного стресса и напряжения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakoe-rechevoe-povedenie-harakterno-dlya-konfliktn",
+                  "title": "Какое речевое поведение характерно для конфликтных ситуаций?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-zvuchit-rech-v-intimnye-nezhnye-momenty",
+                  "title": "Как звучит речь в интимные, нежные моменты?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-vyrazhaetsya-v-rechi-radost-i-torzhestvo",
+                  "title": "Как выражается в речи радость и торжество?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-rechevye-reaktsii-na-neozhidannosti-i-syurpr",
+                  "title": "Какие речевые реакции на неожиданности и сюрпризы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "evolyutsiya-rechi-v-proizvedenii",
+          "title": "7.4 Эволюция речи в произведении",
+          "questionGroups": [
+            {
+              "id": "izmeneniya-rechi-v-hode-razvitiya-syuzheta",
+              "title": "Изменения речи в ходе развития сюжета",
+              "questions": [
+                {
+                  "id": "kak-menyaetsya-rech-personazha-v-hode-razvitiya-sy",
+                  "title": "Как меняется речь персонажа в ходе развития сюжета?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-klyuchevye-sobytiya-vliyayut-na-rechevoe-pov",
+                  "title": "Какие ключевые события влияют на речевое поведение?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "otrazhaetsya-li-vnutrennyaya-transformatsiya-perso",
+                  "title": "Отражается ли внутренняя трансформация персонажа в его речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "priobretaet-li-ili-utrachivaet-opredelennye-rechev",
+                  "title": "Приобретает ли или утрачивает определенные речевые особенности?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-rech-harakterizuet-raznye-etapy-zhizni-persona",
+                  "title": "Как речь характеризует разные этапы жизни персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "istoriko-kulturnye-osobennosti",
+      "title": "8. Историко-культурные особенности",
+      "subsections": [
+        {
+          "id": "yazykovye-normy-epohi",
+          "title": "8.1 Языковые нормы эпохи",
+          "questionGroups": [
+            {
+              "id": "sootvetstvie-rechi-istoricheskomu-periodu",
+              "title": "Соответствие речи историческому периоду",
+              "questions": [
+                {
+                  "id": "sootvetstvuet-li-rech-personazha-yazykovym-normam-",
+                  "title": "Соответствует ли речь персонажа языковым нормам исторического периода?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-arhaicheskie-formy-i-konstruktsii-ispolzuet",
+                  "title": "Какие архаические формы и конструкции использует?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vklyuchaet-li-ustarevshuyu-leksiku-i-frazeologiyu-",
+                  "title": "Включает ли устаревшую лексику и фразеологию своего времени?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "znaet-li-etiketnye-formuly-i-rechevye-ritualy-svoe",
+                  "title": "Знает ли этикетные формулы и речевые ритуалы своего времени?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "chto-bylo-tabuirovannoy-leksikoy-v-ego-epohu",
+                  "title": "Что было табуированной лексикой в его эпоху?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sotsialnye-rechevye-konventsii",
+          "title": "8.2 Социальные речевые конвенции",
+          "questionGroups": [
+            {
+              "id": "pravila-vezhlivosti-epohi",
+              "title": "Правила вежливости эпохи",
+              "questions": [
+                {
+                  "id": "kakie-pravila-rechevoy-vezhlivosti-suschestvovali-",
+                  "title": "Какие правила речевой вежливости существовали в эпоху персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-gendernye-ogranicheniya-suschestvovali-v-rec",
+                  "title": "Какие гендерные ограничения существовали в речи того времени?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-proyavlyalis-klassovye-razlichiya-v-rechevom-p",
+                  "title": "Как проявлялись классовые различия в речевом поведении?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-professionalnye-rechevye-normy-suschestvoval",
+                  "title": "Какие профессиональные речевые нормы существовали?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-vozrast-vliyal-na-rechevye-roli-i-dopustimye-f",
+                  "title": "Как возраст влиял на речевые роли и допустимые формы общения?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "kulturnye-i-literaturnye-vliyaniya",
+          "title": "8.3 Культурные и литературные влияния",
+          "questionGroups": [
+            {
+              "id": "vliyanie-literatury-na-rech-personazha",
+              "title": "Влияние литературы на речь персонажа",
+              "questions": [
+                {
+                  "id": "kak-literatura-epohi-povliyala-na-rechevye-privych",
+                  "title": "Как литература эпохи повлияла на речевые привычки персонажа?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kakie-kulturnye-allyuzii-i-tsitaty-ispolzuet",
+                  "title": "Какие культурные аллюзии и цитаты использует?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "kak-obrazovanie-togo-vremeni-otrazhaetsya-v-rechi",
+                  "title": "Как образование того времени отражается в речи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "vliyali-li-iskusstvo-i-kulturnaya-zhizn-na-rechevy",
+                  "title": "Влияли ли искусство и культурная жизнь на речевые вкусы?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                },
+                {
+                  "id": "sleduet-li-modnym-rechevym-tendentsiyam-svoey-epoh",
+                  "title": "Следует ли модным речевым тенденциям своей эпохи?",
+                  "answers": [],
+                  "answerType": "multiple",
+                  "source": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
