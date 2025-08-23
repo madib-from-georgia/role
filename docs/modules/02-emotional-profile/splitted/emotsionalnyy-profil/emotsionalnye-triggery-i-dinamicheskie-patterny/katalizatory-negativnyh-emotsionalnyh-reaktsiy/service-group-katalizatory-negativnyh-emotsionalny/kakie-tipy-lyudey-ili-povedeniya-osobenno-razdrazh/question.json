@@ -1,0 +1,74 @@
+{
+  "id": "kakie-tipy-lyudey-ili-povedeniya-osobenno-razdrazh",
+  "type": "question",
+  "title": "Какие типы людей или поведения особенно раздражают?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "litsemerie",
+      "value": {
+        "male": "лицемерие",
+        "female": "лицемерие"
+      },
+      "exportedValue": {
+        "male": "У меня лицемерие",
+        "female": "У меня лицемерие"
+      },
+      "hint": "Человеческие качества, которые вызывают отторжение",
+      "exercise": ""
+    },
+    {
+      "id": "vysokomerie",
+      "value": {
+        "male": "высокомерие",
+        "female": "высокомерие"
+      },
+      "exportedValue": {
+        "male": "У меня высокомерие",
+        "female": "У меня высокомерие"
+      },
+      "hint": "Человеческие качества, которые вызывают отторжение",
+      "exercise": ""
+    },
+    {
+      "id": "glupost",
+      "value": {
+        "male": "глупость",
+        "female": "глупость"
+      },
+      "exportedValue": {
+        "male": "У меня глупость",
+        "female": "У меня глупость"
+      },
+      "hint": "Человеческие качества, которые вызывают отторжение",
+      "exercise": ""
+    },
+    {
+      "id": "zhestokost",
+      "value": {
+        "male": "жестокость",
+        "female": "жестокость"
+      },
+      "exportedValue": {
+        "male": "У меня жестокость",
+        "female": "У меня жестокость"
+      },
+      "hint": "Человеческие качества, которые вызывают отторжение",
+      "exercise": ""
+    },
+    {
+      "id": "ravnodushie",
+      "value": {
+        "male": "равнодушие",
+        "female": "равнодушие"
+      },
+      "exportedValue": {
+        "male": "У меня равнодушие",
+        "female": "У меня равнодушие"
+      },
+      "hint": "Человеческие качества, которые вызывают отторжение",
+      "exercise": ""
+    }
+  ]
+}

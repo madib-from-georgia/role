@@ -1,0 +1,14 @@
+{
+  "id": "service-group-konstitutsionalnye-osobennosti-emotsionalnosti",
+  "type": "question_group",
+  "title": "Вопросы раздела \"8.1 Конституциональные особенности эмоциональности\"",
+  "children": [
+    "bystro-ili-medlenno-rabotaet-nervnaya-sistema-pers/question.json",
+    "silnaya-ili-slabaya-nervnaya-sistema/question.json",
+    "podvizhny-ili-inertny-emotsionalnye-protsessy/question.json",
+    "k-kakomu-tipu-teloslozheniya-otnositsya-personazh/question.json",
+    "vliyayut-li-gormonalnye-osobennosti-na-emotsionaln/question.json",
+    "est-li-problemy-so-zdorovem-vliyayuschie-na-emotsi/question.json",
+    "kakoy-tip-vospriyatiya-preobladaet/question.json"
+  ]
+}

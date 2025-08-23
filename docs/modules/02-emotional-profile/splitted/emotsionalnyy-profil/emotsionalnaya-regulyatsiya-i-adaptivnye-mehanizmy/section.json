@@ -1,0 +1,11 @@
+{
+  "id": "emotsionalnaya-regulyatsiya-i-adaptivnye-mehanizmy",
+  "type": "section",
+  "title": "4. Эмоциональная регуляция и адаптивные механизмы",
+  "children": [
+    "strategii-soznatelnogo-emotsionalnogo-kontrolya/subsection.json",
+    "bessoznatelnye-zaschitnye-mehanizmy/subsection.json",
+    "emotsionalnye-maski-i-sotsialnye-roli/subsection.json",
+    "razvitie-emotsionalnoy-kompetentnosti/subsection.json"
+  ]
+}

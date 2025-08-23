@@ -1,0 +1,74 @@
+{
+  "id": "kakaya-emotsiya-obychno-sleduet-za-gnevom-u-person",
+  "type": "question",
+  "title": "Какая эмоция обычно следует за гневом у персонажа?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "styd",
+      "value": {
+        "male": "стыд",
+        "female": "стыд"
+      },
+      "exportedValue": {
+        "male": "У меня стыд",
+        "female": "У меня стыд"
+      },
+      "hint": "Эмоциональная логика: что приходит после взрыва",
+      "exercise": ""
+    },
+    {
+      "id": "udovletvorenie",
+      "value": {
+        "male": "удовлетворение",
+        "female": "удовлетворение"
+      },
+      "exportedValue": {
+        "male": "У меня удовлетворение",
+        "female": "У меня удовлетворение"
+      },
+      "hint": "Эмоциональная логика: что приходит после взрыва",
+      "exercise": ""
+    },
+    {
+      "id": "opustoshenie",
+      "value": {
+        "male": "опустошение",
+        "female": "опустошение"
+      },
+      "exportedValue": {
+        "male": "У меня опустошение",
+        "female": "У меня опустошение"
+      },
+      "hint": "Эмоциональная логика: что приходит после взрыва",
+      "exercise": ""
+    },
+    {
+      "id": "esche-bolshiy-gnev",
+      "value": {
+        "male": "еще больший гнев",
+        "female": "еще больший гнев"
+      },
+      "exportedValue": {
+        "male": "У меня еще больший гнев",
+        "female": "У меня еще больший гнев"
+      },
+      "hint": "Эмоциональная логика: что приходит после взрыва",
+      "exercise": ""
+    },
+    {
+      "id": "pechal",
+      "value": {
+        "male": "печаль",
+        "female": "печаль"
+      },
+      "exportedValue": {
+        "male": "У меня печаль",
+        "female": "У меня печаль"
+      },
+      "hint": "Эмоциональная логика: что приходит после взрыва",
+      "exercise": ""
+    }
+  ]
+}

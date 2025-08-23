@@ -1,0 +1,61 @@
+{
+  "id": "byvayut-li-periody-emotsionalnogo-podema-i-spada",
+  "type": "question",
+  "title": "Бывают ли периоды эмоционального подъема и спада?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "chetkie-tsikly-nastroeniya",
+      "value": {
+        "male": "четкие циклы настроения",
+        "female": "четкие циклы настроения"
+      },
+      "exportedValue": {
+        "male": "У меня четкие циклы настроения",
+        "female": "У меня четкие циклы настроения"
+      },
+      "hint": "Циклоидные особенности настроения",
+      "exercise": ""
+    },
+    {
+      "id": "haotichnye-kolebaniya",
+      "value": {
+        "male": "хаотичные колебания",
+        "female": "хаотичные колебания"
+      },
+      "exportedValue": {
+        "male": "У меня хаотичные колебания",
+        "female": "У меня хаотичные колебания"
+      },
+      "hint": "Циклоидные особенности настроения",
+      "exercise": ""
+    },
+    {
+      "id": "stabilnoe-nastroenie",
+      "value": {
+        "male": "стабильное настроение",
+        "female": "стабильное настроение"
+      },
+      "exportedValue": {
+        "male": "У меня стабильное настроение",
+        "female": "У меня стабильное настроение"
+      },
+      "hint": "Циклоидные особенности настроения",
+      "exercise": ""
+    },
+    {
+      "id": "sezonnye-izmeneniya",
+      "value": {
+        "male": "сезонные изменения",
+        "female": "сезонные изменения"
+      },
+      "exportedValue": {
+        "male": "У меня сезонные изменения",
+        "female": "У меня сезонные изменения"
+      },
+      "hint": "Циклоидные особенности настроения",
+      "exercise": ""
+    }
+  ]
+}

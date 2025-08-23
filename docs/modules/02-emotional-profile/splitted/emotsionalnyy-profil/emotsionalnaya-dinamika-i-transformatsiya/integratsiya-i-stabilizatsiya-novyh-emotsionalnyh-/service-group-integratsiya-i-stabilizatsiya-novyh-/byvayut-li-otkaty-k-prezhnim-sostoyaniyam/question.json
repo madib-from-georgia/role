@@ -1,0 +1,61 @@
+{
+  "id": "byvayut-li-otkaty-k-prezhnim-sostoyaniyam",
+  "type": "question",
+  "title": "Бывают ли \"откаты\" к прежним состояниям?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "chastye-retsidivy",
+      "value": {
+        "male": "частые рецидивы",
+        "female": "частые рецидивы"
+      },
+      "exportedValue": {
+        "male": "У меня частые рецидивы",
+        "female": "У меня частые рецидивы"
+      },
+      "hint": "В каких ситуациях это происходит",
+      "exercise": ""
+    },
+    {
+      "id": "redkie-vozvraty",
+      "value": {
+        "male": "редкие возвраты",
+        "female": "редкие возвраты"
+      },
+      "exportedValue": {
+        "male": "У меня редкие возвраты",
+        "female": "У меня редкие возвраты"
+      },
+      "hint": "В каких ситуациях это происходит",
+      "exercise": ""
+    },
+    {
+      "id": "stabilno-derzhitsya-novogo",
+      "value": {
+        "male": "стабильно держится нового",
+        "female": "стабильно держится нового"
+      },
+      "exportedValue": {
+        "male": "У меня стабильно держится нового",
+        "female": "У меня стабильно держится нового"
+      },
+      "hint": "В каких ситуациях это происходит",
+      "exercise": ""
+    },
+    {
+      "id": "tsiklicheskie-vozvraty",
+      "value": {
+        "male": "циклические возвраты",
+        "female": "циклические возвраты"
+      },
+      "exportedValue": {
+        "male": "У меня циклические возвраты",
+        "female": "У меня циклические возвраты"
+      },
+      "hint": "В каких ситуациях это происходит",
+      "exercise": ""
+    }
+  ]
+}

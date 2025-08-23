@@ -1,0 +1,61 @@
+{
+  "id": "ispolzuet-li-tvorchestvo-dlya-pererabotki-slozhnyh",
+  "type": "question",
+  "title": "Использует ли творчество для переработки сложных эмоций?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "aktivno-ispolzuet-iskusstvo",
+      "value": {
+        "male": "активно использует искусство",
+        "female": "активно использует искусство"
+      },
+      "exportedValue": {
+        "male": "У меня активно использует искусство",
+        "female": "У меня активно использует искусство"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    },
+    {
+      "id": "inogda-tvorit",
+      "value": {
+        "male": "иногда творит",
+        "female": "иногда творит"
+      },
+      "exportedValue": {
+        "male": "У меня иногда творит",
+        "female": "У меня иногда творит"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    },
+    {
+      "id": "ne-svyazyvaet-tvorchestvo-s-emotsiyami",
+      "value": {
+        "male": "не связывает творчество с эмоциями",
+        "female": "не связывает творчество с эмоциями"
+      },
+      "exportedValue": {
+        "male": "У меня не связывает творчество с эмоциями",
+        "female": "У меня не связывает творчество с эмоциями"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    },
+    {
+      "id": "ne-tvorit",
+      "value": {
+        "male": "не творит",
+        "female": "не творит"
+      },
+      "exportedValue": {
+        "male": "У меня не творит",
+        "female": "У меня не творит"
+      },
+      "hint": "Искусство как терапия",
+      "exercise": ""
+    }
+  ]
+}

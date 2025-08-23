@@ -1,0 +1,61 @@
+{
+  "id": "umeet-li-upravlyat-emotsionalnymi-sostoyaniyami",
+  "type": "question",
+  "title": "Умеет ли управлять эмоциональными состояниями?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "otlichnaya-samoregulyatsiya",
+      "value": {
+        "male": "отличная саморегуляция",
+        "female": "отличная саморегуляция"
+      },
+      "exportedValue": {
+        "male": "У меня отличная саморегуляция",
+        "female": "У меня отличная саморегуляция"
+      },
+      "hint": "Способности к эмоциональной саморегуляции",
+      "exercise": ""
+    },
+    {
+      "id": "umerennye-sposobnosti",
+      "value": {
+        "male": "умеренные способности",
+        "female": "умеренные способности"
+      },
+      "exportedValue": {
+        "male": "У меня умеренные способности",
+        "female": "У меня умеренные способности"
+      },
+      "hint": "Способности к эмоциональной саморегуляции",
+      "exercise": ""
+    },
+    {
+      "id": "plohoy-kontrol",
+      "value": {
+        "male": "плохой контроль",
+        "female": "плохой контроль"
+      },
+      "exportedValue": {
+        "male": "У меня плохой контроль",
+        "female": "У меня плохой контроль"
+      },
+      "hint": "Способности к эмоциональной саморегуляции",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyaet-emotsii",
+      "value": {
+        "male": "подавляет эмоции",
+        "female": "подавляет эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня подавляет эмоции",
+        "female": "У меня подавляет эмоции"
+      },
+      "hint": "Способности к эмоциональной саморегуляции",
+      "exercise": ""
+    }
+  ]
+}

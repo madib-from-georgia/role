@@ -1,0 +1,61 @@
+{
+  "id": "obvinyaet-li-drugih-v-tom-chto-chuvstvuet-sam",
+  "type": "question",
+  "title": "Обвиняет ли других в том, что чувствует сам?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "chasto-proetsiruet",
+      "value": {
+        "male": "часто проецирует",
+        "female": "часто проецирует"
+      },
+      "exportedValue": {
+        "male": "У меня часто проецирует",
+        "female": "У меня часто проецирует"
+      },
+      "hint": "\"Он на меня сердится\" вместо \"я на него сержусь\"",
+      "exercise": ""
+    },
+    {
+      "id": "inogda",
+      "value": {
+        "male": "иногда",
+        "female": "иногда"
+      },
+      "exportedValue": {
+        "male": "У меня иногда",
+        "female": "У меня иногда"
+      },
+      "hint": "\"Он на меня сердится\" вместо \"я на него сержусь\"",
+      "exercise": ""
+    },
+    {
+      "id": "redko",
+      "value": {
+        "male": "редко",
+        "female": "редко"
+      },
+      "exportedValue": {
+        "male": "У меня редко",
+        "female": "У меня редко"
+      },
+      "hint": "\"Он на меня сердится\" вместо \"я на него сержусь\"",
+      "exercise": ""
+    },
+    {
+      "id": "horosho-osoznaet-svoi-chuvstva",
+      "value": {
+        "male": "хорошо осознает свои чувства",
+        "female": "хорошо осознает свои чувства"
+      },
+      "exportedValue": {
+        "male": "У меня хорошо осознает свои чувства",
+        "female": "У меня хорошо осознает свои чувства"
+      },
+      "hint": "\"Он на меня сердится\" вместо \"я на него сержусь\"",
+      "exercise": ""
+    }
+  ]
+}

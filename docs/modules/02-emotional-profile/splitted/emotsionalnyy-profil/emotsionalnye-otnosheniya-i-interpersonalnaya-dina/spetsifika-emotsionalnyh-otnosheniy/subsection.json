@@ -1,0 +1,8 @@
+{
+  "id": "spetsifika-emotsionalnyh-otnosheniy",
+  "type": "subsection",
+  "title": "5.3 Специфика эмоциональных отношений",
+  "children": [
+    "service-group-spetsifika-emotsionalnyh-otnosheniy/group.json"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "service-group-bazovyy-emotsionalnyy-ton-i-temperament",
+  "type": "question_group",
+  "title": "Вопросы раздела \"1.1 Базовый эмоциональный тон и темперамент\"",
+  "children": [
+    "kakoe-nastroenie-preobladaet-u-personazha-kogda-ni/question.json",
+    "k-kakomu-tipu-temperamenta-blizhe-vsego-personazh/question.json",
+    "kakova-emotsionalnaya-vynoslivost-personazha/question.json",
+    "chto-daet-personazhu-emotsionalnuyu-energiyu-a-cht/question.json",
+    "tyagoteet-li-personazh-k-pozitivnym-emotsiyam-nega/question.json",
+    "vysokaya-ili-nizkaya-u-personazha-bazovaya-emotsio/question.json",
+    "podskazka-predstavte-emotsionalnuyu-yarkost-kak-sv/question.json",
+    "napravlyaet-li-personazh-svoi-emotsii-bolshe-na-vn/question.json"
+  ]
+}

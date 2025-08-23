@@ -1,0 +1,11 @@
+{
+  "id": "individualno-psihologicheskie-osobennosti-emotsion",
+  "type": "section",
+  "title": "8. Индивидуально-психологические особенности эмоциональной организации",
+  "children": [
+    "konstitutsionalnye-osobennosti-emotsionalnosti/subsection.json",
+    "harakterologicheskie-emotsionalnye-osobennosti/subsection.json",
+    "emotsionalnye-travmy-i-ih-posledstviya/subsection.json",
+    "emotsionalnye-resursy-i-potentsialy/subsection.json"
+  ]
+}

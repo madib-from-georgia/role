@@ -1,0 +1,61 @@
+{
+  "id": "sozhaleet-li-o-svoih-izmeneniyah-ili-rad-im",
+  "type": "question",
+  "title": "Сожалеет ли о своих изменениях или рад им?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "polnostyu-dovolen",
+      "value": {
+        "male": "полностью доволен",
+        "female": "полностью доволна"
+      },
+      "exportedValue": {
+        "male": "У меня полностью доволен",
+        "female": "У меня полностью доволна"
+      },
+      "hint": "Оценка собственной трансформации",
+      "exercise": ""
+    },
+    {
+      "id": "chastichno-sozhaleet",
+      "value": {
+        "male": "частично сожалеет",
+        "female": "частично сожалеет"
+      },
+      "exportedValue": {
+        "male": "У меня частично сожалеет",
+        "female": "У меня частично сожалеет"
+      },
+      "hint": "Оценка собственной трансформации",
+      "exercise": ""
+    },
+    {
+      "id": "ambivalentnye-chuvstva",
+      "value": {
+        "male": "амбивалентные чувства",
+        "female": "амбивалентные чувства"
+      },
+      "exportedValue": {
+        "male": "У меня амбивалентные чувства",
+        "female": "У меня амбивалентные чувства"
+      },
+      "hint": "Оценка собственной трансформации",
+      "exercise": ""
+    },
+    {
+      "id": "sozhaleet-o-izmeneniyah",
+      "value": {
+        "male": "сожалеет о изменениях",
+        "female": "сожалеет о изменениях"
+      },
+      "exportedValue": {
+        "male": "У меня сожалеет о изменениях",
+        "female": "У меня сожалеет о изменениях"
+      },
+      "hint": "Оценка собственной трансформации",
+      "exercise": ""
+    }
+  ]
+}

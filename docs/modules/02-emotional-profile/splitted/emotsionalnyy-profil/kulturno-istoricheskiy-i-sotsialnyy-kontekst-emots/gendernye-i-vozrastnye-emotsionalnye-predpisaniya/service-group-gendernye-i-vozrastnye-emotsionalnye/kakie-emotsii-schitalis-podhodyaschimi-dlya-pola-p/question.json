@@ -1,0 +1,61 @@
+{
+  "id": "kakie-emotsii-schitalis-podhodyaschimi-dlya-pola-p",
+  "type": "question",
+  "title": "Какие эмоции считались подходящими для пола персонажа?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "strogie-gendernye-razgranicheniya",
+      "value": {
+        "male": "строгие гендерные разграничения",
+        "female": "строгие гендерные разграничения"
+      },
+      "exportedValue": {
+        "male": "У меня строгие гендерные разграничения",
+        "female": "У меня строгие гендерные разграничения"
+      },
+      "hint": "Что \"прилично\" мужчине, что - женщине",
+      "exercise": ""
+    },
+    {
+      "id": "myagkie-razlichiya",
+      "value": {
+        "male": "мягкие различия",
+        "female": "мягкие различия"
+      },
+      "exportedValue": {
+        "male": "У меня мягкие различия",
+        "female": "У меня мягкие различия"
+      },
+      "hint": "Что \"прилично\" мужчине, что - женщине",
+      "exercise": ""
+    },
+    {
+      "id": "ravenstvo-polov-v-emotsiyah",
+      "value": {
+        "male": "равенство полов в эмоциях",
+        "female": "равенство полов в эмоциях"
+      },
+      "exportedValue": {
+        "male": "У меня равенство полов в эмоциях",
+        "female": "У меня равенство полов в эмоциях"
+      },
+      "hint": "Что \"прилично\" мужчине, что - женщине",
+      "exercise": ""
+    },
+    {
+      "id": "obratnye-stereotipy",
+      "value": {
+        "male": "обратные стереотипы",
+        "female": "обратные стереотипы"
+      },
+      "exportedValue": {
+        "male": "У меня обратные стереотипы",
+        "female": "У меня обратные стереотипы"
+      },
+      "hint": "Что \"прилично\" мужчине, что - женщине",
+      "exercise": ""
+    }
+  ]
+}

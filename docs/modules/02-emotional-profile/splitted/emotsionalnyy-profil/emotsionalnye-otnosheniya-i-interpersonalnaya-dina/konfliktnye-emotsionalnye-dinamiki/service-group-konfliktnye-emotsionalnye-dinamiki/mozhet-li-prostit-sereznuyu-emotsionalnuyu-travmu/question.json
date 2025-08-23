@@ -1,0 +1,61 @@
+{
+  "id": "mozhet-li-prostit-sereznuyu-emotsionalnuyu-travmu",
+  "type": "question",
+  "title": "Может ли простить серьезную эмоциональную травму?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "sposoben-na-glubokoe-proschenie",
+      "value": {
+        "male": "способен на глубокое прощение",
+        "female": "способен на глубокое прощение"
+      },
+      "exportedValue": {
+        "male": "У меня способен на глубокое прощение",
+        "female": "У меня способен на глубокое прощение"
+      },
+      "hint": "Границы прощения",
+      "exercise": ""
+    },
+    {
+      "id": "proschaet-s-usloviyami",
+      "value": {
+        "male": "прощает с условиями",
+        "female": "прощает с условиями"
+      },
+      "exportedValue": {
+        "male": "У меня прощает с условиями",
+        "female": "У меня прощает с условиями"
+      },
+      "hint": "Границы прощения",
+      "exercise": ""
+    },
+    {
+      "id": "ne-mozhet-prostit",
+      "value": {
+        "male": "не может простить",
+        "female": "не может простить"
+      },
+      "exportedValue": {
+        "male": "У меня не может простить",
+        "female": "У меня не может простить"
+      },
+      "hint": "Границы прощения",
+      "exercise": ""
+    },
+    {
+      "id": "zabyvaet-no-ne-proschaet",
+      "value": {
+        "male": "забывает но не прощает",
+        "female": "забывает но не прощает"
+      },
+      "exportedValue": {
+        "male": "У меня забывает но не прощает",
+        "female": "У меня забывает но не прощает"
+      },
+      "hint": "Границы прощения",
+      "exercise": ""
+    }
+  ]
+}

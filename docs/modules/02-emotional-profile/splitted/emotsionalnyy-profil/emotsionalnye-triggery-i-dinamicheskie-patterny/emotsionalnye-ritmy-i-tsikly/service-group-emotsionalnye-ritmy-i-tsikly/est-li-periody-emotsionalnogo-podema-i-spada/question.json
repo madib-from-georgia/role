@@ -1,0 +1,61 @@
+{
+  "id": "est-li-periody-emotsionalnogo-podema-i-spada",
+  "type": "question",
+  "title": "Есть ли периоды эмоционального подъема и спада?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "regulyarnye-tsikly",
+      "value": {
+        "male": "регулярные циклы",
+        "female": "регулярные циклы"
+      },
+      "exportedValue": {
+        "male": "У меня регулярные циклы",
+        "female": "У меня регулярные циклы"
+      },
+      "hint": "Длительные волны настроения и их закономерности",
+      "exercise": ""
+    },
+    {
+      "id": "haotichnye-kolebaniya",
+      "value": {
+        "male": "хаотичные колебания",
+        "female": "хаотичные колебания"
+      },
+      "exportedValue": {
+        "male": "У меня хаотичные колебания",
+        "female": "У меня хаотичные колебания"
+      },
+      "hint": "Длительные волны настроения и их закономерности",
+      "exercise": ""
+    },
+    {
+      "id": "stabilnoe-sostoyanie",
+      "value": {
+        "male": "стабильное состояние",
+        "female": "стабильное состояние"
+      },
+      "exportedValue": {
+        "male": "У меня стабильное состояние",
+        "female": "У меня стабильное состояние"
+      },
+      "hint": "Длительные волны настроения и их закономерности",
+      "exercise": ""
+    },
+    {
+      "id": "sezonnye-izmeneniya",
+      "value": {
+        "male": "сезонные изменения",
+        "female": "сезонные изменения"
+      },
+      "exportedValue": {
+        "male": "У меня сезонные изменения",
+        "female": "У меня сезонные изменения"
+      },
+      "hint": "Длительные волны настроения и их закономерности",
+      "exercise": ""
+    }
+  ]
+}

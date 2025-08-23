@@ -1,0 +1,11 @@
+{
+  "id": "emotsionalnye-triggery-i-dinamicheskie-patterny",
+  "type": "section",
+  "title": "2. Эмоциональные триггеры и динамические паттерны",
+  "children": [
+    "aktivatory-pozitivnyh-emotsionalnyh-sostoyaniy/subsection.json",
+    "katalizatory-negativnyh-emotsionalnyh-reaktsiy/subsection.json",
+    "emotsionalnye-tsepochki-i-kaskady/subsection.json",
+    "emotsionalnye-ritmy-i-tsikly/subsection.json"
+  ]
+}

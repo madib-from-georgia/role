@@ -1,0 +1,61 @@
+{
+  "id": "kto-ili-chto-pomogaet-spravlyatsya-s-posledstviyam",
+  "type": "question",
+  "title": "Кто или что помогает справляться с последствиями травм?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "podderzhka-blizkih",
+      "value": {
+        "male": "поддержка близких",
+        "female": "поддержка близких"
+      },
+      "exportedValue": {
+        "male": "У меня поддержка близких",
+        "female": "У меня поддержка близких"
+      },
+      "hint": "Ресурсы восстановления и исцеления после травм",
+      "exercise": ""
+    },
+    {
+      "id": "professionalnaya-pomosch",
+      "value": {
+        "male": "профессиональная помощь",
+        "female": "профессиональная помощь"
+      },
+      "exportedValue": {
+        "male": "У меня профессиональная помощь",
+        "female": "У меня профессиональная помощь"
+      },
+      "hint": "Ресурсы восстановления и исцеления после травм",
+      "exercise": ""
+    },
+    {
+      "id": "samoregulyatsiya",
+      "value": {
+        "male": "саморегуляция",
+        "female": "саморегуляция"
+      },
+      "exportedValue": {
+        "male": "У меня саморегуляция",
+        "female": "У меня саморегуляция"
+      },
+      "hint": "Ресурсы восстановления и исцеления после травм",
+      "exercise": ""
+    },
+    {
+      "id": "nikto-ne-pomogaet",
+      "value": {
+        "male": "никто не помогает",
+        "female": "никто не помогает"
+      },
+      "exportedValue": {
+        "male": "У меня никто не помогает",
+        "female": "У меня никто не помогает"
+      },
+      "hint": "Ресурсы восстановления и исцеления после травм",
+      "exercise": ""
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "service-group-emotsionalnye-travmy-i-ih-posledstviya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"8.3 Эмоциональные травмы и их последствия\"",
+  "children": [
+    "byli-li-v-detstve-sobytiya-serezno-travmirovavshie/question.json",
+    "kak-detskie-travmy-vliyayut-na-povedenie-vzroslogo/question.json",
+    "est-li-svezhie-emotsionalnye-rany/question.json",
+    "kak-reagiruet-na-situatsii-napominayuschie-o-travm/question.json",
+    "est-li-emotsionalnye-mertvye-zony/question.json",
+    "vspominaet-li-travmaticheskie-sobytiya/question.json",
+    "kto-ili-chto-pomogaet-spravlyatsya-s-posledstviyam/question.json",
+    "est-li-resursy-dlya-emotsionalnogo-istseleniya/question.json",
+    "mozhet-li-travmaticheskiy-opyt-stat-istochnikom-si/question.json"
+  ]
+}

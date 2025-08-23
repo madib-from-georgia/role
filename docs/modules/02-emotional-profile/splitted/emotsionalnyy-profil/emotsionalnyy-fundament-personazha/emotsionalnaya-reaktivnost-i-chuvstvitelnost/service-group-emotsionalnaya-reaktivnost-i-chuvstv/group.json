@@ -1,0 +1,14 @@
+{
+  "id": "service-group-emotsionalnaya-reaktivnost-i-chuvstvitelnost",
+  "type": "question_group",
+  "title": "Вопросы раздела \"1.3 Эмоциональная реактивность и чувствительность\"",
+  "children": [
+    "kak-bystro-personazh-emotsionalno-reagiruet-na-pro/question.json",
+    "nuzhen-li-personazhu-silnyy-stimul-dlya-emotsional/question.json",
+    "dolgo-li-personazh-ostaetsya-v-odnom-emotsionalnom/question.json",
+    "reagiruet-li-personazh-impulsivno-ili-obdumanno/question.json",
+    "k-kakim-vozdeystviyam-personazh-osobenno-chuvstvit/question.json",
+    "menyaetsya-li-emotsionalnaya-chuvstvitelnost-perso/question.json",
+    "est-li-u-personazha-emotsionalnye-mertvye-zony/question.json"
+  ]
+}

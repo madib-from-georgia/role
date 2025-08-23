@@ -1,0 +1,15 @@
+{
+  "id": "service-group-emotsionalnye-maski-i-sotsialnye-roli",
+  "type": "question_group",
+  "title": "Вопросы раздела \"4.3 Эмоциональные маски и социальные роли\"",
+  "children": [
+    "odinakovo-li-vedet-sebya-doma-i-na-rabote-v-emotsi/question.json",
+    "est-li-emotsii-kotorye-schitaet-nepodhodyaschimi-d/question.json",
+    "kakuyu-emotsionalnuyu-rol-igraet-v-seme/question.json",
+    "trebuet-li-professiya-opredelennogo-emotsionalnogo/question.json",
+    "s-kem-mozhet-byt-emotsionalno-iskrennim/question.json",
+    "kakie-chuvstva-pryachet-ot-okruzhayuschih-i-pochem/question.json",
+    "byvayut-li-momenty-kogda-emotsionalnaya-maska-slet/question.json",
+    "ustaet-li-ot-neobhodimosti-kontrolirovat-emotsii-n/question.json"
+  ]
+}

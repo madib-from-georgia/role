@@ -1,0 +1,61 @@
+{
+  "id": "chto-teryaet-v-rezultate-transformatsii",
+  "type": "question",
+  "title": "Что теряет в результате трансформации?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "prezhnyuyu-bezzabotnost",
+      "value": {
+        "male": "прежнюю беззаботность",
+        "female": "прежнюю беззаботность"
+      },
+      "exportedValue": {
+        "male": "У меня прежнюю беззаботность",
+        "female": "У меня прежнюю беззаботность"
+      },
+      "hint": "Цена эмоционального развития и роста",
+      "exercise": ""
+    },
+    {
+      "id": "illyuzii",
+      "value": {
+        "male": "иллюзии",
+        "female": "иллюзии"
+      },
+      "exportedValue": {
+        "male": "У меня иллюзии",
+        "female": "У меня иллюзии"
+      },
+      "hint": "Цена эмоционального развития и роста",
+      "exercise": ""
+    },
+    {
+      "id": "opredelennyy-tip-otnosheniy",
+      "value": {
+        "male": "определенный тип отношений",
+        "female": "определенный тип отношеная"
+      },
+      "exportedValue": {
+        "male": "У меня определенный тип отношений",
+        "female": "У меня определенный тип отношеная"
+      },
+      "hint": "Цена эмоционального развития и роста",
+      "exercise": ""
+    },
+    {
+      "id": "nichego-ne-teryaet",
+      "value": {
+        "male": "ничего не теряет",
+        "female": "ничего не теряет"
+      },
+      "exportedValue": {
+        "male": "У меня ничего не теряет",
+        "female": "У меня ничего не теряет"
+      },
+      "hint": "Цена эмоционального развития и роста",
+      "exercise": ""
+    }
+  ]
+}

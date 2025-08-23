@@ -1,0 +1,61 @@
+{
+  "id": "chuvstvuet-li-nastroenie-drugih-lyudey-dazhe-esli-",
+  "type": "question",
+  "title": "Чувствует ли настроение других людей, даже если они его скрывают?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "ochen-chutok-k-emotsiyam",
+      "value": {
+        "male": "очень чуток к эмоциям",
+        "female": "очень чуток к эмоциям"
+      },
+      "exportedValue": {
+        "male": "У меня очень чуток к эмоциям",
+        "female": "У меня очень чуток к эмоциям"
+      },
+      "hint": "Способность считывать эмоциональные сигналы",
+      "exercise": ""
+    },
+    {
+      "id": "inogda-chuvstvuet",
+      "value": {
+        "male": "иногда чувствует",
+        "female": "иногда чувствует"
+      },
+      "exportedValue": {
+        "male": "У меня иногда чувствует",
+        "female": "У меня иногда чувствует"
+      },
+      "hint": "Способность считывать эмоциональные сигналы",
+      "exercise": ""
+    },
+    {
+      "id": "ploho-schityvaet-signaly",
+      "value": {
+        "male": "плохо считывает сигналы",
+        "female": "плохо считывает сигналы"
+      },
+      "exportedValue": {
+        "male": "У меня плохо считывает сигналы",
+        "female": "У меня плохо считывает сигналы"
+      },
+      "hint": "Способность считывать эмоциональные сигналы",
+      "exercise": ""
+    },
+    {
+      "id": "sovsem-ne-zamechaet",
+      "value": {
+        "male": "совсем не замечает",
+        "female": "совсем не замечает"
+      },
+      "exportedValue": {
+        "male": "У меня совсем не замечает",
+        "female": "У меня совсем не замечает"
+      },
+      "hint": "Способность считывать эмоциональные сигналы",
+      "exercise": ""
+    }
+  ]
+}

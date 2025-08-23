@@ -1,0 +1,61 @@
+{
+  "id": "podvizhny-ili-inertny-emotsionalnye-protsessy",
+  "type": "question",
+  "title": "Подвижны или инертны эмоциональные процессы?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "ochen-podvizhnye",
+      "value": {
+        "male": "очень подвижные",
+        "female": "очень подвижные"
+      },
+      "exportedValue": {
+        "male": "У меня очень подвижные",
+        "female": "У меня очень подвижные"
+      },
+      "hint": "Легко ли переключается между эмоциями",
+      "exercise": ""
+    },
+    {
+      "id": "inertnye",
+      "value": {
+        "male": "инертные",
+        "female": "инертные"
+      },
+      "exportedValue": {
+        "male": "У меня инертные",
+        "female": "У меня инертные"
+      },
+      "hint": "Легко ли переключается между эмоциями",
+      "exercise": ""
+    },
+    {
+      "id": "srednyaya-podvizhnost",
+      "value": {
+        "male": "средняя подвижность",
+        "female": "средняя подвижность"
+      },
+      "exportedValue": {
+        "male": "У меня средняя подвижность",
+        "female": "У меня средняя подвижность"
+      },
+      "hint": "Легко ли переключается между эмоциями",
+      "exercise": ""
+    },
+    {
+      "id": "izbiratelnaya-podvizhnost",
+      "value": {
+        "male": "избирательная подвижность",
+        "female": "избирательная подвижность"
+      },
+      "exportedValue": {
+        "male": "У меня избирательная подвижность",
+        "female": "У меня избирательная подвижность"
+      },
+      "hint": "Легко ли переключается между эмоциями",
+      "exercise": ""
+    }
+  ]
+}

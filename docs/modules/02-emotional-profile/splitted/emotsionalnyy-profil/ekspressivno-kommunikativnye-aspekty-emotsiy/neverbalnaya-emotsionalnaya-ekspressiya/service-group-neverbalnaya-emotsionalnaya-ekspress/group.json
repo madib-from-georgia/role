@@ -1,0 +1,15 @@
+{
+  "id": "service-group-neverbalnaya-emotsionalnaya-ekspressiya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.2 Невербальная эмоциональная экспрессия\"",
+  "children": [
+    "kak-vyglyadit-litso-personazha-v-raznyh-emotsional/question.json",
+    "kontroliruet-li-vyrazhenie-litsa-ili-emotsii-napis/question.json",
+    "est-li-harakternoe-vyrazhenie-litsa-firmennaya-mim/question.json",
+    "kak-zhestikuliruet-v-spokoynom-i-emotsionalnom-sos/question.json",
+    "est-li-privychka-trogat-sebya-kogda-volnuetsya/question.json",
+    "kak-menyaetsya-osanka-v-zavisimosti-ot-nastroeniya/question.json",
+    "kak-dvigaetsya-kogda-ispytyvaet-raznye-emotsii/question.json",
+    "na-kakom-rasstoyanii-predpochitaet-obschatsya/question.json"
+  ]
+}

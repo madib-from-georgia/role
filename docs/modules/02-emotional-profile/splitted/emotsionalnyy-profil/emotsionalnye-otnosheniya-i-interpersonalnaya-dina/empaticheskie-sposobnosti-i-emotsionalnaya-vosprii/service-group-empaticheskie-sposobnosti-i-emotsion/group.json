@@ -1,0 +1,16 @@
+{
+  "id": "service-group-empaticheskie-sposobnosti-i-emotsionalnaya-vosprii",
+  "type": "question_group",
+  "title": "Вопросы раздела \"5.1 Эмпатические способности и эмоциональная восприимчивость\"",
+  "children": [
+    "chuvstvuet-li-nastroenie-drugih-lyudey-dazhe-esli-/question.json",
+    "zarazhaetsya-li-chuzhimi-emotsiyami/question.json",
+    "mozhet-li-ponyat-chuvstva-drugogo-dazhe-ne-perezhi/question.json",
+    "k-kakim-lyudyam-osobenno-chutok-emotsionalno/question.json",
+    "est-li-lyudi-k-emotsiyam-kotoryh-sovershenno-gluh/question.json",
+    "stremitsya-li-pomoch-kogda-vidit-chuzhuyu-bol/question.json",
+    "mozhet-li-otklyuchit-svoyu-empatiyu-kogda-neobhodi/question.json",
+    "stradaet-li-ot-togo-chto-slishkom-silno-chuvstvuet/question.json",
+    "vliyaet-li-emotsionalnoe-sostoyanie-tolpy-gruppy-n/question.json"
+  ]
+}

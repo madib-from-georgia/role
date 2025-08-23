@@ -1,0 +1,11 @@
+{
+  "id": "emotsionalnye-otnosheniya-i-interpersonalnaya-dina",
+  "type": "section",
+  "title": "5. Эмоциональные отношения и интерперсональная динамика",
+  "children": [
+    "empaticheskie-sposobnosti-i-emotsionalnaya-vosprii/subsection.json",
+    "emotsionalnoe-vliyanie-i-vozdeystvie-na-drugih/subsection.json",
+    "spetsifika-emotsionalnyh-otnosheniy/subsection.json",
+    "konfliktnye-emotsionalnye-dinamiki/subsection.json"
+  ]
+}

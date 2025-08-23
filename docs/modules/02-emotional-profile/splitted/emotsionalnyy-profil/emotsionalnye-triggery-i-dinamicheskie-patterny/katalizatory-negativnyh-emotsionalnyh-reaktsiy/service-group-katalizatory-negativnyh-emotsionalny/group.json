@@ -1,0 +1,16 @@
+{
+  "id": "service-group-katalizatory-negativnyh-emotsionalnyh-reaktsiy",
+  "type": "question_group",
+  "title": "Вопросы раздела \"2.2 Катализаторы негативных эмоциональных реакций\"",
+  "children": [
+    "kakie-temy-razgovora-mgnovenno-vyvodyat-personazha/question.json",
+    "kakie-slova-ili-frazy-deystvuyut-na-personazha-kak/question.json",
+    "v-kakih-situatsiyah-personazh-chuvstvuet-sebya-sov/question.json",
+    "chto-mozhet-dovesti-personazha-do-yarosti/question.json",
+    "kakie-strahi-paralizuyut-personazha-emotsionalno/question.json",
+    "chto-zastavlyaet-personazha-chuvstvovat-styd-ili-v/question.json",
+    "kakie-obstoyatelstva-pogruzhayut-v-tosku-ili-otcha/question.json",
+    "est-li-boleznennye-vospominaniya-kotorye-do-sih-po/question.json",
+    "kakie-tipy-lyudey-ili-povedeniya-osobenno-razdrazh/question.json"
+  ]
+}

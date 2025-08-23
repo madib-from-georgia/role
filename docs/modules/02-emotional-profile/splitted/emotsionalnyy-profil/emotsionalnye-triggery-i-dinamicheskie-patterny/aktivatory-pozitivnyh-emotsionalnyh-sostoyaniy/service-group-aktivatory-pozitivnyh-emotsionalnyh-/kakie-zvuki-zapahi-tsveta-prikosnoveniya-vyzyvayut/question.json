@@ -1,0 +1,74 @@
+{
+  "id": "kakie-zvuki-zapahi-tsveta-prikosnoveniya-vyzyvayut",
+  "type": "question",
+  "title": "Какие звуки, запахи, цвета, прикосновения вызывают положительные эмоции?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "opredelennaya-muzyka",
+      "value": {
+        "male": "определенная музыка",
+        "female": "определенная музыка"
+      },
+      "exportedValue": {
+        "male": "У меня определенная музыка",
+        "female": "У меня определенная музыка"
+      },
+      "hint": "Подумайте о сенсорных \"кнопках радости\"",
+      "exercise": ""
+    },
+    {
+      "id": "zapahi-detstva",
+      "value": {
+        "male": "запахи детства",
+        "female": "запахи детства"
+      },
+      "exportedValue": {
+        "male": "У меня запахи детства",
+        "female": "У меня запахи детства"
+      },
+      "hint": "Подумайте о сенсорных \"кнопках радости\"",
+      "exercise": ""
+    },
+    {
+      "id": "yarkie-tsveta",
+      "value": {
+        "male": "яркие цвета",
+        "female": "яркие цвета"
+      },
+      "exportedValue": {
+        "male": "У меня яркие цвета",
+        "female": "У меня яркие цвета"
+      },
+      "hint": "Подумайте о сенсорных \"кнопках радости\"",
+      "exercise": ""
+    },
+    {
+      "id": "myagkie-tkani",
+      "value": {
+        "male": "мягкие ткани",
+        "female": "мягкие ткани"
+      },
+      "exportedValue": {
+        "male": "У меня мягкие ткани",
+        "female": "У меня мягкие ткани"
+      },
+      "hint": "Подумайте о сенсорных \"кнопках радости\"",
+      "exercise": ""
+    },
+    {
+      "id": "tishina",
+      "value": {
+        "male": "тишина",
+        "female": "тишина"
+      },
+      "exportedValue": {
+        "male": "У меня тишина",
+        "female": "У меня тишина"
+      },
+      "hint": "Подумайте о сенсорных \"кнопках радости\"",
+      "exercise": ""
+    }
+  ]
+}

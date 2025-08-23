@@ -1,0 +1,15 @@
+{
+  "id": "service-group-gendernye-i-vozrastnye-emotsionalnye-predpisaniya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"7.4 Гендерные и возрастные эмоциональные предписания\"",
+  "children": [
+    "kakie-emotsii-schitalis-podhodyaschimi-dlya-pola-p/question.json",
+    "kakie-emotsii-zapreschalos-pokazyvat-iz-za-pola/question.json",
+    "kak-dolzhen-byl-vesti-sebya-chelovek-vozrasta-pers/question.json",
+    "est-li-protivorechie-mezhdu-estestvennymi-emotsiya/question.json",
+    "kak-semeynoe-polozhenie-vliyaet-na-emotsionalnye-r/question.json",
+    "sootvetstvuet-li-normam-svoego-pola-i-vozrasta/question.json",
+    "kak-obschestvo-reagiruet-na-emotsionalnoe-povedeni/question.json",
+    "stradaet-li-ot-nesootvetstviya-ozhidaniyam/question.json"
+  ]
+}

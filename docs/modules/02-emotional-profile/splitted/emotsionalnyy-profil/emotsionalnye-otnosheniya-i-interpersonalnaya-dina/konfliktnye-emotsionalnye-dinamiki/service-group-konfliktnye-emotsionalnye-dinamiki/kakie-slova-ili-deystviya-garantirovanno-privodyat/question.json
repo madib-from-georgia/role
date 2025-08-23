@@ -1,0 +1,61 @@
+{
+  "id": "kakie-slova-ili-deystviya-garantirovanno-privodyat",
+  "type": "question",
+  "title": "Какие слова или действия гарантированно приводят к взрыву?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "est-chetkie-triggery",
+      "value": {
+        "male": "есть четкие триггеры",
+        "female": "есть четкие триггеры"
+      },
+      "exportedValue": {
+        "male": "У меня есть четкие триггеры",
+        "female": "У меня есть четкие триггеры"
+      },
+      "hint": "Красные кнопки в отношениях",
+      "exercise": ""
+    },
+    {
+      "id": "mnogoe-mozhet-sprovotsirovat",
+      "value": {
+        "male": "многое может спровоцировать",
+        "female": "многое может спровоцировать"
+      },
+      "exportedValue": {
+        "male": "У меня многое может спровоцировать",
+        "female": "У меня многое может спровоцировать"
+      },
+      "hint": "Красные кнопки в отношениях",
+      "exercise": ""
+    },
+    {
+      "id": "trudno-vyvesti-iz-sebya",
+      "value": {
+        "male": "трудно вывести из себя",
+        "female": "трудно вывести из себя"
+      },
+      "exportedValue": {
+        "male": "У меня трудно вывести из себя",
+        "female": "У меня трудно вывести из себя"
+      },
+      "hint": "Красные кнопки в отношениях",
+      "exercise": ""
+    },
+    {
+      "id": "ne-vzryvaetsya",
+      "value": {
+        "male": "не взрывается",
+        "female": "не взрывается"
+      },
+      "exportedValue": {
+        "male": "У меня не взрывается",
+        "female": "У меня не взрывается"
+      },
+      "hint": "Красные кнопки в отношениях",
+      "exercise": ""
+    }
+  ]
+}

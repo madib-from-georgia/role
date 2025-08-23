@@ -1,0 +1,74 @@
+{
+  "id": "kak-vedet-sebya-v-emotsionalnom-konflikte",
+  "type": "question",
+  "title": "Как ведет себя в эмоциональном конфликте?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "napadaet",
+      "value": {
+        "male": "нападает",
+        "female": "нападает"
+      },
+      "exportedValue": {
+        "male": "У меня нападает",
+        "female": "У меня нападает"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "zaschischaetsya",
+      "value": {
+        "male": "защищается",
+        "female": "защищается"
+      },
+      "exportedValue": {
+        "male": "У меня защищается",
+        "female": "У меня защищается"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "uhodit",
+      "value": {
+        "male": "уходит",
+        "female": "уходит"
+      },
+      "exportedValue": {
+        "male": "У меня уходит",
+        "female": "У меня уходит"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "pytaetsya-primirit",
+      "value": {
+        "male": "пытается примирить",
+        "female": "пытается примирить"
+      },
+      "exportedValue": {
+        "male": "У меня пытается примирить",
+        "female": "У меня пытается примирить"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    },
+    {
+      "id": "eskaliruet-konflikt",
+      "value": {
+        "male": "эскалирует конфликт",
+        "female": "эскалирует конфликт"
+      },
+      "exportedValue": {
+        "male": "У меня эскалирует конфликт",
+        "female": "У меня эскалирует конфликт"
+      },
+      "hint": "Базовые стратегии конфликтного поведения",
+      "exercise": ""
+    }
+  ]
+}

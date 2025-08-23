@@ -1,0 +1,61 @@
+{
+  "id": "chemu-emotsionalnye-konflikty-uchat-ili-nichego-ne",
+  "type": "question",
+  "title": "Чему эмоциональные конфликты учат или ничего не меняют?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "bystro-izvlekaet-uroki",
+      "value": {
+        "male": "быстро извлекает уроки",
+        "female": "быстро извлекает уроки"
+      },
+      "exportedValue": {
+        "male": "У меня быстро извлекает уроки",
+        "female": "У меня быстро извлекает уроки"
+      },
+      "hint": "Способность извлекать уроки из ссор",
+      "exercise": ""
+    },
+    {
+      "id": "medlenno-uchitsya",
+      "value": {
+        "male": "медленно учится",
+        "female": "медленно учится"
+      },
+      "exportedValue": {
+        "male": "У меня медленно учится",
+        "female": "У меня медленно учится"
+      },
+      "hint": "Способность извлекать уроки из ссор",
+      "exercise": ""
+    },
+    {
+      "id": "ne-uchitsya-na-ssorah",
+      "value": {
+        "male": "не учится на ссорах",
+        "female": "не учится на ссорах"
+      },
+      "exportedValue": {
+        "male": "У меня не учится на ссорах",
+        "female": "У меня не учится на ссорах"
+      },
+      "hint": "Способность извлекать уроки из ссор",
+      "exercise": ""
+    },
+    {
+      "id": "povtoryaet-oshibki",
+      "value": {
+        "male": "повторяет ошибки",
+        "female": "повторяет ошибки"
+      },
+      "exportedValue": {
+        "male": "У меня повторяет ошибки",
+        "female": "У меня повторяет ошибки"
+      },
+      "hint": "Способность извлекать уроки из ссор",
+      "exercise": ""
+    }
+  ]
+}

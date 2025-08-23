@@ -1,0 +1,14 @@
+{
+  "id": "service-group-psihosomaticheskie-i-fiziologicheskie-proyavleniya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.3 Психосоматические и физиологические проявления\"",
+  "children": [
+    "kak-telo-reagiruet-na-silnye-emotsii/question.json",
+    "kak-menyaetsya-dyhanie-v-raznyh-emotsionalnyh-sost/question.json",
+    "est-li-fizicheskie-slabye-mesta-kotorye-reagiruyut/question.json",
+    "vliyayut-li-silnye-perezhivaniya-na-appetit-son/question.json",
+    "chuvstvuet-li-emotsii-gde-to-v-tele-konkretno/question.json",
+    "kak-dolgo-telo-pomnit-silnoe-emotsionalnoe-potryas/question.json",
+    "est-li-psihosomaticheskie-zabolevaniya-svyazannye-/question.json"
+  ]
+}

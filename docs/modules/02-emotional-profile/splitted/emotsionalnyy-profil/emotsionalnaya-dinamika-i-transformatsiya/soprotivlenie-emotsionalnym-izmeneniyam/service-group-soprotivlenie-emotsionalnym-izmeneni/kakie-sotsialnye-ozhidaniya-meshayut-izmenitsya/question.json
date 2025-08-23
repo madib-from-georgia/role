@@ -1,0 +1,61 @@
+{
+  "id": "kakie-sotsialnye-ozhidaniya-meshayut-izmenitsya",
+  "type": "question",
+  "title": "Какие социальные ожидания мешают измениться?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "davlenie-sotsialnyh-roley",
+      "value": {
+        "male": "давление социальных ролей",
+        "female": "давление социальных ролей"
+      },
+      "exportedValue": {
+        "male": "У меня давление социальных ролей",
+        "female": "У меня давление социальных ролей"
+      },
+      "hint": "Давление социальных ролей и стереотипов",
+      "exercise": ""
+    },
+    {
+      "id": "professionalnye-stereotipy",
+      "value": {
+        "male": "профессиональные стереотипы",
+        "female": "профессиональные стереотипы"
+      },
+      "exportedValue": {
+        "male": "У меня профессиональные стереотипы",
+        "female": "У меня профессиональные стереотипы"
+      },
+      "hint": "Давление социальных ролей и стереотипов",
+      "exercise": ""
+    },
+    {
+      "id": "gendernye-ozhidaniya",
+      "value": {
+        "male": "гендерные ожидания",
+        "female": "гендерные ожидания"
+      },
+      "exportedValue": {
+        "male": "У меня гендерные ожидания",
+        "female": "У меня гендерные ожидания"
+      },
+      "hint": "Давление социальных ролей и стереотипов",
+      "exercise": ""
+    },
+    {
+      "id": "vozrastnye-predrassudki",
+      "value": {
+        "male": "возрастные предрассудки",
+        "female": "возрастные предрассудки"
+      },
+      "exportedValue": {
+        "male": "У меня возрастные предрассудки",
+        "female": "У меня возрастные предрассудки"
+      },
+      "hint": "Давление социальных ролей и стереотипов",
+      "exercise": ""
+    }
+  ]
+}

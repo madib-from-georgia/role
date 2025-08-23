@@ -1,0 +1,61 @@
+{
+  "id": "uchitsya-li-na-svoih-emotsionalnyh-oshibkah",
+  "type": "question",
+  "title": "Учится ли на своих эмоциональных ошибках?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "bystro-uchitsya",
+      "value": {
+        "male": "быстро учится",
+        "female": "быстро учится"
+      },
+      "exportedValue": {
+        "male": "У меня быстро учится",
+        "female": "У меня быстро учится"
+      },
+      "hint": "Способность извлекать уроки из эмоционального опыта",
+      "exercise": ""
+    },
+    {
+      "id": "medlenno-uchitsya",
+      "value": {
+        "male": "медленно учится",
+        "female": "медленно учится"
+      },
+      "exportedValue": {
+        "male": "У меня медленно учится",
+        "female": "У меня медленно учится"
+      },
+      "hint": "Способность извлекать уроки из эмоционального опыта",
+      "exercise": ""
+    },
+    {
+      "id": "povtoryaet-oshibki",
+      "value": {
+        "male": "повторяет ошибки",
+        "female": "повторяет ошибки"
+      },
+      "exportedValue": {
+        "male": "У меня повторяет ошибки",
+        "female": "У меня повторяет ошибки"
+      },
+      "hint": "Способность извлекать уроки из эмоционального опыта",
+      "exercise": ""
+    },
+    {
+      "id": "ne-schitaet-ih-oshibkami",
+      "value": {
+        "male": "не считает их ошибками",
+        "female": "не считает их ошибками"
+      },
+      "exportedValue": {
+        "male": "У меня не считает их ошибками",
+        "female": "У меня не считает их ошибками"
+      },
+      "hint": "Способность извлекать уроки из эмоционального опыта",
+      "exercise": ""
+    }
+  ]
+}

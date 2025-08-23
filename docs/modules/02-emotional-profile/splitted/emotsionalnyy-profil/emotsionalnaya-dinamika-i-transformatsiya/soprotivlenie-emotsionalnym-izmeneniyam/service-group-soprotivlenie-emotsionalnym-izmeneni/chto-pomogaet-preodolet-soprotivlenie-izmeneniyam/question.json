@@ -1,0 +1,61 @@
+{
+  "id": "chto-pomogaet-preodolet-soprotivlenie-izmeneniyam",
+  "type": "question",
+  "title": "Что помогает преодолеть сопротивление изменениям?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "krizis-zastavlyaet",
+      "value": {
+        "male": "кризис заставляет",
+        "female": "кризис заставляет"
+      },
+      "exportedValue": {
+        "male": "У меня кризис заставляет",
+        "female": "У меня кризис заставляет"
+      },
+      "hint": "Силы, способные преодолеть внутреннее сопротивление",
+      "exercise": ""
+    },
+    {
+      "id": "podderzhka-blizkih",
+      "value": {
+        "male": "поддержка близких",
+        "female": "поддержка близких"
+      },
+      "exportedValue": {
+        "male": "У меня поддержка близких",
+        "female": "У меня поддержка близких"
+      },
+      "hint": "Силы, способные преодолеть внутреннее сопротивление",
+      "exercise": ""
+    },
+    {
+      "id": "vnutrennee-prozrenie",
+      "value": {
+        "male": "внутреннее прозрение",
+        "female": "внутреннее прозрение"
+      },
+      "exportedValue": {
+        "male": "У меня внутреннее прозрение",
+        "female": "У меня внутреннее прозрение"
+      },
+      "hint": "Силы, способные преодолеть внутреннее сопротивление",
+      "exercise": ""
+    },
+    {
+      "id": "vneshnee-davlenie",
+      "value": {
+        "male": "внешнее давление",
+        "female": "внешнее давление"
+      },
+      "exportedValue": {
+        "male": "У меня внешнее давление",
+        "female": "У меня внешнее давление"
+      },
+      "hint": "Силы, способные преодолеть внутреннее сопротивление",
+      "exercise": ""
+    }
+  ]
+}

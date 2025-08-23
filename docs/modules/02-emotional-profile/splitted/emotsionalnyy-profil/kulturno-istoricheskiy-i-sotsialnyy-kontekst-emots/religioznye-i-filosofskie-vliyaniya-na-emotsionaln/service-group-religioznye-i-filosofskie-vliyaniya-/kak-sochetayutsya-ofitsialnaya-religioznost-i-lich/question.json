@@ -1,0 +1,61 @@
+{
+  "id": "kak-sochetayutsya-ofitsialnaya-religioznost-i-lich",
+  "type": "question",
+  "title": "Как сочетаются официальная религиозность и личные убеждения?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "polnoe-sovpadenie",
+      "value": {
+        "male": "полное совпадение",
+        "female": "полное совпадение"
+      },
+      "exportedValue": {
+        "male": "У меня полное совпадение",
+        "female": "У меня полное совпадение"
+      },
+      "hint": "Формальная вера vs живое чувство",
+      "exercise": ""
+    },
+    {
+      "id": "chastichnoe-rashozhdenie",
+      "value": {
+        "male": "частичное расхождение",
+        "female": "частичное расхождение"
+      },
+      "exportedValue": {
+        "male": "У меня частичное расхождение",
+        "female": "У меня частичное расхождение"
+      },
+      "hint": "Формальная вера vs живое чувство",
+      "exercise": ""
+    },
+    {
+      "id": "formalnaya-vera-pri-lichnyh-ubezhdeniyah",
+      "value": {
+        "male": "формальная вера при личных убеждениях",
+        "female": "формальная вера при личных убеждениях"
+      },
+      "exportedValue": {
+        "male": "У меня формальная вера при личных убеждениях",
+        "female": "У меня формальная вера при личных убеждениях"
+      },
+      "hint": "Формальная вера vs живое чувство",
+      "exercise": ""
+    },
+    {
+      "id": "konflikt-mezhdu-nimi",
+      "value": {
+        "male": "конфликт между ними",
+        "female": "конфликт между ними"
+      },
+      "exportedValue": {
+        "male": "У меня конфликт между ними",
+        "female": "У меня конфликт между ними"
+      },
+      "hint": "Формальная вера vs живое чувство",
+      "exercise": ""
+    }
+  ]
+}

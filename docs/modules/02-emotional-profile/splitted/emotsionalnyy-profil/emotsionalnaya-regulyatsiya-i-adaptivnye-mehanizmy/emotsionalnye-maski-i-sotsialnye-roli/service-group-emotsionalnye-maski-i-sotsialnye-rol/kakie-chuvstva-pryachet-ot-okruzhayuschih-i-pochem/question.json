@@ -1,0 +1,61 @@
+{
+  "id": "kakie-chuvstva-pryachet-ot-okruzhayuschih-i-pochem",
+  "type": "question",
+  "title": "Какие чувства прячет от окружающих и почему?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "stydnye-emotsii",
+      "value": {
+        "male": "стыдные эмоции",
+        "female": "стыдные эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня стыдные эмоции",
+        "female": "У меня стыдные эмоции"
+      },
+      "hint": "Личная цензура эмоционального выражения",
+      "exercise": ""
+    },
+    {
+      "id": "neprilichnye-chuvstva",
+      "value": {
+        "male": "неприличные чувства",
+        "female": "неприличные чувства"
+      },
+      "exportedValue": {
+        "male": "У меня неприличные чувства",
+        "female": "У меня неприличные чувства"
+      },
+      "hint": "Личная цензура эмоционального выражения",
+      "exercise": ""
+    },
+    {
+      "id": "opasnye-perezhivaniya",
+      "value": {
+        "male": "опасные переживания",
+        "female": "опасные переживания"
+      },
+      "exportedValue": {
+        "male": "У меня опасные переживания",
+        "female": "У меня опасные переживания"
+      },
+      "hint": "Личная цензура эмоционального выражения",
+      "exercise": ""
+    },
+    {
+      "id": "nichego-ne-skryvaet",
+      "value": {
+        "male": "ничего не скрывает",
+        "female": "ничего не скрывает"
+      },
+      "exportedValue": {
+        "male": "У меня ничего не скрывает",
+        "female": "У меня ничего не скрывает"
+      },
+      "hint": "Личная цензура эмоционального выражения",
+      "exercise": ""
+    }
+  ]
+}

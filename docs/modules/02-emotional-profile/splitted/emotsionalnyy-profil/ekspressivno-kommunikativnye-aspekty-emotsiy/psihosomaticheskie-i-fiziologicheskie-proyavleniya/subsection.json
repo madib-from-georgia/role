@@ -1,0 +1,8 @@
+{
+  "id": "psihosomaticheskie-i-fiziologicheskie-proyavleniya",
+  "type": "subsection",
+  "title": "3.3 Психосоматические и физиологические проявления",
+  "children": [
+    "service-group-psihosomaticheskie-i-fiziologicheski/group.json"
+  ]
+}

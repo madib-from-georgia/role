@@ -1,0 +1,14 @@
+{
+  "id": "service-group-simvolicheskie-i-sublimirovannye-formy-vyrazheniya",
+  "type": "question_group",
+  "title": "Вопросы раздела \"3.4 Символические и сублимированные формы выражения\"",
+  "children": [
+    "zanimaetsya-li-tvorchestvom-chtoby-vyrazit-svoi-ch/question.json",
+    "est-li-ritualy-svyazannye-s-perezhivaniem-emotsiy/question.json",
+    "kak-vybiraet-odezhdu-v-zavisimosti-ot-nastroeniya/question.json",
+    "kakie-podarki-darit-i-chto-oni-oznachayut-emotsion/question.json",
+    "kak-organizuet-svoe-prostranstvo-dlya-podderzhaniy/question.json",
+    "est-li-osobye-predmety-svyazannye-s-vazhnymi-perez/question.json",
+    "kak-vedet-sebya-kogda-ne-mozhet-pryamo-vyrazit-chu/question.json"
+  ]
+}

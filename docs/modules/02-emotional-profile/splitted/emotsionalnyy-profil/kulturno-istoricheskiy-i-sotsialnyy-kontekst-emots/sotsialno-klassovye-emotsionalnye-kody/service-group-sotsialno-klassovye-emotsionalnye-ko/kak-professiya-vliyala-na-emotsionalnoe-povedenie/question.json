@@ -1,0 +1,61 @@
+{
+  "id": "kak-professiya-vliyala-na-emotsionalnoe-povedenie",
+  "type": "question",
+  "title": "Как профессия влияла на эмоциональное поведение?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "polnostyu-opredelyala",
+      "value": {
+        "male": "полностью определяла",
+        "female": "полностью определяла"
+      },
+      "exportedValue": {
+        "male": "У меня полностью определяла",
+        "female": "У меня полностью определяла"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    },
+    {
+      "id": "chastichno-vliyala",
+      "value": {
+        "male": "частично влияла",
+        "female": "частично влияла"
+      },
+      "exportedValue": {
+        "male": "У меня частично влияла",
+        "female": "У меня частично влияла"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    },
+    {
+      "id": "ne-vliyala",
+      "value": {
+        "male": "не влияла",
+        "female": "не влияла"
+      },
+      "exportedValue": {
+        "male": "У меня не влияла",
+        "female": "У меня не влияла"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    },
+    {
+      "id": "sozdavala-konflikty",
+      "value": {
+        "male": "создавала конфликты",
+        "female": "создавала конфликты"
+      },
+      "exportedValue": {
+        "male": "У меня создавала конфликты",
+        "female": "У меня создавала конфликты"
+      },
+      "hint": "Военный, священник, купец, художник, чиновник",
+      "exercise": ""
+    }
+  ]
+}

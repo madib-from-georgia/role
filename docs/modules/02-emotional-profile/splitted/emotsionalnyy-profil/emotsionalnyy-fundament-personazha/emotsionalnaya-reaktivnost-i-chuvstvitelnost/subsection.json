@@ -1,0 +1,8 @@
+{
+  "id": "emotsionalnaya-reaktivnost-i-chuvstvitelnost",
+  "type": "subsection",
+  "title": "1.3 Эмоциональная реактивность и чувствительность",
+  "children": [
+    "service-group-emotsionalnaya-reaktivnost-i-chuvstv/group.json"
+  ]
+}

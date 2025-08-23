@@ -1,0 +1,61 @@
+{
+  "id": "kak-novye-sposobnosti-sochetayutsya-so-starymi-che",
+  "type": "question",
+  "title": "Как новые способности сочетаются со старыми чертами?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "garmonichno-integriruyutsya",
+      "value": {
+        "male": "гармонично интегрируются",
+        "female": "гармонично интегрируются"
+      },
+      "exportedValue": {
+        "male": "У меня гармонично интегрируются",
+        "female": "У меня гармонично интегрируются"
+      },
+      "hint": "Гармонизация нового и старого в личности",
+      "exercise": ""
+    },
+    {
+      "id": "sozdayut-vnutrenniy-konflikt",
+      "value": {
+        "male": "создают внутренний конфликт",
+        "female": "создают внутренний конфликт"
+      },
+      "exportedValue": {
+        "male": "У меня создают внутренний конфликт",
+        "female": "У меня создают внутренний конфликт"
+      },
+      "hint": "Гармонизация нового и старого в личности",
+      "exercise": ""
+    },
+    {
+      "id": "suschestvuyut-parallelno",
+      "value": {
+        "male": "существуют параллельно",
+        "female": "существуют параллельно"
+      },
+      "exportedValue": {
+        "male": "У меня существуют параллельно",
+        "female": "У меня существуют параллельно"
+      },
+      "hint": "Гармонизация нового и старого в личности",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyayut-starye-cherty",
+      "value": {
+        "male": "подавляют старые черты",
+        "female": "подавляют старые черты"
+      },
+      "exportedValue": {
+        "male": "У меня подавляют старые черты",
+        "female": "У меня подавляют старые черты"
+      },
+      "hint": "Гармонизация нового и старого в личности",
+      "exercise": ""
+    }
+  ]
+}

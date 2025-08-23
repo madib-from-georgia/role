@@ -1,0 +1,11 @@
+{
+  "id": "emotsionalnaya-dinamika-i-transformatsiya",
+  "type": "section",
+  "title": "6. Эмоциональная динамика и трансформация",
+  "children": [
+    "emotsionalnaya-arka-i-traektoriya-razvitiya/subsection.json",
+    "katalizatory-emotsionalnyh-izmeneniy/subsection.json",
+    "soprotivlenie-emotsionalnym-izmeneniyam/subsection.json",
+    "integratsiya-i-stabilizatsiya-novyh-emotsionalnyh-/subsection.json"
+  ]
+}

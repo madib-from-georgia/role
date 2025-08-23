@@ -1,0 +1,8 @@
+{
+  "id": "neverbalnaya-emotsionalnaya-ekspressiya",
+  "type": "subsection",
+  "title": "3.2 Невербальная эмоциональная экспрессия",
+  "children": [
+    "service-group-neverbalnaya-emotsionalnaya-ekspress/group.json"
+  ]
+}

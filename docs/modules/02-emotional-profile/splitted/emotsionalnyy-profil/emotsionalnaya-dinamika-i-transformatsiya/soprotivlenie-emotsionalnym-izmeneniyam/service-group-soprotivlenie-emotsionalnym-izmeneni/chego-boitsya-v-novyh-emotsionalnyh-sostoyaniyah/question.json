@@ -1,0 +1,61 @@
+{
+  "id": "chego-boitsya-v-novyh-emotsionalnyh-sostoyaniyah",
+  "type": "question",
+  "title": "Чего боится в новых эмоциональных состояниях?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "boitsya-razocharovatsya-snova",
+      "value": {
+        "male": "боится разочароваться снова",
+        "female": "боится разочароваться снова"
+      },
+      "exportedValue": {
+        "male": "У меня боится разочароваться снова",
+        "female": "У меня боится разочароваться снова"
+      },
+      "hint": "Страхи, препятствующие эмоциональному развитию",
+      "exercise": ""
+    },
+    {
+      "id": "poteryat-kontrol",
+      "value": {
+        "male": "потерять контроль",
+        "female": "потерять контроль"
+      },
+      "exportedValue": {
+        "male": "У меня потерять контроль",
+        "female": "У меня потерять контроль"
+      },
+      "hint": "Страхи, препятствующие эмоциональному развитию",
+      "exercise": ""
+    },
+    {
+      "id": "pokazatsya-slabym",
+      "value": {
+        "male": "показаться слабым",
+        "female": "показаться слабым"
+      },
+      "exportedValue": {
+        "male": "У меня показаться слабым",
+        "female": "У меня показаться слабым"
+      },
+      "hint": "Страхи, препятствующие эмоциональному развитию",
+      "exercise": ""
+    },
+    {
+      "id": "byt-otvergnutym",
+      "value": {
+        "male": "быть отвергнутым",
+        "female": "быть отвергнутым"
+      },
+      "exportedValue": {
+        "male": "У меня быть отвергнутым",
+        "female": "У меня быть отвергнутым"
+      },
+      "hint": "Страхи, препятствующие эмоциональному развитию",
+      "exercise": ""
+    }
+  ]
+}

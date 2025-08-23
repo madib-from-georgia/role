@@ -1,0 +1,61 @@
+{
+  "id": "kakie-emotsii-schitalis-blagorodnymi-dlya-klassa-p",
+  "type": "question",
+  "title": "Какие эмоции считались \"благородными\" для класса персонажа?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "vozvyshennye-chuvstva",
+      "value": {
+        "male": "возвышенные чувства",
+        "female": "возвышенные чувства"
+      },
+      "exportedValue": {
+        "male": "У меня возвышенные чувства",
+        "female": "У меня возвышенные чувства"
+      },
+      "hint": "Классовая иерархия эмоциональных ценностей",
+      "exercise": ""
+    },
+    {
+      "id": "praktichnye-emotsii",
+      "value": {
+        "male": "практичные эмоции",
+        "female": "практичные эмоции"
+      },
+      "exportedValue": {
+        "male": "У меня практичные эмоции",
+        "female": "У меня практичные эмоции"
+      },
+      "hint": "Классовая иерархия эмоциональных ценностей",
+      "exercise": ""
+    },
+    {
+      "id": "prostye-chelovecheskie-chuvstva",
+      "value": {
+        "male": "простые человеческие чувства",
+        "female": "простые человеческие чувства"
+      },
+      "exportedValue": {
+        "male": "У меня простые человеческие чувства",
+        "female": "У меня простые человеческие чувства"
+      },
+      "hint": "Классовая иерархия эмоциональных ценностей",
+      "exercise": ""
+    },
+    {
+      "id": "vse-emotsii-ravnotsenny",
+      "value": {
+        "male": "все эмоции равноценны",
+        "female": "все эмоции равноценны"
+      },
+      "exportedValue": {
+        "male": "У меня все эмоции равноценны",
+        "female": "У меня все эмоции равноценны"
+      },
+      "hint": "Классовая иерархия эмоциональных ценностей",
+      "exercise": ""
+    }
+  ]
+}

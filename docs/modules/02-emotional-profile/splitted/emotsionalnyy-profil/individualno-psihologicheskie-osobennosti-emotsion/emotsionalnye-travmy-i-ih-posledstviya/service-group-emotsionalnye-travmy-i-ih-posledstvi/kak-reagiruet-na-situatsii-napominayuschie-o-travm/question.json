@@ -1,0 +1,61 @@
+{
+  "id": "kak-reagiruet-na-situatsii-napominayuschie-o-travm",
+  "type": "question",
+  "title": "Как реагирует на ситуации, напоминающие о травме?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "izbegaet-triggerov",
+      "value": {
+        "male": "избегает триггеров",
+        "female": "избегает триггеров"
+      },
+      "exportedValue": {
+        "male": "У меня избегает триггеров",
+        "female": "У меня избегает триггеров"
+      },
+      "hint": "Специфические реакции на травматические напоминания",
+      "exercise": ""
+    },
+    {
+      "id": "zamykaetsya",
+      "value": {
+        "male": "замыкается",
+        "female": "замыкается"
+      },
+      "exportedValue": {
+        "male": "У меня замыкается",
+        "female": "У меня замыкается"
+      },
+      "hint": "Специфические реакции на травматические напоминания",
+      "exercise": ""
+    },
+    {
+      "id": "stanovitsya-agressivnym",
+      "value": {
+        "male": "становится агрессивным",
+        "female": "становится агрессивным"
+      },
+      "exportedValue": {
+        "male": "У меня становится агрессивным",
+        "female": "У меня становится агрессивным"
+      },
+      "hint": "Специфические реакции на травматические напоминания",
+      "exercise": ""
+    },
+    {
+      "id": "spokoyno-perenosit",
+      "value": {
+        "male": "спокойно переносит",
+        "female": "спокойно переносит"
+      },
+      "exportedValue": {
+        "male": "У меня спокойно переносит",
+        "female": "У меня спокойно переносит"
+      },
+      "hint": "Специфические реакции на травматические напоминания",
+      "exercise": ""
+    }
+  ]
+}

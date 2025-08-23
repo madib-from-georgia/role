@@ -1,0 +1,14 @@
+{
+  "id": "service-group-emotsionalnyy-diapazon-i-amplituda",
+  "type": "question_group",
+  "title": "Вопросы раздела \"1.2 Эмоциональный диапазон и амплитуда\"",
+  "children": [
+    "naskolko-bogat-emotsionalnyy-mir-personazha/question.json",
+    "sposoben-li-personazh-na-ochen-silnye-perezhivaniy/question.json",
+    "mozhet-li-personazh-bystro-perehodit-ot-odnoy-kray/question.json",
+    "est-li-u-personazha-redkie-neobychnye-emotsii/question.json",
+    "kakie-emotsii-personazh-tochno-ne-sposoben-ispytyv/question.json",
+    "naskolko-gluboko-personazh-perezhivaet-emotsii/question.json",
+    "mozhet-li-personazh-odnovremenno-ispytyvat-protivo/question.json"
+  ]
+}

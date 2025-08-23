@@ -1,0 +1,74 @@
+{
+  "id": "kak-personazh-reagiruet-na-svoi-sobstvennye-emotsi",
+  "type": "question",
+  "title": "Как персонаж реагирует на свои собственные эмоции?",
+  "answerType": "single",
+  "source": "text",
+  "answers": [
+    {
+      "id": "pugaetsya-ih",
+      "value": {
+        "male": "пугается их",
+        "female": "пугается их"
+      },
+      "exportedValue": {
+        "male": "У меня пугается их",
+        "female": "У меня пугается их"
+      },
+      "hint": "Мета-эмоции: чувства по поводу чувств",
+      "exercise": ""
+    },
+    {
+      "id": "naslazhdaetsya",
+      "value": {
+        "male": "наслаждается",
+        "female": "наслаждается"
+      },
+      "exportedValue": {
+        "male": "У меня наслаждается",
+        "female": "У меня наслаждается"
+      },
+      "hint": "Мета-эмоции: чувства по поводу чувств",
+      "exercise": ""
+    },
+    {
+      "id": "analiziruet",
+      "value": {
+        "male": "анализирует",
+        "female": "анализирует"
+      },
+      "exportedValue": {
+        "male": "У меня анализирует",
+        "female": "У меня анализирует"
+      },
+      "hint": "Мета-эмоции: чувства по поводу чувств",
+      "exercise": ""
+    },
+    {
+      "id": "podavlyaet",
+      "value": {
+        "male": "подавляет",
+        "female": "подавляет"
+      },
+      "exportedValue": {
+        "male": "У меня подавляет",
+        "female": "У меня подавляет"
+      },
+      "hint": "Мета-эмоции: чувства по поводу чувств",
+      "exercise": ""
+    },
+    {
+      "id": "ne-zamechaet",
+      "value": {
+        "male": "не замечает",
+        "female": "не замечает"
+      },
+      "exportedValue": {
+        "male": "У меня не замечает",
+        "female": "У меня не замечает"
+      },
+      "hint": "Мета-эмоции: чувства по поводу чувств",
+      "exercise": ""
+    }
+  ]
+}

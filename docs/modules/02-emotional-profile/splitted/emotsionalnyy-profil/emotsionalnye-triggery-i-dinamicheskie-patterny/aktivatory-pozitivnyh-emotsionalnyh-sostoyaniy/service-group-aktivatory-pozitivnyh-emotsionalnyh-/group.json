@@ -1,0 +1,16 @@
+{
+  "id": "service-group-aktivatory-pozitivnyh-emotsionalnyh-sostoyaniy",
+  "type": "question_group",
+  "title": "Вопросы раздела \"2.1 Активаторы позитивных эмоциональных состояний\"",
+  "children": [
+    "kto-iz-lyudey-sposoben-mgnovenno-podnyat-nastroeni/question.json",
+    "v-kakie-momenty-personazh-chuvstvuet-sebya-naibole/question.json",
+    "kakie-vidy-krasoty-osobenno-trogayut-personazha/question.json",
+    "kakie-zvuki-zapahi-tsveta-prikosnoveniya-vyzyvayut/question.json",
+    "v-kakoe-vremya-goda-vremya-dnya-personazh-chuvstvu/question.json",
+    "kakie-dostizheniya-prinosyat-naibolshee-udovletvor/question.json",
+    "priznanie-kakih-lyudey-osobenno-vazhno-dlya-emotsi/question.json",
+    "kakie-formy-blizosti-i-lyubvi-bolshe-vsego-nuzhny-/question.json",
+    "est-li-osobye-vospominaniya-kotorye-vsegda-podnima/question.json"
+  ]
+}

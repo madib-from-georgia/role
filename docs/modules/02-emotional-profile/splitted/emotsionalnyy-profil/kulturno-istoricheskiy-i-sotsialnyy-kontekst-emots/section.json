@@ -1,0 +1,11 @@
+{
+  "id": "kulturno-istoricheskiy-i-sotsialnyy-kontekst-emots",
+  "type": "section",
+  "title": "7. Культурно-исторический и социальный контекст эмоций",
+  "children": [
+    "istoricheskie-modeli-emotsionalnosti/subsection.json",
+    "sotsialno-klassovye-emotsionalnye-kody/subsection.json",
+    "religioznye-i-filosofskie-vliyaniya-na-emotsionaln/subsection.json",
+    "gendernye-i-vozrastnye-emotsionalnye-predpisaniya/subsection.json"
+  ]
+}

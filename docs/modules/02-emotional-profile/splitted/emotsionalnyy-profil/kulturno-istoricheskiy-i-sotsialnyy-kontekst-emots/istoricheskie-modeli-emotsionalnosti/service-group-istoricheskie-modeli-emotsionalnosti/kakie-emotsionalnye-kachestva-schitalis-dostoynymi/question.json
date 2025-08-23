@@ -1,0 +1,74 @@
+{
+  "id": "kakie-emotsionalnye-kachestva-schitalis-dostoynymi",
+  "type": "question",
+  "title": "Какие эмоциональные качества считались достойными в эпоху персонажа?",
+  "answerType": "multiple",
+  "source": "text",
+  "answers": [
+    {
+      "id": "chuvstvitelnost",
+      "value": {
+        "male": "чувствительность",
+        "female": "чувствительность"
+      },
+      "exportedValue": {
+        "male": "У меня чувствительность",
+        "female": "У меня чувствительность"
+      },
+      "hint": "Например, в XVIII веке - чувствительность, в XIX - страстность или сдержанность",
+      "exercise": ""
+    },
+    {
+      "id": "strastnost",
+      "value": {
+        "male": "страстность",
+        "female": "страстность"
+      },
+      "exportedValue": {
+        "male": "У меня страстность",
+        "female": "У меня страстность"
+      },
+      "hint": "Например, в XVIII веке - чувствительность, в XIX - страстность или сдержанность",
+      "exercise": ""
+    },
+    {
+      "id": "sderzhannost",
+      "value": {
+        "male": "сдержанность",
+        "female": "сдержанность"
+      },
+      "exportedValue": {
+        "male": "У меня сдержанность",
+        "female": "У меня сдержанность"
+      },
+      "hint": "Например, в XVIII веке - чувствительность, в XIX - страстность или сдержанность",
+      "exercise": ""
+    },
+    {
+      "id": "ratsionalnost",
+      "value": {
+        "male": "рациональность",
+        "female": "рациональность"
+      },
+      "exportedValue": {
+        "male": "У меня рациональность",
+        "female": "У меня рациональность"
+      },
+      "hint": "Например, в XVIII веке - чувствительность, в XIX - страстность или сдержанность",
+      "exercise": ""
+    },
+    {
+      "id": "estestvennost",
+      "value": {
+        "male": "естественность",
+        "female": "естественность"
+      },
+      "exportedValue": {
+        "male": "У меня естественность",
+        "female": "У меня естественность"
+      },
+      "hint": "Например, в XVIII веке - чувствительность, в XIX - страстность или сдержанность",
+      "exercise": ""
+    }
+  ]
+}
