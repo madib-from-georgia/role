@@ -20,7 +20,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   isOpen
 }) => {
   const [format, setFormat] = useState<'pdf' | 'docx'>('pdf');
-  const [exportType, setExportType] = useState<'detailed' | 'summary' | 'compact'>('detailed');
+  const [reportType, setReportType] = useState<'questionnaire_empty' | 'questionnaire_with_answers' | 'questionnaire_full' | 'answers_only'>('questionnaire_with_answers');
   const [includeEmptyResponses, setIncludeEmptyResponses] = useState(false);
 
   // Загружаем доступные форматы и типы (закомментировано, так как не используется)
@@ -95,7 +95,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     exportMutation.mutate({
       character_id: characterId,
       format,
-      export_type: exportType,
+      report_type: reportType,
       include_empty_responses: includeEmptyResponses
     });
   };
@@ -166,44 +166,56 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               </div>
             </div>
 
-            {/* Выбор типа детализации */}
+            {/* Выбор типа отчета */}
             <div className="export-option-group">
-              <label className="export-label">Детализация:</label>
+              <label className="export-label">Типы отчетов:</label>
               <div className="export-radio-group">
                 <label className="export-radio">
                   <Radio
-                    value="detailed"
-                    checked={exportType === 'detailed'}
-                    onChange={(e) => setExportType(e.target.value as 'detailed')}
+                    value="questionnaire_empty"
+                    checked={reportType === 'questionnaire_empty'}
+                    onChange={(e) => setReportType(e.target.value as 'questionnaire_empty')}
                     disabled={exportMutation.isLoading}
                   />
                   <span className="export-radio-label">
-                    <strong>Подробный</strong>
-                    <small>Все вопросы и ответы с комментариями</small>
+                    <strong>Опросник без ответов</strong>
+                    <small>Только вопросы и варианты ответов. Без ответов пользователя</small>
                   </span>
                 </label>
                 <label className="export-radio">
                   <Radio
-                    value="summary"
-                    checked={exportType === 'summary'}
-                    onChange={(e) => setExportType(e.target.value as 'summary')}
+                    value="questionnaire_with_answers"
+                    checked={reportType === 'questionnaire_with_answers'}
+                    onChange={(e) => setReportType(e.target.value as 'questionnaire_with_answers')}
                     disabled={exportMutation.isLoading}
                   />
                   <span className="export-radio-label">
-                    <strong>Краткий</strong>
-                    <small>Сводка по чеклистам со статистикой</small>
+                    <strong>Опросник с ответами</strong>
+                    <small>Вопрос и ответ пользователя</small>
                   </span>
                 </label>
                 <label className="export-radio">
                   <Radio
-                    value="compact"
-                    checked={exportType === 'compact'}
-                    onChange={(e) => setExportType(e.target.value as 'compact')}
+                    value="questionnaire_full"
+                    checked={reportType === 'questionnaire_full'}
+                    onChange={(e) => setReportType(e.target.value as 'questionnaire_full')}
                     disabled={exportMutation.isLoading}
                   />
                   <span className="export-radio-label">
-                    <strong>Компактный</strong>
-                    <small>Только основная статистика</small>
+                    <strong>Опросник с ответами, советами и упражнениями</strong>
+                    <small>Вопрос и ответ пользователя с советами к каждому ответу и упражнениями</small>
+                  </span>
+                </label>
+                <label className="export-radio">
+                  <Radio
+                    value="answers_only"
+                    checked={reportType === 'answers_only'}
+                    onChange={(e) => setReportType(e.target.value as 'answers_only')}
+                    disabled={exportMutation.isLoading}
+                  />
+                  <span className="export-radio-label">
+                    <strong>Список ответов пользователя</strong>
+                    <small>Только ответ на каждый вопрос, чтобы возник текст, характеризующий персонажа</small>
                   </span>
                 </label>
               </div>

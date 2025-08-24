@@ -132,7 +132,7 @@ class ExportService:
                 operation="pdf_export",
                 character_id=character.id,
                 format_type=format_type,
-                export_type="pdf",
+                report_type=format_type,
                 user_id=user_id,
                 duration_ms=duration_ms,
                 success=False,
@@ -234,7 +234,7 @@ class ExportService:
                 operation="pdf_export_weasyprint",
                 character_id=character.id,
                 format_type=format_type,
-                export_type="pdf",
+                report_type=format_type,
                 user_id=user_id,
                 duration_ms=duration_ms,
                 file_size=file_size,
@@ -378,13 +378,15 @@ class ExportService:
         # Определяем пол персонажа (можно расширить логику)
         character_gender = self._detect_character_gender(character)
         
-        # Чеклисты
-        if format_type == "detailed":
-            story.extend(self._add_detailed_checklists_to_pdf(checklists, styles, character_gender))
-        elif format_type == "summary":
-            story.extend(self._add_summary_checklists_to_pdf(checklists, styles, character_gender))
-        else:  # compact
-            story.extend(self._add_compact_checklists_to_pdf(checklists, styles, character_gender))
+        # Чеклисты в зависимости от типа отчета
+        if format_type == "questionnaire_empty":
+            story.extend(self._add_empty_questionnaire_to_pdf(checklists, styles))
+        elif format_type == "questionnaire_with_answers":
+            story.extend(self._add_questionnaire_with_answers_to_pdf(checklists, styles, character_gender))
+        elif format_type == "questionnaire_full":
+            story.extend(self._add_full_questionnaire_to_pdf(checklists, styles, character_gender))
+        elif format_type == "answers_only":
+            story.extend(self._add_answers_only_to_pdf(checklists, styles, character_gender))
         
         # Генерация PDF
         doc.build(story)
@@ -397,7 +399,7 @@ class ExportService:
             operation="pdf_export_reportlab",
             character_id=character.id,
             format_type=format_type,
-            export_type="pdf",
+            report_type=format_type,
             user_id=user_id,
             duration_ms=duration_ms,
             file_size=file_size,
@@ -457,6 +459,159 @@ class ExportService:
             
             story.append(Spacer(1, 20))
         
+        return story
+    
+    def _add_empty_questionnaire_to_pdf(self, checklists: list, styles) -> list:
+        """Добавить опросник без ответов в PDF."""
+        story = []
+        
+        for checklist in checklists:
+            story.append(Paragraph(f"Чеклист: {checklist.title}", styles['CustomHeading']))
+            
+            if checklist.description:
+                story.append(Paragraph(checklist.description, styles['CustomNormal']))
+                story.append(Spacer(1, 6))
+            
+            for section in checklist.sections:
+                if not section.subsections:
+                    continue
+                    
+                story.append(Paragraph(f"📝 {section.title}", styles['CustomHeading']))
+                
+                for subsection in section.subsections:
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                story.append(Paragraph(f"🔹 {group.title}", styles['CustomBold']))
+                            
+                            for question in group.questions:
+                                # Добавляем только вопрос без ответа
+                                story.append(Paragraph(f"• {question.text}", styles['CustomNormal']))
+                                
+                                # Добавляем варианты ответов если есть
+                                if hasattr(question, 'answers') and question.answers:
+                                    for answer in question.answers:
+                                        answer_text = answer.value_male or answer.value_female or "Вариант ответа"
+                                        story.append(Paragraph(f"  ○ {answer_text}", styles['CustomNormal']))
+                                
+                                story.append(Spacer(1, 8))
+                
+                story.append(Spacer(1, 12))
+            
+            story.append(Spacer(1, 20))
+        
+        return story
+    
+    def _add_questionnaire_with_answers_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
+        """Добавить опросник с ответами в PDF."""
+        story = []
+        
+        for checklist in checklists:
+            story.append(Paragraph(f"Чеклист: {checklist.title}", styles['CustomHeading']))
+            
+            if checklist.description:
+                story.append(Paragraph(checklist.description, styles['CustomNormal']))
+                story.append(Spacer(1, 6))
+            
+            for section in checklist.sections:
+                if not section.subsections:
+                    continue
+                    
+                story.append(Paragraph(f"📝 {section.title}", styles['CustomHeading']))
+                
+                for subsection in section.subsections:
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                story.append(Paragraph(f"🔹 {group.title}", styles['CustomBold']))
+                            
+                            for question in group.questions:
+                                if question.current_response:
+                                    story.append(Paragraph(f"• {question.text}", styles['CustomNormal']))
+                                    
+                                    # Получаем ответ
+                                    answer_text = self._get_answer_text(question.current_response, character_gender)
+                                    if answer_text:
+                                        story.append(Paragraph(f"Ответ: {answer_text}", styles['CustomNormal']))
+                                    
+                                    story.append(Spacer(1, 4))
+                
+                story.append(Spacer(1, 8))
+            
+            story.append(Spacer(1, 20))
+        
+        return story
+    
+    def _add_full_questionnaire_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
+        """Добавить полный опросник с ответами, советами и упражнениями в PDF."""
+        story = []
+        
+        for checklist in checklists:
+            story.append(Paragraph(f"Чеклист: {checklist.title}", styles['CustomHeading']))
+            
+            if checklist.description:
+                story.append(Paragraph(checklist.description, styles['CustomNormal']))
+                story.append(Spacer(1, 6))
+            
+            for section in checklist.sections:
+                if not section.subsections:
+                    continue
+                    
+                story.append(Paragraph(f"📝 {section.title}", styles['CustomHeading']))
+                
+                for subsection in section.subsections:
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                story.append(Paragraph(f"🔹 {group.title}", styles['CustomBold']))
+                            
+                            for question in group.questions:
+                                if question.current_response:
+                                    story.append(Paragraph(f"• {question.text}", styles['CustomNormal']))
+                                    
+                                    # Получаем ответ
+                                    answer_text = self._get_answer_text(question.current_response, character_gender)
+                                    if answer_text:
+                                        story.append(Paragraph(f"Ответ: {answer_text}", styles['CustomNormal']))
+                                    
+                                    # Добавляем совет если есть
+                                    if question.current_response.answer and question.current_response.answer.hint:
+                                        story.append(Paragraph(f"Совет: {question.current_response.answer.hint}", styles['CustomNormal']))
+                                    
+                                    # Добавляем упражнения если есть
+                                    if question.current_response.answer and question.current_response.answer.exercise:
+                                        story.append(Paragraph(f"Упражнение: {question.current_response.answer.exercise}", styles['CustomNormal']))
+                                    
+                                    # Добавляем комментарий если есть
+                                    if question.current_response.comment:
+                                        story.append(Paragraph(f"Комментарий: {question.current_response.comment}", styles['CustomNormal']))
+                                    
+                                    story.append(Spacer(1, 4))
+                
+                story.append(Spacer(1, 8))
+            
+            story.append(Spacer(1, 20))
+        
+        return story
+    
+    def _add_answers_only_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
+        """Добавить только ответы пользователя в PDF."""
+        story = []
+        
+        story.append(Paragraph("Ответы персонажа", styles['CustomHeading']))
+        story.append(Spacer(1, 12))
+        
+        for checklist in checklists:
+            for section in checklist.sections:
+                for subsection in section.subsections:
+                    for group in subsection.question_groups:
+                        for question in group.questions:
+                            if question.current_response:
+                                answer_text = self._get_answer_text(question.current_response, character_gender)
+                                if answer_text:
+                                    story.append(Paragraph(f"• {answer_text}", styles['CustomNormal']))
+        
+        story.append(Spacer(1, 20))
         return story
     
     def _add_summary_checklists_to_pdf(self, checklists: list, styles, character_gender: Optional[str] = None) -> list:
@@ -582,13 +737,15 @@ class ExportService:
             # Определяем пол персонажа
             character_gender = self._detect_character_gender(character)
             
-            # Добавляем чеклисты в зависимости от формата
-            if format_type == "detailed":
-                self._add_detailed_checklists_to_docx(doc, checklists, character_gender)
-            elif format_type == "summary":
-                self._add_summary_checklists_to_docx(doc, checklists, character_gender)
-            else:  # compact
-                self._add_compact_checklists_to_docx(doc, checklists, character_gender)
+            # Добавляем чеклисты в зависимости от типа отчета
+            if format_type == "questionnaire_empty":
+                self._add_empty_questionnaire_to_docx(doc, checklists)
+            elif format_type == "questionnaire_with_answers":
+                self._add_questionnaire_with_answers_to_docx(doc, checklists, character_gender)
+            elif format_type == "questionnaire_full":
+                self._add_full_questionnaire_to_docx(doc, checklists, character_gender)
+            elif format_type == "answers_only":
+                self._add_answers_only_to_docx(doc, checklists, character_gender)
             
             # Сохранение в байты
             buffer = io.BytesIO()
@@ -602,7 +759,7 @@ class ExportService:
                 operation="docx_export",
                 character_id=character.id,
                 format_type=format_type,
-                export_type="docx",
+                report_type=format_type,
                 user_id=user_id,
                 duration_ms=duration_ms,
                 file_size=file_size,
@@ -617,7 +774,7 @@ class ExportService:
                 operation="docx_export",
                 character_id=character.id,
                 format_type=format_type,
-                export_type="docx",
+                report_type=format_type,
                 user_id=user_id,
                 duration_ms=duration_ms,
                 success=False,
@@ -701,6 +858,148 @@ class ExportService:
                                         source_p.add_run(source_text)
                                     
                                     doc.add_paragraph("")  # Пустая строка для разделения
+    
+    def _add_empty_questionnaire_to_docx(self, doc: Document, checklists: list):
+        """Добавить опросник без ответов в DOCX."""
+        for checklist in checklists:
+            doc.add_heading(f'Чеклист: {checklist.title}', level=1)
+            
+            if checklist.description:
+                doc.add_paragraph(checklist.description)
+            
+            for section in checklist.sections:
+                if not section.subsections:
+                    continue
+                    
+                doc.add_heading(section.title, level=2)
+                
+                for subsection in section.subsections:
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                doc.add_heading(group.title, level=3)
+                            
+                            for question in group.questions:
+                                # Добавляем только вопрос
+                                question_p = doc.add_paragraph()
+                                question_p.add_run('Вопрос: ').bold = True
+                                question_p.add_run(question.text)
+                                
+                                # Добавляем варианты ответов если есть
+                                if hasattr(question, 'answers') and question.answers:
+                                    for answer in question.answers:
+                                        answer_text = answer.value_male or answer.value_female or "Вариант ответа"
+                                        answer_p = doc.add_paragraph()
+                                        answer_p.add_run('  ○ ').bold = True
+                                        answer_p.add_run(answer_text)
+                                
+                                doc.add_paragraph("")  # Пустая строка
+    
+    def _add_questionnaire_with_answers_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
+        """Добавить опросник с ответами в DOCX."""
+        for checklist in checklists:
+            doc.add_heading(f'Чеклист: {checklist.title}', level=1)
+            
+            if checklist.description:
+                doc.add_paragraph(checklist.description)
+            
+            for section in checklist.sections:
+                if not section.subsections:
+                    continue
+                    
+                doc.add_heading(section.title, level=2)
+                
+                for subsection in section.subsections:
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                doc.add_heading(group.title, level=3)
+                            
+                            for question in group.questions:
+                                if question.current_response:
+                                    # Вопрос
+                                    question_p = doc.add_paragraph()
+                                    question_p.add_run('Вопрос: ').bold = True
+                                    question_p.add_run(question.text)
+                                    
+                                    # Ответ
+                                    answer_text = self._get_answer_text(question.current_response, character_gender)
+                                    if answer_text:
+                                        answer_p = doc.add_paragraph()
+                                        answer_p.add_run('Ответ: ').bold = True
+                                        answer_p.add_run(answer_text)
+                                    
+                                    doc.add_paragraph("")  # Пустая строка
+    
+    def _add_full_questionnaire_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
+        """Добавить полный опросник с ответами, советами и упражнениями в DOCX."""
+        for checklist in checklists:
+            doc.add_heading(f'Чеклист: {checklist.title}', level=1)
+            
+            if checklist.description:
+                doc.add_paragraph(checklist.description)
+            
+            for section in checklist.sections:
+                if not section.subsections:
+                    continue
+                    
+                doc.add_heading(section.title, level=2)
+                
+                for subsection in section.subsections:
+                    if subsection.question_groups:
+                        for group in subsection.question_groups:
+                            if group.title and group.title != subsection.title:
+                                doc.add_heading(group.title, level=3)
+                            
+                            for question in group.questions:
+                                if question.current_response:
+                                    # Вопрос
+                                    question_p = doc.add_paragraph()
+                                    question_p.add_run('Вопрос: ').bold = True
+                                    question_p.add_run(question.text)
+                                    
+                                    # Ответ
+                                    answer_text = self._get_answer_text(question.current_response, character_gender)
+                                    if answer_text:
+                                        answer_p = doc.add_paragraph()
+                                        answer_p.add_run('Ответ: ').bold = True
+                                        answer_p.add_run(answer_text)
+                                    
+                                    # Совет
+                                    if question.current_response.answer and question.current_response.answer.hint:
+                                        hint_p = doc.add_paragraph()
+                                        hint_p.add_run('Совет: ').bold = True
+                                        hint_p.add_run(question.current_response.answer.hint)
+                                    
+                                    # Упражнения
+                                    if question.current_response.answer and question.current_response.answer.exercise:
+                                        exercise_p = doc.add_paragraph()
+                                        exercise_p.add_run('Упражнение: ').bold = True
+                                        exercise_p.add_run(question.current_response.answer.exercise)
+                                    
+                                    # Комментарий
+                                    if question.current_response.comment:
+                                        comment_p = doc.add_paragraph()
+                                        comment_p.add_run('Комментарий: ').bold = True
+                                        comment_p.add_run(question.current_response.comment)
+                                    
+                                    doc.add_paragraph("")  # Пустая строка
+    
+    def _add_answers_only_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
+        """Добавить только ответы пользователя в DOCX."""
+        doc.add_heading('Ответы персонажа', level=1)
+        
+        for checklist in checklists:
+            for section in checklist.sections:
+                for subsection in section.subsections:
+                    for group in subsection.question_groups:
+                        for question in group.questions:
+                            if question.current_response:
+                                answer_text = self._get_answer_text(question.current_response, character_gender)
+                                if answer_text:
+                                    answer_p = doc.add_paragraph()
+                                    answer_p.add_run('• ').bold = True
+                                    answer_p.add_run(answer_text)
     
     def _add_summary_checklists_to_docx(self, doc: Document, checklists: list, character_gender: Optional[str] = None):
         """Добавить краткие чеклисты в DOCX."""

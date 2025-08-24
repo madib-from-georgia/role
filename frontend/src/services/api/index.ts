@@ -255,7 +255,7 @@ export const exportApi = {
   exportCharacter: (data: {
     character_id: number;
     format: 'pdf' | 'docx';
-    export_type?: 'detailed' | 'summary' | 'compact';
+    report_type?: 'questionnaire_empty' | 'questionnaire_with_answers' | 'questionnaire_full' | 'answers_only';
     include_checklists?: string[];
     include_empty_responses?: boolean;
   }) => {
@@ -289,7 +289,7 @@ export const exportApi = {
   exportMultipleCharacters: (data: {
     character_ids: number[];
     format: 'pdf' | 'docx';
-    export_type?: 'detailed' | 'summary' | 'compact';
+    report_type?: 'questionnaire_empty' | 'questionnaire_with_answers' | 'questionnaire_full' | 'answers_only';
     merge_into_single_file?: boolean;
   }) => {
     return apiClient.post('/api/export/characters/bulk', data, {

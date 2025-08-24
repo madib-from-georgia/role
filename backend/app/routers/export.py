@@ -15,7 +15,7 @@ from app.dependencies.auth import get_db, get_current_active_user
 from app.database.crud import character as character_crud
 from app.database.models.user import User
 from app.schemas.export import (
-    ExportRequest, ExportResponse, ExportFormat, ExportType, 
+    ExportRequest, ExportResponse, ExportFormat, ReportType,
     ExportTemplateInfo, BulkExportRequest
 )
 from app.services.export_service import export_service
@@ -41,7 +41,7 @@ async def export_character(
     
     - **character_id**: ID персонажа для экспорта
     - **format**: Формат файла (pdf, docx)
-    - **export_type**: Тип детализации (detailed, summary, compact)
+    - **report_type**: Тип отчета (questionnaire_empty, questionnaire_with_answers, questionnaire_full, answers_only)
     - **include_checklists**: Список конкретных чеклистов (опционально)
     - **include_empty_responses**: Включать ли пустые ответы
     """
@@ -91,7 +91,7 @@ async def export_character(
             file_content = await export_service.export_character_pdf(
                 character=character,
                 checklists=checklists,
-                format_type=export_request.export_type,
+                format_type=export_request.report_type,
                 user_id=current_user.id,
                 use_weasyprint=True,
                 theme="professional"
@@ -100,7 +100,7 @@ async def export_character(
             file_extension = "pdf"
         elif export_request.format == ExportFormat.DOCX:
             file_content = await export_service.export_character_docx(
-                character, checklists, export_request.export_type, current_user.id
+                character, checklists, export_request.report_type, current_user.id
             )
             content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             file_extension = "docx"
@@ -122,7 +122,7 @@ async def export_character(
             status_code=200,
             character_id=export_request.character_id,
             format=export_request.format,
-            export_type=export_request.export_type
+            report_type=export_request.report_type
         )
         
         # Возвращаем файл с правильным кодированием имени
@@ -185,7 +185,7 @@ async def export_characters_bulk(
     
     - **character_ids**: Список ID персонажей
     - **format**: Формат файла (pdf, docx)
-    - **export_type**: Тип детализации
+    - **report_type**: Тип отчета
     - **merge_into_single_file**: Объединять ли в один файл
     """
     if not bulk_request.character_ids:
@@ -271,10 +271,10 @@ async def get_supported_formats(
 
 
 @router.get("/types", response_model=List[str])
-async def get_export_types(
+async def get_report_types(
     current_user: User = Depends(get_current_active_user)
 ):
     """
-    Получение списка доступных типов экспорта.
+    Получение списка доступных типов отчетов.
     """
-    return [export_type.value for export_type in ExportType]
+    return [report_type.value for report_type in ReportType]

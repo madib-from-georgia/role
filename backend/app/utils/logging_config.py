@@ -164,7 +164,8 @@ class LoggingConfig:
         operation: str,
         character_id: int,
         format_type: str,
-        export_type: str,
+        export_type: str = None,  # Для обратной совместимости
+        report_type: str = None,  # Новый параметр
         user_id: int = None,
         duration_ms: float = None,
         file_size: int = None,
@@ -174,11 +175,14 @@ class LoggingConfig:
         """Логирование операции экспорта."""
         export_logger = LoggingConfig.get_export_logger()
         
+        # Используем report_type если передан, иначе export_type для обратной совместимости
+        type_value = report_type or export_type
+        
         log_data = {
             "operation": operation,
             "character_id": character_id,
             "format": format_type,
-            "export_type": export_type,
+            "report_type": type_value,
             "user_id": user_id,
             "duration_ms": duration_ms,
             "file_size": file_size,
@@ -186,7 +190,7 @@ class LoggingConfig:
             "error": error
         }
         
-        message = f"Export {operation}: character={character_id}, format={format_type}, type={export_type}"
+        message = f"Export {operation}: character={character_id}, format={format_type}, type={type_value}"
         if duration_ms:
             message += f" ({duration_ms:.2f}ms)"
         if file_size:

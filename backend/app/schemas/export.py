@@ -13,24 +13,25 @@ class ExportFormat(str, Enum):
     DOCX = "docx"
 
 
-class ExportType(str, Enum):
-    """Типы экспорта по детализации."""
-    DETAILED = "detailed"  # Подробный отчет со всеми ответами
-    SUMMARY = "summary"    # Краткий обзор с статистикой
-    COMPACT = "compact"    # Компактный отчет
+class ReportType(str, Enum):
+    """Типы отчетов для экспорта."""
+    QUESTIONNAIRE_EMPTY = "questionnaire_empty"  # Опросник без ответов
+    QUESTIONNAIRE_WITH_ANSWERS = "questionnaire_with_answers"  # Опросник с ответами
+    QUESTIONNAIRE_FULL = "questionnaire_full"  # Опросник с ответами, советами и упражнениями
+    ANSWERS_ONLY = "answers_only"  # Только список ответов пользователя
 
 
 class ExportRequest(BaseModel):
     """Запрос на экспорт данных персонажа."""
     character_id: int = Field(..., description="ID персонажа для экспорта")
     format: ExportFormat = Field(..., description="Формат экспорта")
-    export_type: ExportType = Field(default=ExportType.DETAILED, description="Тип экспорта")
+    report_type: ReportType = Field(default=ReportType.QUESTIONNAIRE_WITH_ANSWERS, description="Тип отчета")
     include_checklists: Optional[List[str]] = Field(
-        default=None, 
+        default=None,
         description="Список slug'ов чеклистов для включения (если None - все)"
     )
     include_empty_responses: bool = Field(
-        default=False, 
+        default=False,
         description="Включать ли вопросы без ответов"
     )
 
@@ -63,9 +64,9 @@ class BulkExportRequest(BaseModel):
     """Запрос на массовый экспорт нескольких персонажей."""
     character_ids: List[int] = Field(..., description="Список ID персонажей")
     format: ExportFormat = Field(..., description="Формат экспорта")
-    export_type: ExportType = Field(default=ExportType.SUMMARY, description="Тип экспорта")
+    report_type: ReportType = Field(default=ReportType.QUESTIONNAIRE_WITH_ANSWERS, description="Тип отчета")
     merge_into_single_file: bool = Field(
-        default=True, 
+        default=True,
         description="Объединять ли всех персонажей в один файл"
     )
 
