@@ -7,6 +7,7 @@ import {
   TextArea,
   SegmentedRadioGroup,
   Breadcrumbs,
+  ArrowToggle
 } from "@gravity-ui/uikit";
 import { QuestionNavigation } from "./QuestionNavigation";
 import {
@@ -71,6 +72,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     sourceType: "FOUND_IN_TEXT" as SourceType,
   });
 
+  // Состояние для раскрытия exercise (hint больше не нужен)
+  const [exerciseExpanded, setExerciseExpanded] = useState(false);
+
   // Получаем данные напрямую из пропсов с мемоизацией
   const response = question?.current_response;
   const responses = useMemo(() => {
@@ -99,12 +103,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       comment: primaryResponse?.comment || "",
       sourceType: primaryResponse?.source_type || "FOUND_IN_TEXT",
     });
+
+    // Сбрасываем состояние раскрытия exercise при смене вопроса
+    setExerciseExpanded(false);
   }, [
     question?.id,
     question,
     primaryResponse?.comment,
     primaryResponse?.source_type,
   ]);
+
+  // Обработчик для переключения раскрытия exercise
+  const toggleExercise = useCallback(() => {
+    setExerciseExpanded(prev => !prev);
+  }, []);
 
   // Получение отображаемого значения ответа в зависимости от пола
   const getAnswerDisplayValue = useCallback(
@@ -306,6 +318,60 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         <Text variant="header-1">{question.text}</Text>
 
         <div className="question-input">{renderAnswerOptions()}</div>
+
+        {/* Отображение hint для выбранных ответов */}
+        {(() => {
+          let selectedAnswers: ChecklistAnswer[] = [];
+          
+          if (question.answer_type === "single" && selectedAnswerId) {
+            const answer = question.answers.find(a => a.id === selectedAnswerId);
+            if (answer) selectedAnswers = [answer];
+          } else if (question.answer_type === "multiple" && selectedAnswerIds.length > 0) {
+            selectedAnswers = question.answers.filter(a => selectedAnswerIds.includes(a.id));
+          }
+
+          if (selectedAnswers.length === 0) return null;
+
+          return (
+            <>
+              {(selectedAnswers.some(answer => answer.hint) || selectedAnswers.some(answer => answer.exercise)) && (
+                <div className="question-hint">
+                  <div className="hint-with-exercise">
+                    {selectedAnswers.map(answer => (
+                      answer.hint && (
+                        <span key={`hint-${answer.id}`} className="question-hint-content">
+                          {answer.hint}
+                        </span>
+                      )
+                    ))}
+                    
+                    {selectedAnswers.some(answer => answer.exercise) && (
+                      <span 
+                        className={`exercise-toggle ${exerciseExpanded ? 'expanded' : ''}`}
+                        onClick={toggleExercise}
+                      >
+                        {selectedAnswers.some(answer => answer.hint) && ' '}
+                        См. упражнения<ArrowToggle direction={exerciseExpanded ? "bottom" : "right"} />
+                      </span>
+                    )}
+                  </div>
+                  
+                  {exerciseExpanded && selectedAnswers.some(answer => answer.exercise) && (
+                    <div className="expandable-content">
+                      {selectedAnswers.map(answer => (
+                        answer.exercise && (
+                          <div key={`exercise-${answer.id}`} className="question-exercise-content">
+                            {answer.exercise}
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {question.current_response && onAnswerDelete && (
           <div className="question-card__delete">

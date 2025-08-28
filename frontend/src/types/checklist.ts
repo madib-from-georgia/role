@@ -8,6 +8,7 @@ export interface ChecklistAnswer {
   exported_value_male?: string;
   exported_value_female?: string;
   hint?: string;
+  exercise?: string;
   order_index: number;
   created_at: string;
   updated_at?: string;
