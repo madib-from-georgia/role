@@ -9,6 +9,7 @@ import { QuestionCard } from "./QuestionCard";
 import { ProgressBar } from "./ProgressBar";
 import { ChecklistSwitcher } from "./ChecklistSwitcher";
 import { ExportDialog } from "./ExportDialog";
+import { NavigationSidebar } from "./NavigationSidebar";
 
 // Import types
 import { Checklist, ChecklistQuestion, ChecklistQuestionGroup, Gender, ChecklistAnswer } from "../../types/checklist";
@@ -55,6 +56,7 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [localData, setLocalData] = useState<Checklist | null>(null);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { questionExternalId } = useParams<{ questionExternalId?: string }>();
 
@@ -469,9 +471,8 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
         {/* Question area */}
         <div className="question-flow__main">
           <ProgressBar
-            currentIndex={currentQuestionIndex}
-            totalQuestions={allQuestions.length}
             checklist={localData}
+            onChecklistClick={setIsSidebarOpen}
           />
           {currentQuestion && (
             <QuestionCard
@@ -527,6 +528,17 @@ export const QuestionFlow: React.FC<QuestionFlowProps> = ({
           onClose={() => setIsExportDialogOpen(false)}
         />
       )}
+
+      <NavigationSidebar
+        isOpen={isSidebarOpen}
+        questions={allQuestions}
+        currentIndex={currentQuestionIndex}
+        onQuestionSelect={handleJumpToQuestion}
+        completionPercentage={
+          localData?.completion_stats?.completion_percentage || 0
+        }
+        onClose={() => setIsSidebarOpen(false)}
+      />
     </div>
   );
 };

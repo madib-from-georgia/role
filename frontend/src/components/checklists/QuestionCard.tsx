@@ -2,14 +2,12 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Label,
   Text,
-  Button,
   Radio,
   Checkbox,
   TextArea,
   SegmentedRadioGroup,
   Breadcrumbs,
 } from "@gravity-ui/uikit";
-import { NavigationSidebar } from "./NavigationSidebar";
 import { QuestionNavigation } from "./QuestionNavigation";
 import {
   ChecklistQuestion,
@@ -62,8 +60,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onAnswerDelete,
   allQuestions,
   currentQuestionIndex,
-  onQuestionSelect,
-  completionPercentage,
   onPrevious,
   onNext,
   canGoBack,
@@ -74,9 +70,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     comment: "",
     sourceType: "FOUND_IN_TEXT" as SourceType,
   });
-
-  // Состояние UI
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Получаем данные напрямую из пропсов с мемоизацией
   const response = question?.current_response;
@@ -296,27 +289,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   return (
     <div className="question-card">
-      {/* Sidebar */}
-      <NavigationSidebar
-        isOpen={isSidebarOpen}
-        questions={allQuestions}
-        currentIndex={currentQuestionIndex}
-        onQuestionSelect={onQuestionSelect}
-        completionPercentage={completionPercentage}
-        onClose={() => setIsSidebarOpen(false)}
-      />
-
       {/* Question context */}
       <div className="question-card__context">
-        <Button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          title="Навигация по вопросам"
-          view="outlined"
-          size="m"
-        >
-          ☰
-        </Button>
-
         <div className="question-card__breadcrumbs">
           <Breadcrumbs>
             <Breadcrumbs.Item>{question.sectionTitle}</Breadcrumbs.Item>

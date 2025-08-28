@@ -59,7 +59,6 @@
 .progress-bar-container {
   flex: 1;
   min-width: 0; /* Allow flex shrinking */
-  /* max-width: calc(100vw - 300px); Reserve space for controls */
   overflow: hidden;
 }
 
@@ -69,6 +68,15 @@
   align-items: flex-start;
   margin-bottom: var(--spacing-4);
   gap: var(--spacing-3);
+}
+
+.progress-header-title {
+  display: flex;
+  align-items: center;
+}
+
+.progress-header-title-text {
+  margin-left: var(--spacing-2);
 }
 
 .checklist-info {
@@ -1238,5 +1246,15 @@
   .loading-fill {
     animation: none !important;
     transform: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+    .question-card__context {
+        display: none;
+    }
+
+  .question-card__main {
+    border-top: 0;
   }
 }

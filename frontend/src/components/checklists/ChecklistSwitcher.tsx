@@ -77,7 +77,7 @@ export const ChecklistSwitcher: React.FC<ChecklistSwitcherProps> = ({
         view="outlined"
         size="m"
       >
-        Чеклисты
+        Все чеклисты
       </Button>
 
       {/* Full-screen sidebar */}
