@@ -891,6 +891,7 @@ a:hover {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 2rem;
+  padding-bottom: 20px;
 }
 
 .error-message,
@@ -928,6 +929,13 @@ a:hover {
   margin-bottom: 1rem;
 }
 
+.upload-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
 .upload-icon {
   margin: 0 auto 1rem;
   width: 3rem;
@@ -950,7 +958,7 @@ a:hover {
   font-weight: 500;
   color: #374151;
   cursor: pointer;
-  padding: 1rem 0;
+  padding: 1rem 10px;
 
 
   display: block;
@@ -1155,7 +1163,7 @@ a:hover {
 .stats-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  margin-bottom: 16px;
 }
 
 .stat-item {

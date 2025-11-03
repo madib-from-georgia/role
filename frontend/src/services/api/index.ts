@@ -126,8 +126,8 @@ export const projectsApi = {
 
 export const textsApi = {
   getByProject: (projectId: string) => api.get(`/api/projects/${projectId}/texts`),
-  upload: (projectId: string, formData: FormData) =>
-    apiClient.post(`/api/projects/${projectId}/texts/upload`, formData, {
+  upload: (projectId: string, formData: FormData, analyzeText: boolean = true) =>
+    apiClient.post(`/api/projects/${projectId}/texts/upload?analyze_text=${analyzeText}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

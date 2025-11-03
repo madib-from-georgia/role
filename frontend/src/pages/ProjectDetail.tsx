@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { Button, Progress, Text, TextInput, Select } from "@gravity-ui/uikit";
+import { Button, Progress, Text, TextInput, Select, Checkbox } from "@gravity-ui/uikit";
 import {
   DndContext,
   closestCenter,
@@ -48,6 +48,7 @@ interface ProjectText {
   original_format: string;
   processed_at?: string;
   created_at: string;
+  content_length?: number;
 }
 
 // Интерфейс для персонажа
@@ -72,11 +73,12 @@ const fetchProjectTexts = async (projectId: string): Promise<ProjectText[]> => {
 
 const uploadText = async (
   projectId: string,
-  file: File
+  file: File,
+  analyzeText: boolean
 ): Promise<FileUploadResponse> => {
   const formData = new FormData();
   formData.append("file", file);
-  return await textsApi.upload(projectId, formData);
+  return await textsApi.upload(projectId, formData, analyzeText);
 };
 
 const deleteProject = async (id: string): Promise<void> => {
@@ -301,7 +303,7 @@ const TextSection: React.FC<{
     ["text-characters", text.id],
     () => fetchCharacters(text.id.toString()),
     {
-      enabled: !!text.processed_at, // Загружаем персонажей только если текст обработан
+      enabled: true, // Загружаем персонажей для всех текстов (могут быть созданы вручную)
       staleTime: 5 * 60 * 1000, // 5 минут
     }
   );
@@ -315,7 +317,7 @@ const TextSection: React.FC<{
             text.processed_at ? "processed" : "pending"
           }`}
         >
-          {text.processed_at ? "Обработан" : "В ожидании"}
+          {text.processed_at ? "Проанализирован" : "Загружен"}
         </span>
       </div>
 
@@ -330,7 +332,7 @@ const TextSection: React.FC<{
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Файл успешно обработан</span>
+            <span>Текст проанализирован</span>
             <small>{new Date(text.processed_at).toLocaleString("ru-RU")}</small>
           </div>
         ) : (
@@ -340,86 +342,84 @@ const TextSection: React.FC<{
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Ожидает обработки</span>
+            <span>Текст загружен без анализа</span>
           </div>
         )}
       </div>
 
-      {/* Отображение персонажей только для обработанных текстов */}
-      {text.processed_at && (
-        <>
-          {charactersLoading && (
-            <div className="characters-loading">
-              <div className="spinner"></div>
-              <span>Загрузка персонажей...</span>
-            </div>
-          )}
+      {/* Отображение персонажей для всех текстов */}
+      <>
+        {charactersLoading && (
+          <div className="characters-loading">
+            <div className="spinner"></div>
+            <span>Загрузка персонажей...</span>
+          </div>
+        )}
 
-          {charactersError && (
-            <div className="error-state">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                />
-              </svg>
-              <p>Ошибка загрузки персонажей</p>
-            </div>
-          )}
+        {charactersError && (
+          <div className="error-state">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+            <p>Ошибка загрузки персонажей</p>
+          </div>
+        )}
 
-          {characters && characters.length > 0 && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={onDragEnd}
+        {characters && characters.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={onDragEnd}
+          >
+            <SortableContext
+              items={characters.map(c => c.id)}
+              strategy={verticalListSortingStrategy}
             >
-              <SortableContext
-                items={characters.map(c => c.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="characters-grid">
-                  {characters.map((character) => (
-                    <SortableCharacterItem
-                      key={character.id}
-                      character={character}
-                      onCharacterClick={onCharacterClick}
-                      onEditCharacter={onEditCharacter}
-                      onDeleteCharacter={onDeleteCharacter}
-                      isEditing={editingCharacter?.id === character.id}
-                      editName={editCharacterName}
-                      editGender={editCharacterGender}
-                      onEditNameChange={onEditNameChange}
-                      onEditGenderChange={onEditGenderChange}
-                      onSaveEdit={onSaveEdit}
-                      onCancelEdit={onCancelEdit}
-                      isUpdating={isUpdating}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          )}
+              <div className="characters-grid">
+                {characters.map((character) => (
+                  <SortableCharacterItem
+                    key={character.id}
+                    character={character}
+                    onCharacterClick={onCharacterClick}
+                    onEditCharacter={onEditCharacter}
+                    onDeleteCharacter={onDeleteCharacter}
+                    isEditing={editingCharacter?.id === character.id}
+                    editName={editCharacterName}
+                    editGender={editCharacterGender}
+                    onEditNameChange={onEditNameChange}
+                    onEditGenderChange={onEditGenderChange}
+                    onSaveEdit={onSaveEdit}
+                    onCancelEdit={onCancelEdit}
+                    isUpdating={isUpdating}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        )}
 
-          {characters && characters.length === 0 && (
-            <div className="empty-characters">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <p>Персонажи не найдены</p>
-            </div>
-          )}
-        </>
-      )}
+        {characters && characters.length === 0 && (
+          <div className="empty-characters">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <p>Персонажи не найдены</p>
+          </div>
+        )}
+      </>
     </div>
   );
 };
@@ -428,6 +428,7 @@ const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [analyzeText, setAnalyzeText] = useState<boolean>(false);
   const [showAddCharacterForm, setShowAddCharacterForm] = useState<boolean>(false);
   const [newCharacterName, setNewCharacterName] = useState<string>("");
   const [newCharacterGender, setNewCharacterGender] = useState<"male" | "female" | "unknown">("unknown");
@@ -469,16 +470,19 @@ const ProjectDetail: React.FC = () => {
     { enabled: !!id }
   );
 
-  const uploadMutation = useMutation((file: File) => uploadText(id!, file), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["project", id]);
-      queryClient.invalidateQueries(["project-texts", id]);
-      setSelectedFile(null);
-    },
-    onError: (error) => {
-      console.error("Ошибка загрузки файла:", error);
-    },
-  });
+  const uploadMutation = useMutation(
+    ({ file, analyzeText }: { file: File; analyzeText: boolean }) => uploadText(id!, file, analyzeText),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["project", id]);
+        queryClient.invalidateQueries(["project-texts", id]);
+        setSelectedFile(null);
+      },
+      onError: (error) => {
+        console.error("Ошибка загрузки файла:", error);
+      },
+    }
+  );
 
   const createCharacterMutation = useMutation(
     ({ textId, characterData }: { textId: string; characterData: { name: string; gender?: "male" | "female" } }) =>
@@ -571,7 +575,7 @@ const ProjectDetail: React.FC = () => {
 
   const handleUpload = () => {
     if (selectedFile) {
-      uploadMutation.mutate(selectedFile);
+      uploadMutation.mutate({ file: selectedFile, analyzeText });
     }
   };
 
@@ -597,10 +601,10 @@ const ProjectDetail: React.FC = () => {
       return;
     }
 
-    // Находим первый обработанный текст для добавления персонажа
-    const processedText = texts?.find((text) => text.processed_at);
-    if (!processedText) {
-      alert("Для добавления персонажа необходимо загрузить и обработать хотя бы один текст");
+    // Находим первый текст (обработанный или нет) для добавления персонажа
+    const firstText = texts?.[0];
+    if (!firstText) {
+      alert("Для добавления персонажа необходимо загрузить хотя бы один текст");
       return;
     }
 
@@ -610,7 +614,7 @@ const ProjectDetail: React.FC = () => {
     };
 
     createCharacterMutation.mutate({
-      textId: processedText.id.toString(),
+      textId: firstText.id.toString(),
       characterData,
     });
   };
@@ -774,103 +778,18 @@ const ProjectDetail: React.FC = () => {
 
       <div className="project-content">
         <div className="main-section">
-          <div className="card">
-            <div className="card-header">
-              <h2 className="card-title">Загрузка текста</h2>
-            </div>
-
-            <div className="file-upload">
-              <div className="upload-area">
-                <div className="upload-content">
-                  <label htmlFor="file-upload" className="upload-label">
-                    <div className="upload-icon">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        />
-                      </svg>
-                    </div>
-                    {selectedFile
-                      ? selectedFile.name
-                      : "Перетащите файл сюда или нажмите для выбора"}
-                    <p className="upload-help">
-                      Поддерживаются файлы TXT, FB2 и EPUB до 10MB
-                    </p>
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    accept=".txt,.fb2,.epub"
-                    onChange={handleFileSelect}
-                    style={{ display: "none" }}
-                  />
-                </div>
-              </div>
-
-              <Button
-                disabled={!selectedFile || uploadMutation.isLoading}
-                onClick={handleUpload}
-                view="action"
-                size="l"
-              >
-                {uploadMutation.isLoading ? (
-                  <div className="project-detail-button">
-                    <span className="spinner small"></span>
-                    Обработка файла...
-                  </div>
-                ) : (
-                  "Загрузить и обработать текст"
-                )}
-              </Button>
-
-              {uploadMutation.isError && (
-                <div className="error-message">
-                  <strong>Ошибка загрузки файла</strong>
-                  <p>
-                    Не удалось загрузить и обработать файл. Попробуйте еще раз.
-                  </p>
-                </div>
-              )}
-
-              {uploadMutation.isSuccess && uploadMutation.data && (
-                <div className="success-message">
-                  <strong>Файл успешно загружен</strong>
-                  <div className="upload-stats">
-                    <p>Имя файла: {uploadMutation.data.filename}</p>
-                    <p>Формат: {uploadMutation.data.format?.toUpperCase()}</p>
-                    <p>
-                      Размер содержимого:{" "}
-                      {uploadMutation.data.content_length?.toLocaleString() ||
-                        "N/A"}{" "}
-                      символов
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Секция найденных персонажей */}
+          {/* Секция для добавления персонажей */}
           {texts && texts.length > 0 && (
             <div className="card">
               <div className="card-header">
-                <h2 className="card-title">Найденные персонажи</h2>
-                {texts.some((text) => text.processed_at) && (
-                  <Button
-                    onClick={() => setShowAddCharacterForm(!showAddCharacterForm)}
-                    view="outlined"
-                    size="m"
-                  >
-                    {showAddCharacterForm ? "Отменить" : "Добавить персонажа"}
-                  </Button>
-                )}
+                <h2 className="card-title">Персонажи</h2>
+                <Button
+                  onClick={() => setShowAddCharacterForm(!showAddCharacterForm)}
+                  view="outlined"
+                  size="m"
+                >
+                  {showAddCharacterForm ? "Отменить" : "Добавить персонажа"}
+                </Button>
               </div>
 
               {/* Форма добавления персонажа */}
@@ -929,6 +848,7 @@ const ProjectDetail: React.FC = () => {
                 </div>
               )}
 
+              {/* Показываем секции для всех текстов */}
               {texts.map((text) => (
                 <TextSection
                   key={text.id}
@@ -954,6 +874,83 @@ const ProjectDetail: React.FC = () => {
 
         <div className="sidebar">
           <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Загрузка текста</h2>
+            </div>
+
+            <div className="file-upload">
+              <div className="upload-area">
+                <div className="upload-content">
+                  <label htmlFor="file-upload" className="upload-label">
+                    <div className="upload-icon">
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        />
+                      </svg>
+                    </div>
+                    {selectedFile
+                      ? selectedFile.name
+                      : "Перетащите файл сюда или нажмите для выбора"}
+                    <p className="upload-help">
+                      Поддерживаются файлы TXT, FB2 и EPUB до 10MB
+                    </p>
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    accept=".txt,.fb2,.epub"
+                    onChange={handleFileSelect}
+                    style={{ display: "none" }}
+                  />
+                </div>
+              </div>
+
+              <div className="upload-actions">
+                <Button
+                  disabled={!selectedFile || uploadMutation.isLoading}
+                  onClick={handleUpload}
+                  view="action"
+                  size="l"
+                >
+                  {uploadMutation.isLoading ? (
+                    <div className="project-detail-button">
+                      <span className="spinner small"></span>
+                      {analyzeText ? "Загрузка и анализ текста..." : "Загрузка файла..."}
+                    </div>
+                  ) : (
+                    analyzeText ? "Загрузить и проанализировать текст" : "Загрузить текст"
+                  )}
+                </Button>
+
+                <Checkbox
+                  checked={analyzeText}
+                  onUpdate={(checked) => setAnalyzeText(checked)}
+                  size="l"
+                >
+                  Анализировать текст и искать персонажей
+                </Checkbox>
+              </div>
+
+              {uploadMutation.isError && (
+                <div className="error-message">
+                  <strong>Ошибка загрузки файла</strong>
+                  <p>
+                    Не удалось загрузить и обработать файл. Попробуйте еще раз.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="card">
             <h3>Статистика проекта</h3>
 
             <div className="stats-list">
@@ -962,19 +959,9 @@ const ProjectDetail: React.FC = () => {
                 <strong>{texts?.length || 0}</strong>
               </div>
               <div className="stat-item">
-                <span>Обработано:</span>
+                <span>Проанализировано:</span>
                 <strong>
                   {texts?.filter((text) => text.processed_at).length || 0}
-                </strong>
-              </div>
-              <div className="stat-item">
-                <span>Форматы:</span>
-                <strong>
-                  {texts
-                    ? [...new Set(texts.map((t) => t.original_format))]
-                        .join(", ")
-                        .toUpperCase()
-                    : "Нет"}
                 </strong>
               </div>
             </div>
@@ -996,8 +983,11 @@ const ProjectDetail: React.FC = () => {
                             text.processed_at ? "processed" : "pending"
                           }`}
                         >
-                          {text.processed_at ? "✓ Обработан" : "⏳ В ожидании"}
+                          {text.processed_at ? "✓ Проанализирован" : "📄 Загружен"}
                         </span>
+                      </div>
+                      <div className="file-size">
+                        {text.content_length?.toLocaleString() || 0} символов
                       </div>
                       {text.processed_at && (
                         <div className="processed-date">
