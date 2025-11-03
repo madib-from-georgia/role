@@ -24,14 +24,14 @@ async def lifespan(app: FastAPI):
     """Управление жизненным циклом приложения."""
     # Startup
     await init_db()
-    
+
     # Автоматический импорт чеклистов при старте
     try:
         await auto_import_service.import_checklists_on_startup()
     except Exception as e:
         # Не останавливаем приложение, если импорт не удался
         print(f"Предупреждение: Ошибка автоматического импорта чеклистов: {e}")
-    
+
     yield
     # Shutdown
     await close_db()
@@ -58,7 +58,8 @@ app.add_middleware(
 
 # Добавление кастомных middleware (порядок важен!)
 # Сначала добавляем middleware для производительности (в обратном порядке)
-app.add_middleware(get_performance_middleware(), max_request_time=30.0)
+# УВЕЛИЧЕН ТАЙМАУТ: с 30 до 300 секунд (5 минут) для поддержки больших файлов
+app.add_middleware(get_performance_middleware(), max_request_time=300.0)
 
 # Затем middleware для безопасности и логирования
 app.add_middleware(LoggingMiddleware)
@@ -111,5 +112,9 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         reload=True,
-        log_level="info"
+        log_level="info",
+        # УВЕЛИЧЕНЫ ТАЙМАУТЫ для поддержки больших файлов
+        timeout_keep_alive=300,  # 5 минут
+        limit_concurrency=100,
+        limit_max_requests=1000
     )

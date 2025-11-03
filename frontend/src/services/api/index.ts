@@ -24,6 +24,8 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // УВЕЛИЧЕНЫ ТАЙМАУТЫ для поддержки больших файлов (5 минут)
+  timeout: 300000, // 300 секунд = 5 минут
 })
 
 // Добавляем interceptor для автоматического добавления токена авторизации
